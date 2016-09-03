@@ -249,11 +249,20 @@
                     <TabControl Margin="10,10,0,0" Grid.Row="1" MinHeight="650" MinWidth="750"
                        HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
 
-                        <TabItem Header="Days For Last 5 and Pages">
+                        <TabItem Header="Last 10 Books Time vs Pages">
                             <ScrollViewer>
-                                <oxy:PlotView MinHeight="630" MinWidth="720"
-                                    Model="{Binding Path=PlotBooksAndPagesLastFiveDaysModel}"
-                                    Controller="{Binding Path=PlotBooksAndPagesLastFiveDaysViewController}" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="20" />
+
+                                    </Grid.ColumnDefinitions>
+
+                                    <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
+                                    Model="{Binding Path=PlotBooksAndPagesLastTenModel}"
+                                    Controller="{Binding Path=PlotBooksAndPagesLastTenViewController}" />
+                                </Grid>
 
                             </ScrollViewer>
                         </TabItem>

@@ -12,6 +12,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
         public const string DaysPerBookKey = "DaysPerBook";
 
         public const string BooksReadKey = "BooksRead";
+
         public const string PagesReadKey = "PagesRead";
 
         public const string PageRateKey = "PageRate";
@@ -31,5 +32,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
         public const string PercentagePagesReadKey = "PercentagePagesRead";
 
         public const string TotalPagesReadKey = "TotalPagesRead";
+
+        public const string DaysTakenKey = "DaysTaken";
     }
 }
