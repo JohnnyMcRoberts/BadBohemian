@@ -243,6 +243,24 @@
                 </ScrollViewer>
             </TabItem>
 
+            <TabItem Header="Books and Pages Scatter charts">
+                <ScrollViewer>
+
+                    <TabControl Margin="10,10,0,0" Grid.Row="1" MinHeight="650" MinWidth="750"
+                       HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
+
+                        <TabItem Header="Days For Last 5 and Pages">
+                            <ScrollViewer>
+                                <oxy:PlotView MinHeight="630" MinWidth="720"
+                                    Model="{Binding Path=PlotBooksAndPagesLastFiveDaysModel}"
+                                    Controller="{Binding Path=PlotBooksAndPagesLastFiveDaysViewController}" />
+
+                            </ScrollViewer>
+                        </TabItem>
+                    </TabControl>
+
+                </ScrollViewer>
+            </TabItem>
 
         </TabControl>
 
