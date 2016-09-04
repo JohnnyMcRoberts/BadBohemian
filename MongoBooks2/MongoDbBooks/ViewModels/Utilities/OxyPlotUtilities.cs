@@ -226,6 +226,18 @@ namespace MongoDbBooks.ViewModels.Utilities
         }
 
 
+        public static void CreateScatterPointSeries(out ScatterSeries series,
+            string xAxisKey, string yAxisKey, string title)
+        {
+            series = new ScatterSeries 
+            {
+                MarkerType = MarkerType.Circle,
+                Title = title,
+                XAxisKey = xAxisKey,
+                YAxisKey = yAxisKey
+            };
+        }
+
 
         public static void CreateLineSeries(out LineSeries series,
             string xAxisKey, string yAxisKey, string title, int colourIndex)

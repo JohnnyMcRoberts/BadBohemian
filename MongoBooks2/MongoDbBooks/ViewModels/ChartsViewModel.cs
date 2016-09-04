@@ -70,6 +70,9 @@ namespace MongoDbBooks.ViewModels
         private PlotModel _plotCurrentPagesReadByCountry;
         private PlotModel _plotCurrentBooksReadByCountry;
 
+        private PlotModel _plotBooksAndPagesLastTen;
+        private PlotModel _plotBooksAndPagesLastTenTranslation;
+
         #endregion
 
         #region Public properties
@@ -225,6 +228,20 @@ namespace MongoDbBooks.ViewModels
         public IPlotController PlotCurrentBooksReadByCountryViewController { get; private set; }
 
 
+        public PlotModel PlotBooksAndPagesLastTenModel
+        {
+            get { return _plotBooksAndPagesLastTen; }
+            private set { _plotBooksAndPagesLastTen = value; }
+        }
+        public IPlotController PlotBooksAndPagesLastTenViewController { get; private set; }
+
+        public PlotModel PlotBooksAndPagesLastTenTranslationModel
+        {
+            get { return _plotBooksAndPagesLastTenTranslation; }
+            private set { _plotBooksAndPagesLastTenTranslation = value; }
+        }
+        public IPlotController PlotBooksAndPagesLastTenTranslationViewController { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -277,6 +294,10 @@ namespace MongoDbBooks.ViewModels
                 InitialisePlotModelAndController(ref _plotCurrentPagesReadByCountry, "CurrentPagesReadByCountry");
             PlotCurrentBooksReadByCountryViewController =
                 InitialisePlotModelAndController(ref _plotCurrentBooksReadByCountry, "CurrentBooksReadByCountry");
+            PlotBooksAndPagesLastTenViewController =
+                InitialisePlotModelAndController(ref _plotBooksAndPagesLastTen, "BooksAndPagesLastTen");
+            PlotBooksAndPagesLastTenTranslationViewController =
+                InitialisePlotModelAndController(ref _plotBooksAndPagesLastTenTranslation, "BooksAndPagesLastTenTranslation");
 
         }
 
@@ -286,6 +307,10 @@ namespace MongoDbBooks.ViewModels
 
         public void UpdateData()
         {
+            // if no data don't waste time trying to create plots
+            if (_mainModel == null || _mainModel.BooksRead == null || _mainModel.BooksRead.Count == 0)
+                return;
+
             PlotOverallBookAndPageTalliesModel = (new OverallBookAndPageTalliesPlotGenerator()).SetupPlot(_mainModel);
             PlotDaysPerBookModel = (new DaysPerBookPlotGenerator()).SetupPlot(_mainModel);
             PlotPageRateModel = (new PageRatePlotGenerator()).SetupPlot(_mainModel);
@@ -303,7 +328,11 @@ namespace MongoDbBooks.ViewModels
             PlotPercentagePagesReadByCountryModel = (new PercentagePagesReadByCountryPlotGenerator()).SetupPlot(_mainModel);
             PlotTotalPagesReadByCountryModel = (new TotalPagesReadByCountryPlotGenerator()).SetupPlot(_mainModel);
             PlotBooksAndPagesThisYearModel = (new BooksAndPagesThisYearPlotGenerator()).SetupPlot(_mainModel);
- 
+
+            PlotBooksAndPagesLastTenModel = (new BooksAndPagesLastTenPlotGenerator()).SetupPlot(_mainModel);
+            PlotBooksAndPagesLastTenTranslationModel = (new BooksAndPagesLastTenTranslationPlotGenerator()).SetupPlot(_mainModel);
+
+
             OnPropertyChanged("");
         }
 

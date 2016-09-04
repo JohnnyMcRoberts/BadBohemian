@@ -38,12 +38,15 @@ namespace MongoDbBooks.Models
             TalliedBooks = new ObservableCollection<TalliedBook>();
             BookDeltas = new ObservableCollection<BooksDelta>();
             BookPerYearDeltas = new ObservableCollection<BooksDelta>();
+            WorldCountries = new ObservableCollection<WorldCountry>();
 
             InputFilePath = Properties.Settings.Default.InputFile;
             OutputFilePath = Properties.Settings.Default.OutputFile;
-
+            InputCountriesFilePath = Properties.Settings.Default.InputCountriesFile;
+        
             InputFilePath = Properties.Settings.Default.InputFile;
             OutputFilePath = Properties.Settings.Default.OutputFile;
+            InputCountriesFilePath = Properties.Settings.Default.InputCountriesFile;
 
             string errorMsg = "test";
             ConnectedToDbSuccessfully = ConnectToDatabase(out errorMsg);
@@ -78,11 +81,14 @@ namespace MongoDbBooks.Models
 
         public string InputFilePath { get; set; }
         public string OutputFilePath { get; set; }
+        public string InputCountriesFilePath { get; set; }
 
         public bool DataFromFile { get; set; }
         public bool DataFromDb { get; set; }
 
         public bool ConnectedToDbSuccessfully { get; private set; }
+
+        public ObservableCollection<WorldCountry> WorldCountries { get; set; }
 
         #endregion
 
@@ -262,9 +268,97 @@ namespace MongoDbBooks.Models
             return true;
         }
 
+        public void ReadCountriesFromFile(string filename)
+        {
+
+            using (var sr = new StreamReader(filename, Encoding.Default))
+            {
+                var csv = new CsvReader(sr);
+
+                WorldCountries.Clear();
+
+                // Country,Capital,Latitude,Longitude
+
+                while (csv.Read())
+                {
+                    
+                    var stringFieldCountry = csv.GetField<string>(0);                    
+                    var stringFieldCapital = csv.GetField<string>(1);
+
+                    var stringFieldLatitude = csv.GetField<string>(2);
+                    var stringFieldLongitude = csv.GetField<string>(3);
+
+                    double latitude = -300, longitude = -300;
+
+                    latitude = GetLatLongFromString(stringFieldLatitude, true);
+                    longitude = GetLatLongFromString(stringFieldLongitude, false);
+
+                    if (latitude > -100 & longitude > -190)
+                    {
+                        WorldCountry country = new WorldCountry()
+                        {
+                            Country = stringFieldCountry,
+                            Capital = stringFieldCapital,
+                            Latitude = latitude,
+                            Longitude = longitude
+                        };
+
+                        WorldCountries.Add(country);
+                    }
+                }
+            }
+            //UpdateCollections();
+            Properties.Settings.Default.InputCountriesFile = filename;
+            Properties.Settings.Default.Save();
+
+        }
+
         #endregion
 
         #region Private Methods
+
+        private double GetLatLongFromString(string stringField, bool isLat)
+        {
+            if (stringField == null || stringField.Length < 7) return -360.0;
+
+            char lastChar = stringField.ToUpper()[stringField.Length - 1];
+            bool isPositive = true;
+            switch(lastChar)
+            {
+                case 'E':
+                    if (isLat) return -360.0;
+                    isPositive = true;
+                    break;
+                case 'W':
+                    if (isLat) return -360.0;
+                    isPositive = false;
+                    break;
+                case 'N':
+                    if (!isLat) return -360.0;
+                    isPositive = true;
+                    break;
+                case 'S':
+                    if (!isLat) return -360.0;
+                    isPositive = false;
+                    break;
+                default:
+                    return -360.0;
+            }
+
+            string degreesStr = stringField.Substring(0, stringField.Length - 5);
+            ushort degrees = 1000;
+            if(!UInt16.TryParse(degreesStr, out degrees)) return -360;
+
+
+            string minsStr = stringField.Substring(degreesStr.Length + 1, 2);
+            ushort mins = 1000;
+            if (!UInt16.TryParse(minsStr, out mins)) return -360;
+
+            double angle = (double)degrees + ((double)mins / 60.0);
+            if (!isPositive)
+                angle *= -1.0;
+            return angle;
+        }
 
         private void UpdateCollections()
         {

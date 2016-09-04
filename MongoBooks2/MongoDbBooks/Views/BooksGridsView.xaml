@@ -5,10 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1000">
-    <Grid>
+    <Grid
+                              Height="{Binding ElementName=UserControl, Path=ActualHeight}"
+                                Width="{Binding ElementName=UserControl, Path=ActualWidth}" >
 
         <TabControl Margin="10,10,0,0" Grid.Row="1" MinHeight="700" MinWidth="800"
-                       HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
+                       HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"
+                              MaxHeight="{Binding ElementName=UserControl, Path=ActualHeight}"
+                              MaxWidth="{Binding ElementName=UserControl, Path=ActualWidth}">
 
             <TabItem Header="Raw Data">
                 <ScrollViewer>
@@ -473,6 +477,44 @@
 
                 </ScrollViewer>
 
+            </TabItem>
+
+            <TabItem Header="World Countries">
+                <ScrollViewer >
+                    <DataGrid AutoGenerateColumns="False" 
+                                    ItemsSource="{Binding Path=WorldCountries, Mode=OneWay}"
+                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" >
+
+                        <DataGrid.Columns>
+
+
+                            <DataGridTextColumn Header="Country" 
+                                                Binding="{Binding Country}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Capital" 
+                                                Binding="{Binding Capital}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="LatitudeText" 
+                                                Binding="{Binding LatitudeText}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="LongitudeText" 
+                                                Binding="{Binding LongitudeText}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Latitude" 
+                                                Binding="{Binding Path=Latitude, StringFormat=N4}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Longitude" 
+                                                Binding="{Binding Path=Longitude, StringFormat=N4}" 
+                                                Width="Auto"/>
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+                </ScrollViewer>
             </TabItem>
 
         </TabControl>

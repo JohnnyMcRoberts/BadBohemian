@@ -138,6 +138,8 @@ namespace MongoDbBooks.ViewModels
 
         public DataTable CountryDeltasTable { get { return _countryDeltasTable; } }
 
+        public ObservableCollection<WorldCountry> WorldCountries { get { return _mainModel.WorldCountries; } }
+
         #endregion
 
         #region Constructor

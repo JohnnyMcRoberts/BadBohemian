@@ -89,6 +89,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\WorldCountry.cs" />
     <Compile Include="Utilities\Logger.cs" />
     <Compile Include="ViewModels\ChartsViewModel.cs" />
     <Compile Include="ViewModels\DataGridsViewModel.cs" />
@@ -96,6 +97,8 @@
     <Compile Include="ViewModels\DataUpdaterViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\PlotGenerators\AverageDaysPerBookPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\BooksAndPagesLastTenPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\BooksAndPagesLastTenTranslationPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\BooksAndPagesThisYearPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\BooksInTranslationPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\ChartAxisKeys.cs" />
@@ -200,6 +203,9 @@
     <Resource Include="Images\File_Exit_16.png" />
     <Resource Include="Images\File_Open_16.png" />
     <Resource Include="Images\save icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\globe.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
