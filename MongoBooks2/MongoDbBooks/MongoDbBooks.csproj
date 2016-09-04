@@ -102,6 +102,7 @@
     <Compile Include="ViewModels\PlotGenerators\BooksAndPagesThisYearPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\BooksInTranslationPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\ChartAxisKeys.cs" />
+    <Compile Include="ViewModels\PlotGenerators\CountryLocationsBooksAndPagesPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookWithTimePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\IPlotGenerator.cs" />

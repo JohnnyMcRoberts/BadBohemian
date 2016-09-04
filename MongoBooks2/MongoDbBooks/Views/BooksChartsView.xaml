@@ -243,12 +243,30 @@
                 </ScrollViewer>
             </TabItem>
 
+            
             <TabItem Header="Books and Pages Scatter charts">
                 <ScrollViewer>
 
                     <TabControl Margin="10,10,0,0" Grid.Row="1" MinHeight="650" MinWidth="750"
                        HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
 
+                        <TabItem Header="Last 10 Books Time vs Pages vs Rate">
+                            <ScrollViewer>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="20" />
+
+                                    </Grid.ColumnDefinitions>
+
+                                    <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
+                                    Model="{Binding Path=PlotBooksAndPagesLastTenModel}"
+                                    Controller="{Binding Path=PlotBooksAndPagesLastTenViewController}" />
+                                </Grid>
+
+                            </ScrollViewer>
+                        </TabItem>
                         <TabItem Header="Last 10 Books Time vs Pages vs Translation">
                             <ScrollViewer>
                                 <Grid>
@@ -266,8 +284,9 @@
 
                             </ScrollViewer>
                         </TabItem>
-                        
-                        <TabItem Header="Last 10 Books Time vs Pages vs Rate">
+
+
+                        <TabItem Header="Country Locations Books and Pages">
                             <ScrollViewer>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -278,8 +297,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotBooksAndPagesLastTenModel}"
-                                    Controller="{Binding Path=PlotBooksAndPagesLastTenViewController}" />
+                                    Model="{Binding Path=PlotCountryLocationsBooksAndPagesModel}"
+                                    Controller="{Binding Path=PlotCountryLocationsBooksAndPagesViewController}" />
                                 </Grid>
 
                             </ScrollViewer>

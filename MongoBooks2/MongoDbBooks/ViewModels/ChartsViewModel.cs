@@ -73,6 +73,8 @@ namespace MongoDbBooks.ViewModels
         private PlotModel _plotBooksAndPagesLastTen;
         private PlotModel _plotBooksAndPagesLastTenTranslation;
 
+        private PlotModel _plotCountryLocationsBooksAndPages;
+
         #endregion
 
         #region Public properties
@@ -242,6 +244,13 @@ namespace MongoDbBooks.ViewModels
         }
         public IPlotController PlotBooksAndPagesLastTenTranslationViewController { get; private set; }
 
+        public PlotModel PlotCountryLocationsBooksAndPagesModel
+        {
+            get { return _plotCountryLocationsBooksAndPages; }
+            private set { _plotCountryLocationsBooksAndPages = value; }
+        }
+        public IPlotController PlotCountryLocationsBooksAndPagesViewController { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -295,10 +304,13 @@ namespace MongoDbBooks.ViewModels
             PlotCurrentBooksReadByCountryViewController =
                 InitialisePlotModelAndController(ref _plotCurrentBooksReadByCountry, "CurrentBooksReadByCountry");
             PlotBooksAndPagesLastTenViewController =
-                InitialisePlotModelAndController(ref _plotBooksAndPagesLastTen, "BooksAndPagesLastTen");
+                InitialisePlotModelAndController(ref _plotBooksAndPagesLastTen, "BooksAndPagesLastTen", true);
             PlotBooksAndPagesLastTenTranslationViewController =
-                InitialisePlotModelAndController(ref _plotBooksAndPagesLastTenTranslation, "BooksAndPagesLastTenTranslation");
+                InitialisePlotModelAndController(ref _plotBooksAndPagesLastTenTranslation, "BooksAndPagesLastTenTranslation",true);
 
+
+            PlotCountryLocationsBooksAndPagesViewController =
+                InitialisePlotModelAndController(ref _plotCountryLocationsBooksAndPages, "CountryLocationsBooksAndPages",true);
         }
 
         #endregion
@@ -332,6 +344,7 @@ namespace MongoDbBooks.ViewModels
             PlotBooksAndPagesLastTenModel = (new BooksAndPagesLastTenPlotGenerator()).SetupPlot(_mainModel);
             PlotBooksAndPagesLastTenTranslationModel = (new BooksAndPagesLastTenTranslationPlotGenerator()).SetupPlot(_mainModel);
 
+            PlotCountryLocationsBooksAndPagesModel = (new CountryLocationsBooksAndPagesPlotGenerator()).SetupPlot(_mainModel);
 
             OnPropertyChanged("");
         }
@@ -353,7 +366,7 @@ namespace MongoDbBooks.ViewModels
 
         #region Common Plotting Functions
 
-        private IPlotController InitialisePlotModelAndController(ref PlotModel plot, string title)
+        private IPlotController InitialisePlotModelAndController(ref PlotModel plot, string title, bool hoverOver = false)
         {
             // Create the plot model & controller 
             var tmp = new PlotModel { Title = title, Subtitle = "using OxyPlot only" };
@@ -361,7 +374,13 @@ namespace MongoDbBooks.ViewModels
             // Set the Model property, the INotifyPropertyChanged event will 
             //  make the WPF Plot control update its content
             plot = tmp;
-            return new CustomPlotController();
+            var controller = new CustomPlotController();
+            if (hoverOver)
+            {
+                controller.UnbindMouseDown(OxyMouseButton.Left);
+                controller.BindMouseEnter(PlotCommands.HoverSnapTrack);
+            }
+            return controller;
         }
 
         #endregion
