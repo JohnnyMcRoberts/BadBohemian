@@ -53,6 +53,7 @@ namespace MongoDbBooks.ViewModels
         private ICommand _saveTextCommand;
         private ICommand _connectToDatabaseCommand;
         private ICommand _openCountriesLocationsCommand;
+        private ICommand _openWorldMapFileCommand;
 
         private bool _dataLoaded = false;
         private bool _connectedToDatabaseSuccessfully = false;
@@ -115,6 +116,19 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
+
+        public ICommand OpenWorldMapFileCommand
+        {
+            get
+            {
+                return _openWorldMapFileCommand ??
+                    (_openWorldMapFileCommand =
+                        new CommandHandler(() => OpenWorldMapFileCommandAction(), true));
+            }
+        }
+
+
+
         public ICommand SaveTextCommand
         {
             get
@@ -157,6 +171,26 @@ namespace MongoDbBooks.ViewModels
                 OnPropertyChanged("");
             }
         }
+
+        public void OpenWorldMapFileCommandAction()
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.FileName = _mainModel.InputWorldMapFilePath;
+
+            fileDialog.Filter = @"All files (*.*)|*.*|XML Files (*.xml)|*.xml";
+            fileDialog.FilterIndex = 4;
+            fileDialog.RestoreDirectory = true;
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _mainModel.ReadWorldMapFromFile(fileDialog.FileName);
+
+                IsDataLoaded = true;
+                _parent.UpdateData();
+                OnPropertyChanged("");
+            }
+        }
+
 
         public void OpenCountriesLocationsCommandAction()
         {

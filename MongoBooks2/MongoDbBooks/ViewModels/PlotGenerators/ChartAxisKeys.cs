@@ -9,6 +9,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
     public class ChartAxisKeys
     {
         public const string DateKey = "Date";
+
         public const string DaysPerBookKey = "DaysPerBook";
 
         public const string BooksReadKey = "BooksRead";
@@ -34,5 +35,9 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
         public const string TotalPagesReadKey = "TotalPagesRead";
 
         public const string DaysTakenKey = "DaysTaken";
+
+        public const string LatitudeKey = "Latitude";
+
+        public const string LongitudeKey = "Longitude";
     }
 }

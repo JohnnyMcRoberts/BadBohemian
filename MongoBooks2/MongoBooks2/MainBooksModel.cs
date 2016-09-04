@@ -12,8 +12,6 @@ using CsvHelper;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-using MongoDbBooks.Models.Geography;
-
 namespace MongoDbBooks.Models
 {
     public class MainBooksModel
@@ -25,8 +23,6 @@ namespace MongoDbBooks.Models
         protected static IMongoClient _client;
         protected static IMongoDatabase _booksDatabase;
         protected static IMongoDatabase _countriesDatabase;
-
-        protected CountriesData _countriesData;
 
         #endregion
 
@@ -48,13 +44,10 @@ namespace MongoDbBooks.Models
             InputFilePath = Properties.Settings.Default.InputFile;
             OutputFilePath = Properties.Settings.Default.OutputFile;
             InputCountriesFilePath = Properties.Settings.Default.InputCountriesFile;
-            InputWorldMapFilePath = Properties.Settings.Default.InputWorldMapFile;
-
+        
             InputFilePath = Properties.Settings.Default.InputFile;
             OutputFilePath = Properties.Settings.Default.OutputFile;
             InputCountriesFilePath = Properties.Settings.Default.InputCountriesFile;
-            InputWorldMapFilePath = Properties.Settings.Default.InputWorldMapFile;
-            
 
             string errorMsg = "test";
             ConnectedToDbSuccessfully = ConnectToDatabase(out errorMsg);
@@ -90,7 +83,6 @@ namespace MongoDbBooks.Models
         public string InputFilePath { get; set; }
         public string OutputFilePath { get; set; }
         public string InputCountriesFilePath { get; set; }
-        public string InputWorldMapFilePath { get; set; }
 
         public bool DataFromFile { get; set; }
         public bool DataFromDb { get; set; }
@@ -98,18 +90,6 @@ namespace MongoDbBooks.Models
         public bool ConnectedToDbSuccessfully { get; private set; }
 
         public ObservableCollection<WorldCountry> WorldCountries { get; set; }
-
-        public ObservableCollection<CountryGeography> CountryGeographies
-        {
-            get
-            {
-                if (CountriesData != null && CountriesData.Countries != null)
-                    return new ObservableCollection<CountryGeography>(CountriesData.Countries);
-                return null;
-            }
-        }
-
-        public CountriesData CountriesData { get { return _countriesData; } }
 
         #endregion
 
@@ -168,18 +148,6 @@ namespace MongoDbBooks.Models
             Properties.Settings.Default.InputFile = filename;
             Properties.Settings.Default.Save();
             DataFromFile = true;
-        }
-
-        internal void ReadWorldMapFromFile(string filename)
-        {
-            using (var sr = new StreamReader(filename, Encoding.Default))
-            {
-                string asStringXml = sr.ReadToEnd();
-                _countriesData = new CountriesData(asStringXml);
-            }
-            UpdateCollections();
-            Properties.Settings.Default.InputWorldMapFile = filename;
-            Properties.Settings.Default.Save();
         }
 
         public void WriteBooksToFile(string filename)

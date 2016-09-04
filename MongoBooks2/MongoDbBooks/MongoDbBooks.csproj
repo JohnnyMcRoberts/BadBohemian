@@ -89,6 +89,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Geography\CountriesData.cs" />
+    <Compile Include="Models\Geography\CountryGeography.cs" />
+    <Compile Include="Models\Geography\IGeographicEntity.cs" />
+    <Compile Include="Models\Geography\PolygonBoundary.cs" />
+    <Compile Include="Models\Geography\PolygonPoint.cs" />
     <Compile Include="Models\WorldCountry.cs" />
     <Compile Include="Utilities\Logger.cs" />
     <Compile Include="ViewModels\ChartsViewModel.cs" />
@@ -102,6 +107,8 @@
     <Compile Include="ViewModels\PlotGenerators\BooksAndPagesThisYearPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\BooksInTranslationPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\ChartAxisKeys.cs" />
+    <Compile Include="ViewModels\PlotGenerators\CountryLocationsBooksAndPagesPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\CountryLocationsBooksReadPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookWithTimePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\IPlotGenerator.cs" />
@@ -117,6 +124,8 @@
     <Compile Include="ViewModels\PlotGenerators\TotalBooksReadByLanguagePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\TotalPagesReadByCountryPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\TotalPagesReadByLanguagePlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapBooksReadPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPlotGenerator.cs" />
     <Compile Include="ViewModels\Utilities\CommandHandler.cs" />
     <Compile Include="ViewModels\Utilities\ICurveFitter.cs" />
     <Compile Include="ViewModels\Utilities\LinearCurveFitter.cs" />
@@ -206,6 +215,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\globe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\map.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
