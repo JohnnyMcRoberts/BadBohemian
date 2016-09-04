@@ -52,6 +52,7 @@ namespace MongoDbBooks.ViewModels
         private ICommand _openTextCommand;
         private ICommand _saveTextCommand;
         private ICommand _connectToDatabaseCommand;
+        private ICommand _openCountriesLocationsCommand;
 
         private bool _dataLoaded = false;
         private bool _connectedToDatabaseSuccessfully = false;
@@ -103,6 +104,17 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
+
+        public ICommand OpenCountriesLocationsCommand
+        {
+            get
+            {
+                return _openCountriesLocationsCommand ??
+                    (_openCountriesLocationsCommand =
+                        new CommandHandler(() => OpenCountriesLocationsCommandAction(), true));
+            }
+        }
+
         public ICommand SaveTextCommand
         {
             get
@@ -139,6 +151,25 @@ namespace MongoDbBooks.ViewModels
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
                 _mainModel.ReadBooksFromFile(fileDialog.FileName);
+
+                IsDataLoaded = true;
+                _parent.UpdateData();
+                OnPropertyChanged("");
+            }
+        }
+
+        public void OpenCountriesLocationsCommandAction()
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.FileName = _mainModel.InputCountriesFilePath;
+
+            fileDialog.Filter = @"All files (*.*)|*.*|CSV Files (*.csv)|*.csv";
+            fileDialog.FilterIndex = 4;
+            fileDialog.RestoreDirectory = true;
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _mainModel.ReadCountriesFromFile(fileDialog.FileName);
 
                 IsDataLoaded = true;
                 _parent.UpdateData();

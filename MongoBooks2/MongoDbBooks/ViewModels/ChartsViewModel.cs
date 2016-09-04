@@ -307,6 +307,10 @@ namespace MongoDbBooks.ViewModels
 
         public void UpdateData()
         {
+            // if no data don't waste time trying to create plots
+            if (_mainModel == null || _mainModel.BooksRead == null || _mainModel.BooksRead.Count == 0)
+                return;
+
             PlotOverallBookAndPageTalliesModel = (new OverallBookAndPageTalliesPlotGenerator()).SetupPlot(_mainModel);
             PlotDaysPerBookModel = (new DaysPerBookPlotGenerator()).SetupPlot(_mainModel);
             PlotPageRateModel = (new PageRatePlotGenerator()).SetupPlot(_mainModel);

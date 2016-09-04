@@ -8,5 +8,8 @@
     <Setting Name="OutputFile" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\temp</Value>
     </Setting>
+    <Setting Name="InputCountriesFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\temp</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
