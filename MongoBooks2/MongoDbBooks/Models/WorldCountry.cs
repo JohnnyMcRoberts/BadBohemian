@@ -8,14 +8,20 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoDbBooks.Models
 {
+
+    [BsonIgnoreExtraElements]
     public class WorldCountry : MongoEntity
     {
-        // Country,Capital,Latitude,Longitude
-
+        [BsonElement("country")]
         public string Country { get; set; }
+
+        [BsonElement("capital")]
         public string Capital { get; set; }
 
+        [BsonElement("latitude")]
         public double Latitude { get; set; }
+
+        [BsonElement("longitude")]
         public double Longitude { get; set; }
 
         public string LatitudeText

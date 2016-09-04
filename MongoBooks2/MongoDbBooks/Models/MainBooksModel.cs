@@ -21,7 +21,8 @@ namespace MongoDbBooks.Models
         private log4net.ILog _log;
 
         protected static IMongoClient _client;
-        protected static IMongoDatabase _database;
+        protected static IMongoDatabase _booksDatabase;
+        protected static IMongoDatabase _countriesDatabase;
 
         #endregion
 
@@ -190,41 +191,8 @@ namespace MongoDbBooks.Models
             try
             {
                 _client = new MongoClient(DatabaseConnectionString);
-                _database = _client.GetDatabase("books_read");
-
-                IMongoCollection<BookRead> booksRead = _database.GetCollection<BookRead>("books");
-
-                // this is a dummy query to get everything to date...
-
-                var filter = Builders<BookRead>.Filter.Lte(
-                    new StringFieldDefinition<BookRead, BsonDateTime>("date"), new BsonDateTime(DateTime.Now));
-
-                long totalCount = booksRead.Count(filter);
-
-                if (totalCount == 0 && BooksRead.Count != 0)
-                {
-                    booksRead.InsertMany(BooksRead);
-                    totalCount = booksRead.Count(filter);
-
-                }
-                else if (totalCount != 0 && BooksRead.Count == 0)
-                {
-
-                    BooksRead.Clear();
-
-                    using (var cursor = booksRead.FindSync(filter))
-                    {
-                        var booksList = cursor.ToList();
-                        foreach (var book in booksList)
-                        {
-                            BooksRead.Add(book);
-                        }
-                    }
-                    UpdateCollections();
-                    DataFromFile = false;
-                    DataFromDb = true;
-                }
-
+                ConnectToBooksDatabase();
+                ConnectToCountriesDatabase();
             }
             catch (Exception e)
             {
@@ -573,9 +541,9 @@ namespace MongoDbBooks.Models
         private void AddNewBookToDatabase(BookRead newBook)
         {
             _client = new MongoClient(DatabaseConnectionString);
-            _database = _client.GetDatabase("books_read");
+            _booksDatabase = _client.GetDatabase("books_read");
 
-            IMongoCollection<BookRead> booksRead = _database.GetCollection<BookRead>("books");
+            IMongoCollection<BookRead> booksRead = _booksDatabase.GetCollection<BookRead>("books");
 
             booksRead.InsertOne(newBook);
         }
@@ -583,9 +551,9 @@ namespace MongoDbBooks.Models
         private void UpdateBookInDatabase(BookRead editBook)
         {
             _client = new MongoClient(DatabaseConnectionString);
-            _database = _client.GetDatabase("books_read");
+            _booksDatabase = _client.GetDatabase("books_read");
 
-            IMongoCollection<BookRead> booksRead = _database.GetCollection<BookRead>("books");
+            IMongoCollection<BookRead> booksRead = _booksDatabase.GetCollection<BookRead>("books");
 
             var filterOnId = Builders<BookRead>.Filter.Eq(s => s.Id, editBook.Id);
 
@@ -594,6 +562,84 @@ namespace MongoDbBooks.Models
             var result = booksRead.ReplaceOne(filterOnId, editBook);
 
         }
+
+        private void ConnectToCountriesDatabase()
+        {
+            _countriesDatabase = _client.GetDatabase("world_countries");
+
+            IMongoCollection<WorldCountry> worldCountries =
+                _countriesDatabase.GetCollection<WorldCountry>("countries");
+
+            // this is a dummy query to get everything to date...
+
+            var filter = Builders<WorldCountry>.Filter.Lte(
+                new StringFieldDefinition<WorldCountry, BsonDouble>("latitude"), new BsonDouble(360.0));
+
+            long totalCount = worldCountries.Count(filter);
+
+            if (totalCount == 0 && WorldCountries.Count != 0)
+            {
+                worldCountries.InsertMany(WorldCountries);
+                totalCount = worldCountries.Count(filter);
+
+            }
+            else if (totalCount != 0 && WorldCountries.Count == 0)
+            {
+                WorldCountries.Clear();
+
+                using (var cursor = worldCountries.FindSync(filter))
+                {
+                    var countryList = cursor.ToList();
+                    foreach (var country in countryList)
+                    {
+                        WorldCountries.Add(country);
+                    }
+                }
+                UpdateCollections();
+                DataFromFile = false;
+                DataFromDb = true;
+            }
+
+        }
+
+        private void ConnectToBooksDatabase()
+        {
+            _booksDatabase = _client.GetDatabase("books_read");
+
+            IMongoCollection<BookRead> booksRead = _booksDatabase.GetCollection<BookRead>("books");
+
+            // this is a dummy query to get everything to date...
+
+            var filter = Builders<BookRead>.Filter.Lte(
+                new StringFieldDefinition<BookRead, BsonDateTime>("date"), new BsonDateTime(DateTime.Now));
+
+            long totalCount = booksRead.Count(filter);
+
+            if (totalCount == 0 && BooksRead.Count != 0)
+            {
+                booksRead.InsertMany(BooksRead);
+                totalCount = booksRead.Count(filter);
+
+            }
+            else if (totalCount != 0 && BooksRead.Count == 0)
+            {
+
+                BooksRead.Clear();
+
+                using (var cursor = booksRead.FindSync(filter))
+                {
+                    var booksList = cursor.ToList();
+                    foreach (var book in booksList)
+                    {
+                        BooksRead.Add(book);
+                    }
+                }
+                UpdateCollections();
+                DataFromFile = false;
+                DataFromDb = true;
+            }
+        }
+
         #endregion
 
     }
