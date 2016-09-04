@@ -172,12 +172,14 @@ namespace MongoDbBooks.Models
 
         internal void ReadWorldMapFromFile(string filename)
         {
-
             using (var sr = new StreamReader(filename, Encoding.Default))
             {
                 string asStringXml = sr.ReadToEnd();
                 _countriesData = new CountriesData(asStringXml);
             }
+            UpdateCollections();
+            Properties.Settings.Default.InputWorldMapFile = filename;
+            Properties.Settings.Default.Save();
         }
 
         public void WriteBooksToFile(string filename)

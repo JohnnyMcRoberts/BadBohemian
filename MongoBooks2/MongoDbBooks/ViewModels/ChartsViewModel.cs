@@ -76,6 +76,8 @@ namespace MongoDbBooks.ViewModels
         private PlotModel _plotCountryLocationsBooksAndPages;
         private PlotModel _plotCountryLocationsBooksRead;
 
+        private PlotModel _plotWorldCountriesMap;
+
         #endregion
 
         #region Public properties
@@ -259,7 +261,14 @@ namespace MongoDbBooks.ViewModels
         }
         public IPlotController PlotCountryLocationsBooksReadViewController { get; private set; }
 
-        
+
+        public PlotModel PlotWorldCountriesMapModel
+        {
+            get { return _plotWorldCountriesMap; }
+            private set { _plotWorldCountriesMap = value; }
+        }
+        public IPlotController PlotWorldCountriesMapViewController { get; private set; }
+
 
         #endregion
 
@@ -360,7 +369,10 @@ namespace MongoDbBooks.ViewModels
 
             PlotCountryLocationsBooksAndPagesModel = (new CountryLocationsBooksAndPagesPlotGenerator()).SetupPlot(_mainModel);
             PlotCountryLocationsBooksReadModel = (new CountryLocationsBooksReadPlotGenerator()).SetupPlot(_mainModel);
-            
+
+            if (_mainModel.CountryGeographies != null)
+                PlotWorldCountriesMapModel = (new WorldCountriesMapPlotGenerator()).SetupPlot(_mainModel);
+
             OnPropertyChanged("");
         }
 
