@@ -14,7 +14,7 @@ using MongoDbBooks.ViewModels.Utilities;
 
 namespace MongoDbBooks.ViewModels.PlotGenerators
 {
-    public class WorldCountriesMapPlotGenerator : IPlotGenerator
+    public class WorldCountriesMapBooksReadPlotGenerator : IPlotGenerator
     {
         public OxyPlot.PlotModel SetupPlot(Models.MainBooksModel mainModel)
         {
@@ -30,8 +30,37 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             //OxyPlotUtilities.SetupPlotLegend(newPlot, "Total Pages Read by Language With Time Plot");
             SetupLatitudeAndLongitudeAxes(newPlot);
 
-            foreach(var country in _mainModel.CountryGeographies)
+            // make up a lit of the countries with books read
+            int maxBooksRead = -1;
+            Dictionary<string, int> countryToReadLookUp = new Dictionary<string, int>();
+            foreach(var authorCountry in _mainModel.AuthorCountries)
             {
+                maxBooksRead = Math.Max(authorCountry.TotalBooksReadFromCountry, maxBooksRead);
+                countryToReadLookUp.Add(authorCountry.Country, authorCountry.TotalBooksReadFromCountry);
+            }
+
+            maxBooksRead *= 12;
+            maxBooksRead /= 10;
+
+            List<OxyColor> colors = new List<OxyColor>();
+            foreach (var color in OxyPalettes.Jet(maxBooksRead).Colors)
+            {
+                var faintColor = OxyColor.FromArgb(128, color.R, color.G, color.B);
+                colors.Add(faintColor);
+            }
+
+            OxyPalette faintPalette = new OxyPalette(colors);
+
+            foreach (var country in _mainModel.CountryGeographies)
+            {
+                OxyColor color = OxyColors.LightGray;
+                string tagString = "";
+
+                if (countryToReadLookUp.ContainsKey(country.Name))
+                {
+                    color = colors[countryToReadLookUp[country.Name]];
+                    tagString = "\nBooks Read = " + countryToReadLookUp[country.Name].ToString();
+                }
 
                 int i = 0;
                 // just do the 5 biggest bits per country (looks enough)
@@ -41,9 +70,10 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                 {
                     var areaSeries = new AreaSeries
                     {
-                        Color = OxyColors.LightGreen,
+                        Color = color,
                         Title = country.Name,
-                        RenderInLegend = false
+                        RenderInLegend = false,
+                        Tag = tagString
                     };
                     foreach (var point in boundary.Points)
                     {
@@ -57,6 +87,9 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
                     }
 
+                    areaSeries.TrackerFormatString = "{0}\nLat/Long ( {4:0.###} ,{2:0.###} )"+ tagString;
+                   
+
                     newPlot.Series.Add(areaSeries);
 
                     i++;
@@ -64,6 +97,10 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                         break;
                 }
             }
+
+
+            newPlot.Axes.Add(new LinearColorAxis
+            { Position = AxisPosition.Right, Palette = faintPalette, Title = "Books Read" });
 
             // finally update the model with the new plot
             return newPlot;
@@ -94,6 +131,6 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             };
             newPlot.Axes.Add(yAxis);
         }
-        
+
     }
 }
