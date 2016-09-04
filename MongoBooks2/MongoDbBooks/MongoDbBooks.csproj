@@ -97,6 +97,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\PlotGenerators\AverageDaysPerBookPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\BooksAndPagesLastTenPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\BooksAndPagesLastTenTranslationPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\BooksAndPagesThisYearPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\BooksInTranslationPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\ChartAxisKeys.cs" />
