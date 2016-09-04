@@ -286,7 +286,7 @@
                         </TabItem>
 
 
-                        <TabItem Header="Country Locations Books and Pages">
+                        <TabItem Header="Country Locations and Pages Read">
                             <ScrollViewer>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -303,6 +303,26 @@
 
                             </ScrollViewer>
                         </TabItem>
+
+
+                        <TabItem Header="Country Locations and Books Read">
+                            <ScrollViewer>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="20" />
+
+                                    </Grid.ColumnDefinitions>
+
+                                    <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
+                                    Model="{Binding Path=PlotCountryLocationsBooksReadModel}"
+                                    Controller="{Binding Path=PlotCountryLocationsBooksReadViewController}" />
+                                </Grid>
+
+                            </ScrollViewer>
+                        </TabItem>
+
                     </TabControl>
 
                 </ScrollViewer>

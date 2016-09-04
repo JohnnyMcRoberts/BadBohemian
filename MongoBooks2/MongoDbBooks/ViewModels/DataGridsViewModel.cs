@@ -9,6 +9,7 @@ using System.Data;
 
 
 using MongoDbBooks.Models;
+using MongoDbBooks.Models.Geography;
 using MongoDbBooks.ViewModels.Utilities;
 
 namespace MongoDbBooks.ViewModels
@@ -139,6 +140,14 @@ namespace MongoDbBooks.ViewModels
         public DataTable CountryDeltasTable { get { return _countryDeltasTable; } }
 
         public ObservableCollection<WorldCountry> WorldCountries { get { return _mainModel.WorldCountries; } }
+
+        public ObservableCollection<CountryGeography> CountryGeographies
+        {
+            get
+            {
+                return _mainModel.CountryGeographies;
+            }
+        }
 
         #endregion
 

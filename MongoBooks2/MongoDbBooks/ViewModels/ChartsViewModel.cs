@@ -74,6 +74,7 @@ namespace MongoDbBooks.ViewModels
         private PlotModel _plotBooksAndPagesLastTenTranslation;
 
         private PlotModel _plotCountryLocationsBooksAndPages;
+        private PlotModel _plotCountryLocationsBooksRead;
 
         #endregion
 
@@ -251,6 +252,15 @@ namespace MongoDbBooks.ViewModels
         }
         public IPlotController PlotCountryLocationsBooksAndPagesViewController { get; private set; }
 
+        public PlotModel PlotCountryLocationsBooksReadModel
+        {
+            get { return _plotCountryLocationsBooksRead; }
+            private set { _plotCountryLocationsBooksRead = value; }
+        }
+        public IPlotController PlotCountryLocationsBooksReadViewController { get; private set; }
+
+        
+
         #endregion
 
         #region Constructor
@@ -311,6 +321,10 @@ namespace MongoDbBooks.ViewModels
 
             PlotCountryLocationsBooksAndPagesViewController =
                 InitialisePlotModelAndController(ref _plotCountryLocationsBooksAndPages, "CountryLocationsBooksAndPages",true);
+
+            PlotCountryLocationsBooksReadViewController =
+                InitialisePlotModelAndController(ref _plotCountryLocationsBooksRead, "CountryLocationsBooksRead", true);
+            
         }
 
         #endregion
@@ -345,7 +359,8 @@ namespace MongoDbBooks.ViewModels
             PlotBooksAndPagesLastTenTranslationModel = (new BooksAndPagesLastTenTranslationPlotGenerator()).SetupPlot(_mainModel);
 
             PlotCountryLocationsBooksAndPagesModel = (new CountryLocationsBooksAndPagesPlotGenerator()).SetupPlot(_mainModel);
-
+            PlotCountryLocationsBooksReadModel = (new CountryLocationsBooksReadPlotGenerator()).SetupPlot(_mainModel);
+            
             OnPropertyChanged("");
         }
 

@@ -58,5 +58,17 @@ namespace MongoDbBooks.Properties {
                 this["InputCountriesFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\temp")]
+        public string InputWorldMapFile {
+            get {
+                return ((string)(this["InputWorldMapFile"]));
+            }
+            set {
+                this["InputWorldMapFile"] = value;
+            }
+        }
     }
 }

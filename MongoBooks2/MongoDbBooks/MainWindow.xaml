@@ -24,6 +24,11 @@
                         <Image Source="./Images/globe.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="_World Map File"  Command="{Binding Path=DataLoaderVM.OpenWorldMapFileCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="./Images/map.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="_Connect To Database" 
                           Command="{Binding Path=DataLoaderVM.ConnectToDatabaseCommand}" >
