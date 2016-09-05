@@ -89,6 +89,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\BookLocation.cs" />
+    <Compile Include="Models\BookLocationDelta.cs" />
     <Compile Include="Models\Geography\CountriesData.cs" />
     <Compile Include="Models\Geography\CountryGeography.cs" />
     <Compile Include="Models\Geography\IGeographicEntity.cs" />
