@@ -14,7 +14,7 @@ using MongoDbBooks.ViewModels.Utilities;
 
 namespace MongoDbBooks.ViewModels.PlotGenerators
 {
-    public class WorldCountriesMapBooksReadPlotGenerator : IPlotGenerator
+    public class WorldCountriesMapPagesReadPlotGenerator : IPlotGenerator
     {
         public OxyPlot.PlotModel SetupPlot(Models.MainBooksModel mainModel)
         {
@@ -32,19 +32,24 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             SetupLatitudeAndLongitudeAxes(newPlot);
 
             // make up a lit of the countries with books read
-            int maxBooksRead = -1;
-            Dictionary<string, int> countryToReadLookUp = new Dictionary<string, int>();
-            foreach(var authorCountry in _mainModel.AuthorCountries)
+            int maxBooksPages = 0;
+            Dictionary<string, long> countryToReadLookUp = new Dictionary<string, long>();
+            Dictionary<string, uint> countryToPagesLookUp = new Dictionary<string, uint>();
+            foreach (var authorCountry in _mainModel.AuthorCountries)
             {
-                maxBooksRead = Math.Max(authorCountry.TotalBooksReadFromCountry, maxBooksRead);
-                countryToReadLookUp.Add(authorCountry.Country, authorCountry.TotalBooksReadFromCountry);
+                int totalPagesInThousands = (int)((long)authorCountry.TotalPagesReadFromCountry / 1000);
+                if (totalPagesInThousands < 1)
+                    totalPagesInThousands = 1;
+                maxBooksPages = Math.Max(totalPagesInThousands, maxBooksPages);
+                countryToReadLookUp.Add(authorCountry.Country, totalPagesInThousands);
+                countryToPagesLookUp.Add(authorCountry.Country, authorCountry.TotalPagesReadFromCountry);
             }
 
-            maxBooksRead *= 12;
-            maxBooksRead /= 10;
+            maxBooksPages *= 12;
+            maxBooksPages /= 10;
 
             List<OxyColor> colors = new List<OxyColor>();
-            foreach (var color in OxyPalettes.Jet(maxBooksRead).Colors)
+            foreach (var color in OxyPalettes.Jet((int)maxBooksPages).Colors)
             {
                 var faintColor = OxyColor.FromArgb(128, color.R, color.G, color.B);
                 colors.Add(faintColor);
@@ -59,8 +64,8 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
                 if (countryToReadLookUp.ContainsKey(country.Name))
                 {
-                    color = colors[countryToReadLookUp[country.Name]];
-                    tagString = "\nBooks Read = " + countryToReadLookUp[country.Name].ToString();
+                    color = colors[(int)countryToReadLookUp[country.Name]];
+                    tagString = "\nPages Read = " + countryToPagesLookUp[country.Name].ToString();
                 }
 
                 int i = 0;
@@ -88,8 +93,8 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
                     }
 
-                    areaSeries.TrackerFormatString = "{0}\nLat/Long ( {4:0.###} ,{2:0.###} )"+ tagString;
-                   
+                    areaSeries.TrackerFormatString = "{0}\nLat/Long ( {4:0.###} ,{2:0.###} )" + tagString;
+
 
                     newPlot.Series.Add(areaSeries);
 
@@ -100,8 +105,8 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             }
 
 
-            newPlot.Axes.Add(new LinearColorAxis
-            { Position = AxisPosition.Right, Palette = faintPalette, Title = "Books Read", Maximum = maxBooksRead, Minimum = 0 });
+            newPlot.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = faintPalette, Title = "Thousand Pages Read", 
+                Maximum = maxBooksPages, Minimum = 0 });
 
             // finally update the model with the new plot
             return newPlot;
