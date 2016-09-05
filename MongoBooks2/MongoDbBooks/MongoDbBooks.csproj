@@ -133,6 +133,7 @@
     <Compile Include="ViewModels\Utilities\ICurveFitter.cs" />
     <Compile Include="ViewModels\Utilities\LinearCurveFitter.cs" />
     <Compile Include="ViewModels\Utilities\OxyPlotUtilities.cs" />
+    <Compile Include="ViewModels\Utilities\PolygonReducer.cs" />
     <Compile Include="ViewModels\Utilities\QuadraticCurveFitter.cs" />
     <Compile Include="ViewModels\Utilities\WaitCursor.cs" />
     <Compile Include="Views\BooksChartsView.xaml.cs">

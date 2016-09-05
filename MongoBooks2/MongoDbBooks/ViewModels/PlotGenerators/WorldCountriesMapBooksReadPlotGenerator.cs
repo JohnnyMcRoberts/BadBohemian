@@ -39,18 +39,10 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                 maxBooksRead = Math.Max(authorCountry.TotalBooksReadFromCountry, maxBooksRead);
                 countryToReadLookUp.Add(authorCountry.Country, authorCountry.TotalBooksReadFromCountry);
             }
-
-            maxBooksRead *= 12;
-            maxBooksRead /= 10;
-
-            List<OxyColor> colors = new List<OxyColor>();
-            foreach (var color in OxyPalettes.Jet(maxBooksRead).Colors)
-            {
-                var faintColor = OxyColor.FromArgb(128, color.R, color.G, color.B);
-                colors.Add(faintColor);
-            }
-
-            OxyPalette faintPalette = new OxyPalette(colors);
+            List<OxyColor> colors;
+            OxyPalette faintPalette;
+            maxBooksRead = 
+                OxyPlotUtilities.SetupFaintPaletteForRange(maxBooksRead, out colors, out faintPalette, 128);
 
             foreach (var country in _mainModel.CountryGeographies)
             {
@@ -64,7 +56,6 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                 }
 
                 int i = 0;
-                // just do the 5 biggest bits per country (looks enough)
                 var landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
 
                 foreach (var boundary in landBlocks)
@@ -76,23 +67,26 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                         RenderInLegend = false,
                         Tag = tagString
                     };
-                    foreach (var point in boundary.Points)
-                    {
 
+                    var points = boundary.Points;
+                    if (points.Count > PolygonReducer.MaxPolygonPoints)
+                        points = PolygonReducer.AdaptativePolygonReduce(points, PolygonReducer.MaxPolygonPoints);
+
+                    foreach (var point in points)
+                    {
                         double ptX = 0;
                         double ptY = 0;
                         point.GetCoordinates(out ptX, out ptY);
                         DataPoint dataPoint = new DataPoint(ptX, ptY);
 
                         areaSeries.Points.Add(dataPoint);
-
                     }
 
-                    areaSeries.TrackerFormatString = "{0}\nLat/Long ( {4:0.###} ,{2:0.###} )"+ tagString;
-                   
-
+                    areaSeries.TrackerFormatString = "{0}\nLat/Long ( {4:0.###} ,{2:0.###} )"+ tagString;                  
                     newPlot.Series.Add(areaSeries);
 
+
+                    // just do the 10 biggest bits per country (as looks good enough)
                     i++;
                     if (i > 10)
                         break;

@@ -27,14 +27,13 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
         {
             // Create the plot model
             var newPlot = new PlotModel { Title = "Countries of the World" };
-            //OxyPlotUtilities.SetupPlotLegend(newPlot, "Total Pages Read by Language With Time Plot");
+
             SetupLatitudeAndLongitudeAxes(newPlot);
 
             foreach(var country in _mainModel.CountryGeographies)
             {
 
                 int i = 0;
-                // just do the 5 biggest bits per country (looks enough)
                 var landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
 
                 foreach (var boundary in landBlocks)
@@ -45,20 +44,23 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                         Title = country.Name,
                         RenderInLegend = false
                     };
-                    foreach (var point in boundary.Points)
-                    {
+                    var points = boundary.Points;
+                    if (points.Count > PolygonReducer.MaxPolygonPoints)
+                        points = PolygonReducer.AdaptativePolygonReduce(points, PolygonReducer.MaxPolygonPoints);
 
+                    foreach (var point in points)
+                    {
                         double ptX = 0;
                         double ptY = 0;
                         point.GetCoordinates(out ptX, out ptY);
                         DataPoint dataPoint = new DataPoint(ptX, ptY);
 
                         areaSeries.Points.Add(dataPoint);
-
                     }
 
                     newPlot.Series.Add(areaSeries);
 
+                    // just do the 10 biggest bits per country (looks to be enough)
                     i++;
                     if (i > 10)
                         break;

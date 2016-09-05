@@ -437,5 +437,24 @@ namespace MongoDbBooks.ViewModels.Utilities
             return modelP1;
         }
 
+        public static int SetupFaintPaletteForRange(
+            int range, out List<OxyColor> colors, out OxyPalette faintPalette, byte aValue = 225)
+        {
+            // add 20% tolerance to the range
+            range *= 12;
+            range /= 10;
+
+            // set up the coulours
+            colors = new List<OxyColor>();
+            foreach (var color in OxyPalettes.Jet(range).Colors)
+            {
+                var faintColor = OxyColor.FromArgb(aValue, color.R, color.G, color.B);
+                colors.Add(faintColor);
+            }
+
+            // then put them into tthe palette
+            faintPalette = new OxyPalette(colors);
+            return range;
+        }
     }
 }
