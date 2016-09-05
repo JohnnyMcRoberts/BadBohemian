@@ -82,6 +82,7 @@ namespace MongoDbBooks.ViewModels
         private PlotModel _plotWorldCountriesMapWithBooksRead;
         private PlotModel _plotLatitudeWithTime;
         private PlotModel _plotLongitudeWithTime;
+        private PlotModel _plotWorldCountriesMapLastTenLatLong;
 
         #endregion
 
@@ -308,6 +309,13 @@ namespace MongoDbBooks.ViewModels
         }
         public IPlotController PlotLongitudeWithTimeViewController { get; private set; }
 
+        public PlotModel PlotWorldCountriesMapLastTenLatLongModel
+        {
+            get { return _plotWorldCountriesMapLastTenLatLong; }
+            private set { _plotWorldCountriesMapLastTenLatLong = value; }
+        }
+        public IPlotController PlotWorldCountriesMapLastTenLatLongViewController { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -380,6 +388,8 @@ namespace MongoDbBooks.ViewModels
                 InitialisePlotModelAndController(ref _plotLatitudeWithTime, "LatitudeWithTime");
             PlotLongitudeWithTimeViewController =
                 InitialisePlotModelAndController(ref _plotLongitudeWithTime, "LongitudeWithTime");
+            PlotWorldCountriesMapLastTenLatLongViewController =
+                InitialisePlotModelAndController(ref _plotWorldCountriesMapLastTenLatLong, "WorldCountriesMapLastTenLatLong", true);
 
         }
 
@@ -427,6 +437,7 @@ namespace MongoDbBooks.ViewModels
                 PlotWorldCountriesMapBooksReadModel = (new WorldCountriesMapBooksReadPlotGenerator()).SetupPlot(_mainModel);
                 PlotWorldCountriesMapPagesReadModel = (new WorldCountriesMapPagesReadPlotGenerator()).SetupPlot(_mainModel);
                 PlotWorldCountriesMapWithBooksReadModel = (new WorldCountriesMapWithBooksReadPlotGenerator()).SetupPlot(_mainModel);
+                PlotWorldCountriesMapLastTenLatLongModel = (new WorldCountriesMapLastTenLatLongPlotGenerator()).SetupPlot(_mainModel);
             }
 
             PlotLatitudeWithTimeModel = (new LatitudeWithTimePlotGenerator()).SetupPlot(_mainModel);

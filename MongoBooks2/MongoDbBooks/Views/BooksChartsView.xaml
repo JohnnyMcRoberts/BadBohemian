@@ -455,6 +455,25 @@
                             </ScrollViewer>
                         </TabItem>
 
+                        <TabItem Header="Countries Map with Last 10 by Time">
+                            <ScrollViewer>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="20" />
+
+                                    </Grid.ColumnDefinitions>
+
+                                    <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
+                                    Model="{Binding Path=PlotWorldCountriesMapLastTenLatLongModel}"
+                                    Controller="{Binding Path=PlotWorldCountriesMapLastTenLatLongViewController}" />
+                                </Grid>
+
+                            </ScrollViewer>
+                        </TabItem>
+
+
 
 
                     </TabControl>

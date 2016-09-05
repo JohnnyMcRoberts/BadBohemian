@@ -131,6 +131,7 @@
     <Compile Include="ViewModels\PlotGenerators\TotalPagesReadByCountryPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\TotalPagesReadByLanguagePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapBooksReadPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapLastTenLatLongPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPagesReadPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapWithBooksReadPlotGenerator.cs" />
