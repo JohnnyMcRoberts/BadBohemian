@@ -21,12 +21,12 @@
                 </MenuItem>
                 <MenuItem Header="_Locations File"  Command="{Binding Path=DataLoaderVM.OpenCountriesLocationsCommand}">
                     <MenuItem.Icon>
-                        <Image Source="./Images/globe.png" />
+                        <Image Source="./Images/globe.png" Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_World Map File"  Command="{Binding Path=DataLoaderVM.OpenWorldMapFileCommand}">
                     <MenuItem.Icon>
-                        <Image Source="./Images/map.png" />
+                        <Image Source="./Images/map.png" Width="16" Height="16"  />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />

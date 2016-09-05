@@ -100,7 +100,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
 
             newPlot.Axes.Add(new LinearColorAxis
-            { Position = AxisPosition.Right, Palette = faintPalette, Title = "Books Read" });
+            { Position = AxisPosition.Right, Palette = faintPalette, Title = "Books Read", Maximum = maxBooksRead, Minimum = 0 });
 
             // finally update the model with the new plot
             return newPlot;

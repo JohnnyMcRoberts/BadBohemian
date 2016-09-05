@@ -11,58 +11,70 @@
         <TabControl Margin="10,10,0,0" Grid.Row="1" MinHeight="700" MinWidth="800"
                        HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
 
-
-            <TabItem Header="Overall Book and Page Tallies">
+            
+            <TabItem Header="Page and Book Rate Charts">
                 <ScrollViewer>
 
-                    <oxy:PlotView MinHeight="630" MinWidth="720"
+                    <TabControl Margin="10,10,0,0" Grid.Row="1" MinHeight="650" MinWidth="750"
+                       HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
+
+
+                        <TabItem Header="Overall Book and Page Tallies">
+                            <ScrollViewer>
+
+                                <oxy:PlotView MinHeight="630" MinWidth="720"
                         Model="{Binding Path=PlotOverallBookAndPageTalliesModel}"
                    Controller="{Binding Path=PlotOverallBookAndPageTalliesViewController}" />
 
-                </ScrollViewer>
-            </TabItem>
+                            </ScrollViewer>
+                        </TabItem>
 
 
-            <TabItem Header="Days per Book">
-                <ScrollViewer>
+                        <TabItem Header="Days per Book">
+                            <ScrollViewer>
 
-                    <oxy:PlotView MinHeight="630" MinWidth="720"
+                                <oxy:PlotView MinHeight="630" MinWidth="720"
                         Model="{Binding Path=PlotDaysPerBookModel}"
                    Controller="{Binding Path=PlotDaysPerBookViewController}" />
 
-                </ScrollViewer>
-            </TabItem>
+                            </ScrollViewer>
+                        </TabItem>
 
 
-            <TabItem Header="Page Rate">
-                <ScrollViewer>
+                        <TabItem Header="Page Rate">
+                            <ScrollViewer>
 
-                    <oxy:PlotView MinHeight="630" MinWidth="720"
+                                <oxy:PlotView MinHeight="630" MinWidth="720"
                         Model="{Binding Path=PlotPageRateModel}"
                    Controller="{Binding Path=PlotPageRateViewController}" />
 
-                </ScrollViewer>
-            </TabItem>
+                            </ScrollViewer>
+                        </TabItem>
 
 
-            <TabItem Header="Pages per Book">
-                <ScrollViewer>
+                        <TabItem Header="Pages per Book">
+                            <ScrollViewer>
 
-                    <oxy:PlotView MinHeight="630" MinWidth="720"
+                                <oxy:PlotView MinHeight="630" MinWidth="720"
                         Model="{Binding Path=PlotPagesPerBookModel}"
                    Controller="{Binding Path=PlotPagesPerBookViewController}" />
 
-                </ScrollViewer>
-            </TabItem>
+                            </ScrollViewer>
+                        </TabItem>
 
 
-            <TabItem Header="Books in Translation">
-                <ScrollViewer>
+                        <TabItem Header="Books in Translation">
+                            <ScrollViewer>
 
-                    <oxy:PlotView MinHeight="630" MinWidth="720"
+                                <oxy:PlotView MinHeight="630" MinWidth="720"
                         Model="{Binding Path=PlotBooksInTranslationModel}"
                    Controller="{Binding Path=PlotBooksInTranslationViewController}" />
 
+                            </ScrollViewer>
+                        </TabItem>
+
+
+                    </TabControl>
                 </ScrollViewer>
             </TabItem>
 
@@ -328,6 +340,7 @@
                 </ScrollViewer>
             </TabItem>
 
+            
             <TabItem Header="Maps">
                 <ScrollViewer>
 
@@ -376,6 +389,7 @@
                 </ScrollViewer>
             </TabItem>
 
+            
         </TabControl>
 
     </Grid>

@@ -377,6 +377,10 @@ namespace MongoDbBooks.ViewModels
             PlotTotalPagesReadByCountryModel = (new TotalPagesReadByCountryPlotGenerator()).SetupPlot(_mainModel);
             PlotBooksAndPagesThisYearModel = (new BooksAndPagesThisYearPlotGenerator()).SetupPlot(_mainModel);
 
+
+            PlotCurrentPagesReadByCountryModel = (new CurrentPagesReadByCountryPlotGenerator()).SetupPlot(_mainModel);
+            PlotCurrentBooksReadByCountryModel = (new CurrentBooksReadByCountryPlotGenerator()).SetupPlot(_mainModel);
+
             PlotBooksAndPagesLastTenModel = (new BooksAndPagesLastTenPlotGenerator()).SetupPlot(_mainModel);
             PlotBooksAndPagesLastTenTranslationModel = (new BooksAndPagesLastTenTranslationPlotGenerator()).SetupPlot(_mainModel);
 

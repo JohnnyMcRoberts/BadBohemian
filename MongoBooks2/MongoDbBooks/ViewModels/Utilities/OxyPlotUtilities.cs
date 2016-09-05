@@ -400,11 +400,11 @@ namespace MongoDbBooks.ViewModels.Utilities
         }
 
         public static void AddResultsToPieChart(
-            dynamic seriesP1, List<KeyValuePair<string, int>> totals)
+            dynamic seriesP1, List<KeyValuePair<string, int>> totals, byte aValue = 225)
         {
             int colourIndex = 0;
 
-            List<OxyColor> coloursArray = SetupStandardColourSet();
+            List<OxyColor> coloursArray = SetupStandardColourSet(aValue);
 
             foreach (var total in totals)
             {
@@ -423,14 +423,14 @@ namespace MongoDbBooks.ViewModels.Utilities
         }
 
         public static PlotModel CreatePieSeriesModelForResultsSet(
-            List<KeyValuePair<string, int>> results, string title)
+            List<KeyValuePair<string, int>> results, string title, byte aValue = 225)
         {
             PlotModel modelP1;
             dynamic seriesP1;
 
             GetNewModelForPieSeries(out modelP1, out seriesP1, title);
 
-            AddResultsToPieChart(seriesP1, results);
+            AddResultsToPieChart(seriesP1, results, aValue);
 
             modelP1.Series.Add(seriesP1);
 
