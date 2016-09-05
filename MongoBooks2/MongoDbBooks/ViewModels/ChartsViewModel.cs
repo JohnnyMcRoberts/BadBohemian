@@ -79,6 +79,7 @@ namespace MongoDbBooks.ViewModels
         private PlotModel _plotWorldCountriesMap;
         private PlotModel _plotWorldCountriesMapBooksRead;
         private PlotModel _plotWorldCountriesMapPagesRead;
+        private PlotModel _plotWorldCountriesMapWithBooksRead;
 
         #endregion
 
@@ -284,6 +285,13 @@ namespace MongoDbBooks.ViewModels
         }
         public IPlotController PlotWorldCountriesMapPagesReadViewController { get; private set; }
 
+        public PlotModel PlotWorldCountriesMapWithBooksReadModel
+        {
+            get { return _plotWorldCountriesMapWithBooksRead; }
+            private set { _plotWorldCountriesMapWithBooksRead = value; }
+        }
+        public IPlotController PlotWorldCountriesMapWithBooksReadViewController { get; private set; }
+
 
         #endregion
 
@@ -341,22 +349,18 @@ namespace MongoDbBooks.ViewModels
                 InitialisePlotModelAndController(ref _plotBooksAndPagesLastTen, "BooksAndPagesLastTen", true);
             PlotBooksAndPagesLastTenTranslationViewController =
                 InitialisePlotModelAndController(ref _plotBooksAndPagesLastTenTranslation, "BooksAndPagesLastTenTranslation",true);
-
-
             PlotCountryLocationsBooksAndPagesViewController =
                 InitialisePlotModelAndController(ref _plotCountryLocationsBooksAndPages, "CountryLocationsBooksAndPages",true);
-
             PlotCountryLocationsBooksReadViewController =
                 InitialisePlotModelAndController(ref _plotCountryLocationsBooksRead, "CountryLocationsBooksRead", true);
-
             PlotWorldCountriesMapViewController =
                 InitialisePlotModelAndController(ref _plotWorldCountriesMap, "WorldCountriesMap", true);
-
             PlotWorldCountriesMapBooksReadViewController =
                 InitialisePlotModelAndController(ref _plotWorldCountriesMapBooksRead, "WorldCountriesMapBooksRead", true);
-
             PlotWorldCountriesMapPagesReadViewController =
                 InitialisePlotModelAndController(ref _plotWorldCountriesMapPagesRead, "WorldCountriesMapPagesRead", true);
+            PlotWorldCountriesMapWithBooksReadViewController =
+                InitialisePlotModelAndController(ref _plotWorldCountriesMapBooksRead, "WorldCountriesMapWithBooksRead", true);
 
         }
 
@@ -403,6 +407,7 @@ namespace MongoDbBooks.ViewModels
                 PlotWorldCountriesMapModel = (new WorldCountriesMapPlotGenerator()).SetupPlot(_mainModel);
                 PlotWorldCountriesMapBooksReadModel = (new WorldCountriesMapBooksReadPlotGenerator()).SetupPlot(_mainModel);
                 PlotWorldCountriesMapPagesReadModel = (new WorldCountriesMapPagesReadPlotGenerator()).SetupPlot(_mainModel);
+                PlotWorldCountriesMapWithBooksReadModel = (new WorldCountriesMapWithBooksReadPlotGenerator()).SetupPlot(_mainModel);
 
             }
 
