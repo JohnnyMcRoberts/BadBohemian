@@ -80,6 +80,8 @@ namespace MongoDbBooks.ViewModels
         private PlotModel _plotWorldCountriesMapBooksRead;
         private PlotModel _plotWorldCountriesMapPagesRead;
         private PlotModel _plotWorldCountriesMapWithBooksRead;
+        private PlotModel _plotLatitudeWithTime;
+        private PlotModel _plotLongitudeWithTime;
 
         #endregion
 
@@ -292,6 +294,19 @@ namespace MongoDbBooks.ViewModels
         }
         public IPlotController PlotWorldCountriesMapWithBooksReadViewController { get; private set; }
 
+        public PlotModel PlotLatitudeWithTimeModel
+        {
+            get { return _plotLatitudeWithTime; }
+            private set { _plotLatitudeWithTime = value; }
+        }
+        public IPlotController PlotLatitudeWithTimeViewController { get; private set; }
+
+        public PlotModel PlotLongitudeWithTimeModel
+        {
+            get { return _plotLongitudeWithTime; }
+            private set { _plotLongitudeWithTime = value; }
+        }
+        public IPlotController PlotLongitudeWithTimeViewController { get; private set; }
 
         #endregion
 
@@ -361,6 +376,10 @@ namespace MongoDbBooks.ViewModels
                 InitialisePlotModelAndController(ref _plotWorldCountriesMapPagesRead, "WorldCountriesMapPagesRead", true);
             PlotWorldCountriesMapWithBooksReadViewController =
                 InitialisePlotModelAndController(ref _plotWorldCountriesMapBooksRead, "WorldCountriesMapWithBooksRead", true);
+            PlotLatitudeWithTimeViewController =
+                InitialisePlotModelAndController(ref _plotLatitudeWithTime, "LatitudeWithTime");
+            PlotLongitudeWithTimeViewController =
+                InitialisePlotModelAndController(ref _plotLongitudeWithTime, "LongitudeWithTime");
 
         }
 
@@ -408,8 +427,10 @@ namespace MongoDbBooks.ViewModels
                 PlotWorldCountriesMapBooksReadModel = (new WorldCountriesMapBooksReadPlotGenerator()).SetupPlot(_mainModel);
                 PlotWorldCountriesMapPagesReadModel = (new WorldCountriesMapPagesReadPlotGenerator()).SetupPlot(_mainModel);
                 PlotWorldCountriesMapWithBooksReadModel = (new WorldCountriesMapWithBooksReadPlotGenerator()).SetupPlot(_mainModel);
-
             }
+
+            PlotLatitudeWithTimeModel = (new LatitudeWithTimePlotGenerator()).SetupPlot(_mainModel);
+            PlotLongitudeWithTimeModel = (new LongitudeWithTimePlotGenerator()).SetupPlot(_mainModel);
 
             OnPropertyChanged("");
         }

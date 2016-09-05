@@ -426,7 +426,44 @@
                 </ScrollViewer>
             </TabItem>
 
-            
+
+            <TabItem Header="Lat Long with Time">
+                <ScrollViewer>
+
+                    <TabControl Margin="10,10,0,0" Grid.Row="1" MinHeight="650" MinWidth="750"
+                       HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
+
+                        <TabItem Header="Lat and Long with Time">
+                            <ScrollViewer>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition  Height="20" />
+                                        <RowDefinition Height="*" />
+
+                                    </Grid.RowDefinitions>
+
+                                    <oxy:PlotView MinHeight="300" MinWidth="720" Grid.Row="0"
+                                    Model="{Binding Path=PlotLatitudeWithTimeModel}"
+                                    Controller="{Binding Path=PlotLatitudeWithTimeViewController}" />
+                                    
+                                    <oxy:PlotView MinHeight="300" MinWidth="720" Grid.Row="2"
+                                    Model="{Binding Path=PlotLongitudeWithTimeModel}"
+                                    Controller="{Binding Path=PlotLongitudeWithTimeViewController}" />
+                                </Grid>
+
+                            </ScrollViewer>
+                        </TabItem>
+
+
+
+                    </TabControl>
+
+                </ScrollViewer>
+            </TabItem>
+
+
+                    
         </TabControl>
 
     </Grid>
