@@ -149,6 +149,8 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
+        public ObservableCollection<BookLocationDelta> BookLocationDeltas { get { return _mainModel.BookLocationDeltas; } }
+
         #endregion
 
         #region Constructor

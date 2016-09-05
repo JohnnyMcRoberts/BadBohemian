@@ -516,6 +516,7 @@
                     </DataGrid>
                 </ScrollViewer>
             </TabItem>
+            
             <TabItem Header="World Country Geographies">
                 <ScrollViewer >
                     <DataGrid AutoGenerateColumns="False" 
@@ -544,6 +545,70 @@
 
                     </DataGrid>
                 </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Location Deltas">
+
+                <ScrollViewer>
+
+                    <DataGrid AutoGenerateColumns="False" 
+                                    ItemsSource="{Binding Path=BookLocationDeltas, Mode=OneWay}"
+                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+
+                        <DataGrid.Columns>
+
+                            <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn Header="Days Since Start" 
+                                                Binding="{Binding DaysSinceStart}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="AverageLatitude" 
+                                                Binding="{Binding Path=AverageLatitude, StringFormat=N4}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="AverageLongitude" 
+                                                Binding="{Binding Path=AverageLongitude, StringFormat=N4}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="WeightedLatitude" 
+                                                Binding="{Binding Path=WeightedLatitude, StringFormat=N4}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="WeightedLongitude" 
+                                                Binding="{Binding Path=WeightedLongitude, StringFormat=N4}"
+                                                Width="Auto"/>
+
+
+                            <DataGridTextColumn Header="AverageLatitudeLastTen" 
+                                                Binding="{Binding Path=AverageLatitudeLastTen, StringFormat=N4}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="AverageLongitudeLastTen" 
+                                                Binding="{Binding Path=AverageLongitudeLastTen, StringFormat=N4}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="WeightedLatitudeLastTen" 
+                                                Binding="{Binding Path=WeightedLatitudeLastTen, StringFormat=N4}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="WeightedLongitudeLastTen" 
+                                                Binding="{Binding Path=WeightedLongitudeLastTen, StringFormat=N4}"
+                                                Width="Auto"/>
+
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+
+                </ScrollViewer>
+
             </TabItem>
             
         </TabControl>

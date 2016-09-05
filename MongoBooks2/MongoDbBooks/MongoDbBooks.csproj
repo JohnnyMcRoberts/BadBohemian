@@ -89,6 +89,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\BookLocation.cs" />
+    <Compile Include="Models\BookLocationDelta.cs" />
     <Compile Include="Models\Geography\CountriesData.cs" />
     <Compile Include="Models\Geography\CountryGeography.cs" />
     <Compile Include="Models\Geography\IGeographicEntity.cs" />
@@ -129,10 +131,12 @@
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapBooksReadPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPagesReadPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapWithBooksReadPlotGenerator.cs" />
     <Compile Include="ViewModels\Utilities\CommandHandler.cs" />
     <Compile Include="ViewModels\Utilities\ICurveFitter.cs" />
     <Compile Include="ViewModels\Utilities\LinearCurveFitter.cs" />
     <Compile Include="ViewModels\Utilities\OxyPlotUtilities.cs" />
+    <Compile Include="ViewModels\Utilities\PolygonReducer.cs" />
     <Compile Include="ViewModels\Utilities\QuadraticCurveFitter.cs" />
     <Compile Include="ViewModels\Utilities\WaitCursor.cs" />
     <Compile Include="Views\BooksChartsView.xaml.cs">

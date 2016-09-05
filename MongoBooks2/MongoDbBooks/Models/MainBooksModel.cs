@@ -27,6 +27,7 @@ namespace MongoDbBooks.Models
         protected static IMongoDatabase _countriesDatabase;
 
         protected CountriesData _countriesData;
+        protected Dictionary<string, WorldCountry> _worldCountryLookup;
 
         #endregion
 
@@ -44,6 +45,7 @@ namespace MongoDbBooks.Models
             BookDeltas = new ObservableCollection<BooksDelta>();
             BookPerYearDeltas = new ObservableCollection<BooksDelta>();
             WorldCountries = new ObservableCollection<WorldCountry>();
+            BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
 
             InputFilePath = Properties.Settings.Default.InputFile;
             OutputFilePath = Properties.Settings.Default.OutputFile;
@@ -86,6 +88,8 @@ namespace MongoDbBooks.Models
         public ObservableCollection<BooksDelta> BookDeltas { get; private set; }
 
         public ObservableCollection<BooksDelta> BookPerYearDeltas { get; private set; }
+
+        public ObservableCollection<BookLocationDelta> BookLocationDeltas { get; private set; }
 
         public string InputFilePath { get; set; }
         public string OutputFilePath { get; set; }
@@ -307,7 +311,8 @@ namespace MongoDbBooks.Models
                     }
                 }
             }
-            //UpdateCollections();
+            UpdateWorldCountryLookup();
+            UpdateCollections();
             Properties.Settings.Default.InputCountriesFile = filename;
             Properties.Settings.Default.Save();
 
@@ -370,6 +375,59 @@ namespace MongoDbBooks.Models
             UpdateTalliedBooks();
             UpdateBookDeltas();
             UpdateBookPerYearDeltas();
+            UpdateWorldCountryLookup();
+            UpdateBookLocationDeltas();
+        }
+
+        private void UpdateBookLocationDeltas()
+        {
+            // clear the list and the counts
+            BookLocationDeltas.Clear();
+            if (BooksRead.Count < 1) return;
+            DateTime startDate = BooksRead[0].Date;
+
+            // get all the dates a book has been read (after the first quarter)
+            Dictionary<DateTime, DateTime> bookReadDates = GetBookReadDates(startDate);
+
+            // then add the delta made up of the books up to that date
+            foreach (var date in bookReadDates.Keys.ToList())
+            {
+                BookLocationDelta delta = new BookLocationDelta(date, startDate);
+                foreach (var book in BooksRead)
+                {
+                    if (book.Date <= date)
+                    {
+                        WorldCountry country = GetCountryForBook(book);
+                        if (country != null)
+                        {
+                            BookLocation location = 
+                                new BookLocation() { Book = book, Latitude = country.Latitude, Longitude = country.Longitude };
+
+                            delta.BooksLocationsToDate.Add(location);
+                        }
+                    }
+                    else
+                        break;
+                }
+                //delta.UpdateTallies();
+                BookLocationDeltas.Add(delta);
+            }
+        }
+
+        private WorldCountry GetCountryForBook(BookRead book)
+        {
+            if (_worldCountryLookup == null || _worldCountryLookup.Count == 0 || 
+                !_worldCountryLookup.ContainsKey(book.Nationality)) return null;
+            return _worldCountryLookup[book.Nationality];
+        }
+
+
+        private void UpdateWorldCountryLookup()
+        {
+            _worldCountryLookup = new Dictionary<string, WorldCountry>();
+            foreach (var country in WorldCountries)
+                if (!_worldCountryLookup.ContainsKey(country.Country))
+                    _worldCountryLookup.Add(country.Country, country);
         }
 
         private void UpdateBookPerYearDeltas()
@@ -420,16 +478,7 @@ namespace MongoDbBooks.Models
             DateTime startDate = BooksRead[0].Date;
 
             // get all the dates a book has been read (after the first quarter)
-            Dictionary<DateTime, DateTime> bookReadDates = new Dictionary<DateTime, DateTime>();
-            foreach (var book in BooksRead)
-            {
-                if (!bookReadDates.ContainsKey(book.Date))
-                {
-                    TimeSpan ts = book.Date - startDate;
-                    if (ts.Days >= 90)
-                        bookReadDates.Add(book.Date, book.Date);
-                }
-            }
+            Dictionary<DateTime, DateTime> bookReadDates = GetBookReadDates(startDate);
 
             // then add the delta made up of the books up to that date
             foreach (var date in bookReadDates.Keys.ToList())
@@ -445,6 +494,21 @@ namespace MongoDbBooks.Models
                 delta.UpdateTallies();
                 BookDeltas.Add(delta);
             }
+        }
+
+        private Dictionary<DateTime, DateTime> GetBookReadDates(DateTime startDate)
+        {
+            Dictionary<DateTime, DateTime> bookReadDates = new Dictionary<DateTime, DateTime>();
+            foreach (var book in BooksRead)
+            {
+                if (!bookReadDates.ContainsKey(book.Date))
+                {
+                    TimeSpan ts = book.Date - startDate;
+                    if (ts.Days >= 90)
+                        bookReadDates.Add(book.Date, book.Date);
+                }
+            }
+            return bookReadDates;
         }
 
         private void UpdateTalliedBooks()
@@ -661,6 +725,8 @@ namespace MongoDbBooks.Models
                 worldCountries.InsertMany(missingItems);
                 totalCount = worldCountries.Count(filter);
             }
+
+            UpdateWorldCountryLookup();
 
         }
 

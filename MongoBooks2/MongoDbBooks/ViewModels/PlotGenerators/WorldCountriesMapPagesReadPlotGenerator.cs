@@ -45,17 +45,11 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                 countryToPagesLookUp.Add(authorCountry.Country, authorCountry.TotalPagesReadFromCountry);
             }
 
-            maxBooksPages *= 12;
-            maxBooksPages /= 10;
 
-            List<OxyColor> colors = new List<OxyColor>();
-            foreach (var color in OxyPalettes.Jet((int)maxBooksPages).Colors)
-            {
-                var faintColor = OxyColor.FromArgb(128, color.R, color.G, color.B);
-                colors.Add(faintColor);
-            }
-
-            OxyPalette faintPalette = new OxyPalette(colors);
+            List<OxyColor> colors;
+            OxyPalette faintPalette;
+            maxBooksPages =
+                OxyPlotUtilities.SetupFaintPaletteForRange(maxBooksPages, out colors, out faintPalette, 128);
 
             foreach (var country in _mainModel.CountryGeographies)
             {
@@ -81,7 +75,12 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                         RenderInLegend = false,
                         Tag = tagString
                     };
-                    foreach (var point in boundary.Points)
+
+                    var points = boundary.Points;
+                    if (points.Count > PolygonReducer.MaxPolygonPoints)
+                        points = PolygonReducer.AdaptativePolygonReduce(points, PolygonReducer.MaxPolygonPoints);
+
+                    foreach (var point in points)
                     {
 
                         double ptX = 0;
