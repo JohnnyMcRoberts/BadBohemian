@@ -78,6 +78,7 @@ namespace MongoDbBooks.ViewModels
 
         private PlotModel _plotWorldCountriesMap;
         private PlotModel _plotWorldCountriesMapBooksRead;
+        private PlotModel _plotWorldCountriesMapPagesRead;
 
         #endregion
 
@@ -262,19 +263,26 @@ namespace MongoDbBooks.ViewModels
         }
         public IPlotController PlotCountryLocationsBooksReadViewController { get; private set; }
 
-
         public PlotModel PlotWorldCountriesMapModel
         {
             get { return _plotWorldCountriesMap; }
             private set { _plotWorldCountriesMap = value; }
         }
         public IPlotController PlotWorldCountriesMapViewController { get; private set; }
+
         public PlotModel PlotWorldCountriesMapBooksReadModel
         {
             get { return _plotWorldCountriesMapBooksRead; }
             private set { _plotWorldCountriesMapBooksRead = value; }
         }
         public IPlotController PlotWorldCountriesMapBooksReadViewController { get; private set; }
+
+        public PlotModel PlotWorldCountriesMapPagesReadModel
+        {
+            get { return _plotWorldCountriesMapPagesRead; }
+            private set { _plotWorldCountriesMapPagesRead = value; }
+        }
+        public IPlotController PlotWorldCountriesMapPagesReadViewController { get; private set; }
 
 
         #endregion
@@ -347,6 +355,9 @@ namespace MongoDbBooks.ViewModels
             PlotWorldCountriesMapBooksReadViewController =
                 InitialisePlotModelAndController(ref _plotWorldCountriesMapBooksRead, "WorldCountriesMapBooksRead", true);
 
+            PlotWorldCountriesMapPagesReadViewController =
+                InitialisePlotModelAndController(ref _plotWorldCountriesMapPagesRead, "WorldCountriesMapPagesRead", true);
+
         }
 
         #endregion
@@ -391,6 +402,7 @@ namespace MongoDbBooks.ViewModels
             {
                 PlotWorldCountriesMapModel = (new WorldCountriesMapPlotGenerator()).SetupPlot(_mainModel);
                 PlotWorldCountriesMapBooksReadModel = (new WorldCountriesMapBooksReadPlotGenerator()).SetupPlot(_mainModel);
+                PlotWorldCountriesMapPagesReadModel = (new WorldCountriesMapPagesReadPlotGenerator()).SetupPlot(_mainModel);
 
             }
 
