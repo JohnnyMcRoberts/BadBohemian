@@ -122,7 +122,43 @@ namespace MongoDbBooks.ViewModels
 
             }
 
+            double maxHeight = Math.Log(range);
+            TubeVisual3D path = GetPathForMeanReadingLocation(maxHeight);
+
+            modelGroup.Children.Add(path.Content);
+
             BooksReadByCountryModel = modelGroup;
+        }
+
+        private TubeVisual3D GetPathForMeanReadingLocation(double maxHeight)
+        {
+            int totalDeltas = _mainModel.BookLocationDeltas.Count;
+            double increment = maxHeight / (0.5 * (1 + totalDeltas));
+
+            var averagePosition = new List<Point3D>();
+            int counter = 0;
+            foreach (var delta in _mainModel.BookLocationDeltas)
+            {
+                PolygonPoint latLong =
+                    new PolygonPoint() { Latitude = delta.AverageLatitude, Longitude = delta.AverageLongitude };
+                double x, y;
+                latLong.GetCoordinates(out x, out y);
+
+                double height = maxHeight - (counter * increment);
+
+                averagePosition.Add(new Point3D(x, y, height));
+                counter++;
+            }
+
+            TubeVisual3D path = new TubeVisual3D()
+            {
+                Path = new Point3DCollection(averagePosition),
+                Diameter = 0.5,
+                ThetaDiv = 20,
+                IsPathClosed = false,
+                Fill = Brushes.Green
+            };
+            return path;
         }
 
         private TextVisual3D GetCountryText(
