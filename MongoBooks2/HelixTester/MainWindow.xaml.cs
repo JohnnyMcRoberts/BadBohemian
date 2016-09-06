@@ -13,6 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using HelixToolkit.Wpf;
+using System.Windows.Media.Media3D;
+
+using HelixTester.ViewModels;
+
 namespace HelixTester
 {
     /// <summary>
@@ -23,6 +28,8 @@ namespace HelixTester
         public MainWindow()
         {
             InitializeComponent();
+            MainViewModel mainVieWModel = new MainViewModel(this);
+            DataContext = mainVieWModel;
         }
     }
 }
