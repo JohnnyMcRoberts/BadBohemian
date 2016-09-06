@@ -214,7 +214,7 @@ namespace MongoDbBooks.ViewModels
             var top = new Point3D(x, y, height);
             var textStart = new Point3D(x, y+1, height+1);
 
-            meshBuilder.AddArrow(top, textStart, 0.1);
+            meshBuilder.AddArrow(textStart, top, 0.1);
 
             countryGeometry.Geometry = meshBuilder.ToMesh();
             return countryGeometry;
