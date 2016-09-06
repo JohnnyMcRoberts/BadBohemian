@@ -58,26 +58,28 @@
                 <TabControl >
 
                     <TabItem Header="Grids">
-                        <Grid Background="#FFE5E5E5"
-                              Height="{Binding ElementName=UserControl, Path=ActualHeight}"
-                                Width="{Binding ElementName=UserControl, Path=ActualWidth}" >
+                        <Grid Background="#FFE5E5E5" >
                             <Views:BooksGridsView  DataContext="{Binding Path=DataGridsVM}" />
                         </Grid>
                     </TabItem>
 
 
                     <TabItem Header="Charts">
-                        <Grid Background="#FFE5E5E5"
-                              Height="{Binding ElementName=UserControl, Path=ActualHeight}"
-                                Width="{Binding ElementName=UserControl, Path=ActualWidth}" >
+                        <Grid Background="#FFE5E5E5" >
                             <Views:BooksChartsView  DataContext="{Binding Path=ChartsVM}" />
                         </Grid>
                     </TabItem>
 
+
+                    <TabItem Header="3D Diagrams">
+                        <Grid Background="#FFE5E5E5" >
+                            <Views:BooksDiagramsView  DataContext="{Binding Path=DiagramsVM}" />
+                        </Grid>
+                    </TabItem>
+                    
+
                     <TabItem Header="Update">
-                        <Grid Background="#FFE5E5E5"
-                              Height="{Binding ElementName=UserControl, Path=ActualHeight}"
-                                Width="{Binding ElementName=UserControl, Path=ActualWidth}" >
+                        <Grid Background="#FFE5E5E5" >
                             <Views:BooksDataUpdateView  DataContext="{Binding Path=DataUpdaterVM}" />
                         </Grid>
                     </TabItem>

@@ -103,8 +103,7 @@ namespace HelixTester.ViewModels
 
             railing3.Geometry = railingBuilder3.ToMesh();
             modelGroup.Children.Add(railing3);
-
-
+            
             GeometryModel3D railing4 = new GeometryModel3D();
 
             railing4.Material = MaterialHelper.CreateMaterial(Brushes.LightSkyBlue, ambient: 177);

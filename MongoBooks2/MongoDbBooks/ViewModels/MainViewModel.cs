@@ -50,6 +50,7 @@ namespace MongoDbBooks.ViewModels
             _dataUpdaterVM = new DataUpdaterViewModel(_mainWindow, log, _mainModel, this);
             _dataGridsVM = new DataGridsViewModel(_mainWindow, log, _mainModel, this);
             _chartsVM = new ChartsViewModel(_mainWindow, log, _mainModel, this);
+            _diagramsVM = new DiagramsViewModel(_mainWindow, log, _mainModel, this);
 
             if (_mainModel.ConnectedToDbSuccessfully)
                 UpdateData();
@@ -69,6 +70,7 @@ namespace MongoDbBooks.ViewModels
         private DataUpdaterViewModel _dataUpdaterVM;
         private DataGridsViewModel _dataGridsVM;
         private ChartsViewModel _chartsVM;
+        private DiagramsViewModel _diagramsVM;
 
         #endregion
 
@@ -101,12 +103,18 @@ namespace MongoDbBooks.ViewModels
             get { return _chartsVM; }
         }
 
+        public DiagramsViewModel DiagramsVM
+        {
+            get { return _diagramsVM; }
+        }
+
         #endregion
 
         #region Public Methods
 
         public void UpdateData()
         {
+            DiagramsVM.UpdateData();
             ChartsVM.UpdateData();
             DataGridsVM.UpdateData();
             DataUpdaterVM.UpdateData();
