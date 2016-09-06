@@ -13,23 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using HelixToolkit.Wpf;
-using System.Windows.Media.Media3D;
-
-using HelixTester.ViewModels;
-
-namespace HelixTester
+namespace MongoDbBooks.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for BooksDiagramsView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class BooksDiagramsView : UserControl
     {
-        public MainWindow()
+        public BooksDiagramsView()
         {
             InitializeComponent();
-            MainViewModel mainVieWModel = new MainViewModel(this);
-            DataContext = mainVieWModel;
         }
     }
 }
