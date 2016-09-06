@@ -38,6 +38,14 @@
       <HintPath>..\packages\CsvHelper.3.0.0-beta4\lib\net45\CsvHelper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HelixToolkit, Version=2015.1.715.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelixToolkit.2015.1.715\lib\portable-net4+sl4+wp71+win8\HelixToolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HelixToolkit.Wpf, Version=2015.1.715.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelixToolkit.Wpf.2015.1.715\lib\net45\HelixToolkit.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -102,6 +110,7 @@
     <Compile Include="ViewModels\DataGridsViewModel.cs" />
     <Compile Include="ViewModels\DataLoaderViewModel.cs" />
     <Compile Include="ViewModels\DataUpdaterViewModel.cs" />
+    <Compile Include="ViewModels\DiagramsViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\PlotGenerators\AverageDaysPerBookPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\BooksAndPagesLastTenPlotGenerator.cs" />
@@ -116,6 +125,8 @@
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookWithTimePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\IPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\LatitudeWithTimePlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\LongitudeWithTimePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\OverallBookAndPageTalliesPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\PageRatePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\PagesPerBookPlotGenerator.cs" />
@@ -129,6 +140,7 @@
     <Compile Include="ViewModels\PlotGenerators\TotalPagesReadByCountryPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\TotalPagesReadByLanguagePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapBooksReadPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapLastTenLatLongPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPagesReadPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapWithBooksReadPlotGenerator.cs" />
@@ -144,6 +156,9 @@
     </Compile>
     <Compile Include="Views\BooksDataUpdateView.xaml.cs">
       <DependentUpon>BooksDataUpdateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BooksDiagramsView.xaml.cs">
+      <DependentUpon>BooksDiagramsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BooksGridsView.xaml.cs">
       <DependentUpon>BooksGridsView.xaml</DependentUpon>
@@ -166,6 +181,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BooksDataUpdateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BooksDiagramsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

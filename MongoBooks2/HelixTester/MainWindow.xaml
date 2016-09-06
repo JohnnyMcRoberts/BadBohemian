@@ -5,7 +5,9 @@
         Title="Getting Started Demo" Height="480" Width="640">
 
     <h:HelixViewport3D >
-        <h:DefaultLights/>
-        <h:Teapot/>
+        <h:SunLight  />
+        <h:GridLinesVisual3D/>
+        <!-- The content of this visual is defined in MainViewModel.cs -->
+        <ModelVisual3D Content="{Binding Model}"/>
     </h:HelixViewport3D>
 </Window>
