@@ -751,6 +751,7 @@ namespace MongoDbBooks.Models
             }
             else if (totalCount != 0 && BooksRead.Count == 0)
             {
+                RemoveDuplicateBooksRead(booksRead, filter);
 
                 BooksRead.Clear();
 
@@ -762,11 +763,106 @@ namespace MongoDbBooks.Models
                         BooksRead.Add(book);
                     }
                 }
+
+
+
                 UpdateCollections();
                 DataFromFile = false;
                 DataFromDb = true;
             }
+            else if (totalCount != 0 && totalCount < BooksRead.Count)
+            {
+                List<BookRead> missingItems = new List<BookRead>();
+                List<BookRead> existingItems = new List<BookRead>();
+
+                using (var cursor = booksRead.FindSync(filter))
+                {
+                    existingItems = cursor.ToList();
+                }
+
+                // get the missing items
+                foreach (var book in BooksRead)
+                {
+                    bool alreadyThere = false;
+                    foreach (var existing in existingItems)
+                    {
+                        if (book.Title == existing.Title &&
+                            book.Author == existing.Author &&
+                            book.Date == existing.Date)
+                        {
+                            alreadyThere = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyThere)
+                        missingItems.Add(book);
+                }
+
+                // then insert them to the list
+
+                booksRead.InsertMany(missingItems);
+                totalCount = booksRead.Count(filter);
+
+                UpdateCollections();
+                DataFromFile = false;
+                DataFromDb = true;
+            }
+
         }
+
+        private void RemoveDuplicateBooksRead(IMongoCollection<BookRead> booksRead, FilterDefinition<BookRead> filter)
+        {
+            List<BookRead> existingItems = new List<BookRead>();
+
+            using (var cursor = booksRead.FindSync(filter))
+            {
+                existingItems = cursor.ToList();
+            }
+
+            List<BookRead> duplicateBooks = new List<BookRead>();
+
+            for(int i = 0; i < existingItems.Count; i++)
+            {
+                var extBook = existingItems[i];
+
+                // if in the duplicate list skip on
+                bool inDuplicatedList = false;
+                foreach(var dupBook in duplicateBooks)
+                {
+                    if (dupBook.Author == extBook.Author && dupBook.Title == extBook.Title)
+                    {
+                        inDuplicatedList = true;
+                        break;
+                    }
+                }
+                if (inDuplicatedList)
+                    continue;
+
+                // see if duplicates with different dates
+                for (int j = 0; j < existingItems.Count; j++)
+                {
+                    // ignore self
+                    if (j == i) 
+                        continue;
+
+                    var dupBook = existingItems[j];
+
+                    if (dupBook.Author == extBook.Author && dupBook.Title == extBook.Title)
+                    {
+                        duplicateBooks.Add(dupBook);
+                    }
+                }
+            }
+
+            foreach (var dupBook in duplicateBooks)
+            {
+                var remFilter = Builders<BookRead>.Filter.Eq("Id", dupBook.Id);
+                var result = booksRead.Find(remFilter);
+                var asList = result.ToList();
+                booksRead.DeleteMany(remFilter);
+            }
+        }
+
 
         #endregion
 
