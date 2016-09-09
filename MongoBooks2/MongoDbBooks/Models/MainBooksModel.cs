@@ -766,6 +766,44 @@ namespace MongoDbBooks.Models
                 DataFromFile = false;
                 DataFromDb = true;
             }
+            else if (totalCount != 0 && totalCount < BooksRead.Count)
+            {
+                List<BookRead> missingItems = new List<BookRead>();
+                List<BookRead> existingItems = new List<BookRead>();
+
+                using (var cursor = booksRead.FindSync(filter))
+                {
+                    existingItems = cursor.ToList();
+                }
+
+                // get the missing items
+                foreach (var book in BooksRead)
+                {
+                    bool alreadyThere = false;
+                    foreach (var existing in existingItems)
+                    {
+                        if (book.Title == existing.Title &&
+                            book.Author == existing.Author &&
+                            book.Date == existing.Date)
+                        {
+                            alreadyThere = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyThere)
+                        missingItems.Add(book);
+                }
+
+                // then insert them to the list
+
+                booksRead.InsertMany(missingItems);
+                totalCount = booksRead.Count(filter);
+
+                UpdateCollections();
+                DataFromFile = false;
+                DataFromDb = true;
+            }
+
         }
 
         #endregion
