@@ -16,14 +16,9 @@ namespace MongoDbBooks.Models
         Audio = 3
     };
 
-    public class MongoEntity
-    {
-        [BsonId]
-        public ObjectId Id { get; set; }
-    }
 
     [BsonIgnoreExtraElements]
-    public class BookRead : MongoEntity
+    public class BookRead : BaseMongoEntity
     {
         // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio
 

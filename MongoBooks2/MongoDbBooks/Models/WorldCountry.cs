@@ -10,7 +10,7 @@ namespace MongoDbBooks.Models
 {
 
     [BsonIgnoreExtraElements]
-    public class WorldCountry : MongoEntity
+    public class WorldCountry : BaseMongoEntity
     {
         [BsonElement("country")]
         public string Country { get; set; }
