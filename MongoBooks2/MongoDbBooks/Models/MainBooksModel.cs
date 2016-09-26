@@ -758,19 +758,21 @@ namespace MongoDbBooks.Models
                 using (var cursor = booksRead.FindSync(filter))
                 {
                     var booksList = cursor.ToList();
-                    foreach (var book in booksList)
+
+                    var sortedBooks =
+                        (from item in booksList orderby item.Date select item);
+
+                    foreach (var book in sortedBooks)
                     {
                         BooksRead.Add(book);
                     }
                 }
 
-
-
                 UpdateCollections();
                 DataFromFile = false;
                 DataFromDb = true;
             }
-            else if (totalCount != 0 && totalCount < BooksRead.Count)
+            else if (totalCount != 0 && totalCount != BooksRead.Count)
             {
                 List<BookRead> missingItems = new List<BookRead>();
                 List<BookRead> existingItems = new List<BookRead>();
@@ -788,7 +790,7 @@ namespace MongoDbBooks.Models
                     {
                         if (book.Title == existing.Title &&
                             book.Author == existing.Author &&
-                            book.Date == existing.Date)
+                            Math.Abs((book.Date - existing.Date).Hours) < 48)
                         {
                             alreadyThere = true;
                             break;
@@ -829,7 +831,10 @@ namespace MongoDbBooks.Models
                 bool inDuplicatedList = false;
                 foreach(var dupBook in duplicateBooks)
                 {
-                    if (dupBook.Author == extBook.Author && dupBook.Title == extBook.Title)
+                    if (dupBook.Author == extBook.Author &&
+                        dupBook.Title == extBook.Title &&
+                        dupBook.Format == extBook.Format &&
+                        dupBook.Pages == extBook.Pages)
                     {
                         inDuplicatedList = true;
                         break;
@@ -847,9 +852,17 @@ namespace MongoDbBooks.Models
 
                     var dupBook = existingItems[j];
 
-                    if (dupBook.Author == extBook.Author && dupBook.Title == extBook.Title)
+                    if (dupBook.Author == extBook.Author &&
+                        dupBook.Title == extBook.Title &&
+                        dupBook.Format == extBook.Format &&
+                        dupBook.Pages == extBook.Pages)
                     {
-                        duplicateBooks.Add(dupBook);
+                        var timeDiff = dupBook.Date - extBook.Date;
+
+                        if (Math.Abs(timeDiff.Hours) < 48)
+                            duplicateBooks.Add(dupBook);
+                        else
+                            timeDiff = extBook.Date - dupBook.Date;
                     }
                 }
             }

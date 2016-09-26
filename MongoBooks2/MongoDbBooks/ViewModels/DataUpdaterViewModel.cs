@@ -128,7 +128,7 @@ namespace MongoDbBooks.ViewModels
         public DateTime ExistingBookDate
         {
             get { if (_existingBook != null) return _existingBook.Date; return DateTime.Now; }
-            set { _existingBook.Date = value; OnPropertyChanged(() => ExistingBookDateText); }
+            set { if (_existingBook != null) _existingBook.Date = value; OnPropertyChanged(() => ExistingBookDateText); }
         }
         public string ExistingBookAuthor
         {
@@ -138,17 +138,17 @@ namespace MongoDbBooks.ViewModels
         public string ExistingBookTitle
         {
             get { if (_existingBook != null) return _existingBook.Title; return null; }
-            set { _existingBook.Title = value; }
+            set { if (_existingBook != null) _existingBook.Title = value; }
         }
         public UInt16 ExistingBookPages
         {
             get { if (_existingBook != null) return _existingBook.Pages; return 0; }
-            set { _existingBook.Pages = value; }
+            set { if (_existingBook != null) _existingBook.Pages = value; }
         }
         public string ExistingBookNote
         {
             get { if (_existingBook != null) return _existingBook.Note; return null; }
-            set { _existingBook.Note = value; }
+            set { if (_existingBook != null) _existingBook.Note = value; }
         }
         public string ExistingBookNationality
         {
@@ -158,12 +158,12 @@ namespace MongoDbBooks.ViewModels
         public string ExistingBookOriginalLanguage
         {
             get { if (_existingBook != null) return _existingBook.OriginalLanguage; return null; }
-            set { _existingBook.OriginalLanguage = value; }
+            set { if (_existingBook != null) _existingBook.OriginalLanguage = value; }
         }
         public BookFormat ExistingBookFormat
         {
             get { if (_existingBook != null) return _existingBook.Format; return BookFormat.Book; }
-            set { _existingBook.Format = value; OnPropertyChanged(() => ExistingBookFormat); }
+            set { if (_existingBook != null) _existingBook.Format = value; OnPropertyChanged(() => ExistingBookFormat); }
         }
         public string ExistingBookDateText
         { get { if (_existingBook == null) return ""; _existingBook.DateString = GetBookDateText(false); return _existingBook.DateString; } }
