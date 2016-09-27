@@ -38,25 +38,17 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
             List<BooksDelta> deltasSet = new List<BooksDelta>();
 
-
             foreach (var delta in _mainModel.BookDeltas)
             {
                 deltasSet.Add(delta);
                 if (deltasSet.Count < 10) continue;
 
-                BooksDelta start = deltasSet.First();
                 BooksDelta end = deltasSet.Last();
 
-                var daysTaken = end.DaysSinceStart - start.DaysSinceStart;
-                var pagesRead = end.OverallTally.TotalPages - start.OverallTally.TotalPages;
+                double daysTaken = end.LastTenTally.DaysInTally;
+                double pagesRead = end.LastTenTally.TotalPages;
 
-                var endInEnglish =
-                    end.BooksReadToDate.Where(b => b.OriginalLanguage == "English").Count();
-                var startInEnglish =
-                    start.BooksReadToDate.Where(b => b.OriginalLanguage == "English").Count();
-
-                var translated = 
-                    (end.BooksReadToDate.Count() - endInEnglish) - (start.BooksReadToDate.Count() - startInEnglish);
+                double translated = end.LastTenTally.PercentageInTranslation;
                 
                 ScatterPoint point =
                     new ScatterPoint(daysTaken, pagesRead, 5, translated) { Tag = end.Date.ToString("ddd d MMM yyy") };
@@ -64,10 +56,10 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
                 deltasSet.RemoveAt(0);
             }
-            pointsSeries.TrackerFormatString = "{Tag}\n{1}: {2:0.###}\n{3}: {4:0.###}\nTranslated {6}";
+            pointsSeries.TrackerFormatString = "{Tag}\n{1}: {2:0.###}\n{3}: {4:0.###}\nTranslated % {6}";
             newPlot.Series.Add(pointsSeries);
             newPlot.Axes.Add(new LinearColorAxis
-            { Position = AxisPosition.Right, Palette = OxyPalettes.Jet(200), Title = "Number Translated" });
+            { Position = AxisPosition.Right, Palette = OxyPalettes.Jet(200), Title = "Percentage Translated" });
 
             // finally update the model with the new plot
             return newPlot;
