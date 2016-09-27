@@ -41,24 +41,25 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
             double minRate = 1e16;
             double maxRate = 0.0;
-
+            
             foreach (var delta in _mainModel.BookDeltas)
             {
                 deltasSet.Add(delta);
                 if (deltasSet.Count < 10) continue;
 
-                BooksDelta start = deltasSet.First();
                 BooksDelta end = deltasSet.Last();
 
-                var daysTaken = end.DaysSinceStart - start.DaysSinceStart;
-                var pagesRead = end.OverallTally.TotalPages - start.OverallTally.TotalPages;
+                double daysTaken = end.LastTenTally.DaysInTally;
+                double pagesRead = end.LastTenTally.TotalPages;
+                if (daysTaken < 1.0)
+                    daysTaken = 1.0;
                 double rate = pagesRead / daysTaken;
                 ScatterPoint point = 
                     new ScatterPoint(daysTaken, pagesRead, 5, rate) { Tag = end.Date.ToString("ddd d MMM yyy") };
                 pointsSeries.Points.Add(point);
 
                 if (minRate > rate) minRate = rate;
-                if (maxRate > rate) maxRate = rate;
+                if (maxRate < rate) maxRate = rate;
 
                 deltasSet.RemoveAt(0);                
             }
