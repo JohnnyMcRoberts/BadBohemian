@@ -129,6 +129,7 @@
     <Compile Include="ViewModels\PlotGenerators\LatitudeWithTimePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\LongitudeWithTimePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\OverallBookAndPageTalliesPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\OxyPlotPair.cs" />
     <Compile Include="ViewModels\PlotGenerators\PageRatePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\PagesPerBookPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\PagesPerDayWithTimePlotGenerator.cs" />
