@@ -10,6 +10,19 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
+
+using _3DTools;
+//using Petzold.Media3D;
+
 namespace HelixTester.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
@@ -56,18 +69,205 @@ namespace HelixTester.ViewModels
             //modelGroup.Children.Add(rectangle.Model);
             //modelGroup.Children.Add(sphere.Model);
 
+            /*
+
+            Point3D point;
+            Point3D point2;
+            Point3D point3;
+            Point3D point4;
+            AddElementsPart2(modelGroup, out point, out point2, out point3, out point4);
+
+
+            TubeVisual3D path = new TubeVisual3D()
+            {
+                Path =  new Point3DCollection(new List<Point3D>(){
+                point + new Vector3D(0, 0, 20),
+                point2 + new Vector3D(0, 0, 19),
+                point3 + new Vector3D(0, 0, 18),
+                point4 + new Vector3D(0, 0, 17)
+                }),
+                Diameter = 0.5,
+                ThetaDiv = 20,
+                IsPathClosed = false,
+                Fill = Brushes.Green
+                //Fill = new Brush() { Colors.Blue}
+            };
+
+            modelGroup.Children.Add(path.Content);
+
+            */
+            //AddSolidBox(modelGroup);
+
+            AddRevolved(modelGroup);
+
+
+            
+            HelixVisual3D helixItem = new HelixVisual3D();
+            helixItem.Fill = new SolidColorBrush(Colors.Violet);
+            helixItem.Origin = new Point3D(0,0,-0.45);
+            helixItem.Diameter = 0.1;
+            helixItem.Turns = 2;
+            helixItem.Length = 0.9;
+            helixItem.Radius = 0.35;
+            
+            modelGroup.Children.Add(helixItem.Content);
+            //modelGroup.Children.Add(box.Content);
+
+
+                       //<helix:HelixVisual3D 
+                           //Origin="0 0 -0.45" 
+            //Diameter="0.1" 
+            //Turns="2" 
+            //Length="0.9" 
+            //Radius="0.35" 
+            //Fill="Violet" 
+            //Visible="{Binding IsChecked, ElementName=HelixVisible}"/>
+
+
+            numberOfPoints = 100;
+
+           // wireLines = new WireLines { Color = Colors.Black, Thickness = 3,  };
+            Points = new Point3DCollection(GeneratePoints(numberOfPoints, 7000 * 0.001));
+            //wireLines.Lines = Points;
+
+
+            //modelGroup.Children.Add(wireLines.Content);
+
+
+            var y0 = 0d;
+            var theta = Math.PI / 180 * 30;
+            var roofBuilder = new MeshBuilder(false, false);
+            var y1 = y0 + Math.Tan(theta) * 5 / 2;
+            var p0 = new Point(0, y1);
+            var p1 = new Point(5 / 2 + 0.2 * Math.Cos(theta), y0 - 0.2 * Math.Sin(theta));
+            var p2 = new Point(p1.X + 0.1 * Math.Sin(theta), p1.Y + 0.1 * Math.Cos(theta));
+            var p3 = new Point(0, y1 + 0.1 / Math.Cos(theta));
+            var p4 = new Point(-p2.X, p2.Y);
+            var p5 = new Point(-p1.X, p1.Y);
+
+
+            IList<Point> roofSection = new List<Point>() { p0, p1, p1, p2, p2, p3, p3, p4, p4, p5, p5, p0 };
+            var roofAxisX = new Vector3D(0, -1, 0);
+            var roofAxisY = new Vector3D(0, 0, 1);
+            var roofOrigin = new Point3D(1, 1, 1);
+            //roofBuilder.AddPolygon(roofSection, roofAxisX, roofAxisY, roofOrigin);
+
+
+            Point3DCollection simplePoly = new System.Windows.Media.Media3D.Point3DCollection(
+            new List<Point3D>(){
+                new Point3D(1,0, 1),
+                new Point3D(1,1, -1),
+                new Point3D(0,1, -1),
+                new Point3D(0,0, 1),
+                //new Point3D(1,0, 1),
+            }
+            );
+
+
+            roofBuilder.AddPolygon(simplePoly);
+
+            GeometryModel3D roofGeometry = new GeometryModel3D();
+
+            //var material = MaterialHelper.CreateMaterial(Brushes.LightBlue, ambient: 77, freeze: false);
+            var material = MaterialHelper.CreateMaterial(Colors.LightBlue, 0.25);
+
+
+            roofGeometry.Material = material;
+
+            roofGeometry.Geometry = roofBuilder.ToMesh(true);
+            modelGroup.Children.Add(roofGeometry);
+          
+
+
+            //ScreenSpaceLines3D Wireframe = new ScreenSpaceLines3D();
+
+            //Wireframe.Thickness = 2;
+            //Wireframe.Color = Colors.Black;
+            //Wireframe.Points = simplePoly;
+            ////Wireframe.MakeWireframe(roofGeometry);
+            //modelGroup.Children.Add(Wireframe.Content);
+
+            this.Model = modelGroup;
+            
+
+
+        }
+        public Point3DCollection Points;
+
+        public static IEnumerable<Point3D> GeneratePoints(int n, double time)
+        {
+            const double R = 2;
+            const double Q = 0.5;
+            for (int i = 0; i < n; i++)
+            {
+                double t = Math.PI * 2 * i / (n - 1);
+                double u = (t * 24) + (time * 5);
+                var pt = new Point3D(Math.Cos(t) * (R + (Q * Math.Cos(u))), Math.Sin(t) * (R + (Q * Math.Cos(u))), Q * Math.Sin(u));
+                yield return pt;
+                if (i > 0 && i < n - 1)
+                {
+                    yield return pt;
+                }
+            }
+        }
+
+        private int numberOfPoints;
+
+        private LinesVisual3D linesVisual;
+        private PointsVisual3D pointsVisual;
+        //private ScreenSpaceLines3D screenSpaceLines;
+        //private WireLines wireLines;
+
+        private Point3DCollection points;
+
+
+        private static void AddSolidBox(Model3DGroup modelGroup)
+        {
+
+
+            GeometryBoxVisual3D box = new GeometryBoxVisual3D();
+            box.Fill = new SolidColorBrush(Colors.Red);
+            modelGroup.Children.Add(box.Content);
+            MeshGeometry3D geometry3 = box.Geometry();
+            LinesVisual3D lines = new LinesVisual3D();
+            lines.Thickness = 3;
+            lines.Points = geometry3.Positions;
+            lines.Color = Colors.Black;
+            lines.Transform = new TranslateTransform3D(3.5, 1.5, 2.5);
+            modelGroup.Children.Add(lines.Content);
+        }
+
+        private static void AddRevolved(Model3DGroup modelGroup)
+        {
+
+
+            GeometryModel3D railingRevolvedGeometry = new GeometryModel3D();
+
+            railingRevolvedGeometry.Material = MaterialHelper.CreateMaterial(Brushes.LightBlue, ambient: 77);
+
+            var builder = new MeshBuilder(true, true);
+            var profile = new[] { new Point(0, 0.4), new Point(0.06, 0.36), new Point(0.1, 0.1), new Point(0.34, 0.1), new Point(0.4, 0.14), new Point(0.5, 0.5), new Point(0.7, 0.56), new Point(1, 0.46) };
+            builder.AddRevolvedGeometry(profile, null, new Point3D(0, 0, 0), new Vector3D(0, 0, 1), 100);
+            railingRevolvedGeometry.Geometry = builder.ToMesh(true);
+            modelGroup.Children.Add(railingRevolvedGeometry);
+
+        }
+
+        private static void AddElementsPart2(Model3DGroup modelGroup, 
+            out Point3D point, out Point3D point2, out Point3D point3, out Point3D point4)
+        {
 
 
             GeometryModel3D railing = new GeometryModel3D();
 
             railing.Material = MaterialHelper.CreateMaterial(Brushes.LightPink, ambient: 55);
             var railingBuilder = new MeshBuilder(false, false);
-            
+
             double height = 5;
             double diameter = 3;
-            var point = new Point3D(3, 3, 3);
+            point = new Point3D(3, 3, 3);
             railingBuilder.AddCylinder(point, point + new Vector3D(0, 0, height), diameter, 10);
-            railingBuilder.AddSphere(point, diameter *0.75);
+            railingBuilder.AddSphere(point, diameter * 0.75);
 
             railing.Geometry = railingBuilder.ToMesh();
             modelGroup.Children.Add(railing);
@@ -80,7 +280,7 @@ namespace HelixTester.ViewModels
 
             double height2 = 12;
             double diameter2 = 4;
-            var point2 = new Point3D(-4, -4, -4);
+            point2 = new Point3D(-4, -4, -4);
             railingBuilder2.AddCylinder(point2, point2 + new Vector3D(0, 0, height2), diameter2, 10);
             railingBuilder2.AddSphere(point2, 2 * diameter2);
 
@@ -96,14 +296,14 @@ namespace HelixTester.ViewModels
 
             double height3 = 12;
             double diameter3 = 4;
-            var point3 = new Point3D(-7, 5, -3);
+            point3 = new Point3D(-7, 5, -3);
             //railingBuilder3.AddCylinder(point3, point3 + new Vector3D(0, 0, height3), diameter2, 10);
             //railingBuilder3.AddSphere(point3, 2 * diameter3);
             railingBuilder3.AddCone(point3, point3 + new Vector3D(0, 0, height3), diameter3, false, 15);
 
             railing3.Geometry = railingBuilder3.ToMesh();
             modelGroup.Children.Add(railing3);
-            
+
             GeometryModel3D railing4 = new GeometryModel3D();
 
             railing4.Material = MaterialHelper.CreateMaterial(Brushes.LightSkyBlue, ambient: 177);
@@ -111,7 +311,7 @@ namespace HelixTester.ViewModels
 
             double height4 = 10;
             double diameter4 = 4;
-            var point4 = new Point3D(-14, 4, -4);
+            point4 = new Point3D(-14, 4, -4);
             //railingBuilder3.AddCylinder(point3, point3 + new Vector3D(0, 0, height3), diameter2, 10);
             //railingBuilder3.AddSphere(point3, 2 * diameter3);
 
@@ -132,40 +332,25 @@ namespace HelixTester.ViewModels
                 //Padding  = System.Windows.Thickness,
                 FontWeight = System.Windows.FontWeights.Normal,
                 IsDoubleSided = true,
-                Position = point3 + new Vector3D(0, 0, height3+1),
+                Position = point3 + new Vector3D(0, 0, height3 + 1),
                 UpDirection = new Vector3D(0, 0, 1),
-                TextDirection = new Vector3D(0,1,0),
+                TextDirection = new Vector3D(0, 1, 0),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Bottom,
-                Text = "testc TExt for 3 £"
+                Text = "test Text for £3 ono"
             };
 
 
             modelGroup.Children.Add(text.Content);
 
+        }
 
-
-            TubeVisual3D path = new TubeVisual3D()
+        public class GeometryBoxVisual3D : BoxVisual3D
+        {
+            public MeshGeometry3D Geometry()
             {
-                Path =  new Point3DCollection(new List<Point3D>(){
-                point + new Vector3D(0, 0, 20),
-                point2 + new Vector3D(0, 0, 19),
-                point3 + new Vector3D(0, 0, 18),
-                point4 + new Vector3D(0, 0, 17)
-                }),
-                Diameter = 0.5,
-                ThetaDiv = 20,
-                IsPathClosed = false,
-                Fill = Brushes.Green
-                //Fill = new Brush() { Colors.Blue}
-            };
-
-            modelGroup.Children.Add(path.Content);
-
-
-            this.Model = modelGroup;
-
-
+                return Tessellate();
+            }
         }
 
         private static RectangleVisual3D GenerateRectangle()
