@@ -49,272 +49,71 @@ namespace MongoDbBooks.ViewModels
         private MainBooksModel _mainModel;
         private MainViewModel _parent;
 
-        private PlotModel _plotOverallBookAndPageTallies;
-        private PlotModel _plotDaysPerBook;
-        private PlotModel _plotPageRate;
-        private PlotModel _plotPagesPerBook;
-        private PlotModel _plotBooksInTranslation;
-        private PlotModel _plotDaysPerBookWithTime;
-        private PlotModel _plotPagesPerDayWithTime;
-        private PlotModel _plotAverageDaysPerBook;
-        private PlotModel _plotPercentageBooksReadByLanguage;
-        private PlotModel _plotTotalBooksReadByLanguage;
-        private PlotModel _plotPercentagePagesReadByLanguage;
-        private PlotModel _plotTotalPagesReadByLanguage;
-        private PlotModel _plotPercentageBooksReadByCountry;
-        private PlotModel _plotTotalBooksReadByCountry;
-        private PlotModel _plotPercentagePagesReadByCountry;
-        private PlotModel _plotTotalPagesReadByCountry;
-        private PlotModel _plotBooksAndPagesThisYear;
-
-        private PlotModel _plotCurrentPagesReadByCountry;
-        private PlotModel _plotCurrentBooksReadByCountry;
-
-        private PlotModel _plotBooksAndPagesLastTen;
-        private PlotModel _plotBooksAndPagesLastTenTranslation;
-
-        private PlotModel _plotCountryLocationsBooksAndPages;
-        private PlotModel _plotCountryLocationsBooksRead;
-
-        private PlotModel _plotWorldCountriesMap;
-        private PlotModel _plotWorldCountriesMapBooksRead;
-        private PlotModel _plotWorldCountriesMapPagesRead;
-        private PlotModel _plotWorldCountriesMapWithBooksRead;
-        private PlotModel _plotLatitudeWithTime;
-        private PlotModel _plotLongitudeWithTime;
-        private PlotModel _plotWorldCountriesMapLastTenLatLong;
-
         #endregion
 
         #region Public properties
 
-        public PlotModel PlotOverallBookAndPageTalliesModel
-        {
-            get { return _plotOverallBookAndPageTallies; }
-            private set { _plotOverallBookAndPageTallies = value; }
-        }
-        public IPlotController PlotOverallBookAndPageTalliesViewController { get; private set; }
+        public OxyPlotPair PlotOverallBookAndPageTallies { get; private set; }
 
-        public PlotModel PlotDaysPerBookModel
-        {
-            get { return _plotDaysPerBook; }
-            private set { _plotDaysPerBook = value; }
-        }
-        public IPlotController PlotDaysPerBookViewController { get; private set; }
+        public OxyPlotPair PlotDaysPerBook { get; private set; }
 
+        public OxyPlotPair PlotPageRate { get; private set; }
 
-        public PlotModel PlotPageRateModel
-        {
-            get { return _plotPageRate; }
-            private set { _plotPageRate = value; }
-        }
-        public IPlotController PlotPageRateViewController { get; private set; }
+        public OxyPlotPair PlotPagesPerBook { get; private set; }
 
+        public OxyPlotPair PlotBooksInTranslation { get; private set; }
 
-        public PlotModel PlotPagesPerBookModel
-        {
-            get { return _plotPagesPerBook; }
-            private set { _plotPagesPerBook = value; }
-        }
-        public IPlotController PlotPagesPerBookViewController { get; private set; }
+        public OxyPlotPair PlotDaysPerBookWithTime { get; private set; }
 
+        public OxyPlotPair PlotPagesPerDayWithTime { get; private set; }
 
-        public PlotModel PlotBooksInTranslationModel
-        {
-            get { return _plotBooksInTranslation; }
-            private set { _plotBooksInTranslation = value; }
-        }
-        public IPlotController PlotBooksInTranslationViewController { get; private set; }
+        public OxyPlotPair PlotAverageDaysPerBook { get; private set; }
 
+        public OxyPlotPair PlotPercentageBooksReadByLanguage { get; private set; }
 
-        public PlotModel PlotDaysPerBookWithTimeModel
-        {
-            get { return _plotDaysPerBookWithTime; }
-            private set { _plotDaysPerBookWithTime = value; }
-        }
-        public IPlotController PlotDaysPerBookWithTimeViewController { get; private set; }
+        public OxyPlotPair PlotTotalBooksReadByLanguage { get; private set; }
 
+        public OxyPlotPair PlotPercentagePagesReadByLanguage { get; private set; }
 
-        public PlotModel PlotPagesPerDayWithTimeModel
-        {
-            get { return _plotPagesPerDayWithTime; }
-            private set { _plotPagesPerDayWithTime = value; }
-        }
-        public IPlotController PlotPagesPerDayWithTimeViewController { get; private set; }
+        public OxyPlotPair PlotTotalPagesReadByLanguage { get; private set; }
 
+        public OxyPlotPair PlotPercentageBooksReadByCountry { get; private set; }
 
-        public PlotModel PlotAverageDaysPerBookModel
-        {
-            get { return _plotAverageDaysPerBook; }
-            private set { _plotAverageDaysPerBook = value; }
-        }
-        public IPlotController PlotAverageDaysPerBookViewController { get; private set; }
+        public OxyPlotPair PlotTotalBooksReadByCountry { get; private set; }
 
+        public OxyPlotPair PlotPercentagePagesReadByCountry { get; private set; }
 
-        public PlotModel PlotPercentageBooksReadByLanguageModel
-        {
-            get { return _plotPercentageBooksReadByLanguage; }
-            private set { _plotPercentageBooksReadByLanguage = value; }
-        }
-        public IPlotController PlotPercentageBooksReadByLanguageViewController { get; private set; }
+        public OxyPlotPair PlotTotalPagesReadByCountry { get; private set; }
 
+        public OxyPlotPair PlotBooksAndPagesThisYear { get; private set; }
 
-        public PlotModel PlotTotalBooksReadByLanguageModel
-        {
-            get { return _plotTotalBooksReadByLanguage; }
-            private set { _plotTotalBooksReadByLanguage = value; }
-        }
-        public IPlotController PlotTotalBooksReadByLanguageViewController { get; private set; }
+        public OxyPlotPair PlotCurrentPagesReadByCountry { get; private set; }
 
+        public OxyPlotPair PlotCurrentBooksReadByCountry { get; private set; }
 
-        public PlotModel PlotPercentagePagesReadByLanguageModel
-        {
-            get { return _plotPercentagePagesReadByLanguage; }
-            private set { _plotPercentagePagesReadByLanguage = value; }
-        }
-        public IPlotController PlotPercentagePagesReadByLanguageViewController { get; private set; }
+        public OxyPlotPair PlotBooksAndPagesLastTen { get; private set; }
 
+        public OxyPlotPair PlotBooksAndPagesLastTenTranslation { get; private set; }
 
-        public PlotModel PlotTotalPagesReadByLanguageModel
-        {
-            get { return _plotTotalPagesReadByLanguage; }
-            private set { _plotTotalPagesReadByLanguage = value; }
-        }
-        public IPlotController PlotTotalPagesReadByLanguageViewController { get; private set; }
+        public OxyPlotPair PlotCountryLocationsBooksAndPages { get; private set; }
 
+        public OxyPlotPair PlotCountryLocationsBooksRead { get; private set; }
 
-        public PlotModel PlotPercentageBooksReadByCountryModel
-        {
-            get { return _plotPercentageBooksReadByCountry; }
-            private set { _plotPercentageBooksReadByCountry = value; }
-        }
-        public IPlotController PlotPercentageBooksReadByCountryViewController { get; private set; }
+        public OxyPlotPair PlotWorldCountriesMap { get; private set; }
 
+        public OxyPlotPair PlotWorldCountriesMapBooksRead { get; private set; }
 
-        public PlotModel PlotTotalBooksReadByCountryModel
-        {
-            get { return _plotTotalBooksReadByCountry; }
-            private set { _plotTotalBooksReadByCountry = value; }
-        }
-        public IPlotController PlotTotalBooksReadByCountryViewController { get; private set; }
+        public OxyPlotPair PlotWorldCountriesMapPagesRead { get; private set; }
 
+        public OxyPlotPair PlotWorldCountriesMapWithBooksRead { get; private set; }
 
-        public PlotModel PlotPercentagePagesReadByCountryModel
-        {
-            get { return _plotPercentagePagesReadByCountry; }
-            private set { _plotPercentagePagesReadByCountry = value; }
-        }
-        public IPlotController PlotPercentagePagesReadByCountryViewController { get; private set; }
+        public OxyPlotPair PlotLatitudeWithTime { get; private set; }
 
+        public OxyPlotPair PlotLongitudeWithTime { get; private set; }
 
-        public PlotModel PlotTotalPagesReadByCountryModel
-        {
-            get { return _plotTotalPagesReadByCountry; }
-            private set { _plotTotalPagesReadByCountry = value; }
-        }
-        public IPlotController PlotTotalPagesReadByCountryViewController { get; private set; }
+        public OxyPlotPair PlotWorldCountriesMapLastTenLatLong { get; private set; }
 
-
-        public PlotModel PlotBooksAndPagesThisYearModel
-        {
-            get { return _plotBooksAndPagesThisYear; }
-            private set { _plotBooksAndPagesThisYear = value; }
-        }
-        public IPlotController PlotBooksAndPagesThisYearViewController { get; private set; }
-
-
-        public PlotModel PlotCurrentPagesReadByCountryModel
-        {
-            get { return _plotCurrentPagesReadByCountry; }
-            private set { _plotCurrentPagesReadByCountry = value; }
-        }
-        public IPlotController PlotCurrentPagesReadByCountryViewController { get; private set; }
-
-
-        public PlotModel PlotCurrentBooksReadByCountryModel
-        {
-            get { return _plotCurrentBooksReadByCountry; }
-            private set { _plotCurrentBooksReadByCountry = value; }
-        }
-        public IPlotController PlotCurrentBooksReadByCountryViewController { get; private set; }
-
-
-        public PlotModel PlotBooksAndPagesLastTenModel
-        {
-            get { return _plotBooksAndPagesLastTen; }
-            private set { _plotBooksAndPagesLastTen = value; }
-        }
-        public IPlotController PlotBooksAndPagesLastTenViewController { get; private set; }
-
-        public PlotModel PlotBooksAndPagesLastTenTranslationModel
-        {
-            get { return _plotBooksAndPagesLastTenTranslation; }
-            private set { _plotBooksAndPagesLastTenTranslation = value; }
-        }
-        public IPlotController PlotBooksAndPagesLastTenTranslationViewController { get; private set; }
-
-        public PlotModel PlotCountryLocationsBooksAndPagesModel
-        {
-            get { return _plotCountryLocationsBooksAndPages; }
-            private set { _plotCountryLocationsBooksAndPages = value; }
-        }
-        public IPlotController PlotCountryLocationsBooksAndPagesViewController { get; private set; }
-
-        public PlotModel PlotCountryLocationsBooksReadModel
-        {
-            get { return _plotCountryLocationsBooksRead; }
-            private set { _plotCountryLocationsBooksRead = value; }
-        }
-        public IPlotController PlotCountryLocationsBooksReadViewController { get; private set; }
-
-        public PlotModel PlotWorldCountriesMapModel
-        {
-            get { return _plotWorldCountriesMap; }
-            private set { _plotWorldCountriesMap = value; }
-        }
-        public IPlotController PlotWorldCountriesMapViewController { get; private set; }
-
-        public PlotModel PlotWorldCountriesMapBooksReadModel
-        {
-            get { return _plotWorldCountriesMapBooksRead; }
-            private set { _plotWorldCountriesMapBooksRead = value; }
-        }
-        public IPlotController PlotWorldCountriesMapBooksReadViewController { get; private set; }
-
-        public PlotModel PlotWorldCountriesMapPagesReadModel
-        {
-            get { return _plotWorldCountriesMapPagesRead; }
-            private set { _plotWorldCountriesMapPagesRead = value; }
-        }
-        public IPlotController PlotWorldCountriesMapPagesReadViewController { get; private set; }
-
-        public PlotModel PlotWorldCountriesMapWithBooksReadModel
-        {
-            get { return _plotWorldCountriesMapWithBooksRead; }
-            private set { _plotWorldCountriesMapWithBooksRead = value; }
-        }
-        public IPlotController PlotWorldCountriesMapWithBooksReadViewController { get; private set; }
-
-        public PlotModel PlotLatitudeWithTimeModel
-        {
-            get { return _plotLatitudeWithTime; }
-            private set { _plotLatitudeWithTime = value; }
-        }
-        public IPlotController PlotLatitudeWithTimeViewController { get; private set; }
-
-        public PlotModel PlotLongitudeWithTimeModel
-        {
-            get { return _plotLongitudeWithTime; }
-            private set { _plotLongitudeWithTime = value; }
-        }
-        public IPlotController PlotLongitudeWithTimeViewController { get; private set; }
-
-        public PlotModel PlotWorldCountriesMapLastTenLatLongModel
-        {
-            get { return _plotWorldCountriesMapLastTenLatLong; }
-            private set { _plotWorldCountriesMapLastTenLatLong = value; }
-        }
-        public IPlotController PlotWorldCountriesMapLastTenLatLongViewController { get; private set; }
+        public OxyPlotPair PlotTalliesPerCalendarYear { get; private set; }
 
         #endregion
 
@@ -329,67 +128,71 @@ namespace MongoDbBooks.ViewModels
             _mainModel = mainModel;
             _parent = parent;
 
+            PlotOverallBookAndPageTallies = 
+                new OxyPlotPair( new OverallBookAndPageTalliesPlotGenerator(), "OverallBookAndPage");
+            PlotDaysPerBook =
+                new OxyPlotPair(new DaysPerBookPlotGenerator(), "DaysPerBook");
+            PlotPageRate =
+                new OxyPlotPair(new PageRatePlotGenerator(), "PageRate");
+            PlotPagesPerBook =
+                new OxyPlotPair(new PagesPerBookPlotGenerator(), "PagesPerBook");
+            PlotBooksInTranslation =
+                new OxyPlotPair(new BooksInTranslationPlotGenerator(), "BooksInTranslation");
+            PlotDaysPerBookWithTime =
+                new OxyPlotPair(new DaysPerBookWithTimePlotGenerator(), "DaysPerBook");
+            PlotPagesPerDayWithTime =
+                new OxyPlotPair(new PagesPerDayWithTimePlotGenerator(), "PagesPerDayWithTime");
+            PlotAverageDaysPerBook =
+                new OxyPlotPair(new AverageDaysPerBookPlotGenerator(), "AverageDaysPerBook");
+            PlotPercentageBooksReadByLanguage =
+                new OxyPlotPair(new PercentageBooksReadByLanguagePlotGenerator(), "PercentageBooksReadByLanguage");
+            PlotTotalBooksReadByLanguage =
+                new OxyPlotPair(new TotalBooksReadByLanguagePlotGenerator(), "TotalBooksReadByLanguage");
+            PlotPercentagePagesReadByLanguage =
+                new OxyPlotPair(new PercentagePagesReadByLanguagePlotGenerator(), "PercentagePagesReadByLanguage");
+            PlotTotalPagesReadByLanguage =
+                new OxyPlotPair(new TotalPagesReadByLanguagePlotGenerator(), "TotalPagesReadByLanguage");
+            PlotPercentageBooksReadByCountry =
+                new OxyPlotPair(new PercentageBooksReadByCountryPlotGenerator(), "PercentageBooksReadByCountry");
+            PlotTotalBooksReadByCountry =
+                new OxyPlotPair(new TotalBooksReadByCountryPlotGenerator(), "TotalBooksReadByCountry");
+            PlotPercentagePagesReadByCountry =
+                new OxyPlotPair(new PercentagePagesReadByCountryPlotGenerator(), "PercentagePagesReadByCountry");
+            PlotTotalPagesReadByCountry =
+                new OxyPlotPair(new TotalPagesReadByCountryPlotGenerator(), "TotalPagesReadByCountry");
+            PlotTotalPagesReadByLanguage =
+                new OxyPlotPair(new TotalPagesReadByLanguagePlotGenerator(), "TotalPagesReadByLanguage");
+            PlotBooksAndPagesThisYear =
+                new OxyPlotPair(new BooksAndPagesThisYearPlotGenerator(), "BooksAndPagesThisYear");
+            PlotCurrentPagesReadByCountry =
+                new OxyPlotPair(new CurrentPagesReadByCountryPlotGenerator(), "CurrentPagesReadByCountry");
+            PlotCurrentBooksReadByCountry =
+                new OxyPlotPair(new CurrentBooksReadByCountryPlotGenerator(), "CurrentBooksReadByCountry");
+            PlotBooksAndPagesLastTen =
+                new OxyPlotPair(new BooksAndPagesLastTenPlotGenerator(), "BooksAndPagesLastTen", true);
+            PlotBooksAndPagesLastTenTranslation =
+                new OxyPlotPair(new BooksAndPagesLastTenTranslationPlotGenerator(), "BooksAndPagesLastTenTranslation", true);
+            PlotCountryLocationsBooksAndPages =
+                new OxyPlotPair(new CountryLocationsBooksAndPagesPlotGenerator(), "CountryLocationsBooksAndPages", true);
+            PlotCountryLocationsBooksRead =
+                new OxyPlotPair(new CountryLocationsBooksReadPlotGenerator(), "CountryLocationsBooksRead", true);
+            PlotLatitudeWithTime =
+                new OxyPlotPair(new LatitudeWithTimePlotGenerator(), "LatitudeWithTime");
+            PlotLongitudeWithTime =
+                new OxyPlotPair(new LongitudeWithTimePlotGenerator(), "LongitudeWithTime");
+            PlotTalliesPerCalendarYear =
+                new OxyPlotPair(new TalliesPerCalendarYearPlotGenerator(), "TalliesPerCalendar");
 
-            PlotOverallBookAndPageTalliesViewController =
-                InitialisePlotModelAndController(ref _plotOverallBookAndPageTallies, "OverallBookAndPage");
-            PlotDaysPerBookViewController =
-                InitialisePlotModelAndController(ref _plotDaysPerBook, "DaysPerBook");
-            PlotPageRateViewController =
-                InitialisePlotModelAndController(ref _plotPageRate, "PageRate");
-            PlotPagesPerBookViewController =
-                InitialisePlotModelAndController(ref _plotPagesPerBook, "PagesPerBook");
-            PlotBooksInTranslationViewController =
-                InitialisePlotModelAndController(ref _plotBooksInTranslation, "BooksInTranslation");
-            PlotDaysPerBookWithTimeViewController =
-                InitialisePlotModelAndController(ref _plotDaysPerBookWithTime, "DaysPerBook");
-            PlotPagesPerDayWithTimeViewController =
-                InitialisePlotModelAndController(ref _plotPagesPerDayWithTime, "PagesPerDayWithTime");
-            PlotAverageDaysPerBookViewController =
-                InitialisePlotModelAndController(ref _plotAverageDaysPerBook, "AverageDaysPerBook");
-            PlotPercentageBooksReadByLanguageViewController =
-                InitialisePlotModelAndController(ref _plotPercentageBooksReadByLanguage, "PercentageBooksReadByLanguage");
-            PlotTotalBooksReadByLanguageViewController =
-                InitialisePlotModelAndController(ref _plotTotalBooksReadByLanguage, "TotalBooksReadByLanguage");
-            PlotPercentagePagesReadByLanguageViewController =
-                InitialisePlotModelAndController(ref _plotPercentagePagesReadByLanguage, "PercentagePagesReadByLanguage");
-            PlotTotalPagesReadByLanguageViewController =
-                InitialisePlotModelAndController(ref _plotTotalPagesReadByLanguage, "TotalPagesReadByLanguage");
-            PlotPercentageBooksReadByCountryViewController =
-                InitialisePlotModelAndController(ref _plotPercentageBooksReadByCountry, "PercentageBooksReadByCountry");
-            PlotTotalBooksReadByCountryViewController =
-                InitialisePlotModelAndController(ref _plotTotalBooksReadByCountry, "TotalBooksReadByCountry");
-            PlotPercentagePagesReadByCountryViewController =
-                InitialisePlotModelAndController(ref _plotPercentagePagesReadByCountry, "PercentagePagesReadByCountry");
-            PlotTotalPagesReadByLanguageViewController =
-                InitialisePlotModelAndController(ref _plotTotalPagesReadByCountry, "TotalPagesReadByCountry");
-            PlotBooksAndPagesThisYearViewController =
-                InitialisePlotModelAndController(ref _plotBooksAndPagesThisYear, "BooksAndPagesThisYear");
-            PlotCurrentPagesReadByCountryViewController =
-                InitialisePlotModelAndController(ref _plotCurrentPagesReadByCountry, "CurrentPagesReadByCountry");
-            PlotCurrentBooksReadByCountryViewController =
-                InitialisePlotModelAndController(ref _plotCurrentBooksReadByCountry, "CurrentBooksReadByCountry");
-            PlotBooksAndPagesLastTenViewController =
-                InitialisePlotModelAndController(ref _plotBooksAndPagesLastTen, "BooksAndPagesLastTen", true);
-            PlotBooksAndPagesLastTenTranslationViewController =
-                InitialisePlotModelAndController(ref _plotBooksAndPagesLastTenTranslation, "BooksAndPagesLastTenTranslation",true);
-            PlotCountryLocationsBooksAndPagesViewController =
-                InitialisePlotModelAndController(ref _plotCountryLocationsBooksAndPages, "CountryLocationsBooksAndPages",true);
-            PlotCountryLocationsBooksReadViewController =
-                InitialisePlotModelAndController(ref _plotCountryLocationsBooksRead, "CountryLocationsBooksRead", true);
-            PlotWorldCountriesMapViewController =
-                InitialisePlotModelAndController(ref _plotWorldCountriesMap, "WorldCountriesMap", true);
-            PlotWorldCountriesMapBooksReadViewController =
-                InitialisePlotModelAndController(ref _plotWorldCountriesMapBooksRead, "WorldCountriesMapBooksRead", true);
-            PlotWorldCountriesMapPagesReadViewController =
-                InitialisePlotModelAndController(ref _plotWorldCountriesMapPagesRead, "WorldCountriesMapPagesRead", true);
-            PlotWorldCountriesMapWithBooksReadViewController =
-                InitialisePlotModelAndController(ref _plotWorldCountriesMapBooksRead, "WorldCountriesMapWithBooksRead", true);
-            PlotLatitudeWithTimeViewController =
-                InitialisePlotModelAndController(ref _plotLatitudeWithTime, "LatitudeWithTime");
-            PlotLongitudeWithTimeViewController =
-                InitialisePlotModelAndController(ref _plotLongitudeWithTime, "LongitudeWithTime");
-            PlotWorldCountriesMapLastTenLatLongViewController =
-                InitialisePlotModelAndController(ref _plotWorldCountriesMapLastTenLatLong, "WorldCountriesMapLastTenLatLong", true);
+            PlotWorldCountriesMap =
+                new OxyPlotPair(new WorldCountriesMapPlotGenerator(), "WorldCountriesMap", true);
+            PlotWorldCountriesMapBooksRead =
+                new OxyPlotPair(new WorldCountriesMapBooksReadPlotGenerator(), "WorldCountriesMapBooksRead", true);
+            PlotWorldCountriesMapPagesRead =
+                new OxyPlotPair(new WorldCountriesMapPagesReadPlotGenerator(), "WorldCountriesMapPagesRead", true);
+            PlotWorldCountriesMapWithBooksRead =
+                new OxyPlotPair(new WorldCountriesMapWithBooksReadPlotGenerator(), "WorldCountriesMapWithBooksRead", true);
+            PlotWorldCountriesMapLastTenLatLong =
+                new OxyPlotPair(new WorldCountriesMapLastTenLatLongPlotGenerator(), "WorldCountriesMapLastTenLatLong", true);
 
         }
 
@@ -403,81 +206,43 @@ namespace MongoDbBooks.ViewModels
             if (_mainModel == null || _mainModel.BooksRead == null || _mainModel.BooksRead.Count == 0)
                 return;
 
-            PlotOverallBookAndPageTalliesModel = (new OverallBookAndPageTalliesPlotGenerator()).SetupPlot(_mainModel);
-            PlotDaysPerBookModel = (new DaysPerBookPlotGenerator()).SetupPlot(_mainModel);
-            PlotPageRateModel = (new PageRatePlotGenerator()).SetupPlot(_mainModel);
-            PlotPagesPerBookModel = (new PagesPerBookPlotGenerator()).SetupPlot(_mainModel);
-            PlotBooksInTranslationModel = (new BooksInTranslationPlotGenerator()).SetupPlot(_mainModel);
-            PlotDaysPerBookWithTimeModel = (new DaysPerBookWithTimePlotGenerator()).SetupPlot(_mainModel);
-            PlotPagesPerDayWithTimeModel = (new PagesPerDayWithTimePlotGenerator()).SetupPlot(_mainModel);
-            PlotAverageDaysPerBookModel = (new AverageDaysPerBookPlotGenerator()).SetupPlot(_mainModel);
-            PlotPercentageBooksReadByLanguageModel = (new PercentageBooksReadByLanguagePlotGenerator()).SetupPlot(_mainModel);
-            PlotTotalBooksReadByLanguageModel = (new TotalBooksReadByLanguagePlotGenerator()).SetupPlot(_mainModel);
-            PlotPercentagePagesReadByLanguageModel = (new PercentagePagesReadByLanguagePlotGenerator()).SetupPlot(_mainModel);
-            PlotTotalPagesReadByLanguageModel = (new TotalPagesReadByLanguagePlotGenerator()).SetupPlot(_mainModel);
-            PlotPercentageBooksReadByCountryModel = (new PercentageBooksReadByCountryPlotGenerator()).SetupPlot(_mainModel);
-            PlotTotalBooksReadByCountryModel = (new TotalBooksReadByCountryPlotGenerator()).SetupPlot(_mainModel);
-            PlotPercentagePagesReadByCountryModel = (new PercentagePagesReadByCountryPlotGenerator()).SetupPlot(_mainModel);
-            PlotTotalPagesReadByCountryModel = (new TotalPagesReadByCountryPlotGenerator()).SetupPlot(_mainModel);
-            PlotBooksAndPagesThisYearModel = (new BooksAndPagesThisYearPlotGenerator()).SetupPlot(_mainModel);
-
-
-            PlotCurrentPagesReadByCountryModel = (new CurrentPagesReadByCountryPlotGenerator()).SetupPlot(_mainModel);
-            PlotCurrentBooksReadByCountryModel = (new CurrentBooksReadByCountryPlotGenerator()).SetupPlot(_mainModel);
-
-            PlotBooksAndPagesLastTenModel = (new BooksAndPagesLastTenPlotGenerator()).SetupPlot(_mainModel);
-            PlotBooksAndPagesLastTenTranslationModel = (new BooksAndPagesLastTenTranslationPlotGenerator()).SetupPlot(_mainModel);
-
-            PlotCountryLocationsBooksAndPagesModel = (new CountryLocationsBooksAndPagesPlotGenerator()).SetupPlot(_mainModel);
-            PlotCountryLocationsBooksReadModel = (new CountryLocationsBooksReadPlotGenerator()).SetupPlot(_mainModel);
+            PlotOverallBookAndPageTallies.UpdateData(_mainModel);            
+            PlotDaysPerBook.UpdateData(_mainModel); 
+            PlotPageRate.UpdateData(_mainModel); 
+            PlotPagesPerBook.UpdateData(_mainModel); 
+            PlotBooksInTranslation.UpdateData(_mainModel);
+            PlotDaysPerBookWithTime.UpdateData(_mainModel);
+            PlotPagesPerDayWithTime.UpdateData(_mainModel);
+            PlotAverageDaysPerBook.UpdateData(_mainModel);
+            PlotPercentageBooksReadByLanguage.UpdateData(_mainModel);
+            PlotTotalBooksReadByLanguage.UpdateData(_mainModel);
+            PlotPercentagePagesReadByLanguage.UpdateData(_mainModel);
+            PlotTotalPagesReadByLanguage.UpdateData(_mainModel);
+            PlotPercentageBooksReadByCountry.UpdateData(_mainModel);
+            PlotTotalBooksReadByCountry.UpdateData(_mainModel);
+            PlotPercentagePagesReadByCountry.UpdateData(_mainModel);
+            PlotTotalPagesReadByCountry.UpdateData(_mainModel);
+            PlotBooksAndPagesThisYear.UpdateData(_mainModel);
+            PlotCurrentPagesReadByCountry.UpdateData(_mainModel);
+            PlotCurrentBooksReadByCountry.UpdateData(_mainModel);
+            PlotBooksAndPagesLastTen.UpdateData(_mainModel);
+            PlotBooksAndPagesLastTenTranslation.UpdateData(_mainModel);
+            PlotCountryLocationsBooksAndPages.UpdateData(_mainModel);
+            PlotCountryLocationsBooksRead.UpdateData(_mainModel);            
+            PlotLatitudeWithTime.UpdateData(_mainModel);
+            PlotLongitudeWithTime.UpdateData(_mainModel);
+            PlotTalliesPerCalendarYear.UpdateData(_mainModel);
 
             if (_mainModel.CountryGeographies != null)
-            {
-                PlotWorldCountriesMapModel = (new WorldCountriesMapPlotGenerator()).SetupPlot(_mainModel);
-                PlotWorldCountriesMapBooksReadModel = (new WorldCountriesMapBooksReadPlotGenerator()).SetupPlot(_mainModel);
-                PlotWorldCountriesMapPagesReadModel = (new WorldCountriesMapPagesReadPlotGenerator()).SetupPlot(_mainModel);
-                PlotWorldCountriesMapWithBooksReadModel = (new WorldCountriesMapWithBooksReadPlotGenerator()).SetupPlot(_mainModel);
-                PlotWorldCountriesMapLastTenLatLongModel = (new WorldCountriesMapLastTenLatLongPlotGenerator()).SetupPlot(_mainModel);
+            {                   
+                PlotWorldCountriesMap.UpdateData(_mainModel);
+                PlotWorldCountriesMapBooksRead.UpdateData(_mainModel);
+                PlotWorldCountriesMapPagesRead.UpdateData(_mainModel);
+                PlotWorldCountriesMapWithBooksRead.UpdateData(_mainModel);
+                PlotWorldCountriesMapLastTenLatLong.UpdateData(_mainModel);                
             }
-
-            PlotLatitudeWithTimeModel = (new LatitudeWithTimePlotGenerator()).SetupPlot(_mainModel);
-            PlotLongitudeWithTimeModel = (new LongitudeWithTimePlotGenerator()).SetupPlot(_mainModel);
 
             OnPropertyChanged("");
-        }
-
-        #endregion
-
-        #region Nested Classes
-
-        public class CustomPlotController : PlotController
-        {
-            public CustomPlotController()
-            {
-                this.BindKeyDown(OxyKey.Left, PlotCommands.PanRight);
-                this.BindKeyDown(OxyKey.Right, PlotCommands.PanLeft);
-            }
-        }
-
-        #endregion
-
-        #region Common Plotting Functions
-
-        private IPlotController InitialisePlotModelAndController(ref PlotModel plot, string title, bool hoverOver = false)
-        {
-            // Create the plot model & controller 
-            var tmp = new PlotModel { Title = title, Subtitle = "using OxyPlot only" };
-
-            // Set the Model property, the INotifyPropertyChanged event will 
-            //  make the WPF Plot control update its content
-            plot = tmp;
-            var controller = new CustomPlotController();
-            if (hoverOver)
-            {
-                controller.UnbindMouseDown(OxyMouseButton.Left);
-                controller.BindMouseEnter(PlotCommands.HoverSnapTrack);
-            }
-            return controller;
         }
 
         #endregion

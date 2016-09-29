@@ -23,8 +23,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="630" MinWidth="720"
-                        Model="{Binding Path=PlotOverallBookAndPageTalliesModel}"
-                   Controller="{Binding Path=PlotOverallBookAndPageTalliesViewController}" />
+                        Model="{Binding Path=PlotOverallBookAndPageTallies.Model}"
+                   Controller="{Binding Path=PlotOverallBookAndPageTallies.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -34,8 +34,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="630" MinWidth="720"
-                        Model="{Binding Path=PlotDaysPerBookModel}"
-                   Controller="{Binding Path=PlotDaysPerBookViewController}" />
+                        Model="{Binding Path=PlotDaysPerBook.Model}"
+                   Controller="{Binding Path=PlotDaysPerBook.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -45,8 +45,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="630" MinWidth="720"
-                        Model="{Binding Path=PlotPageRateModel}"
-                   Controller="{Binding Path=PlotPageRateViewController}" />
+                        Model="{Binding Path=PlotPageRate.Model}"
+                   Controller="{Binding Path=PlotPageRate.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -56,8 +56,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="630" MinWidth="720"
-                        Model="{Binding Path=PlotPagesPerBookModel}"
-                   Controller="{Binding Path=PlotPagesPerBookViewController}" />
+                        Model="{Binding Path=PlotPagesPerBook.Model}"
+                   Controller="{Binding Path=PlotPagesPerBook.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -67,8 +67,19 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="630" MinWidth="720"
-                        Model="{Binding Path=PlotBooksInTranslationModel}"
-                   Controller="{Binding Path=PlotBooksInTranslationViewController}" />
+                        Model="{Binding Path=PlotBooksInTranslation.Model}"
+                   Controller="{Binding Path=PlotBooksInTranslation.ViewController}" />
+
+                            </ScrollViewer>
+                        </TabItem>
+
+
+                        <TabItem Header="Tallies Per Calendar Year">
+                            <ScrollViewer>
+
+                                <oxy:PlotView MinHeight="630" MinWidth="720"
+                        Model="{Binding Path=PlotTalliesPerCalendarYear.Model}"
+                   Controller="{Binding Path=PlotTalliesPerCalendarYear.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -89,8 +100,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotDaysPerBookWithTimeModel}"
-                   Controller="{Binding Path=PlotDaysPerBookWithTimeViewController}" />
+                        Model="{Binding Path=PlotDaysPerBookWithTime.Model}"
+                   Controller="{Binding Path=PlotDaysPerBookWithTime.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -99,8 +110,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotPagesPerDayWithTimeModel}"
-                   Controller="{Binding Path=PlotPagesPerDayWithTimeViewController}" />
+                        Model="{Binding Path=PlotPagesPerDayWithTime.Model}"
+                   Controller="{Binding Path=PlotPagesPerDayWithTime.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -109,8 +120,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotAverageDaysPerBookModel}"
-                   Controller="{Binding Path=PlotAverageDaysPerBookViewController}" />
+                        Model="{Binding Path=PlotAverageDaysPerBook.Model}"
+                   Controller="{Binding Path=PlotAverageDaysPerBook.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -130,8 +141,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotPercentageBooksReadByLanguageModel}"
-                   Controller="{Binding Path=PlotPercentageBooksReadByLanguageViewController}" />
+                        Model="{Binding Path=PlotPercentageBooksReadByLanguage.Model}"
+                   Controller="{Binding Path=PlotPercentageBooksReadByLanguage.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -140,8 +151,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotTotalBooksReadByLanguageModel}"
-                   Controller="{Binding Path=PlotTotalBooksReadByLanguageViewController}" />
+                        Model="{Binding Path=PlotTotalBooksReadByLanguage.Model}"
+                   Controller="{Binding Path=PlotTotalBooksReadByLanguage.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -150,8 +161,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotPercentagePagesReadByLanguageModel}"
-                   Controller="{Binding Path=PlotPercentagePagesReadByLanguageViewController}" />
+                        Model="{Binding Path=PlotPercentagePagesReadByLanguage.Model}"
+                   Controller="{Binding Path=PlotPercentagePagesReadByLanguage.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -160,8 +171,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotTotalPagesReadByLanguageModel}"
-                   Controller="{Binding Path=PlotTotalPagesReadByLanguageViewController}" />
+                        Model="{Binding Path=PlotTotalPagesReadByLanguage.Model}"
+                   Controller="{Binding Path=PlotTotalPagesReadByLanguage.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -181,8 +192,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotPercentageBooksReadByCountryModel}"
-                   Controller="{Binding Path=PlotPercentageBooksReadByCountryViewController}" />
+                        Model="{Binding Path=PlotPercentageBooksReadByCountry.Model}"
+                   Controller="{Binding Path=PlotPercentageBooksReadByCountry.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -191,8 +202,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotTotalBooksReadByCountryModel}"
-                   Controller="{Binding Path=PlotTotalBooksReadByCountryViewController}" />
+                        Model="{Binding Path=PlotTotalBooksReadByCountry.Model}"
+                   Controller="{Binding Path=PlotTotalBooksReadByCountry.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -201,8 +212,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotPercentagePagesReadByCountryModel}"
-                   Controller="{Binding Path=PlotPercentagePagesReadByCountryViewController}" />
+                        Model="{Binding Path=PlotPercentagePagesReadByCountry.Model}"
+                   Controller="{Binding Path=PlotPercentagePagesReadByCountry.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -211,8 +222,8 @@
                             <ScrollViewer>
 
                                 <oxy:PlotView MinHeight="600" MinWidth="720"
-                        Model="{Binding Path=PlotTotalPagesReadByCountryModel}"
-                   Controller="{Binding Path=PlotTotalPagesReadByCountryViewController}" />
+                        Model="{Binding Path=PlotTotalPagesReadByCountry.Model}"
+                   Controller="{Binding Path=PlotTotalPagesReadByCountry.ViewController}" />
 
                             </ScrollViewer>
                         </TabItem>
@@ -228,12 +239,12 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="600" MinWidth="360" Grid.Column="0"
-                        Model="{Binding Path=PlotCurrentPagesReadByCountryModel}"
-                   Controller="{Binding Path=PlotCurrentPagesReadByCountryViewController}" />
+                        Model="{Binding Path=PlotCurrentPagesReadByCountry.Model}"
+                   Controller="{Binding Path=PlotCurrentPagesReadByCountry.ViewController}" />
 
                                     <oxy:PlotView MinHeight="600" MinWidth="360" Grid.Column="1"
-                        Model="{Binding Path=PlotCurrentBooksReadByCountryModel}"
-                   Controller="{Binding Path=PlotCurrentBooksReadByCountryViewController}" />
+                        Model="{Binding Path=PlotCurrentBooksReadByCountry.Model}"
+                   Controller="{Binding Path=PlotCurrentBooksReadByCountry.ViewController}" />
 
                                 </Grid>
 
@@ -249,8 +260,8 @@
                 <ScrollViewer>
 
                     <oxy:PlotView MinHeight="630" MinWidth="720"
-                        Model="{Binding Path=PlotBooksAndPagesThisYearModel}"
-                   Controller="{Binding Path=PlotBooksAndPagesThisYearViewController}" />
+                        Model="{Binding Path=PlotBooksAndPagesThisYear.Model}"
+                   Controller="{Binding Path=PlotBooksAndPagesThisYear.ViewController}" />
 
                 </ScrollViewer>
             </TabItem>
@@ -273,8 +284,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotBooksAndPagesLastTenModel}"
-                                    Controller="{Binding Path=PlotBooksAndPagesLastTenViewController}" />
+                                    Model="{Binding Path=PlotBooksAndPagesLastTen.Model}"
+                                    Controller="{Binding Path=PlotBooksAndPagesLastTen.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>
@@ -290,8 +301,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotBooksAndPagesLastTenTranslationModel}"
-                                    Controller="{Binding Path=PlotBooksAndPagesLastTenTranslationViewController}" />
+                                    Model="{Binding Path=PlotBooksAndPagesLastTenTranslation.Model}"
+                                    Controller="{Binding Path=PlotBooksAndPagesLastTenTranslation.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>
@@ -309,8 +320,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotCountryLocationsBooksAndPagesModel}"
-                                    Controller="{Binding Path=PlotCountryLocationsBooksAndPagesViewController}" />
+                                    Model="{Binding Path=PlotCountryLocationsBooksAndPages.Model}"
+                                    Controller="{Binding Path=PlotCountryLocationsBooksAndPages.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>
@@ -328,8 +339,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotCountryLocationsBooksReadModel}"
-                                    Controller="{Binding Path=PlotCountryLocationsBooksReadViewController}" />
+                                    Model="{Binding Path=PlotCountryLocationsBooksRead.Model}"
+                                    Controller="{Binding Path=PlotCountryLocationsBooksRead.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>
@@ -358,8 +369,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotWorldCountriesMapModel}"
-                                    Controller="{Binding Path=PlotWorldCountriesMapViewController}" />
+                                    Model="{Binding Path=PlotWorldCountriesMap.Model}"
+                                    Controller="{Binding Path=PlotWorldCountriesMap.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>
@@ -376,8 +387,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotWorldCountriesMapBooksReadModel}"
-                                    Controller="{Binding Path=PlotWorldCountriesMapBooksReadViewController}" />
+                                    Model="{Binding Path=PlotWorldCountriesMapBooksRead.Model}"
+                                    Controller="{Binding Path=PlotWorldCountriesMapBooksRead.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>
@@ -394,8 +405,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotWorldCountriesMapPagesReadModel}"
-                                    Controller="{Binding Path=PlotWorldCountriesMapPagesReadViewController}" />
+                                    Model="{Binding Path=PlotWorldCountriesMapPagesRead.Model}"
+                                    Controller="{Binding Path=PlotWorldCountriesMapPagesRead.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>
@@ -412,8 +423,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotWorldCountriesMapWithBooksReadModel}"
-                                    Controller="{Binding Path=PlotWorldCountriesMapWithBooksReadViewController}" />
+                                    Model="{Binding Path=PlotWorldCountriesMapWithBooksRead.Model}"
+                                    Controller="{Binding Path=PlotWorldCountriesMapWithBooksRead.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>
@@ -444,12 +455,12 @@
                                     </Grid.RowDefinitions>
 
                                     <oxy:PlotView MinHeight="300" MinWidth="720" Grid.Row="0"
-                                    Model="{Binding Path=PlotLatitudeWithTimeModel}"
-                                    Controller="{Binding Path=PlotLatitudeWithTimeViewController}" />
+                                    Model="{Binding Path=PlotLatitudeWithTime.Model}"
+                                    Controller="{Binding Path=PlotLatitudeWithTime.ViewController}" />
                                     
                                     <oxy:PlotView MinHeight="300" MinWidth="720" Grid.Row="2"
-                                    Model="{Binding Path=PlotLongitudeWithTimeModel}"
-                                    Controller="{Binding Path=PlotLongitudeWithTimeViewController}" />
+                                    Model="{Binding Path=PlotLongitudeWithTime.Model}"
+                                    Controller="{Binding Path=PlotLongitudeWithTime.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>
@@ -466,8 +477,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <oxy:PlotView MinHeight="630" MinWidth="720" Grid.Column="1"
-                                    Model="{Binding Path=PlotWorldCountriesMapLastTenLatLongModel}"
-                                    Controller="{Binding Path=PlotWorldCountriesMapLastTenLatLongViewController}" />
+                                    Model="{Binding Path=PlotWorldCountriesMapLastTenLatLong.Model}"
+                                    Controller="{Binding Path=PlotWorldCountriesMapLastTenLatLong.ViewController}" />
                                 </Grid>
 
                             </ScrollViewer>

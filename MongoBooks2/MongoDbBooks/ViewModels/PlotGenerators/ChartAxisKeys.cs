@@ -39,5 +39,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
         public const string LatitudeKey = "Latitude";
 
         public const string LongitudeKey = "Longitude";
+
+        public const string DayOfYearKey = "DayOfYear";
     }
 }
