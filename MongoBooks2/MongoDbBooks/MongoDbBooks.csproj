@@ -137,6 +137,7 @@
     <Compile Include="ViewModels\PlotGenerators\PercentageBooksReadByLanguagePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\PercentagePagesReadByCountryPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\PercentagePagesReadByLanguagePlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\TalliesPerCalendarYearPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\TotalBooksReadByCountryPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\TotalBooksReadByLanguagePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\TotalPagesReadByCountryPlotGenerator.cs" />
