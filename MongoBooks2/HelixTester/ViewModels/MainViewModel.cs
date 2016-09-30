@@ -98,7 +98,7 @@ namespace HelixTester.ViewModels
             */
             //AddSolidBox(modelGroup);
 
-            AddRevolved(modelGroup);
+            //AddRevolved(modelGroup);
 
 
             
@@ -110,7 +110,7 @@ namespace HelixTester.ViewModels
             helixItem.Length = 0.9;
             helixItem.Radius = 0.35;
             
-            modelGroup.Children.Add(helixItem.Content);
+            //modelGroup.Children.Add(helixItem.Content);
             //modelGroup.Children.Add(box.Content);
 
 
@@ -156,23 +156,36 @@ namespace HelixTester.ViewModels
             Point3DCollection simplePoly = new System.Windows.Media.Media3D.Point3DCollection(
             new List<Point3D>(){
                 new Point3D(1,0, 1),
+                new Point3D(1,1, 1),
+                new Point3D(0,1, 1),
+                new Point3D(0,0, 1),
+
+                /*
+                //new Point3D(1,0, 1),
+                new Point3D(0,0, -1),
+                new Point3D(1,0, -1),
                 new Point3D(1,1, -1),
                 new Point3D(0,1, -1),
-                new Point3D(0,0, 1),
                 //new Point3D(1,0, 1),
+                new Point3D(0,0, -1),
+                new Point3D(0,0, 1),
+                 */
             }
             );
 
 
             roofBuilder.AddPolygon(simplePoly);
 
+            //roofBuilder.AddRectangularMesh()
+
             GeometryModel3D roofGeometry = new GeometryModel3D();
 
             //var material = MaterialHelper.CreateMaterial(Brushes.LightBlue, ambient: 77, freeze: false);
-            var material = MaterialHelper.CreateMaterial(Colors.LightBlue, 0.25);
+            var material = MaterialHelper.CreateMaterial(Colors.LawnGreen, 0.25);
 
 
             roofGeometry.Material = material;
+            roofGeometry.BackMaterial = material;
 
             roofGeometry.Geometry = roofBuilder.ToMesh(true);
             modelGroup.Children.Add(roofGeometry);
@@ -187,10 +200,83 @@ namespace HelixTester.ViewModels
             ////Wireframe.MakeWireframe(roofGeometry);
             //modelGroup.Children.Add(Wireframe.Content);
 
+
+
+
+            var Mesh = new MeshGeometry3D();
+            //var Material = MaterialHelper.CreateImageMaterial(image);
+            var Damping = 0.98;
+            var integrator = new VerletIntegrator() { Iterations = 4, Damping = 0.98 };
+            var WindSpeed = 6;
+            var WindDirection = 180;
+            var PoleHeight = 12;
+            var Height = 3;
+            var Length = 4;
+            var Mass = 0.8;
+            var m = 48;
+            var n = 32;
+
+            var pts = new Point3D[n, m];
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < m; j++)
+                {
+                    pts[i, j] = new Point3D(-Length * j / (m - 1), 0, PoleHeight - Height * i / (n - 1));
+                }
+
+
+            var pts2 = new Point3D[2, 4];
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 4; j++)
+                {
+                    double x = 0, z = 0;
+                    if (i == 0) { x = 0; z = 0; }
+                    if (i == 1) { x = 1; z = 0; }
+                    if (i == 2) { x = 1; z = 1; }
+                    if (i == 3) { x = 0; z = 1; }
+
+                    pts[i, j] = new Point3D(x, i, PoleHeight - z);
+                }
+
+
+            var mb = new MeshBuilder(false, true);
+            //mb.AddRectangularMesh(pts, null, false, false);
+            mb.AddRectangularMesh(pts, null, false, false);
+            Mesh = mb.ToMesh();
+
+            var gradientMaterial = CreateGradientBrushMaterial();
+
+
+            gradientMaterial = MaterialHelper.CreateMaterial(Colors.LightBlue, 0.25);
+
+
+            GeometryModel3D meshGeometry = new GeometryModel3D();
+            meshGeometry.Geometry = Mesh;
+            meshGeometry.Material = gradientMaterial;
+            meshGeometry.BackMaterial = gradientMaterial;
+            modelGroup.Children.Add(meshGeometry);
+
+
             this.Model = modelGroup;
             
 
 
+        }
+
+        private static System.Windows.Media.Media3D.Material CreateGradientBrushMaterial()
+        {
+
+
+            var brush = new LinearGradientBrush();
+            brush.StartPoint = new Point(0, 0);
+            brush.EndPoint = new Point(1, 0);
+            brush.GradientStops.Add(new GradientStop(Color.FromRgb(0, 7, 100), 0));
+            brush.GradientStops.Add(new GradientStop(Color.FromRgb(32, 107, 203), 0.15));
+            brush.GradientStops.Add(new GradientStop(Color.FromRgb(237, 255, 255), 0.42));
+            brush.GradientStops.Add(new GradientStop(Color.FromRgb(255, 170, 0), 0.64));
+            brush.GradientStops.Add(new GradientStop(Color.FromRgb(0, 0, 0), 0.854));
+            //      brush.GradientStops.Add(new GradientStop(Color.FromRgb(0, 7, 100), 1.0));
+            var gradientMaterial = MaterialHelper.CreateMaterial(brush, null, Brushes.Gray, 1.0, 200);
+            return gradientMaterial;
         }
         public Point3DCollection Points;
 

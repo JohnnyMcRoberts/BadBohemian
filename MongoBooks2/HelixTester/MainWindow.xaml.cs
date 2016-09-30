@@ -56,7 +56,7 @@ namespace HelixTester
             this.watch.Start();
 
             this.NumberOfPoints = 100;
-            this.DataContext = this;
+            //this.DataContext = this;
 
             CompositionTarget.Rendering += this.OnCompositionTargetRendering;
         }
