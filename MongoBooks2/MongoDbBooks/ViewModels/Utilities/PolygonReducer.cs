@@ -14,7 +14,7 @@ namespace MongoDbBooks.ViewModels.Utilities
 
         public const double LatLongTolerance = 1e-12;
         public const double InitialPolygonTolerance = 1e-4;
-        public const int MaxIterations = 10;
+        public const int MaxIterations = 20;
         public const int MaxPolygonPoints = 750;
 
         #endregion
