@@ -27,29 +27,39 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
         private PlotModel SetupWorldCountriesMapPlot()
         {
             // Create the plot model
-            var newPlot = new PlotModel { Title = "Countries of the World" };
+            var newPlot = new PlotModel { Title = "Countries of the World with Pages read" };
             //OxyPlotUtilities.SetupPlotLegend(newPlot, "Total Pages Read by Language With Time Plot");
             SetupLatitudeAndLongitudeAxes(newPlot);
 
             // make up a lit of the countries with books read
             int maxBooksPages = 0;
+            int maxBooksLogPages = 0;
             Dictionary<string, long> countryToReadLookUp = new Dictionary<string, long>();
             Dictionary<string, uint> countryToPagesLookUp = new Dictionary<string, uint>();
+            Dictionary<string, uint> countryToLogPagesLookUp = new Dictionary<string, uint>();
             foreach (var authorCountry in _mainModel.AuthorCountries)
             {
                 int totalPagesInThousands = (int)((long)authorCountry.TotalPagesReadFromCountry / 1000);
                 if (totalPagesInThousands < 1)
                     totalPagesInThousands = 1;
+
+                double ttl = 
+                    (authorCountry.TotalPagesReadFromCountry > 1 ) 
+                    ? authorCountry.TotalPagesReadFromCountry : 10;
+                var logPages =  (uint)(10.0 * Math.Log10(ttl));
+
                 maxBooksPages = Math.Max(totalPagesInThousands, maxBooksPages);
+                maxBooksLogPages = Math.Max((int)logPages, maxBooksLogPages);
                 countryToReadLookUp.Add(authorCountry.Country, totalPagesInThousands);
                 countryToPagesLookUp.Add(authorCountry.Country, authorCountry.TotalPagesReadFromCountry);
+                countryToLogPagesLookUp.Add(authorCountry.Country, logPages - 10);
             }
 
 
             List<OxyColor> colors;
             OxyPalette faintPalette;
             maxBooksPages =
-                OxyPlotUtilities.SetupFaintPaletteForRange(maxBooksPages, out colors, out faintPalette, 128);
+                OxyPlotUtilities.SetupFaintPaletteForRange(maxBooksLogPages, out colors, out faintPalette, 128);
 
             foreach (var country in _mainModel.CountryGeographies)
             {
@@ -58,7 +68,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
                 if (countryToReadLookUp.ContainsKey(country.Name))
                 {
-                    color = colors[(int)countryToReadLookUp[country.Name]];
+                    color = colors[(int)countryToLogPagesLookUp[country.Name]];
                     tagString = "\nPages Read = " + countryToPagesLookUp[country.Name].ToString();
                 }
 
