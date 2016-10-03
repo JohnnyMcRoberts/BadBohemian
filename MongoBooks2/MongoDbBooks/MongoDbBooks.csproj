@@ -74,6 +74,10 @@
       <HintPath>..\packages\OxyPlot.Wpf.1.0.0-unstable2100\lib\net45\OxyPlot.Xps.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Poly2Tri.NetStandard, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Poly2Tri.NetStandard.1.0.2\lib\net45\Poly2Tri.NetStandard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms">
@@ -152,6 +156,7 @@
     <Compile Include="ViewModels\Utilities\LinearCurveFitter.cs" />
     <Compile Include="ViewModels\Utilities\OxyPlotUtilities.cs" />
     <Compile Include="ViewModels\Utilities\PolygonReducer.cs" />
+    <Compile Include="ViewModels\Utilities\PolygonSimplifier.cs" />
     <Compile Include="ViewModels\Utilities\QuadraticCurveFitter.cs" />
     <Compile Include="ViewModels\Utilities\WaitCursor.cs" />
     <Compile Include="Views\BooksChartsView.xaml.cs">

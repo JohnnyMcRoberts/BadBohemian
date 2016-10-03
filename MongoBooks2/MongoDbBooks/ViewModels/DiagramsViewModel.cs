@@ -82,6 +82,7 @@ namespace MongoDbBooks.ViewModels
         public void UpdateData()
         {
             SetupBooksReadByCountryModel();
+            OnPropertyChanged("");
         }
 
         #endregion
@@ -98,7 +99,10 @@ namespace MongoDbBooks.ViewModels
             List<OxyColor> colors;
             OxyPlotUtilities.SetupFaintPaletteForRange( range, out colors, out faintPalette, 128);
 
-            foreach (var authorCountry in _mainModel.AuthorCountries)
+            List<OxyColor> stdColors = OxyPlotUtilities.SetupStandardColourSet();
+            int geographyIndex = 0;
+
+            foreach (var authorCountry in _mainModel.AuthorCountries.OrderByDescending(x => x.TotalBooksReadFromCountry))
             {
                 var name = authorCountry.Country;
                 var country = _mainModel.WorldCountries.Where(w => w.Country == name).FirstOrDefault();
@@ -120,6 +124,18 @@ namespace MongoDbBooks.ViewModels
                     modelGroup.Children.Add(countryText.Content);
                 }
 
+                if (_mainModel.CountryGeographies != null && _mainModel.CountryGeographies.Count > 0)
+                {
+                    var geography = _mainModel.CountryGeographies.Where(g => g.Name == name).FirstOrDefault();
+                    if (geography != null )
+                    {
+                        var colour = stdColors[(geographyIndex % stdColors.Count)];
+                        GeometryModel3D geographyGeometry =
+                            GetGeographyPlaneGeometry(geography, colour);
+                        modelGroup.Children.Add(geographyGeometry);
+                        geographyIndex++;
+                    }
+                }
             }
 
             double maxHeight = Math.Log(range);
@@ -128,6 +144,65 @@ namespace MongoDbBooks.ViewModels
             modelGroup.Children.Add(path.Content);
 
             BooksReadByCountryModel = modelGroup;
+        }
+
+        private GeometryModel3D GetGeographyPlaneGeometry(CountryGeography geography, OxyColor color)
+        {
+            int i = 0;
+            var landBlocks = geography.LandBlocks.OrderByDescending(b => b.TotalArea);
+
+            GeometryModel3D countryGeometry = new GeometryModel3D();
+
+            var mapColor = new Color() { A= color.A, R=color.R, G=color.G, B=color.B };
+            var material = MaterialHelper.CreateMaterial(mapColor, 0.25);
+            countryGeometry.Material = material;
+            countryGeometry.BackMaterial = material;
+
+            var geographyBuilder = new MeshBuilder(false, false);
+
+            foreach (var boundary in landBlocks)
+            {
+                List<List<DataPoint>> simpleAreaSet = SimplifyBoundary(boundary);
+
+                foreach (var simpleArea in simpleAreaSet)
+                {
+                    var areaPts = new List<Point3D>() { };
+
+                    foreach(var vertex in simpleArea)
+                        areaPts.Add(new Point3D(vertex.X, vertex.Y, 0));
+
+                    Point3DCollection area = new Point3DCollection(areaPts);
+                    Polygon3D poly3D = new Polygon3D(area);
+                    geographyBuilder.AddPolygon(area);
+                }
+
+                // just do the 10 biggest bits per country (looks to be enough)
+                i++;
+                if (i > 10)
+                    break;
+            }
+            countryGeometry.Geometry = geographyBuilder.ToMesh();
+            return countryGeometry;
+        }
+
+        private static List<List<DataPoint>> SimplifyBoundary(PolygonBoundary boundary)
+        {
+            var points = boundary.Points;
+
+            List<DataPoint> xyPoints = new List<DataPoint>();
+            foreach (var point in points)
+            {
+                double ptX = 0;
+                double ptY = 0;
+                point.GetCoordinates(out ptX, out ptY);
+                DataPoint dataPoint = new DataPoint(ptX, ptY);
+                xyPoints.Add(dataPoint);
+            }
+
+            // need to turn these into a set of triangles
+            List<List<DataPoint>> simpleAreaSet =
+                PolygonSimplifier.TriangulatePolygon(xyPoints);
+            return simpleAreaSet;
         }
 
         private TubeVisual3D GetPathForMeanReadingLocation(double maxHeight)
