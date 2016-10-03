@@ -85,6 +85,13 @@
                         </TabItem>
 
 
+                        <TabItem Header="Monthly Tallies by Calendar Year">
+                            <ScrollViewer>
+
+                            </ScrollViewer>
+                        </TabItem>
+
+
                     </TabControl>
                 </ScrollViewer>
             </TabItem>
