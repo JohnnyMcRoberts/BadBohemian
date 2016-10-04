@@ -88,6 +88,10 @@
                         <TabItem Header="Monthly Tallies by Calendar Year">
                             <ScrollViewer>
 
+                                <oxy:PlotView MinHeight="630" MinWidth="720"
+                        Model="{Binding Path=PlotMonthlyBookTalliesByCalendarYear.Model}"
+                   Controller="{Binding Path=PlotMonthlyBookTalliesByCalendarYear.ViewController}" />
+
                             </ScrollViewer>
                         </TabItem>
 

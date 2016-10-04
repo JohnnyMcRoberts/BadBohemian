@@ -115,6 +115,8 @@ namespace MongoDbBooks.ViewModels
 
         public OxyPlotPair PlotTalliesPerCalendarYear { get; private set; }
 
+        public OxyPlotPair PlotMonthlyBookTalliesByCalendarYear { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -182,6 +184,8 @@ namespace MongoDbBooks.ViewModels
                 new OxyPlotPair(new LongitudeWithTimePlotGenerator(), "LongitudeWithTime");
             PlotTalliesPerCalendarYear =
                 new OxyPlotPair(new TalliesPerCalendarYearPlotGenerator(), "TalliesPerCalendar");
+            PlotMonthlyBookTalliesByCalendarYear =
+                new OxyPlotPair(new MonthlyBookTalliesByCalendarYearPlotGenerator(), "MonthlyBookTalliesByCalendarYear");
 
             PlotWorldCountriesMap =
                 new OxyPlotPair(new WorldCountriesMapPlotGenerator(), "WorldCountriesMap", true);
@@ -232,6 +236,7 @@ namespace MongoDbBooks.ViewModels
             PlotLatitudeWithTime.UpdateData(_mainModel);
             PlotLongitudeWithTime.UpdateData(_mainModel);
             PlotTalliesPerCalendarYear.UpdateData(_mainModel);
+            PlotMonthlyBookTalliesByCalendarYear.UpdateData(_mainModel);
 
             if (_mainModel.CountryGeographies != null)
             {                   
