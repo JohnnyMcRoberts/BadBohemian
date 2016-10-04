@@ -117,6 +117,10 @@ namespace MongoDbBooks.ViewModels
 
         public OxyPlotPair PlotMonthlyBookTalliesByCalendarYear { get; private set; }
 
+        public OxyPlotPair PlotMonthlyPageTalliesByCalendarYear { get; private set; }
+
+        public OxyPlotPair PlotMonthlyBookAndPageTalliesByCalendarYear { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -185,7 +189,17 @@ namespace MongoDbBooks.ViewModels
             PlotTalliesPerCalendarYear =
                 new OxyPlotPair(new TalliesPerCalendarYearPlotGenerator(), "TalliesPerCalendar");
             PlotMonthlyBookTalliesByCalendarYear =
-                new OxyPlotPair(new MonthlyBookTalliesByCalendarYearPlotGenerator(), "MonthlyBookTalliesByCalendarYear");
+                new OxyPlotPair(new MonthlyBookTalliesByCalendarYearPlotGenerator(
+                    MonthlyBookTalliesByCalendarYearPlotGenerator.ChartType.BooksAsColumns), 
+                    "MonthlyBookTalliesByCalendarYear");
+            PlotMonthlyPageTalliesByCalendarYear =
+                new OxyPlotPair(new MonthlyBookTalliesByCalendarYearPlotGenerator(
+                    MonthlyBookTalliesByCalendarYearPlotGenerator.ChartType.PagesAsColumns), 
+                    "MonthlyPageTalliesByCalendarYear");
+            PlotMonthlyBookAndPageTalliesByCalendarYear =
+                new OxyPlotPair(new MonthlyBookTalliesByCalendarYearPlotGenerator(
+                    MonthlyBookTalliesByCalendarYearPlotGenerator.ChartType.BothAsLines), 
+                    "MonthlyBookAndPageTalliesByCalendarYear");
 
             PlotWorldCountriesMap =
                 new OxyPlotPair(new WorldCountriesMapPlotGenerator(), "WorldCountriesMap", true);
@@ -237,6 +251,8 @@ namespace MongoDbBooks.ViewModels
             PlotLongitudeWithTime.UpdateData(_mainModel);
             PlotTalliesPerCalendarYear.UpdateData(_mainModel);
             PlotMonthlyBookTalliesByCalendarYear.UpdateData(_mainModel);
+            PlotMonthlyPageTalliesByCalendarYear.UpdateData(_mainModel);
+            PlotMonthlyBookAndPageTalliesByCalendarYear.UpdateData(_mainModel);
 
             if (_mainModel.CountryGeographies != null)
             {                   
