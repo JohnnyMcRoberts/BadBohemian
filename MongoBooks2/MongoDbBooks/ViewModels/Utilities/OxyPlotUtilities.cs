@@ -30,8 +30,6 @@ namespace MongoDbBooks.ViewModels.Utilities
             new Tuple<byte,byte,byte>(128,	128	,0),
             new Tuple<byte,byte,byte>(128,	0	,128),
             new Tuple<byte,byte,byte>(0,	128	,128),
-            new Tuple<byte,byte,byte>(192,	192	,192),
-            new Tuple<byte,byte,byte>(128,	128	,128),
             new Tuple<byte,byte,byte>(153,	153	,255),
             new Tuple<byte,byte,byte>(153,	51	,102),
             new Tuple<byte,byte,byte>(255,	255	,204),
@@ -71,7 +69,6 @@ namespace MongoDbBooks.ViewModels.Utilities
             new Tuple<byte,byte,byte>(153,	51	,0),
             new Tuple<byte,byte,byte>(153,	51	,102),
             new Tuple<byte,byte,byte>(51,	51	,153),
-            new Tuple<byte,byte,byte>(51,	51	,51),
         };
 
         #endregion

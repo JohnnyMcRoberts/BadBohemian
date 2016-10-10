@@ -18,7 +18,17 @@
                 </h:HelixViewport3D>
 
             </TabItem>
-            
+            <TabItem  Header="Pages Read By Country">
+                <h:HelixViewport3D >
+                    <h:SunLight  />
+                    <h:GridLinesVisual3D/>
+                    <!-- The content of this visual is defined in MainViewModel.cs -->
+                    <ModelVisual3D Content="{Binding PagesReadByCountryModel}"/>
+
+                </h:HelixViewport3D>
+
+            </TabItem>
+
         </TabControl>
             
     </Grid>

@@ -16,6 +16,26 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 {
     public class MonthlyBookTalliesByCalendarYearPlotGenerator : IPlotGenerator
     {
+        #region Public Types
+
+        public enum ChartType
+        {
+            BothAsLines,
+            BooksAsColumns,
+            PagesAsColumns,
+        }
+
+        #endregion
+
+        #region Constructor
+
+        public MonthlyBookTalliesByCalendarYearPlotGenerator(ChartType type)
+        {
+            _chartType = type;
+        }
+
+        #endregion
+
         #region IPlotGenerator implementation
 
         public OxyPlot.PlotModel SetupPlot(Models.MainBooksModel mainModel)
@@ -29,6 +49,25 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
         #region Private data
 
         private Models.MainBooksModel _mainModel;
+
+        private readonly ChartType _chartType;
+
+        private readonly string[] _monthNames = new string[]
+        {
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        };
+
 
         #endregion
 
@@ -51,12 +90,73 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             // Create the plot model
             var newPlot = new PlotModel { Title = "Tallies Per Month for each Calendar Year" };
             OxyPlotUtilities.SetupPlotLegend(newPlot, "Tallies Per Month for each Calendar Year");
-            SetupBookAndPagesVsMonthOfYearAxes(newPlot);
+            if (_chartType == ChartType.BothAsLines)    
+                SetupBookAndPagesVsMonthOfYearAxes(newPlot);
+            else if (_chartType == ChartType.PagesAsColumns)
+                SetupPagesVsMonthOfYearCalegoryAxes(newPlot);
+            else                
+                SetupBookVsMonthOfYearCalegoryAxes(newPlot);
 
             // get the books & pages read for each calendar year
             Dictionary<int, List<MonthOfYearTally>> bookListsByMonthOfYear = GetBookListsByMonthOfYear();
 
             // add a series for each year (in order)
+            if (_chartType == ChartType.BothAsLines)
+                AddLineSeriesForMonthlyTallies(newPlot, bookListsByMonthOfYear);
+            else
+                AddColumnSeriesForMonthlyTallies(newPlot, bookListsByMonthOfYear);
+
+            // finally update the model with the new plot
+            return newPlot;
+        }
+
+        private void AddColumnSeriesForMonthlyTallies(PlotModel newPlot, 
+            Dictionary<int, List<MonthOfYearTally>> bookListsByMonthOfYear)
+        {
+            int colourIndex = 1;
+            var colours = OxyPlotUtilities.SetupStandardColourSet();
+            foreach (var year in bookListsByMonthOfYear.Keys.ToList().OrderBy(x => x))
+            {
+                int index = colourIndex % colours.Count;
+                var colour = colours[index];
+                string title =  (_chartType == ChartType.PagesAsColumns) 
+                    ? "Pages read in " + year.ToString()
+                    : "Books read in " + year.ToString();
+
+                var yKey =  (_chartType == ChartType.PagesAsColumns)
+                    ? ChartAxisKeys.PagesReadKey
+                    : ChartAxisKeys.BooksReadKey;
+
+                ColumnSeries booksReadSeries = new ColumnSeries
+                {
+                    Title = title,
+                    XAxisKey = ChartAxisKeys.MonthOfYearKey,
+                    YAxisKey = yKey, 
+                    FillColor = colour, 
+                    ColumnWidth = 13, 
+                };
+
+                var monthTallies = bookListsByMonthOfYear[year];
+                foreach (var monthTally in monthTallies)
+                {
+                    booksReadSeries.Items.Add(
+                        new ColumnItem() 
+                        { 
+                            CategoryIndex = monthTally.MonthOfYear - 1,
+                            Value = (_chartType == ChartType.PagesAsColumns)
+                                ? monthTally.PagesReadThisMonth
+                                : monthTally.BooksReadThisMonth 
+                        });
+                }
+
+                newPlot.Series.Add(booksReadSeries);
+                colourIndex++;
+            }
+        }
+
+        private static void AddLineSeriesForMonthlyTallies(PlotModel newPlot, 
+            Dictionary<int, List<MonthOfYearTally>> bookListsByMonthOfYear)
+        {
             int colourIndex = 1;
             var colours = OxyPlotUtilities.SetupStandardColourSet();
             foreach (var year in bookListsByMonthOfYear.Keys.ToList().OrderBy(x => x))
@@ -79,11 +179,8 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                     LineSeries[] { booksReadSeries, pagesReadSeries });
                 colourIndex++;
             }
-
-            // finally update the model with the new plot
-            return newPlot;
         }
-
+      
         private static void GetBooksAndPagesReadLineSeries(int colourIndex, List<OxyColor> colours, int year,
             out LineSeries booksReadSeries, out LineSeries pagesReadSeries)
         {
@@ -192,7 +289,58 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             };
             newPlot.Axes.Add(rhsAxis);
         }
+        
+        private void SetupBookVsMonthOfYearCalegoryAxes(PlotModel newPlot)
+        {
+            var xAxis = new CategoryAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Month of the year",
+                Key = ChartAxisKeys.MonthOfYearKey,
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.None,
+                ItemsSource = _monthNames
+            };
+            newPlot.Axes.Add(xAxis);
 
+            var lhsAxis = new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Title = "Books Read",
+                Key = ChartAxisKeys.BooksReadKey,
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.None,
+                Minimum = 0
+            };
+            newPlot.Axes.Add(lhsAxis);
+        }
+
+        private void SetupPagesVsMonthOfYearCalegoryAxes(PlotModel newPlot)
+        {
+            var xAxis = new CategoryAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Month of the year",
+                Key = ChartAxisKeys.MonthOfYearKey,
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.None,
+                ItemsSource = _monthNames
+            };
+            newPlot.Axes.Add(xAxis);
+
+            var lhsAxis = new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Title = "Pages Read",
+                Key = ChartAxisKeys.PagesReadKey,
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.None,
+                Minimum = 0
+            };
+            newPlot.Axes.Add(lhsAxis);
+        }
+
+        
         #endregion
     }
 }
