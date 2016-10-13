@@ -674,60 +674,126 @@ namespace MongoDbBooks.Models
 
             if (totalCount == 0 && WorldCountries.Count != 0)
             {
-                worldCountries.InsertMany(WorldCountries);
-                totalCount = worldCountries.Count(filter);
-
+                totalCount = AddLoadedCountriesToBlankDatabase(worldCountries, filter, totalCount);
+            }
+            else if (WorldCountries.Count != 0)
+            {
+                totalCount = AddNewCountriesToExistingDatabase(worldCountries, filter, totalCount);
             }
             else if (totalCount != 0 && WorldCountries.Count == 0)
             {
-                WorldCountries.Clear();
-
-                using (var cursor = worldCountries.FindSync(filter))
-                {
-                    var countryList = cursor.ToList();
-                    foreach (var country in countryList)
-                    {
-                        WorldCountries.Add(country);
-                    }
-                }
-                UpdateCollections();
-                DataFromFile = false;
-                DataFromDb = true;
+                LoadAllCountriesFromDatabase(worldCountries, filter);
             }
             else if (totalCount != 0 && totalCount < WorldCountries.Count)
             {
-                List<WorldCountry> missingItems = new List<WorldCountry>();
-                List<WorldCountry> existingItems = new List<WorldCountry>();
+                totalCount = UpdateDatabaseCountries(worldCountries, filter, totalCount);
+            }
 
-                using (var cursor = worldCountries.FindSync(filter))
-                {
-                    existingItems = cursor.ToList();
-                }
-
-                // get the missing items
-                foreach ( var country in WorldCountries)
-                {
-                    bool alreadyThere = false;
-                    foreach( var existing in existingItems)
-                    {
-                        if (country.Country == existing.Country)
-                        {
-                            alreadyThere = true;
-                            break;
-                        }
-                    }
-                    if (!alreadyThere)
-                        missingItems.Add(country);
-                }
-
-                // then insert them to the list
-
-                worldCountries.InsertMany(missingItems);
-                totalCount = worldCountries.Count(filter);
+            if (WorldCountries.Count > 0)
+            {
+                var orderedCountries = WorldCountries.OrderBy(c => c.Country).ToList();
+                WorldCountries.Clear();
+                foreach (var orderedCountry in orderedCountries)
+                    WorldCountries.Add(orderedCountry);
             }
 
             UpdateWorldCountryLookup();
 
+        }
+
+        private long UpdateDatabaseCountries(IMongoCollection<WorldCountry> worldCountries, 
+            FilterDefinition<WorldCountry> filter, long totalCount)
+        {
+            List<WorldCountry> missingItems = new List<WorldCountry>();
+            List<WorldCountry> existingItems = new List<WorldCountry>();
+
+            using (var cursor = worldCountries.FindSync(filter))
+            {
+                existingItems = cursor.ToList();
+            }
+
+            // get the missing items
+            foreach (var country in WorldCountries)
+            {
+                bool alreadyThere = false;
+                foreach (var existing in existingItems)
+                {
+                    if (country.Country == existing.Country)
+                    {
+                        alreadyThere = true;
+                        break;
+                    }
+                }
+                if (!alreadyThere)
+                    missingItems.Add(country);
+            }
+
+            // then insert them to the list
+
+            worldCountries.InsertMany(missingItems);
+            totalCount = worldCountries.Count(filter);
+            return totalCount;
+        }
+
+        private void LoadAllCountriesFromDatabase(IMongoCollection<WorldCountry> worldCountries, 
+            FilterDefinition<WorldCountry> filter)
+        {
+            WorldCountries.Clear();
+
+            using (var cursor = worldCountries.FindSync(filter))
+            {
+                var countryList = cursor.ToList();
+                foreach (var country in countryList)
+                {
+                    WorldCountries.Add(country);
+                }
+            }
+            UpdateCollections();
+            DataFromFile = false;
+            DataFromDb = true;
+        }
+
+        private long AddNewCountriesToExistingDatabase(IMongoCollection<WorldCountry> worldCountries, 
+            FilterDefinition<WorldCountry> filter, long totalCount)
+        {
+            ObservableCollection<WorldCountry> dbCountries = new ObservableCollection<WorldCountry>();
+            ObservableCollection<WorldCountry> missingCountries = new ObservableCollection<WorldCountry>();
+
+            using (var cursor = worldCountries.FindSync(filter))
+            {
+                var countryList = cursor.ToList();
+                foreach (var country in countryList)
+                {
+                    dbCountries.Add(country);
+                }
+            }
+
+            foreach (var currentCountry in WorldCountries)
+            {
+                bool countryInDb = false;
+                foreach (var dbCountry in dbCountries)
+                {
+                    if (dbCountry.Country == currentCountry.Country)
+                        countryInDb = true;
+                    if (countryInDb)
+                        break;
+                }
+
+                if (!countryInDb)
+                    missingCountries.Add(currentCountry);
+            }
+
+            worldCountries.InsertMany(missingCountries);
+            totalCount = worldCountries.Count(filter);
+            return totalCount;
+        }
+
+        private long AddLoadedCountriesToBlankDatabase(IMongoCollection<WorldCountry> worldCountries, 
+            FilterDefinition<WorldCountry> filter, long totalCount)
+        {
+            worldCountries.InsertMany(WorldCountries);
+            totalCount = worldCountries.Count(filter);
+            return totalCount;
         }
 
         private void ConnectToBooksDatabase()
