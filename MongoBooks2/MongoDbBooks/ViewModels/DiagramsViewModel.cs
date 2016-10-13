@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.Linq.Expressions;
 
-using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
@@ -15,7 +13,6 @@ using OxyPlot;
 using MongoDbBooks.Models;
 using MongoDbBooks.Models.Geography;
 using MongoDbBooks.ViewModels.Utilities;
-using MongoDbBooks.ViewModels.PlotGenerators;
 
 namespace MongoDbBooks.ViewModels
 {
