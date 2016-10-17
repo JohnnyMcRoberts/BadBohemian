@@ -78,7 +78,7 @@
                              ItemsSource="{Binding Path=AuthorNationalities}" 
                              SelectedItem="{Binding Path=NewBookNationality, Mode=TwoWay}" 
                              HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"
-                             Text="{Binding Path=NewBookNationalityText, Mode=OneWayToSource}"/>
+                             Text="{Binding Path=NewBookNationalityText, Mode=TwoWay}"/>
 
 
                         <Label Grid.Row="5" Content="Original Language" 
@@ -88,7 +88,7 @@
                              ItemsSource="{Binding Path=OriginalLanguages}" 
                              SelectedItem="{Binding Path=NewBookOriginalLanguage, Mode=TwoWay}" 
                              HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"
-                             Text="{Binding Path=NewBookOriginalLanguageText, Mode=OneWayToSource}"/>
+                             Text="{Binding Path=NewBookOriginalLanguageText, Mode=TwoWay}"/>
 
 
 

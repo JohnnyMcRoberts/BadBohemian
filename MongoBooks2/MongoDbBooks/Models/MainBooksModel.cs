@@ -421,7 +421,6 @@ namespace MongoDbBooks.Models
             return _worldCountryLookup[book.Nationality];
         }
 
-
         private void UpdateWorldCountryLookup()
         {
             _worldCountryLookup = new Dictionary<string, WorldCountry>();
@@ -942,8 +941,6 @@ namespace MongoDbBooks.Models
             }
         }
 
-
         #endregion
-
     }
 }
