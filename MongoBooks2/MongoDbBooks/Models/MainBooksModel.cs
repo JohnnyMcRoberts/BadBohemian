@@ -804,7 +804,7 @@ namespace MongoDbBooks.Models
             // this is a dummy query to get everything to date...
 
             var filter = Builders<BookRead>.Filter.Lte(
-                new StringFieldDefinition<BookRead, BsonDateTime>("date"), new BsonDateTime(DateTime.Now));
+                new StringFieldDefinition<BookRead, BsonDateTime>("date"), new BsonDateTime(DateTime.Now.AddDays(1000)));
 
             long totalCount = booksRead.Count(filter);
 
@@ -923,8 +923,9 @@ namespace MongoDbBooks.Models
                         dupBook.Pages == extBook.Pages)
                     {
                         var timeDiff = dupBook.Date - extBook.Date;
+                        int hours = (timeDiff.Days * 24) +  timeDiff.Hours;
 
-                        if (Math.Abs(timeDiff.Hours) < 48)
+                        if (Math.Abs(hours) < 48)
                             duplicateBooks.Add(dupBook);
                         else
                             timeDiff = extBook.Date - dupBook.Date;
