@@ -311,7 +311,6 @@ namespace MongoDbBooks.ViewModels
             return countryGeometry;
         }
 
-
         private Dictionary<string, uint> _countryToLogPagesLookUp;
 
         private void SetupPagesReadByCountryModel()
@@ -378,7 +377,6 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
-
         private void AddCountryPagesSpiral(Model3DGroup modelGroup, List<OxyColor> colors, AuthorCountry authorCountry, 
             string name, WorldCountry country)
         {
@@ -403,7 +401,6 @@ namespace MongoDbBooks.ViewModels
             modelGroup.Children.Add(countryText.Content);
         }
 
-
         private GeometryModel3D GetCountryHelixArrowGeometry(
             double latitude, double longitude, double height, OxyColor color)
         {
@@ -416,12 +413,12 @@ namespace MongoDbBooks.ViewModels
 
             countryGeometry.Material = MaterialHelper.CreateMaterial(brush, ambient: 177);
             var meshBuilder = new MeshBuilder(false, false);
-
+            
+            var top = new Point3D(x, y, height);
             var countryPoint = new Point3D(x, y, 0);
 
-            meshBuilder.AddEllipsoid(countryPoint, 1.0, 1.0, height);
+            meshBuilder.AddCone(top, countryPoint, 1.0, true, 16);
 
-            var top = new Point3D(x, y, height);
             var textStart = new Point3D(x, y + 1, height + 1);
 
             meshBuilder.AddArrow(textStart, top, 0.1);
@@ -429,7 +426,6 @@ namespace MongoDbBooks.ViewModels
             countryGeometry.Geometry = meshBuilder.ToMesh();
             return countryGeometry;
         }
-
 
         private void SetupCountyPagesLookups(out int maxBooksPages, out int maxBooksLogPages,
             out Dictionary<string, long> countryToReadLookUp, out Dictionary<string, uint> countryToPagesLookUp,
@@ -458,7 +454,6 @@ namespace MongoDbBooks.ViewModels
                 countryToLogPagesLookUp.Add(authorCountry.Country, logPages - 10);
             }
         }
-
 
         private TextVisual3D GetCountryText(
             double latitude, double longitude, int booksCount, string label, double height)

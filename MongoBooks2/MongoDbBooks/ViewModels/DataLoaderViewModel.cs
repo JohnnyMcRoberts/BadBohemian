@@ -92,7 +92,7 @@ namespace MongoDbBooks.ViewModels
         }
 
         #endregion
-
+        
         #region Commands
 
         public ICommand OpenTextCommand

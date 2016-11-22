@@ -115,7 +115,7 @@ namespace MongoDbBooks.ViewModels
         }
         public List<string> AuthorNationalities
         {
-            get { return (from book in BooksRead orderby book.Nationality select book.Nationality).Distinct().ToList(); }
+            get { return (from country in _mainModel.WorldCountries orderby country.Country select country.Country).Distinct().ToList(); }
         }
         public List<string> OriginalLanguages
         {
