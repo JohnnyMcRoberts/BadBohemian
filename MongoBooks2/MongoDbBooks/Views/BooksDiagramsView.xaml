@@ -29,6 +29,16 @@
 
             </TabItem>
 
+            <TabItem  Header="Pages by Country ">
+                <h:HelixViewport3D >
+                    <h:SunLight  />
+                    <!-- The content of this visual is defined in MainViewModel.cs -->
+                    <ModelVisual3D Content="{Binding PagesByCountryModel}"/>
+
+                </h:HelixViewport3D>
+
+            </TabItem>
+
         </TabControl>
             
     </Grid>
