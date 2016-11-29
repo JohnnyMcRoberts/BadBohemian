@@ -7,7 +7,7 @@
              d:DesignHeight="800" d:DesignWidth="1000">
     <Grid>
 
-        <TabControl Margin="10,10,0,0" Grid.Row="1" MinHeight="700" MinWidth="800"
+        <TabControl Margin="10,10,0,0" Grid.Row="1" MinHeight="550" MinWidth="800"
                        HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"
                               MaxHeight="{Binding ElementName=UserControl, Path=ActualHeight}"
                               MaxWidth="{Binding ElementName=UserControl, Path=ActualWidth}">
