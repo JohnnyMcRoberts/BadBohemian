@@ -52,13 +52,13 @@
                 <MenuItem Header="_Show groups" IsCheckable="True" IsChecked="True" />
             </MenuItem>
         </Menu>
-        <Grid>
+        <Grid MinHeight="625">
 
             <DockPanel>
-                <TabControl >
+                <TabControl MinHeight="600">
 
                     <TabItem Header="Grids">
-                        <Grid Background="#FFE5E5E5" >
+                        <Grid Background="#FFE5E5E5"  MinHeight="575">
                             <Views:BooksGridsView  DataContext="{Binding Path=DataGridsVM}" />
                         </Grid>
                     </TabItem>
