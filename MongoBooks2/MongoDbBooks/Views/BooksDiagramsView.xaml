@@ -14,7 +14,7 @@
                     <h:GridLinesVisual3D/>
                     <!-- The content of this visual is defined in MainViewModel.cs -->
                     <ModelVisual3D Content="{Binding BooksReadByCountryModel}"/>
-                    
+
                 </h:HelixViewport3D>
 
             </TabItem>
@@ -24,6 +24,12 @@
                     <h:GridLinesVisual3D/>
                     <!-- The content of this visual is defined in MainViewModel.cs -->
                     <ModelVisual3D Content="{Binding PagesReadByCountryModel}"/>
+
+                    <h:HelixViewport3D.Camera>
+                        <PerspectiveCamera  
+                            Position="5,45,75" ></PerspectiveCamera>
+                        
+                    </h:HelixViewport3D.Camera>
 
                 </h:HelixViewport3D>
 
