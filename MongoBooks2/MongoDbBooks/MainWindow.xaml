@@ -90,6 +90,15 @@
                         </Grid>
                     </TabItem>
 
+
+
+                    <TabItem Header="Chart Selection">
+                        <Grid Background="#FFE5E5E5" >
+                            <Views:ChartSelectionView  DataContext="{Binding Path=ChartSelectionVM}" />
+                        </Grid>
+                    </TabItem>
+
+
                 </TabControl>
             </DockPanel>
 

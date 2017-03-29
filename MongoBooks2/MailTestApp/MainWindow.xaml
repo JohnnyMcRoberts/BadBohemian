@@ -51,8 +51,7 @@
                 IsEnabled="{Binding Path=IsValidToConnect}"/>
 
         <ScrollViewer  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" >
-
-            <TextBlock Text="{Binding Path=MailItemsText}" TextWrapping="Wrap" />
+            <TextBox Text="{Binding Path=MailItemsText}" TextWrapping="Wrap" IsReadOnly="True" />
         </ScrollViewer>
             
 
