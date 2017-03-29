@@ -111,6 +111,7 @@
     <Compile Include="Models\Geography\PolygonPoint.cs" />
     <Compile Include="Models\WorldCountry.cs" />
     <Compile Include="Utilities\Logger.cs" />
+    <Compile Include="ViewModels\ChartSelectionViewModel.cs" />
     <Compile Include="ViewModels\ChartsViewModel.cs" />
     <Compile Include="ViewModels\DataGridsViewModel.cs" />
     <Compile Include="ViewModels\DataLoaderViewModel.cs" />
@@ -172,6 +173,9 @@
     <Compile Include="Views\BooksGridsView.xaml.cs">
       <DependentUpon>BooksGridsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ChartSelectionView.xaml.cs">
+      <DependentUpon>ChartSelectionView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -198,6 +202,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BooksGridsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChartSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

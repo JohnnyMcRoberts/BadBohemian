@@ -130,10 +130,11 @@ namespace MailTestApp.ViewModels
                     var _mailBox = _clientImap4.SelectMailbox(_selectedMailBox);
 
                     string messageItemText = "";
-                    foreach (var messageId in _mailBox.Search("ALL").AsEnumerable())
+                    foreach (var messageId in _mailBox.Search("ALL").AsEnumerable().OrderByDescending(x => x))
                     {
                         var message = _mailBox.Fetch.Message(messageId);
                         var _imapMessage = Parser.ParseMessage(message);
+
                         messageItemText +=
                         "From: " + _imapMessage.From.Name + ", Subject: " + _imapMessage.Subject + "\n";
 
