@@ -101,6 +101,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\ClassForGit.cs" />
     <Compile Include="Models\BaseMongoEntity.cs" />
     <Compile Include="Models\BookLocation.cs" />
     <Compile Include="Models\BookLocationDelta.cs" />
