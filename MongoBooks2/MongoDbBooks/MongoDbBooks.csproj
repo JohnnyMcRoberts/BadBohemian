@@ -101,7 +101,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\ClassForGit.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Models\BaseMongoEntity.cs" />
     <Compile Include="Models\BookLocation.cs" />
     <Compile Include="Models\BookLocationDelta.cs" />
@@ -254,6 +254,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\map.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Mail-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
