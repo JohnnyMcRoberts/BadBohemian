@@ -36,6 +36,12 @@
                         <Image Source="./Images/database-medium.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Connect To _Mailbox" 
+                          Command="{Binding Path=MailboxLoaderVM.ConnectToMailboxCommand}" >
+                    <MenuItem.Icon>
+                        <Image Source="./Images/Mail-icon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="_Exit">
                     <MenuItem.Icon>
@@ -76,7 +82,7 @@
                             <Views:BooksDiagramsView  DataContext="{Binding Path=DiagramsVM}" />
                         </Grid>
                     </TabItem>
-                    
+
 
                     <TabItem Header="Update">
                         <Grid Background="#FFE5E5E5" >
@@ -99,4 +105,3 @@
         </Grid>
     </DockPanel>
 </Window>
-
