@@ -51,6 +51,7 @@ namespace MongoDbBooks.ViewModels
             _dataGridsVM = new DataGridsViewModel(_mainWindow, log, _mainModel, this);
             _chartsVM = new ChartsViewModel(_mainWindow, log, _mainModel, this);
             _diagramsVM = new DiagramsViewModel(_mainWindow, log, _mainModel, this);
+            _mailboxLoaderVM = new MailboxLoaderViewModel(_mainWindow, log, _mainModel, this);
 
             if (_mainModel.ConnectedToDbSuccessfully)
                 UpdateData();
@@ -71,6 +72,7 @@ namespace MongoDbBooks.ViewModels
         private DataGridsViewModel _dataGridsVM;
         private ChartsViewModel _chartsVM;
         private DiagramsViewModel _diagramsVM;
+        private MailboxLoaderViewModel _mailboxLoaderVM;
 
         #endregion
 
@@ -106,6 +108,11 @@ namespace MongoDbBooks.ViewModels
         public DiagramsViewModel DiagramsVM
         {
             get { return _diagramsVM; }
+        }
+
+        public MailboxLoaderViewModel MailboxLoaderVM
+        {
+            get { return _mailboxLoaderVM; }
         }
 
         #endregion

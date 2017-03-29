@@ -36,6 +36,12 @@
                         <Image Source="./Images/database-medium.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Connect To _Mailbox" 
+                          Command="{Binding Path=MailboxLoaderVM.ConnectToMailboxCommand}" >
+                    <MenuItem.Icon>
+                        <Image Source="./Images/Mail-icon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="_Exit">
                     <MenuItem.Icon>
@@ -52,13 +58,13 @@
                 <MenuItem Header="_Show groups" IsCheckable="True" IsChecked="True" />
             </MenuItem>
         </Menu>
-        <Grid>
+        <Grid MinHeight="625">
 
             <DockPanel>
-                <TabControl >
+                <TabControl MinHeight="600">
 
                     <TabItem Header="Grids">
-                        <Grid Background="#FFE5E5E5" >
+                        <Grid Background="#FFE5E5E5"  MinHeight="575">
                             <Views:BooksGridsView  DataContext="{Binding Path=DataGridsVM}" />
                         </Grid>
                     </TabItem>
@@ -76,7 +82,7 @@
                             <Views:BooksDiagramsView  DataContext="{Binding Path=DiagramsVM}" />
                         </Grid>
                     </TabItem>
-                    
+
 
                     <TabItem Header="Update">
                         <Grid Background="#FFE5E5E5" >
@@ -90,4 +96,3 @@
         </Grid>
     </DockPanel>
 </Window>
-
