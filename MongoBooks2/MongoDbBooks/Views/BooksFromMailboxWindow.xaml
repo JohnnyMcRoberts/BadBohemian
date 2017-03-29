@@ -1,0 +1,295 @@
+﻿<Window x:Class="MongoDbBooks.Views.BooksFromMailboxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit" 
+        xmlns:vmu="clr-namespace:MongoDbBooks.ViewModels.Utilities"
+        xmlns:converters="clr-namespace:MongoDbBooks.Converters"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Import Books From Mailbox"
+             d:DesignHeight="800" d:DesignWidth="1000">
+    <Grid>
+        <Grid Margin="10">
+            <Grid.Resources>
+                <converters:BooleanToVisibilityConverter x:Key="booleanToVisibility" />
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="140"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="160"/>
+                <RowDefinition Height="30*"/>
+            </Grid.RowDefinitions>
+            <Grid  Grid.Row="0" IsEnabled="{Binding Path=CanSetEmailParameters}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="125"/>
+                    <ColumnDefinition  Width="225"/>
+                    <ColumnDefinition  Width="15"/>
+                    <ColumnDefinition  Width="125*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Email" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <xctk:WatermarkTextBox  Grid.Row="1" Grid.Column="1" 
+                             TextWrapping="NoWrap" 
+                             Text="{Binding Path=EmailAdress, Mode=TwoWay}"  MinWidth="150"
+                                 HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <xctk:WatermarkTextBox.Watermark>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="someone@gmail.com" Margin="4,0,0,0" />
+                        </StackPanel>
+                    </xctk:WatermarkTextBox.Watermark>
+                </xctk:WatermarkTextBox>
+
+                <Button Grid.Row="1" Grid.Column="3" Content="{Binding Path=SetDefaultUserText}" Height="22"
+                                Command="{Binding Path=SetDefaultUserCommand}" MinWidth="1" HorizontalAlignment="Left"
+                                IsEnabled="{Binding Path=IsDefaultUser}"/>
+
+                <Label Grid.Row="2" Grid.Column="0"  Content="Password" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <PasswordBox PasswordChar="*" Grid.Row="2" Grid.Column="1" 
+                     MinWidth="150"
+                     vmu:PasswordHelper.Attach="True" 
+                     vmu:PasswordHelper.Password="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     HorizontalAlignment="Stretch"  VerticalAlignment="Center">
+                    <PasswordBox.InputBindings>
+                        <KeyBinding Command="{Binding Path=ReadEmailCommand}" Key="Enter"></KeyBinding>
+                    </PasswordBox.InputBindings>
+                </PasswordBox>
+
+                <Button Grid.Row="3" Grid.Column="1" Content="Connect To Mailbox" Height="22"
+                                Command="{Binding Path=ReadEmailCommand}" 
+                IsEnabled="{Binding Path=IsValidToConnect}"/>
+
+            </Grid>
+
+            <Grid Grid.Row="1" Visibility="{Binding Path=ReadingEmails, Converter={StaticResource booleanToVisibility}}">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="175"/>
+                    <ColumnDefinition  Width="125"/>
+                    <ColumnDefinition  Width="225"/>
+                    <ColumnDefinition  Width="15"/>
+                    <ColumnDefinition  Width="125*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Content="Connecting to E-Mail Inbox" FontWeight="Bold"></Label>
+                <ProgressBar Grid.Column="1" Grid.ColumnSpan="4"
+                         Height="15" Minimum="0" Maximum="1" Margin="15,2,15,2" IsIndeterminate="True" HorizontalAlignment="Left" Width="345"/>
+            </Grid>
+
+            <ScrollViewer Grid.Row="2" >
+
+                <TextBox Background="Transparent"
+                    BorderThickness="0"
+                    Text="{Binding Path=MailItemsText, Mode=OneWay}"
+                    IsReadOnly="True"
+                    TextWrapping="Wrap" />
+            </ScrollViewer>
+
+            <ScrollViewer Grid.Row="3" 
+                      Visibility="{Binding Path=BooksReadFromEmailToDisplay, Converter={StaticResource booleanToVisibility}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="470"/>
+                        <ColumnDefinition  Width="350*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="200*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Column="0" Grid.Row="0"  Content="New Books to Add" FontWeight="Bold"></Label>
+
+                    <DataGrid Grid.Column="0" Grid.Row="1" AutoGenerateColumns="False"
+                                    ItemsSource="{Binding Path=BooksReadFromEmail, Mode=OneWay}"
+                                    SelectedItem="{Binding Path=SelectedEmailedBook, Mode=OneWayToSource}"
+                                    IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+                        <DataGrid.Columns>
+
+                            <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn Header="Author" 
+                                                Binding="{Binding Author}" 
+                                                Width="150"/>
+
+                            <DataGridTextColumn Header="Title" 
+                                                Binding="{Binding Title}" 
+                                                Width="150"/>
+
+                            <DataGridTextColumn Header="Pages" 
+                                                Binding="{Binding Pages}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Format" 
+                                                Binding="{Binding Format}" 
+                                                Width="Auto"/>
+
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+
+                    <Grid Grid.Column="1" Grid.Row="1">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="40*"/>
+                            <RowDefinition Height="40"/>
+
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Content="Date" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <DatePicker  Grid.Row="0" Grid.Column="1"
+                           HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,5,0"  Width="120" 
+                           SelectedDate="{Binding Path=NewBookDate, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}"/>
+                        <Label Grid.Row="0" Content="Date Text"  Grid.Column="2"
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                        <TextBlock  Grid.Row="0" Grid.Column="3"
+                            HorizontalAlignment="Left" VerticalAlignment="Center"  Width="120" Text="{Binding Path=NewBookDateText}"/>
+
+
+                        <Label Grid.Row="1" Grid.Column="0" Content="Author" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <ComboBox IsEditable="True" 
+                             Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"      
+                             ItemsSource="{Binding Path=AuthorNames}" 
+                             SelectedItem="{Binding Path=NewBookAuthor, Mode=TwoWay}" 
+                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290" 
+                             Text="{Binding Path=NewBookAuthorText, Mode=TwoWay}"/>
+
+
+                        <Button Content="Add Selected Book" Grid.Row="1" Grid.Column="2" 
+                                HorizontalAlignment="Left" Margin="10,10,0,0"
+                                VerticalAlignment="Top" Width="125" Height="22"
+                                Command="{Binding Path=AddSelectedBookCommand}" 
+                                IsEnabled="{Binding Path=CanAddSelectedBook}"/>
+
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Title" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="2" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0" 
+                             Height="23" TextWrapping="NoWrap" 
+                             Text="{Binding Path=NewBookTitle, Mode=TwoWay}" 
+                                 HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocusCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Pages" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="3" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0" 
+                             Height="23" TextWrapping="NoWrap" 
+                             Text="{Binding Path=NewBookPages, Mode=TwoWay}" 
+                                 HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocusCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+
+
+                        <Label Grid.Row="4" Grid.Column="0" Content="Author's Home Country" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <ComboBox IsEditable="True" 
+                             Grid.Row="4" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"      
+                             ItemsSource="{Binding Path=AuthorNationalities}" 
+                             SelectedItem="{Binding Path=NewBookNationality, Mode=TwoWay}" 
+                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"
+                             Text="{Binding Path=NewBookNationalityText, Mode=OneWayToSource}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocusCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+
+
+                        <Label Grid.Row="5" Grid.Column="0" Content="Original Language" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <ComboBox IsEditable="True" 
+                             Grid.Row="5" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"      
+                             ItemsSource="{Binding Path=OriginalLanguages}" 
+                             SelectedItem="{Binding Path=NewBookOriginalLanguage, Mode=TwoWay}" 
+                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"
+                             Text="{Binding Path=NewBookOriginalLanguageText, Mode=OneWayToSource}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocusCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+
+
+
+                        <Label Grid.Row="6" Grid.Column="0" Content="Format" 
+                            HorizontalAlignment="Left"  VerticalAlignment="Top" />
+                        <Grid Grid.Row="6" Grid.Column="1"  Margin="5,5,5,0">
+                            <StackPanel >
+                                <RadioButton IsChecked="{Binding Path=NewBookFormatIsBook}">Book</RadioButton>
+                                <RadioButton IsChecked="{Binding Path=NewBookFormatIsComic}">Comic</RadioButton>
+                                <RadioButton IsChecked="{Binding Path=NewBookFormatIsAudio}">Audio</RadioButton>
+                            </StackPanel>
+                        </Grid>
+
+
+                        <Label Grid.Row="7" Grid.Column="0" Content="Notes" 
+                            HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <TextBox Grid.Row="7" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0" 
+                             Height="23" TextWrapping="Wrap" 
+                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.CanContentScroll="True"
+                             Text="{Binding Path=NewBookNote, Mode=TwoWay}" 
+                                 HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="290"/>
+
+
+
+                    </Grid>
+
+
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>
