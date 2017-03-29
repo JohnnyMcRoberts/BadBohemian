@@ -1,110 +1,206 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Driver;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BookRead.cs" company="N/A">
+//   2016-2020
+// </copyright>
+// <summary>
+//   The book format.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace MongoDbBooks.Models
 {
-    public enum BookFormat
-    {
-        Book = 1,
-        Comic = 2,
-        Audio = 3
-    };
+    using System;
 
+    using MongoDB.Bson.Serialization.Attributes;
 
+    /// <summary>
+    /// The book read.
+    /// </summary>
     [BsonIgnoreExtraElements]
-    public class BookRead : BaseMongoEntity
+    public class BookRead : BaseMongoEntity, IBookRead
     {
-        // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio
+        #region Private Data
 
-        #region Public Data
+        /// <summary>
+        /// Whether is book.
+        /// </summary>
+        private string _isBook;
 
-        [BsonElement("dateString")]
-        public string DateString { get; set; }
-        [BsonElement("date")]
-        public DateTime Date { get; set; }
-        [BsonElement("author")]
-        public string Author { get; set; }
-        [BsonElement("title")]
-        public string Title { get; set; }
-        [BsonElement("pages")]
-        public UInt16 Pages { get; set; }
-        [BsonElement("note")]
-        public string Note { get; set; }
-        [BsonElement("nationality")]
-        public string Nationality { get; set; }
-        [BsonElement("originalLanguage")]
-        public string OriginalLanguage { get; set; }
+        /// <summary>
+        /// Whether is comic.
+        /// </summary>
+        private string _isComic;
 
-        public string Book
-        {
-            get { return _isBook; }
-            set
-            {
-                _isBook = value;
-                if (!string.IsNullOrEmpty(_isBook)) Format = BookFormat.Book;
-            }
-        }
-        public string Comic
-        {
-            get { return _isComic; }
-            set
-            {
-                _isComic = value;
-                if (!string.IsNullOrEmpty(_isComic)) Format = BookFormat.Comic;
-            }
-        }
-        public string Audio
-        {
-            get { return _isAudio; }
-            set
-            {
-                _isAudio = value;
-                if (!string.IsNullOrEmpty(_isAudio)) Format = BookFormat.Audio;
-            }
-        }
+        /// <summary>
+        /// Whether is audio.
+        /// </summary>
+        private string _isAudio;
 
-        [BsonElement("format")]
-        public BookFormat Format
-        {
-            get { return _bookFormat; }
-            set
-            {
-                _bookFormat = value;
-                switch (_bookFormat)
-                {
-                    case BookFormat.Book: _isBook = "x"; _isComic = _isAudio = ""; break;
-                    case BookFormat.Audio: _isAudio = "x"; _isBook = _isComic = ""; break;
-                    case BookFormat.Comic: _isComic = "x"; _isBook = _isAudio = ""; break;
-                }
-            }
-        }
+        /// <summary>
+        /// The format.
+        /// </summary>
+        private BookFormat _bookFormat;
 
         #endregion
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookRead"/> class.
+        /// </summary>
         public BookRead()
         {
-            Format = BookFormat.Book;
+            this.Format = BookFormat.Book;
         }
 
         #endregion
 
-        #region Private Data
+        // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio
+        #region Public Data
 
-        private string _isBook;
-        private string _isComic;
-        private string _isAudio;
+        /// <summary>
+        /// Gets or sets the date string.
+        /// </summary>
+        [BsonElement("dateString")]
+        public string DateString { get; set; }
 
-        private BookFormat _bookFormat;
+        /// <summary>
+        /// Gets or sets the date.
+        /// </summary>
+        [BsonElement("date")]
+        public DateTime Date { get; set; }
+
+        /// <summary>
+        /// Gets or sets the author.
+        /// </summary>
+        [BsonElement("author")]
+        public string Author { get; set; }
+
+        /// <summary>
+        /// Gets or sets the title.
+        /// </summary>
+        [BsonElement("title")]
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pages.
+        /// </summary>
+        [BsonElement("pages")]
+        public ushort Pages { get; set; }
+
+        /// <summary>
+        /// Gets or sets the note.
+        /// </summary>
+        [BsonElement("note")]
+        public string Note { get; set; }
+
+        /// <summary>
+        /// Gets or sets the nationality.
+        /// </summary>
+        [BsonElement("nationality")]
+        public string Nationality { get; set; }
+
+        /// <summary>
+        /// Gets or sets the original language.
+        /// </summary>
+        [BsonElement("originalLanguage")]
+        public string OriginalLanguage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the book.
+        /// </summary>
+        public string Book
+        {
+            get
+            {
+                return this._isBook;
+            }
+
+            set
+            {
+                this._isBook = value;
+                if (!string.IsNullOrEmpty(this._isBook))
+                {
+                    this.Format = BookFormat.Book;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the comic.
+        /// </summary>
+        public string Comic
+        {
+            get
+            {
+                return this._isComic;
+            }
+
+            set
+            {
+                this._isComic = value;
+                if (!string.IsNullOrEmpty(this._isComic))
+                {
+                    this.Format = BookFormat.Comic;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the audio.
+        /// </summary>
+        public string Audio
+        {
+            get
+            {
+                return this._isAudio;
+            }
+
+            set
+            {
+                this._isAudio = value;
+                if (!string.IsNullOrEmpty(this._isAudio))
+                {
+                    this.Format = BookFormat.Audio;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the format.
+        /// </summary>
+        [BsonElement("format")]
+        public BookFormat Format
+        {
+            get
+            {
+                return _bookFormat;
+            }
+
+            set
+            {
+                _bookFormat = value;
+                if (_bookFormat == BookFormat.Book)
+                {
+                    _isBook = "x";
+                    _isComic = string.Empty;
+                    _isAudio = string.Empty;
+                }
+                else if (_bookFormat == BookFormat.Audio)
+                {
+                    _isAudio = "x";
+                    _isBook = string.Empty;
+                    _isComic = string.Empty;
+                }
+                else if (_bookFormat == BookFormat.Comic)
+                {
+                    _isComic = "x";
+                    _isBook = string.Empty;
+                    _isAudio = string.Empty;
+                }
+            }
+        }
 
         #endregion
-
     }
 }

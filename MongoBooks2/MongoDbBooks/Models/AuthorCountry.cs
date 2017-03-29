@@ -13,18 +13,15 @@ namespace MongoDbBooks.Models
         {
             get
             {
-                UInt32 total = 0;
-                foreach (var author in AuthorsFromCountry) total += author.TotalPages;
-                return total;
+                return AuthorsFromCountry.Aggregate<BookAuthor, uint>(0, (current, author) => current + author.TotalPages);
             }
         }
+
         public int TotalBooksReadFromCountry
         {
             get
             {
-                int total = 0;
-                foreach (var author in AuthorsFromCountry) total += author.TotalBooksReadBy;
-                return total;
+                return AuthorsFromCountry.Sum(author => author.TotalBooksReadBy);
             }
         }
 

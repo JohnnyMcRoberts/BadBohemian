@@ -10,7 +10,6 @@ using System.Data;
 
 using MongoDbBooks.Models;
 using MongoDbBooks.Models.Geography;
-using MongoDbBooks.ViewModels.Utilities;
 
 namespace MongoDbBooks.ViewModels
 {

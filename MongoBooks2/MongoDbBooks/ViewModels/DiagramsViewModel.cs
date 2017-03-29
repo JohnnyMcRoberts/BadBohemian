@@ -99,7 +99,8 @@ namespace MongoDbBooks.ViewModels
             Model3DGroup modelGroup = new Model3DGroup();
 
             // get the range of colours for the for the countries
-            int range = _mainModel.AuthorCountries.Select(s => s.TotalBooksReadFromCountry).Max();
+            int range = _mainModel.AuthorCountries.Count > 0 ?
+                _mainModel.AuthorCountries.Select(s => s.TotalBooksReadFromCountry).Max() : 5;
             OxyPalette faintPalette;
             List<OxyColor> colors;
             OxyPlotUtilities.SetupFaintPaletteForRange( range, out colors, out faintPalette, 128);

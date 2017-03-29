@@ -52,6 +52,7 @@ namespace MongoDbBooks.ViewModels
             _chartsVM = new ChartsViewModel(_mainWindow, log, _mainModel, this);
             _diagramsVM = new DiagramsViewModel(_mainWindow, log, _mainModel, this);
             _chartSelectionVM = new ChartSelectionViewModel(_mainWindow, log, _mainModel, this);
+            _mailboxLoaderVM = new MailboxLoaderViewModel(_mainWindow, log, _mainModel, this);
 
             if (_mainModel.ConnectedToDbSuccessfully)
                 UpdateData();
@@ -72,6 +73,7 @@ namespace MongoDbBooks.ViewModels
         private ChartsViewModel _chartsVM;
         private DiagramsViewModel _diagramsVM;
         private ChartSelectionViewModel _chartSelectionVM;
+        private MailboxLoaderViewModel _mailboxLoaderVM;
 
         #endregion
 
@@ -112,6 +114,11 @@ namespace MongoDbBooks.ViewModels
         public ChartSelectionViewModel ChartSelectionVM
         {
             get { return _chartSelectionVM; }
+        }
+
+        public MailboxLoaderViewModel MailboxLoaderVM
+        {
+            get { return _mailboxLoaderVM; }
         }
 
         #endregion
