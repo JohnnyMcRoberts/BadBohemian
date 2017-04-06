@@ -30,6 +30,7 @@
         private Dictionary<string, WorldCountry> _worldCountryLookup;
 
         private static IMailReader _mailReader;
+        private string _defaultUserName;
 
         #endregion
 
@@ -58,7 +59,7 @@
             OutputFilePath = Properties.Settings.Default.OutputFile;
             InputCountriesFilePath = Properties.Settings.Default.InputCountriesFile;
             InputWorldMapFilePath = Properties.Settings.Default.InputWorldMapFile;
-            
+            _defaultUserName = Properties.Settings.Default.UserName;
 
             string errorMsg;
             ConnectedToDbSuccessfully = ConnectToDatabase(out errorMsg);
@@ -98,6 +99,19 @@
         public string OutputFilePath { get; set; }
         public string InputCountriesFilePath { get; set; }
         public string InputWorldMapFilePath { get; set; }
+
+        public string DefaultUserName
+        {
+            get
+            {
+                return _defaultUserName;
+            }
+            set
+            {
+                _defaultUserName = value;
+                Properties.Settings.Default.Save();
+            }
+        }
 
         public bool DataFromFile { get; set; }
         public bool DataFromDb { get; set; }
