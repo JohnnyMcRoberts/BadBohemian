@@ -111,8 +111,6 @@ namespace MailTestApp.ViewModels
             string msg = "Getting Mail from '" + _emailAddress + "' with password '" + _password + "'";
             MessageBox.Show(msg);
 
-            // login johnnymcbobatwork@gmail.com
-
             string _selectedMailBox = "INBOX";
 
             using (var _clientImap4 = new Imap4Client())
