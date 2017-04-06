@@ -108,8 +108,12 @@
             }
             set
             {
-                _defaultUserName = value;
-                Properties.Settings.Default.Save();
+                if (_defaultUserName != value)
+                {
+                    _defaultUserName = value;
+                    Properties.Settings.Default.UserName = _defaultUserName;
+                    Properties.Settings.Default.Save();
+                }
             }
         }
 

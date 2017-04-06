@@ -673,8 +673,7 @@ namespace MongoDbBooks.ViewModels
 
                 RemoveBooksAlreadyInDatabaseFromEmailBooks(_booksReadFromEmail);
 
-
-                _mainModel.DefaultUserName = _userName;
+                _mainModel.DefaultUserName = _emailAddress;
             }
         }
 
