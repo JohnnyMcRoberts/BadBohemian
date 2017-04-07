@@ -97,10 +97,64 @@
                     </Grid>
 
                     <Image Grid.Row="1" Source="http://img.timeoutshanghai.com/201304/20130401044423690_Medium.jpg" />
+                    <DockPanel  Grid.Row="2">
+                        <ToolBar DockPanel.Dock="Top">
 
-                    <WebBrowser Grid.Row="2"
-                         Source="https://www.google.com/search?q=J.G. Ballard&amp;tbm=isch"
-                VerticalAlignment="Center" />
+                            <Button  Command="{Binding Path=BrowseBackNavigationCommand}">
+
+                                <Grid>
+                                    <Ellipse HorizontalAlignment="Center" Height="26" Stroke="Blue"
+                                                              VerticalAlignment="Center" Width="26"/>
+                                    <Path HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="Blue"
+                                                           Data="M0,25 L25,0 25,13 50,13 50,37 25,37 25,50z" StrokeThickness="4" >
+
+                                        <Path.LayoutTransform>
+                                            <ScaleTransform  ScaleX="0.30" ScaleY="0.30" />
+                                        </Path.LayoutTransform>
+
+                                        <Path.RenderTransform>
+                                            <RotateTransform Angle="0" CenterX="8" CenterY="8" />
+                                        </Path.RenderTransform>
+
+                                    </Path>
+
+                                </Grid>
+                            </Button>
+                            <Button Command="{Binding Path=BrowseForwardNavigationCommand}">
+
+                                <Grid>
+                                    <Ellipse HorizontalAlignment="Center" Height="26"
+                                                              Stroke="Blue"
+                                                              VerticalAlignment="Center" Width="26"/>
+                                    <Path HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="Blue"
+                                                           Data="M0,25 L25,0 25,13 50,13 50,37 25,37 25,50z" StrokeThickness="4" >
+
+                                        <Path.LayoutTransform>
+                                            <ScaleTransform  ScaleX="0.30" ScaleY="0.30" />
+                                        </Path.LayoutTransform>
+
+                                        <Path.RenderTransform>
+                                            <RotateTransform Angle="180" CenterX="8" CenterY="8" />
+                                        </Path.RenderTransform>
+
+                                    </Path>
+
+                                </Grid>
+                            </Button>
+                            <Separator />
+                            <TextBox Name="txtUrl" Text="{Binding WebAddress}" Width="300"/>
+                            <Button Command="{Binding Path=GoToPageNavigationCommand}">
+
+                                <Image Source="./Images/arrowAndEarth.jpg"  Width="32" Height="32"/>
+                            </Button>
+                        </ToolBar>
+
+                        <WebBrowser
+                        vm:WebBrowserProperties.Url="{Binding FindImageUrl}"
+                        VerticalAlignment="Center" />
+
+
+                    </DockPanel>
                 </Grid>
 
             </TabItem>

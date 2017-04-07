@@ -43,8 +43,13 @@ namespace MailTestApp.ViewModels
         private string _password;
         private bool _isValidToConnect;
         private string _mailItemsText;
+        private string _webAddress;
 
         private ICommand _readEmailCommand;
+        private ICommand _browseBackNavigationCommand;
+        private ICommand _browseForwardNavigationCommand;
+        private ICommand _goToPageNavigationCommand;
+        private Uri _findImageUrl;
 
         #endregion
 
@@ -74,6 +79,19 @@ namespace MailTestApp.ViewModels
             private set { _isValidToConnect = value; OnPropertyChanged(() => IsValidToConnect); }
         }
 
+        public Uri FindImageUrl
+        {
+            get { return _findImageUrl; }
+            private set { _findImageUrl = value; OnPropertyChanged(() => FindImageUrl); }
+        }
+
+        public string WebAddress
+        {
+            get { return _webAddress; }
+            set { _webAddress = value; FindImageUrl = new Uri(value); OnPropertyChanged(() => WebAddress); }
+        }
+
+
         #endregion
 
         #region Constructors
@@ -83,6 +101,7 @@ namespace MailTestApp.ViewModels
             _emailAddress = "";
             _password = "";
             _isValidToConnect = false;
+            WebAddress = "https://www.google.com/search?q=J.G. Ballard&amp;tbm=isch";
         }
 
         #endregion
@@ -95,6 +114,37 @@ namespace MailTestApp.ViewModels
                 return _readEmailCommand ??
                     (_readEmailCommand =
                         new CommandHandler(() => ReadEmailCommandAction(), true));
+            }
+        }
+
+        public ICommand BrowseBackNavigationCommand
+        {
+            get
+            {
+                return _browseBackNavigationCommand ??
+                    (_browseBackNavigationCommand =
+                        new CommandHandler(() => BrowseBackNavigationCommandAction(), true));
+            }
+        }
+
+
+        public ICommand BrowseForwardNavigationCommand
+        {
+            get
+            {
+                return _browseForwardNavigationCommand ??
+                    (_browseForwardNavigationCommand =
+                        new CommandHandler(() => BrowseForwardNavigationCommandAction(), true));
+            }
+        }
+
+        public ICommand GoToPageNavigationCommand
+        {
+            get
+            {
+                return _goToPageNavigationCommand ??
+                    (_goToPageNavigationCommand =
+                        new CommandHandler(() => GoToPageNavigationCommandAction(), true));
             }
         }
 
@@ -153,11 +203,25 @@ namespace MailTestApp.ViewModels
                     string error = e.Message + " : " + e.InnerException;
                     MessageBox.Show(error);
                 }
-
             }
+        }
 
 
+        private void BrowseBackNavigationCommandAction()
+        {
+            MessageBox.Show("Back");
+        }
 
+        private void BrowseForwardNavigationCommandAction()
+        {
+            MessageBox.Show("Forward");
+        }
+
+        private void GoToPageNavigationCommandAction()
+        {
+            MessageBox.Show("Go To Page");
+
+            WebAddress = "https://www.google.com/search?q=Stefan+Zweig&amp;tbm=isch";
         }
 
         #endregion
