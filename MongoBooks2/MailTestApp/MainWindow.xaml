@@ -9,53 +9,157 @@
         mc:Ignorable="d"
         Title="Mail Tester">
     <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="30*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition  Width="125"/>
-            <ColumnDefinition  Width="225"/>
-            <ColumnDefinition  Width="125*"/>
-        </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="1" Grid.Column="0" Content="Email" 
-                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TabControl MinHeight="600">
 
-        <xctk:WatermarkTextBox  Grid.Row="1" Grid.Column="1" 
-                             TextWrapping="NoWrap" 
-                             Text="{Binding Path=EmailAdress, Mode=TwoWay}"  MinWidth="150"
-                                 HorizontalAlignment="Stretch" VerticalAlignment="Center">
-            <xctk:WatermarkTextBox.Watermark>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="someone@gmail.com" Margin="4,0,0,0" />
-                </StackPanel>
-            </xctk:WatermarkTextBox.Watermark>
-        </xctk:WatermarkTextBox>
+            <TabItem Header="Mailbox">
+
+                <Grid>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="30*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="125"/>
+                        <ColumnDefinition  Width="225"/>
+                        <ColumnDefinition  Width="125*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Email" 
+                                        HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                    <xctk:WatermarkTextBox  Grid.Row="1" Grid.Column="1" 
+                                         TextWrapping="NoWrap" 
+                                         Text="{Binding Path=EmailAdress, Mode=TwoWay}"  MinWidth="150"
+                                             HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                        <xctk:WatermarkTextBox.Watermark>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="someone@gmail.com" Margin="4,0,0,0" />
+                            </StackPanel>
+                        </xctk:WatermarkTextBox.Watermark>
+                    </xctk:WatermarkTextBox>
         
-        <Label Grid.Row="2" Grid.Column="0"  Content="Password" 
-                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <Label Grid.Row="2" Grid.Column="0"  Content="Password" 
+                                        HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
 
-        <PasswordBox x:Name="passwordBox" PasswordChar="*" Grid.Row="2" Grid.Column="1" 
-                             MinWidth="150"
-                             vm:PasswordHelper.Attach="True" 
-                             vm:PasswordHelper.Password="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 HorizontalAlignment="Stretch"  VerticalAlignment="Center"/>
+                    <PasswordBox x:Name="passwordBox" PasswordChar="*" Grid.Row="2" Grid.Column="1" 
+                                         MinWidth="150"
+                                         vm:PasswordHelper.Attach="True" 
+                                         vm:PasswordHelper.Password="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             HorizontalAlignment="Stretch"  VerticalAlignment="Center"/>
 
-        <Button Grid.Row="3" Grid.Column="1" Content="Connect To Mailbox" Height="22"
-                                Command="{Binding Path=ReadEmailCommand}" 
-                IsEnabled="{Binding Path=IsValidToConnect}"/>
+                    <Button Grid.Row="3" Grid.Column="1" Content="Connect To Mailbox" Height="22"
+                                            Command="{Binding Path=ReadEmailCommand}" 
+                            IsEnabled="{Binding Path=IsValidToConnect}"/>
 
-        <ScrollViewer  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" >
-            <TextBox Text="{Binding Path=MailItemsText}" TextWrapping="Wrap" IsReadOnly="True" />
-        </ScrollViewer>
+                    <ScrollViewer  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" >
+                        <TextBox Text="{Binding Path=MailItemsText}" TextWrapping="Wrap" IsReadOnly="True" />
+                    </ScrollViewer>
+                    
+                </Grid>
+
+            </TabItem>
             
+            <TabItem Header="Web Lookup">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid  Grid.Row="0" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"></ColumnDefinition>
+                            <ColumnDefinition Width="200"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Enter Search Term"></Label>
+                        <TextBox Grid.Row="0" Grid.Column="1"></TextBox>
+                        <Button Grid.Row="0" Grid.Column="2" Content="Update Search"></Button>
 
 
+                        <Label Grid.Row="1" Grid.Column="0" Content="Save Image Location"></Label>
+                        <TextBox Grid.Row="1" Grid.Column="1"></TextBox>
+                        <Button Grid.Row="1" Grid.Column="2" Content="Save"></Button>
+
+
+                    </Grid>
+
+                    <Image Grid.Row="1" Source="http://img.timeoutshanghai.com/201304/20130401044423690_Medium.jpg" />
+                    <DockPanel  Grid.Row="2">
+                        <ToolBar DockPanel.Dock="Top">
+
+                            <Button  Command="{Binding Path=BrowseBackNavigationCommand}">
+
+                                <Grid>
+                                    <Ellipse HorizontalAlignment="Center" Height="26" Stroke="Blue"
+                                                              VerticalAlignment="Center" Width="26"/>
+                                    <Path HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="Blue"
+                                                           Data="M0,25 L25,0 25,13 50,13 50,37 25,37 25,50z" StrokeThickness="4" >
+
+                                        <Path.LayoutTransform>
+                                            <ScaleTransform  ScaleX="0.30" ScaleY="0.30" />
+                                        </Path.LayoutTransform>
+
+                                        <Path.RenderTransform>
+                                            <RotateTransform Angle="0" CenterX="8" CenterY="8" />
+                                        </Path.RenderTransform>
+
+                                    </Path>
+
+                                </Grid>
+                            </Button>
+                            <Button Command="{Binding Path=BrowseForwardNavigationCommand}">
+
+                                <Grid>
+                                    <Ellipse HorizontalAlignment="Center" Height="26"
+                                                              Stroke="Blue"
+                                                              VerticalAlignment="Center" Width="26"/>
+                                    <Path HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="Blue"
+                                                           Data="M0,25 L25,0 25,13 50,13 50,37 25,37 25,50z" StrokeThickness="4" >
+
+                                        <Path.LayoutTransform>
+                                            <ScaleTransform  ScaleX="0.30" ScaleY="0.30" />
+                                        </Path.LayoutTransform>
+
+                                        <Path.RenderTransform>
+                                            <RotateTransform Angle="180" CenterX="8" CenterY="8" />
+                                        </Path.RenderTransform>
+
+                                    </Path>
+
+                                </Grid>
+                            </Button>
+                            <Separator />
+                            <TextBox Name="txtUrl" Text="{Binding WebAddress}" Width="300"/>
+                            <Button Command="{Binding Path=GoToPageNavigationCommand}">
+
+                                <Image Source="./Images/arrowAndEarth.jpg"  Width="32" Height="32"/>
+                            </Button>
+                        </ToolBar>
+
+                        <WebBrowser
+                        vm:WebBrowserProperties.Url="{Binding FindImageUrl}"
+                        VerticalAlignment="Center" />
+
+
+                    </DockPanel>
+                </Grid>
+
+            </TabItem>
+
+        </TabControl>
 
     </Grid>
 </Window>

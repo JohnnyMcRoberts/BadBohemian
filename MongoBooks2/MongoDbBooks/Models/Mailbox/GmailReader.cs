@@ -200,19 +200,16 @@ namespace MongoDbBooks.Models.Mailbox
             //  [n-3] = -
             //  [n-2] = 9)
             //  [n-1] = [169923]
-
             // as occasionally miss out the spaces around the dashes pad them
             string padded = section.Replace("-", " - ");
 
             // as occasionally mess up the bit around the brackets replace any odd chars with spaces
             // should use regex for this...
             //string pattern = @"^).\[$";
-
             padded = Regex.Replace(padded, @"[^\w\[\]\(\)\-]", " ");
 
             //Regex regex = new Regex(@"^.\[$");
             //padded = regex.Replace(padded, " [");
-
             char[] delimiterChars = { ' ' };
             string[] words = padded.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
             int numWords = words.Length;
@@ -385,7 +382,7 @@ namespace MongoDbBooks.Models.Mailbox
         /// <returns>True if read books ok.</returns>
         private bool ReadEmailsUsingStdImap4(out string errorMessage, out List<IBookRead> books)
         {
-            string _selectedMailBox = "INBOX";
+            string selectedMailBox = "INBOX";
             books = null;
 
             using (var clientImap4 = new Imap4Client())
@@ -395,7 +392,7 @@ namespace MongoDbBooks.Models.Mailbox
                     clientImap4.ConnectSsl(ImapServerAddress, ImapPort);
                     clientImap4.Login(_emailAddress, _password); // Make log in and load all MailBox.
 
-                    Mailbox mailbox = clientImap4.SelectMailbox(_selectedMailBox);
+                    Mailbox mailbox = clientImap4.SelectMailbox(selectedMailBox);
 
                     string messageItemText = string.Empty;
                     foreach (var messageId in mailbox.Search("ALL").AsEnumerable().OrderByDescending(x => x))
@@ -467,16 +464,12 @@ namespace MongoDbBooks.Models.Mailbox
         }
 
         /// <summary>
-        /// The get book entries from a block of plain text.
+        /// This gets the book entries from a block of plain text.
         /// </summary>
-        /// <param name="text">
-        /// The text.
-        /// </param>
-        /// <param name="bookEntries">
-        /// The book entries.
-        /// </param>
+        /// <param name="text"> The text. </param>
+        /// <param name="bookEntries">The book entries.</param>
         /// <returns>
-        /// The <see cref="bool"/>.
+        /// True if got books from the text, false otherwise.
         /// </returns>
         private bool GetBookEntriesFromPlainText(string text, out List<string> bookEntries)
         {
@@ -498,6 +491,8 @@ namespace MongoDbBooks.Models.Mailbox
                 }
             }
 
+            betterBlocks = SplitOutMultipleBooksInSingleBlock(betterBlocks);
+
             bookEntries = new List<string>();
             foreach (var block in betterBlocks)
             {
@@ -513,6 +508,61 @@ namespace MongoDbBooks.Models.Mailbox
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// This splits out blocks where there is more than one book in a single block.
+        /// </summary>
+        /// <param name="blocks">The list of text blocks.</param>
+        /// <returns>
+        /// True if got books from the text, false otherwise.
+        /// </returns>
+        private List<string> SplitOutMultipleBooksInSingleBlock(List<string> blocks)
+        {
+            List<string> updatedBlocks = new List<string>();
+            foreach (var block in blocks)
+            {
+                bool splitBlock = false;
+                List<string> splitBlocks = new List<string>();
+                foreach (string dayName in _dayNames)
+                {
+                    // if there are 2 entries in the one block ie ... [12345] Monday 1st January 2012 :- An Author : a book ...
+                    // split that into 2 items and replace in the blocks list
+                    string daySplit = "] " + dayName;
+                    if (block.Contains(daySplit))
+                    {
+                        string[] splitterStrings = { daySplit };
+                        string[] items = block.Split(splitterStrings, StringSplitOptions.RemoveEmptyEntries);
+                        splitBlock = true;
+
+                        List<string> splitParts = new List<string> { items[0] + "]" };
+                        for (int i = 1; i < items.Length; i++)
+                        {
+                            string daySection = dayName + items[i].TrimEnd();
+                            if (!daySection.EndsWith("]"))
+                            {
+                                daySection += "]";
+                            }
+
+                            splitParts.Add(daySection);
+                        }
+
+                        splitBlocks.AddRange(splitParts);
+                    }
+                }
+
+                if (splitBlock == false)
+                {
+                    updatedBlocks.Add(block);
+                }
+                else
+                {
+                    updatedBlocks.AddRange(splitBlocks);
+                }
+            }
+
+            blocks = updatedBlocks;
+            return blocks;
         }
 
         /// <summary>
@@ -781,7 +831,7 @@ namespace MongoDbBooks.Models.Mailbox
             _password = password;
             List<IBookRead> emailedBooks;
             bool result = ReadEmailsUsingStdImap4(out errorMessage, out emailedBooks);
-            books = new ObservableCollection<IBookRead>(emailedBooks);
+            books = (emailedBooks == null) ? new ObservableCollection<IBookRead>() : new ObservableCollection<IBookRead>(emailedBooks);
             return result;
         }
 

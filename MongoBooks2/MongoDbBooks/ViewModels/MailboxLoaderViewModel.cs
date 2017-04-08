@@ -672,6 +672,8 @@ namespace MongoDbBooks.ViewModels
                 MailItemsText = GetMessageTextForEmailedBooksRead(_booksReadFromEmail);
 
                 RemoveBooksAlreadyInDatabaseFromEmailBooks(_booksReadFromEmail);
+
+                _mainModel.DefaultUserName = _emailAddress;
             }
         }
 
@@ -792,7 +794,7 @@ namespace MongoDbBooks.ViewModels
             _log = log;
             _mainModel = mainModel;
             _parent = parent;
-            _userName = "johnnymcbobatwork@gmail.com";
+            _userName = _mainModel.DefaultUserName;
 
             IsDataLoaded = mainModel.BooksRead.Count > 0;
             ReadingEmails = false;

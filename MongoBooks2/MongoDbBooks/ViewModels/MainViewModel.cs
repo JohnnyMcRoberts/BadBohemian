@@ -53,6 +53,7 @@ namespace MongoDbBooks.ViewModels
             _diagramsVM = new DiagramsViewModel(_mainWindow, log, _mainModel, this);
             _mailboxLoaderVM = new MailboxLoaderViewModel(_mainWindow, log, _mainModel, this);
             _chartSelectionVM = new ChartSelectionViewModel(_mainWindow, log, _mainModel, this);
+            _mailboxLoaderVM = new MailboxLoaderViewModel(_mainWindow, log, _mainModel, this);
 
             if (_mainModel.ConnectedToDbSuccessfully)
                 UpdateData();
