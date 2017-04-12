@@ -44,11 +44,14 @@ namespace MailTestApp.ViewModels
         private bool _isValidToConnect;
         private string _mailItemsText;
         private string _webAddress;
+        private string _searchTerm;
+        private string _theHtml;
 
         private ICommand _readEmailCommand;
         private ICommand _browseBackNavigationCommand;
         private ICommand _browseForwardNavigationCommand;
         private ICommand _goToPageNavigationCommand;
+        private ICommand _updateSearchTermCommand;
         private Uri _findImageUrl;
 
         #endregion
@@ -92,6 +95,37 @@ namespace MailTestApp.ViewModels
         }
 
 
+        public string SearchTerm
+        {
+            get { return _searchTerm; }
+            set
+            {
+                _searchTerm = value;
+                OnPropertyChanged(() => SearchTerm);
+            }
+        }
+
+        public int LengthOfHtmlString
+        {
+            get { return _theHtml.Length; }
+
+        }
+
+        public string TheHtml
+        {
+            get { return _theHtml; }
+            set
+            {
+                if (value != null)
+                    _theHtml = value;
+                else
+                    _theHtml = "";
+                OnPropertyChanged(() => TheHtml);
+                OnPropertyChanged(() => LengthOfHtmlString);
+            }
+
+        }
+
         #endregion
 
         #region Constructors
@@ -102,6 +136,8 @@ namespace MailTestApp.ViewModels
             _password = "";
             _isValidToConnect = false;
             WebAddress = "https://www.google.com/search?q=J.G. Ballard&amp;tbm=isch";
+
+            _theHtml = "Dummy TextBox";
         }
 
         #endregion
@@ -148,10 +184,23 @@ namespace MailTestApp.ViewModels
             }
         }
 
+        public ICommand UpdateSearchTermCommand
+        {
+            get
+            {
+                return _updateSearchTermCommand ??
+                    (_updateSearchTermCommand =
+                        new CommandHandler(() => UpdateSearchTermCommandAction(), true));
+            }
+        }
+
+        
+
         #endregion
 
         #region Command Handlers
 
+        #region Mailbox
 
         private const int _imapPort = 993;
         private const string _imapServerAddress = "imap.gmail.com";
@@ -206,6 +255,9 @@ namespace MailTestApp.ViewModels
             }
         }
 
+        #endregion
+
+        #region Image search
 
         private void BrowseBackNavigationCommandAction()
         {
@@ -223,6 +275,12 @@ namespace MailTestApp.ViewModels
 
             WebAddress = "https://www.google.com/search?q=Stefan+Zweig&amp;tbm=isch";
         }
+
+        private void UpdateSearchTermCommandAction()
+        {
+            WebAddress = "https://www.google.com/search?q=" + _searchTerm + "&amp;tbm=isch";
+        }
+        #endregion
 
         #endregion
 

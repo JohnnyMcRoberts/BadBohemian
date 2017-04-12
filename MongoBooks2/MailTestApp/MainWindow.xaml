@@ -73,6 +73,7 @@
                         <RowDefinition Height="60"/>
                         <RowDefinition Height="70"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="100"/>
                     </Grid.RowDefinitions>
                     <Grid  Grid.Row="0" >
                         <Grid.RowDefinitions>
@@ -85,8 +86,9 @@
                             <ColumnDefinition Width="100"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Content="Enter Search Term"></Label>
-                        <TextBox Grid.Row="0" Grid.Column="1"></TextBox>
-                        <Button Grid.Row="0" Grid.Column="2" Content="Update Search"></Button>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SearchTerm}" ></TextBox>
+                        <Button Grid.Row="0" Grid.Column="2" Content="Update Search"
+                                 Command="{Binding Path=UpdateSearchTermCommand}"></Button>
 
 
                         <Label Grid.Row="1" Grid.Column="0" Content="Save Image Location"></Label>
@@ -96,7 +98,11 @@
 
                     </Grid>
 
-                    <Image Grid.Row="1" Source="http://img.timeoutshanghai.com/201304/20130401044423690_Medium.jpg" />
+                    <StackPanel  Grid.Row="1" Orientation="Horizontal">
+                    <Image Source="http://img.timeoutshanghai.com/201304/20130401044423690_Medium.jpg" />
+
+                    <Label Content="{Binding TheHtml}" ></Label>
+                    </StackPanel>
                     <DockPanel  Grid.Row="2">
                         <ToolBar DockPanel.Dock="Top">
 
@@ -142,16 +148,17 @@
                                 </Grid>
                             </Button>
                             <Separator />
-                            <TextBox Name="txtUrl" Text="{Binding WebAddress}" Width="300"/>
+                            <TextBox Text="{Binding WebAddress}" Width="300"/>
                             <Button Command="{Binding Path=GoToPageNavigationCommand}">
 
                                 <Image Source="./Images/arrowAndEarth.jpg"  Width="32" Height="32"/>
                             </Button>
                         </ToolBar>
 
-                        <WebBrowser
-                        vm:WebBrowserProperties.Url="{Binding FindImageUrl}"
-                        VerticalAlignment="Center" />
+
+                        <local:BindableWebBrowser  x:Name="TestWebBrowser" BindableSource="{Binding FindImageUrl}" 
+                                                  DocHtml="{Binding TheHtml, Mode=OneWayToSource}"
+                            VerticalAlignment="Center"/>
 
 
                     </DockPanel>
