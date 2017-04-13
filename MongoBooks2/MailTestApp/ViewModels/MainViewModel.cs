@@ -10,6 +10,8 @@ using ActiveUp.Net.Mail;
 
 namespace MailTestApp.ViewModels
 {
+    using mshtml;
+
     public class MainViewModel : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
@@ -46,13 +48,14 @@ namespace MailTestApp.ViewModels
         private string _webAddress;
         private string _searchTerm;
         private string _theHtml;
+        private HTMLDocument _loadedDocument;
+        private Uri _findImageUrl;
 
         private ICommand _readEmailCommand;
         private ICommand _browseBackNavigationCommand;
         private ICommand _browseForwardNavigationCommand;
         private ICommand _goToPageNavigationCommand;
         private ICommand _updateSearchTermCommand;
-        private Uri _findImageUrl;
 
         #endregion
 
@@ -94,7 +97,6 @@ namespace MailTestApp.ViewModels
             set { _webAddress = value; FindImageUrl = new Uri(value); OnPropertyChanged(() => WebAddress); }
         }
 
-
         public string SearchTerm
         {
             get { return _searchTerm; }
@@ -123,9 +125,77 @@ namespace MailTestApp.ViewModels
                 OnPropertyChanged(() => TheHtml);
                 OnPropertyChanged(() => LengthOfHtmlString);
             }
-
         }
 
+        public HTMLDocument LoadedDocument
+        {
+            get { return _loadedDocument; }
+            set
+            {
+                _loadedDocument = value;
+                OnPropertyChanged(() => LoadedDocument);
+                OnPropertyChanged(() => DocumentTitle);
+                OnPropertyChanged(() => ImagesInPage);
+                OnPropertyChanged(() => LoadedHtml);
+            }
+        }
+
+        public string DocumentTitle
+        {
+            get
+            {
+                if (_loadedDocument != null)
+                {
+                    return _loadedDocument.title + " : " + _loadedDocument.url;
+                }
+
+                return "Nothing loaded";
+            }
+        }
+
+        public List<string> ImagesInPage
+        {
+            get
+            {
+                if (_loadedDocument?.images == null)
+                {
+                    return new List<string> { "No Images Loaded" };
+                }
+
+                List<string> imageDetails = new List<string>();
+
+                foreach (IHTMLImgElement img in _loadedDocument.images)
+                {
+                    string imageSrc = img.src;
+                    string imageLowSrc = img.lowsrc;
+                    if (imageSrc != null &&
+                        (imageSrc.ToLower().EndsWith(".jpg") || imageSrc.ToLower().EndsWith(".png") ||
+                        imageSrc.ToLower().Contains(".jpg")))
+                        imageDetails.Add(imageSrc);
+                    else if (imageLowSrc != null &&
+                        (imageLowSrc.ToLower().EndsWith(".jpg") || imageLowSrc.ToLower().EndsWith(".png")))
+                        imageDetails.Add(imageLowSrc);
+                }
+
+
+
+
+                return imageDetails;
+            }
+        }
+
+        public string LoadedHtml
+        {
+            get
+            {
+                if (_loadedDocument?.body?.innerHTML != null)
+                {
+                    return _loadedDocument.body.innerHTML;
+                }
+
+                return "Nothing loaded";
+            }
+        }
         #endregion
 
         #region Constructors

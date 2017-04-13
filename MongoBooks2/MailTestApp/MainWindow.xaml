@@ -71,7 +71,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
-                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="80"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="100"/>
                     </Grid.RowDefinitions>
@@ -101,7 +101,10 @@
                     <StackPanel  Grid.Row="1" Orientation="Horizontal">
                     <Image Source="http://img.timeoutshanghai.com/201304/20130401044423690_Medium.jpg" />
 
-                    <Label Content="{Binding TheHtml}" ></Label>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="{Binding DocumentTitle}" FontWeight="Bold" ></Label>
+                            <TextBlock Text="{Binding TheHtml}"  TextWrapping="Wrap"></TextBlock>
+                        </StackPanel>
                     </StackPanel>
                     <DockPanel  Grid.Row="2">
                         <ToolBar DockPanel.Dock="Top">
@@ -156,12 +159,29 @@
                         </ToolBar>
 
 
-                        <local:BindableWebBrowser  x:Name="TestWebBrowser" BindableSource="{Binding FindImageUrl}" 
-                                                  DocHtml="{Binding TheHtml, Mode=OneWayToSource}"
+                        <local:BindableWebBrowser 
+                            BindableSource="{Binding FindImageUrl}"
+                            DocHtml="{Binding TheHtml, Mode=OneWayToSource}"
+                            LoadedHtmlDocument="{Binding LoadedDocument, Mode=OneWayToSource}"
                             VerticalAlignment="Center"/>
 
 
                     </DockPanel>
+                    <Grid Grid.Row="3">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width ="300"/>
+                            <ColumnDefinition Width ="300*"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" IsReadOnly="True" ItemsSource="{Binding Path=ImagesInPage}"></ComboBox>
+
+                        <TextBox Grid.Column="1" Background="Transparent"
+                             BorderThickness="0"
+                             Text="{Binding TheHtml, Mode=OneWay}"
+                             IsReadOnly="True"
+                             TextWrapping="Wrap" />
+                        
+                    </Grid>
                 </Grid>
 
             </TabItem>

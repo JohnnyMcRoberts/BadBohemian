@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿
 
 namespace MailTestApp
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using System.Windows.Navigation;
     using mshtml;
 
     /// <summary>
@@ -25,6 +17,8 @@ namespace MailTestApp
         private const string _SkipSourceChange = "Skip";
 
         private string _docHtml = "No HTML Loaded";
+
+        private HTMLDocument _loadedHtmlDocument = null;
 
         public BindableWebBrowser()
         {
@@ -53,6 +47,12 @@ namespace MailTestApp
             set { _docHtml = value; SetValue(DocHtmlProperty, value); }
         }
 
+        public HTMLDocument LoadedHtmlDocument
+        {
+            get { return _loadedHtmlDocument; }
+            set { _loadedHtmlDocument = value; SetValue(LoadedHtmlDocumentProperty, value); }
+        }
+
 
         public bool ShouldHandleNavigated
         {
@@ -76,6 +76,12 @@ namespace MailTestApp
                                                         DependencyProperty.RegisterAttached(
                                                                 "DocHtml",
                                                                 typeof(string),
+                                                                typeof(BindableWebBrowser));
+
+        public static readonly DependencyProperty LoadedHtmlDocumentProperty =
+                                                        DependencyProperty.RegisterAttached(
+                                                                "LoadedHtmlDocument",
+                                                                typeof(HTMLDocument),
                                                                 typeof(BindableWebBrowser));
 
         public static readonly DependencyProperty ShouldHandleNavigatedProperty =
@@ -157,6 +163,7 @@ namespace MailTestApp
 
             if (htmlDocument != null)
             {
+                LoadedHtmlDocument = htmlDocument;
                 string docHtml = htmlDocument.body.outerHTML;
                 DocumentHtml = docHtml;
                 DocHtml = docHtml;
@@ -171,7 +178,7 @@ namespace MailTestApp
                 if (BindableSource != e.Uri.ToString())
                 {
                     browser.Tag = _SkipSourceChange;
-                    this.BindableSource = browser.Source.AbsoluteUri;
+                    BindableSource = browser.Source.AbsoluteUri;
                     browser.Tag = null;
                 }
             }
