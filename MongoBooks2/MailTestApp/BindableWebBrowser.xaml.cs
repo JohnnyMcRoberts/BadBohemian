@@ -1,5 +1,11 @@
-﻿
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BindableWebBrowser.xaml.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The Interaction logic for BindableWebBrowser.xaml.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace MailTestApp
 {
     using System;
@@ -10,15 +16,15 @@ namespace MailTestApp
     using mshtml;
 
     /// <summary>
-    /// Interaction logic for BindableWebBrowser.xaml
+    /// Interaction logic for <see cref="BindableWebBrowser" />
     /// </summary>
-    public partial class BindableWebBrowser : UserControl
+    public partial class BindableWebBrowser
     {
-        private const string _SkipSourceChange = "Skip";
+        private const string SkipSourceChange = "Skip";
 
         private string _docHtml = "No HTML Loaded";
 
-        private HTMLDocument _loadedHtmlDocument = null;
+        private HTMLDocument _loadedHtmlDocument;
 
         public BindableWebBrowser()
         {
@@ -52,7 +58,6 @@ namespace MailTestApp
             get { return _loadedHtmlDocument; }
             set { _loadedHtmlDocument = value; SetValue(LoadedHtmlDocumentProperty, value); }
         }
-
 
         public bool ShouldHandleNavigated
         {
@@ -145,7 +150,7 @@ namespace MailTestApp
             if (browser != null)
             {
                 string uri = e.NewValue as string;
-                if (!_SkipSourceChange.Equals(browser.Tag))
+                if (!SkipSourceChange.Equals(browser.Tag))
                 {
                     browser.LoadCompleted += WebBrowserLoaded;
                     browser.Source = !string.IsNullOrEmpty(uri) ? new Uri(uri) : null;
@@ -172,14 +177,14 @@ namespace MailTestApp
 
         private void Browser_Navigated(object sender, NavigationEventArgs e)
         {
-            WebBrowser browser = sender as WebBrowser;
-            if (browser != null)
+            WebBrowser webBrowser = sender as WebBrowser;
+            if (webBrowser != null)
             {
                 if (BindableSource != e.Uri.ToString())
                 {
-                    browser.Tag = _SkipSourceChange;
-                    BindableSource = browser.Source.AbsoluteUri;
-                    browser.Tag = null;
+                    webBrowser.Tag = SkipSourceChange;
+                    BindableSource = webBrowser.Source.AbsoluteUri;
+                    webBrowser.Tag = null;
                 }
             }
         }

@@ -99,7 +99,7 @@
                     </Grid>
 
                     <StackPanel  Grid.Row="1" Orientation="Horizontal">
-                    <Image Source="http://img.timeoutshanghai.com/201304/20130401044423690_Medium.jpg" />
+                        <Image Source="{Binding MatchedImageUri}" />
 
                         <StackPanel Orientation="Vertical">
                             <Label Content="{Binding DocumentTitle}" FontWeight="Bold" ></Label>
@@ -109,7 +109,7 @@
                     <DockPanel  Grid.Row="2">
                         <ToolBar DockPanel.Dock="Top">
 
-                            <Button  Command="{Binding Path=BrowseBackNavigationCommand}">
+                            <Button Command="NavigationCommands.BrowseBack" CommandTarget="{Binding ElementName=webBrowser}">
 
                                 <Grid>
                                     <Ellipse HorizontalAlignment="Center" Height="26" Stroke="Blue"
@@ -129,7 +129,7 @@
 
                                 </Grid>
                             </Button>
-                            <Button Command="{Binding Path=BrowseForwardNavigationCommand}">
+                            <Button Command="NavigationCommands.BrowseForward" CommandTarget="{Binding ElementName=webBrowser}">
 
                                 <Grid>
                                     <Ellipse HorizontalAlignment="Center" Height="26"
@@ -159,7 +159,7 @@
                         </ToolBar>
 
 
-                        <local:BindableWebBrowser 
+                        <local:BindableWebBrowser  x:Name="webBrowser"
                             BindableSource="{Binding FindImageUrl}"
                             DocHtml="{Binding TheHtml, Mode=OneWayToSource}"
                             LoadedHtmlDocument="{Binding LoadedDocument, Mode=OneWayToSource}"
@@ -173,13 +173,40 @@
                             <ColumnDefinition Width ="300"/>
                             <ColumnDefinition Width ="300*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Grid.Column="0" IsReadOnly="True" ItemsSource="{Binding Path=ImagesInPage}"></ComboBox>
+                        <StackPanel Grid.Column="0">
 
-                        <TextBox Grid.Column="1" Background="Transparent"
+                            <ComboBox IsReadOnly="True" ItemsSource="{Binding Path=ImagesInPage}" ></ComboBox>
+
+                            <TextBox Background="Transparent"
                              BorderThickness="0"
                              Text="{Binding TheHtml, Mode=OneWay}"
                              IsReadOnly="True"
                              TextWrapping="Wrap" />
+
+                        </StackPanel>
+
+                        <DataGrid Grid.Column="1" ColumnWidth="*" AutoGenerateColumns="False"
+                                  ItemsSource="{Binding Path=ImagesOnPage, Mode=OneWay}"
+                                  SelectedItem="{Binding Path=SelectedImage, Mode=OneWayToSource}"
+                                  IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+                            <DataGrid.Columns>
+                                
+                                <DataGridTemplateColumn Header="Image" Width="SizeToCells" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Image}" MaxHeight="60" MaxWidth="60"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="Web Address" 
+                                                Binding="{Binding WebAddress}" 
+                                                Width="Auto"/>
+                                
+                            </DataGrid.Columns>
+
+                        </DataGrid>
                         
                     </Grid>
                 </Grid>
