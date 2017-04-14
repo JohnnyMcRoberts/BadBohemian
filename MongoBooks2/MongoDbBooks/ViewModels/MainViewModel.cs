@@ -51,6 +51,7 @@ namespace MongoDbBooks.ViewModels
             _dataGridsVM = new DataGridsViewModel(_mainWindow, log, _mainModel, this);
             _chartsVM = new ChartsViewModel(_mainWindow, log, _mainModel, this);
             _diagramsVM = new DiagramsViewModel(_mainWindow, log, _mainModel, this);
+            _mailboxLoaderVM = new MailboxLoaderViewModel(_mainWindow, log, _mainModel, this);
             _chartSelectionVM = new ChartSelectionViewModel(_mainWindow, log, _mainModel, this);
             _mailboxLoaderVM = new MailboxLoaderViewModel(_mainWindow, log, _mainModel, this);
 
