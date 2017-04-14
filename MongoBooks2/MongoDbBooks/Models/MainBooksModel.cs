@@ -15,6 +15,7 @@
 
     using MongoDbBooks.Models.Geography;
     using MongoDbBooks.Models.Mailbox;
+    using Database;
 
     public class MainBooksModel
     {
@@ -31,6 +32,8 @@
 
         private static IMailReader _mailReader;
         private string _defaultUserName;
+
+        private NationDatabase _nationsDatabase;
 
         #endregion
 
@@ -67,6 +70,11 @@
                 _log.Debug("error connecting to db : " + errorMsg);
 
             _mailReader = new GmailReader();
+
+            _nationsDatabase = new NationDatabase(DatabaseConnectionString);
+
+            if (ConnectedToDbSuccessfully)
+                _nationsDatabase.UpdateNationsDatabase(WorldCountries);
         }
 
         #endregion
@@ -138,6 +146,16 @@
 
         public IMailReader MailReader => _mailReader;
 
+        public ObservableCollection<Nation> Nations
+        {
+            get
+            {
+                if (_nationsDatabase != null && _nationsDatabase.LoadedItems != null)
+                    return new ObservableCollection<Nation>(_nationsDatabase.LoadedItems);
+                return null;
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -204,6 +222,7 @@
                 string asStringXml = sr.ReadToEnd();
                 _countriesData = new CountriesData(asStringXml);
             }
+            _nationsDatabase.UpdateNationsDatabase(_countriesData);
             UpdateCollections();
             Properties.Settings.Default.InputWorldMapFile = filename;
             Properties.Settings.Default.Save();
