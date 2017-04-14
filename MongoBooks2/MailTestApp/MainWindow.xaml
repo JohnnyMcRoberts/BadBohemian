@@ -71,8 +71,9 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
-                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="80"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="100"/>
                     </Grid.RowDefinitions>
                     <Grid  Grid.Row="0" >
                         <Grid.RowDefinitions>
@@ -85,8 +86,9 @@
                             <ColumnDefinition Width="100"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Content="Enter Search Term"></Label>
-                        <TextBox Grid.Row="0" Grid.Column="1"></TextBox>
-                        <Button Grid.Row="0" Grid.Column="2" Content="Update Search"></Button>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SearchTerm}" ></TextBox>
+                        <Button Grid.Row="0" Grid.Column="2" Content="Update Search"
+                                 Command="{Binding Path=UpdateSearchTermCommand}"></Button>
 
 
                         <Label Grid.Row="1" Grid.Column="0" Content="Save Image Location"></Label>
@@ -96,11 +98,18 @@
 
                     </Grid>
 
-                    <Image Grid.Row="1" Source="http://img.timeoutshanghai.com/201304/20130401044423690_Medium.jpg" />
+                    <StackPanel  Grid.Row="1" Orientation="Horizontal">
+                        <Image Source="{Binding MatchedImageUri}" />
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="{Binding DocumentTitle}" FontWeight="Bold" ></Label>
+                            <TextBlock Text="{Binding TheHtml}"  TextWrapping="Wrap"></TextBlock>
+                        </StackPanel>
+                    </StackPanel>
                     <DockPanel  Grid.Row="2">
                         <ToolBar DockPanel.Dock="Top">
 
-                            <Button  Command="{Binding Path=BrowseBackNavigationCommand}">
+                            <Button Command="NavigationCommands.BrowseBack" CommandTarget="{Binding ElementName=webBrowser}">
 
                                 <Grid>
                                     <Ellipse HorizontalAlignment="Center" Height="26" Stroke="Blue"
@@ -120,7 +129,7 @@
 
                                 </Grid>
                             </Button>
-                            <Button Command="{Binding Path=BrowseForwardNavigationCommand}">
+                            <Button Command="NavigationCommands.BrowseForward" CommandTarget="{Binding ElementName=webBrowser}">
 
                                 <Grid>
                                     <Ellipse HorizontalAlignment="Center" Height="26"
@@ -142,19 +151,64 @@
                                 </Grid>
                             </Button>
                             <Separator />
-                            <TextBox Name="txtUrl" Text="{Binding WebAddress}" Width="300"/>
+                            <TextBox Text="{Binding WebAddress}" Width="300"/>
                             <Button Command="{Binding Path=GoToPageNavigationCommand}">
 
                                 <Image Source="./Images/arrowAndEarth.jpg"  Width="32" Height="32"/>
                             </Button>
                         </ToolBar>
 
-                        <WebBrowser
-                        vm:WebBrowserProperties.Url="{Binding FindImageUrl}"
-                        VerticalAlignment="Center" />
+
+                        <local:BindableWebBrowser  x:Name="webBrowser"
+                            BindableSource="{Binding FindImageUrl}"
+                            DocHtml="{Binding TheHtml, Mode=OneWayToSource}"
+                            LoadedHtmlDocument="{Binding LoadedDocument, Mode=OneWayToSource}"
+                            VerticalAlignment="Center"/>
 
 
                     </DockPanel>
+                    <Grid Grid.Row="3">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width ="300"/>
+                            <ColumnDefinition Width ="300*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+
+                            <ComboBox IsReadOnly="True" ItemsSource="{Binding Path=ImagesInPage}" ></ComboBox>
+
+                            <TextBox Background="Transparent"
+                             BorderThickness="0"
+                             Text="{Binding TheHtml, Mode=OneWay}"
+                             IsReadOnly="True"
+                             TextWrapping="Wrap" />
+
+                        </StackPanel>
+
+                        <DataGrid Grid.Column="1" ColumnWidth="*" AutoGenerateColumns="False"
+                                  ItemsSource="{Binding Path=ImagesOnPage, Mode=OneWay}"
+                                  SelectedItem="{Binding Path=SelectedImage, Mode=OneWayToSource}"
+                                  IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+                            <DataGrid.Columns>
+                                
+                                <DataGridTemplateColumn Header="Image" Width="SizeToCells" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Image}" MaxHeight="60" MaxWidth="60"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="Web Address" 
+                                                Binding="{Binding WebAddress}" 
+                                                Width="Auto"/>
+                                
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                        
+                    </Grid>
                 </Grid>
 
             </TabItem>
