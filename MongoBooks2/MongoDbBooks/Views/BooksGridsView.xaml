@@ -545,6 +545,49 @@
                 </ScrollViewer>
             </TabItem>
 
+            <TabItem Header="Nations">
+                <ScrollViewer >
+                    <DataGrid AutoGenerateColumns="False" 
+                                    ItemsSource="{Binding Path=Nations, Mode=OneWay}"
+                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" >
+
+                        <DataGrid.Columns>
+
+
+                            <DataGridTextColumn Header="Country" 
+                                                Binding="{Binding Name}" 
+                                                Width="Auto"/>
+
+
+                            <DataGridTextColumn Header="Capital" 
+                                                Binding="{Binding Capital}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="LatitudeText" 
+                                                Binding="{Binding LatitudeText}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="LongitudeText" 
+                                                Binding="{Binding LongitudeText}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Latitude" 
+                                                Binding="{Binding Path=Latitude, StringFormat=N4}"
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Longitude" 
+                                                Binding="{Binding Path=Longitude, StringFormat=N4}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Geography XML" 
+                                                Binding="{Binding DisplayXML}" 
+                                                Width="Auto"/>
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+                </ScrollViewer>
+            </TabItem>
+
             <TabItem Header="Location Deltas">
 
                 <ScrollViewer>

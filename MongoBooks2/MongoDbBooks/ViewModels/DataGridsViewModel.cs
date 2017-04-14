@@ -10,6 +10,7 @@ using System.Data;
 
 using MongoDbBooks.Models;
 using MongoDbBooks.Models.Geography;
+using MongoDbBooks.Models.Database;
 
 namespace MongoDbBooks.ViewModels
 {
@@ -147,6 +148,16 @@ namespace MongoDbBooks.ViewModels
                 return _mainModel.CountryGeographies;
             }
         }
+
+
+        public ObservableCollection<Nation> Nations
+        {
+            get
+            {
+                return _mainModel.Nations;
+            }
+        }
+
 
         public ObservableCollection<BookLocationDelta> BookLocationDeltas { get { return _mainModel.BookLocationDeltas; } }
 

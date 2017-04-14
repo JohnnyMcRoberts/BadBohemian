@@ -171,6 +171,11 @@
     <Compile Include="Models\BookFormat.cs" />
     <Compile Include="Models\BookLocation.cs" />
     <Compile Include="Models\BookLocationDelta.cs" />
+    <Compile Include="Models\Database\BaseDatabaseConnection.cs" />
+    <Compile Include="Models\Database\BaseEntity.cs" />
+    <Compile Include="Models\Database\IDatabaseConnection.cs" />
+    <Compile Include="Models\Database\Nation.cs" />
+    <Compile Include="Models\Database\NationDatabase.cs" />
     <Compile Include="Models\Geography\CountriesData.cs" />
     <Compile Include="Models\Geography\CountryGeography.cs" />
     <Compile Include="Models\Geography\IGeographicEntity.cs" />
