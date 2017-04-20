@@ -238,6 +238,7 @@
     <Compile Include="ViewModels\Utilities\PolygonReducer.cs" />
     <Compile Include="ViewModels\Utilities\PolygonSimplifier.cs" />
     <Compile Include="ViewModels\Utilities\QuadraticCurveFitter.cs" />
+    <Compile Include="ViewModels\Utilities\RelayCommandHandler.cs" />
     <Compile Include="ViewModels\Utilities\WaitCursor.cs" />
     <Compile Include="Views\BooksChartsView.xaml.cs">
       <DependentUpon>BooksChartsView.xaml</DependentUpon>
