@@ -15,6 +15,7 @@ namespace MongoDbBooks.ViewModels
 {
     using System.Windows.Input;
     using MongoDbBooks.ViewModels.Utilities;
+    using MongoDbBooks.Views;
 
     public class DataGridsViewModel : INotifyPropertyChanged
     {
@@ -472,6 +473,20 @@ namespace MongoDbBooks.ViewModels
             if (nation != null)
             {
                 _log.Debug("Getting Nation information for " + nation.Name);
+
+                ImageSelectionViewModel selectionViewModel = new ImageSelectionViewModel(_log, nation.Name);
+
+                ImageSelectionWindow imageSelectDialog = new ImageSelectionWindow { DataContext = selectionViewModel };
+                var success = imageSelectDialog.ShowDialog();
+                if (success.HasValue && success.Value)
+                {
+
+                    _log.Debug("Success Getting Nation information for " + nation.Name);
+                }
+                else
+                {
+                    _log.Debug("Failed Getting Nation information for " + nation.Name);
+                }
             }
         }
 
