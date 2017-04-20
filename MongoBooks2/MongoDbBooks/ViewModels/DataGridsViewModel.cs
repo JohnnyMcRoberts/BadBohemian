@@ -154,7 +154,7 @@ namespace MongoDbBooks.ViewModels
         {
             get
             {
-                return _mainModel.Nations;
+                return new ObservableCollection<Nation>(_mainModel.Nations.OrderBy(n => n.Name));
             }
         }
 
