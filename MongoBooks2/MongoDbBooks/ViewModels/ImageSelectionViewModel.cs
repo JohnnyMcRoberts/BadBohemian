@@ -171,7 +171,7 @@ namespace MongoDbBooks.ViewModels
         /// <summary>
         /// Gets or sets the search term to use for the image search.
         /// </summary>
-        public Uri SelectedImageUri => _selectedDetail == null ? new Uri(DefaultImageAddress) : _selectedDetail.Image;
+        public Uri SelectedImageUri => _selectedDetail == null ? new Uri("pack://application:,,,/Images/default.png") : _selectedDetail.Image;
 
         /// <summary>
         /// Gets or sets the selected image detail.

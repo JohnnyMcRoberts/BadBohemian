@@ -110,7 +110,6 @@
             </TabItem>
 
             <TabItem Header="Languages">
-
                 <ScrollViewer>
 
                     <DataGrid AutoGenerateColumns="False" 
@@ -161,7 +160,6 @@
             </TabItem>
 
             <TabItem Header="Countries">
-
                 <ScrollViewer>
                     <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=AuthorCountries, Mode=OneWay}"
@@ -214,7 +212,6 @@
             </TabItem>
 
             <TabItem Header="Tallies">
-
                 <ScrollViewer>
                     <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=TalliedBooks, Mode=OneWay}"
@@ -264,11 +261,9 @@
 
                     </DataGrid>
                 </ScrollViewer>
-
             </TabItem>
 
             <TabItem Header="Deltas">
-
                 <ScrollViewer>
 
                     <DataGrid AutoGenerateColumns="False" 
@@ -354,11 +349,9 @@
                     </DataGrid>
 
                 </ScrollViewer>
-
             </TabItem>
 
             <TabItem Header="Language Deltas">
-
                 <ScrollViewer>
 
                     <DataGrid AutoGenerateColumns="True" 
@@ -369,11 +362,9 @@
                     </DataGrid>
 
                 </ScrollViewer>
-
             </TabItem>
 
             <TabItem Header="Country Deltas">
-
                 <ScrollViewer>
 
                     <DataGrid AutoGenerateColumns="True" 
@@ -384,11 +375,9 @@
                     </DataGrid>
 
                 </ScrollViewer>
-
             </TabItem>
 
             <TabItem Header="Per Year Deltas">
-
                 <ScrollViewer>
 
                     <DataGrid AutoGenerateColumns="False" 
@@ -474,7 +463,6 @@
                     </DataGrid>
 
                 </ScrollViewer>
-
             </TabItem>
 
             <TabItem Header="World Countries">
@@ -557,6 +545,27 @@
                             <DataGridTextColumn Header="Country" 
                                                 Binding="{Binding Name}" 
                                                 Width="Auto"/>
+                            
+                            <DataGridTemplateColumn MinWidth="100" Header="Image Select">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Select Image"
+                                                Command="{Binding DataContext.SelectImageForNationCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" 
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}">
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
+                            <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding DisplayImage}" MaxHeight="30" MaxWidth="30"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
 
 
                             <DataGridTextColumn Header="Capital" 
@@ -571,29 +580,14 @@
                                                 Binding="{Binding LongitudeText}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Latitude" 
-                                                Binding="{Binding Path=Latitude, StringFormat=N4}"
-                                                Width="Auto"/>
-
-                            <DataGridTextColumn Header="Longitude" 
-                                                Binding="{Binding Path=Longitude, StringFormat=N4}" 
-                                                Width="Auto"/>
-
                             <DataGridTextColumn Header="Geography XML" 
                                                 Binding="{Binding DisplayXML}" 
                                                 Width="Auto"/>
-                            
-                            <DataGridTemplateColumn MinWidth="100" Header="Image Select">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="Select Image"
-                                                Command="{Binding DataContext.SelectImageForNationCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" 
-                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}">
-                                        </Button>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            
+
+                            <DataGridTextColumn Header="Image Address" 
+                                                Binding="{Binding DisplayImageAddress}" 
+                                                Width="Auto"/>
+
                         </DataGrid.Columns>
 
                     </DataGrid>

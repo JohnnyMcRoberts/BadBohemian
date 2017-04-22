@@ -48,6 +48,12 @@ namespace MongoDbBooks.Models.Database
         /// </summary>
         public string GeographyXml { get; set; }
 
+        [BsonElement("image_uri")]
+        /// <summary>
+        /// Gets or sets the URI string for a .jpg/.png image for the nation.
+        /// </summary>
+        public string ImageURI { get; set; }
+
         /// <summary>
         /// Gets the latitude in a degree, minutes and seconds.
         /// </summary>
@@ -101,6 +107,36 @@ namespace MongoDbBooks.Models.Database
                     return "N/A";
                 else
                     return GeographyXml.Substring(0, Math.Min(GeographyXml.Length, 50)) + " ...";
+            }
+        }
+
+        /// <summary>
+        /// Gets the image address ready to be displayed.
+        /// </summary>
+        public string DisplayImageAddress
+        {
+            get
+            {
+                if (ImageURI == null)
+                    return "N/A";
+                else
+                    return ImageURI.Substring(0, Math.Min(ImageURI.Length, 50)) + " ...";
+            }
+        }
+
+        /// <summary>
+        /// Gets the image URI ready to be displayed.
+        /// </summary>
+        public Uri DisplayImage
+        {
+            get
+            {
+                if (ImageURI == null)
+                {
+                    return new Uri("pack://application:,,,/Images/camera_image_cancel-32.png");
+                }
+                else
+                    return new Uri(ImageURI);
             }
         }
     }

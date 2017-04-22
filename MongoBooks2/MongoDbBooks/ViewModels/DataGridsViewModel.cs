@@ -480,8 +480,13 @@ namespace MongoDbBooks.ViewModels
                 var success = imageSelectDialog.ShowDialog();
                 if (success.HasValue && success.Value)
                 {
+                    _log.Debug("Success Getting Nation information for " + nation.Name + 
+                        "\n   Img = " + selectionViewModel.SelectedImageAddress);
 
-                    _log.Debug("Success Getting Nation information for " + nation.Name);
+                    nation.ImageURI = selectionViewModel.SelectedImageAddress;
+                    _mainModel.NationDatabase.UpdateDatabaseItem(nation);
+
+                    OnPropertyChanged(() => Nations);
                 }
                 else
                 {

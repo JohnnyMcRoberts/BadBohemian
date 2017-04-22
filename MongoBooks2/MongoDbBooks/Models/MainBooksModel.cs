@@ -156,6 +156,9 @@
             }
         }
 
+
+        public NationDatabase NationDatabase => _nationsDatabase;
+
         #endregion
 
         #region Public Methods
