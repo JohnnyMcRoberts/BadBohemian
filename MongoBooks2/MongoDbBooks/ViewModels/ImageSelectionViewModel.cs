@@ -287,19 +287,25 @@ namespace MongoDbBooks.ViewModels
 
         private void GetImagesInPage()
         {
-            LoadImagesFromDocument();
-
-            if (TheHtml != string.Empty)
+            try
             {
-                HtmlTag tag = HtmlTag.Parse(TheHtml); // as there should always be a root tag
+                LoadImagesFromDocument();
 
-                GetImagesFromImgTags(tag);
+                if (TheHtml != string.Empty)
+                {
+                    HtmlTag tag = HtmlTag.Parse(TheHtml); // as there should always be a root tag
 
-                GetImagesFromDivTags(tag);
+                    GetImagesFromImgTags(tag);
+
+                    GetImagesFromDivTags(tag);
+                }
+
+                _imagesInPage = _imagesInPage.Distinct().ToList();
             }
+            catch (Exception)
+            {
 
-            _imagesInPage = _imagesInPage.Distinct().ToList();
-
+            }
             UpdateImagesOnPage();
         }
 
