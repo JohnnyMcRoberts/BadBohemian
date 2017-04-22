@@ -11,6 +11,7 @@ namespace MongoDbBooks.Models.Database
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
     using System;
+    using Geography;
 
     [BsonIgnoreExtraElements]
     /// <summary>
@@ -139,5 +140,24 @@ namespace MongoDbBooks.Models.Database
                     return new Uri(ImageURI);
             }
         }
+
+        /// <summary>
+        /// Gets the image URI ready to be displayed.
+        /// </summary>
+        public CountryGeography Geography
+        {
+            get
+            {
+                if (GeographyXml == null || GeographyXml == string.Empty)
+                    return null;
+
+                if (_countryGeography == null)
+                    _countryGeography = CountryGeography.Create(GeographyXml);
+
+                return _countryGeography;
+            }
+        }
+
+        private CountryGeography _countryGeography;
     }
 }

@@ -90,6 +90,13 @@ namespace MongoDbBooks.Models.Geography
             return country;
         }
 
+        public static CountryGeography Create(string geographyXml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(geographyXml);
+            return Create(doc.DocumentElement);
+        }
+
         public void UpdateLatLongs()
         {
             MinLongitude = MinLatitude = Double.MaxValue;
@@ -116,5 +123,6 @@ namespace MongoDbBooks.Models.Geography
             CentroidLongitude /= totalArea;
             CentroidLatitude /= totalArea;
         }
+
     }
 }
