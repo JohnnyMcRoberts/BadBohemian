@@ -13,6 +13,7 @@ using OxyPlot;
 using MongoDbBooks.Models;
 using MongoDbBooks.Models.Geography;
 using MongoDbBooks.ViewModels.Utilities;
+using MongoDbBooks.Models.Database;
 
 namespace MongoDbBooks.ViewModels
 {
@@ -518,21 +519,83 @@ namespace MongoDbBooks.ViewModels
             foreach (var authorCountry in _mainModel.AuthorCountries.OrderByDescending(x => x.TotalBooksReadFromCountry))
             {
                 var name = authorCountry.Country;
-                var country = _mainModel.WorldCountries.Where(w => w.Country == name).FirstOrDefault();
+                var country = _mainModel.Nations.Where(w => w.Name == name).FirstOrDefault();
                 if (country != null)
                 {
-                    AddCountryPagesPins(modelGroup, colors, authorCountry, name, country);
+                    AddNationPagesPins(modelGroup, colors, authorCountry, name, country);
                 }
 
-                if (_mainModel.CountryGeographies != null && _mainModel.CountryGeographies.Count > 0)
+                if (_mainModel.Nations != null && _mainModel.Nations.Count > 0)
                 {
-                    geographyIndex = AddCountryGeographyPlane(modelGroup, stdColors, geographyIndex, name);
+                    geographyIndex = AddNationsCountryGeographyPlane(modelGroup, stdColors, geographyIndex, name);
                 }
             }
 
-            AddGeographiesForCountriesWithoutBooksRead(modelGroup);
+            AddGeographiesForNationsWithoutBooksRead(modelGroup);
 
             PagesByCountryModel = modelGroup;
+        }
+
+        private int AddNationsCountryGeographyPlane(Model3DGroup modelGroup, List<OxyColor> stdColors, int geographyIndex, string name)
+        {
+            var nation = _mainModel.Nations.Where(g => g.Name == name).FirstOrDefault();
+            if (nation != null)
+            {
+                CountryGeography geography = nation.Geography;
+                if (geography != null)
+                {
+                    var colour = stdColors[(geographyIndex % stdColors.Count)];
+                    GeometryModel3D geographyGeometry =
+                        GetGeographyPlaneGeometry(geography, colour, 0.4);
+                    modelGroup.Children.Add(geographyGeometry);
+                    geographyIndex++;
+                }
+            }
+            
+            return geographyIndex;
+        }
+
+        private void AddGeographiesForNationsWithoutBooksRead(Model3DGroup modelGroup)
+        {
+            if (_mainModel.Nations != null && _mainModel.Nations.Count > 0)
+            {
+                List<string> authorCountries = _mainModel.AuthorCountries.Select(x => x.Country).ToList();
+                foreach (Nation nation in _mainModel.Nations)
+                {
+                    CountryGeography geography = nation.Geography;
+                    if (geography != null && !authorCountries.Contains(geography.Name))
+                    {
+                        GeometryModel3D geographyGeometry =
+                            GetGeographyPlaneGeometry(geography, OxyColors.LightGray);
+                        modelGroup.Children.Add(geographyGeometry);
+                    }
+                }
+            }
+        }
+
+        private void AddNationPagesPins(Model3DGroup modelGroup, List<OxyColor> colors, AuthorCountry authorCountry, string name, Nation country)
+        {
+            int pagesCount = (int)authorCountry.TotalPagesReadFromCountry;
+            int booksCount = (int)authorCountry.TotalBooksReadFromCountry;
+
+            var pagesLookup = (int)_countryToLogPagesLookUp[authorCountry.Country];
+            var maxPages = _countryToLogPagesLookUp.Values.OrderByDescending(x => x).FirstOrDefault();
+            double height = (12.0 * (double)pagesLookup) / ((double)maxPages);
+            if (height < 1.0) height = 1.0;
+
+            GeometryModel3D countryGeometry =
+                GetCountryOctahedronGeometry(country.Latitude, country.Longitude,
+                    height, colors[pagesLookup], booksCount, country.DisplayImage);
+            modelGroup.Children.Add(countryGeometry);
+
+            string label =
+                string.Format("{0}\nLat/Long ( {1:0.###} ,{2:0.###} ) \nTotal Pages {3}",
+                    name, country.Latitude, country.Longitude, pagesCount);
+
+            TextVisual3D countryText =
+                GetCountryText(country.Latitude, country.Longitude, pagesCount, label, height);
+
+            modelGroup.Children.Add(countryText.Content);
         }
 
         private void AddCountryPagesPins(Model3DGroup modelGroup, List<OxyColor> colors, AuthorCountry authorCountry,
@@ -562,7 +625,7 @@ namespace MongoDbBooks.ViewModels
         }
 
         private GeometryModel3D GetCountryOctahedronGeometry(
-            double latitude, double longitude, double height, OxyColor color, int books)
+            double latitude, double longitude, double height, OxyColor color, int books, Uri image = null)
         {
             PolygonPoint latLong = new PolygonPoint() { Latitude = latitude, Longitude = longitude };
             double x, y;
@@ -571,7 +634,17 @@ namespace MongoDbBooks.ViewModels
             GeometryModel3D countryGeometry = new GeometryModel3D();
             var brush = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
 
-            countryGeometry.Material = MaterialHelper.CreateMaterial(brush, ambient: 177);
+            //if (image != null)
+            //{
+            //    System.Windows.Media.Imaging.BitmapImage im = 
+            //        new System.Windows.Media.Imaging.BitmapImage(image);
+
+            //    countryGeometry.Material = MaterialHelper.CreateImageMaterial(im, 1,false);
+
+            //}
+            //else
+                countryGeometry.Material = MaterialHelper.CreateMaterial(brush, ambient: 177);
+
             var meshBuilder = new MeshBuilder(false, false);
 
             var top = new Point3D(x, y, height);
