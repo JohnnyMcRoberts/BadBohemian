@@ -472,26 +472,42 @@ namespace MongoDbBooks.ViewModels
             Nation nation = parameter as Nation;
             if (nation != null)
             {
-                _log.Debug("Getting Nation information for " + nation.Name);
+                SelectImageForNation(nation);
+                return;
+            }
 
-                ImageSelectionViewModel selectionViewModel = new ImageSelectionViewModel(_log, nation.Name);
+            AuthorCountry authorCountry = parameter as AuthorCountry;
+            if (authorCountry?.Nation != null)
+            {
+                SelectImageForNation(authorCountry.Nation);
+            }
+        }
 
-                ImageSelectionWindow imageSelectDialog = new ImageSelectionWindow { DataContext = selectionViewModel };
-                var success = imageSelectDialog.ShowDialog();
-                if (success.HasValue && success.Value)
-                {
-                    _log.Debug("Success Getting Nation information for " + nation.Name + 
-                        "\n   Img = " + selectionViewModel.SelectedImageAddress);
+        #endregion
 
-                    nation.ImageURI = selectionViewModel.SelectedImageAddress;
-                    _mainModel.NationDatabase.UpdateDatabaseItem(nation);
+        #region Utility Methods
 
-                    OnPropertyChanged(() => Nations);
-                }
-                else
-                {
-                    _log.Debug("Failed Getting Nation information for " + nation.Name);
-                }
+        private void SelectImageForNation(Nation nation)
+        {
+            _log.Debug("Getting Nation information for " + nation.Name);
+
+            ImageSelectionViewModel selectionViewModel = new ImageSelectionViewModel(_log, nation.Name);
+
+            ImageSelectionWindow imageSelectDialog = new ImageSelectionWindow {DataContext = selectionViewModel};
+            var success = imageSelectDialog.ShowDialog();
+            if (success.HasValue && success.Value)
+            {
+                _log.Debug("Success Getting Nation information for " + nation.Name +
+                           "\n   Img = " + selectionViewModel.SelectedImageAddress);
+
+                nation.ImageUri = selectionViewModel.SelectedImageAddress;
+                _mainModel.NationDatabase.UpdateDatabaseItem(nation);
+
+                OnPropertyChanged(() => Nations);
+            }
+            else
+            {
+                _log.Debug("Failed Getting Nation information for " + nation.Name);
             }
         }
 

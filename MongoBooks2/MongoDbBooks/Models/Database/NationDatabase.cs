@@ -66,7 +66,7 @@ namespace MongoDbBooks.Models.Database
         {
             foreach(var country in countriesData.Countries)
             {
-                foreach(var nation in LoadedItems)
+                foreach(Nation nation in LoadedItems)
                 {
                     if (country.Name == nation.Name)
                     {

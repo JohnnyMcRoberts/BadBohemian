@@ -139,7 +139,7 @@
 
     #endregion
 
-    #region Constructor
+        #region Constructor
 
         public ChartSelectionViewModel(
             MainWindow mainWindow, log4net.ILog log,
@@ -243,9 +243,9 @@
 #endif
         }
 
-#endregion
+        #endregion
 
-#region Public Methods
+        #region Public Methods
 
         public void UpdateData()
         {
@@ -300,7 +300,7 @@
             OnPropertyChanged("");
         }
 
-#endregion
+        #endregion
 
     }
 }

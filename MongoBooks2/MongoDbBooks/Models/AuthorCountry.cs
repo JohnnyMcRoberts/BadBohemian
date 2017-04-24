@@ -5,8 +5,12 @@ using System.Linq;
 
 namespace MongoDbBooks.Models
 {
+    using MongoDbBooks.Models.Database;
+
     public class AuthorCountry
     {
+        private readonly MainBooksModel _mainModel;
+
         public string Country { get; set; }
 
         public UInt32 TotalPagesReadFromCountry
@@ -35,7 +39,7 @@ namespace MongoDbBooks.Models
             get
             {
                 if (TotalBooksWorldWide < 1) return 0.0;
-                return 100.0 * ((double)TotalBooksReadFromCountry / (double)TotalBooksWorldWide);
+                return 100.0 * (TotalBooksReadFromCountry / (double)TotalBooksWorldWide);
             }
         }
 
@@ -44,12 +48,46 @@ namespace MongoDbBooks.Models
             get
             {
                 if (TotalPagesWorldWide < 1) return 0.0;
-                return 100.0 * ((double)TotalPagesReadFromCountry / (double)TotalPagesWorldWide);
+                return 100.0 * (TotalPagesReadFromCountry / (double)TotalPagesWorldWide);
             }
         }
 
-        public AuthorCountry()
+
+        /// <summary>
+        /// Gets the image URI ready to be displayed.
+        /// </summary>
+        public Nation Nation
         {
+            get
+            {
+                return _mainModel.Nations.FirstOrDefault(n => n.Name == Country);
+            }
+        }
+
+        /// <summary>
+        /// Gets the image URI ready to be displayed.
+        /// </summary>
+        public Uri DisplayImage
+        {
+            get
+            {
+                string imageUri = string.Empty;
+                foreach (WorldCountry worldCountry in _mainModel.WorldCountries.Where(worldCountry => worldCountry.Country == Country))
+                {
+                    imageUri = worldCountry.FlagUrl;
+                    break;
+                }
+
+                if (string.IsNullOrEmpty(imageUri) && !string.IsNullOrEmpty(Nation?.ImageUri))
+                    imageUri = Nation.ImageUri;
+
+                return string.IsNullOrEmpty(imageUri) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(imageUri);
+            }
+        }
+
+        public AuthorCountry(MainBooksModel mainModel)
+        {
+            _mainModel = mainModel;
             Country = "";
             AuthorsFromCountry = new List<BookAuthor>();
             TotalPagesWorldWide = 1;
