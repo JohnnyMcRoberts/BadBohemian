@@ -593,9 +593,50 @@ namespace MongoDbBooks.ViewModels
                     name, country.Latitude, country.Longitude, pagesCount);
 
             TextVisual3D countryText =
-                GetCountryText(country.Latitude, country.Longitude, pagesCount, label, height);
+                GetNationText(country, pagesCount, label, height);
 
             modelGroup.Children.Add(countryText.Content);
+        }
+
+        private TextVisual3D GetNationText(Nation country, int count, string label, double height)
+        {
+            double latitude = country.Latitude;
+            double longitude = country.Longitude;
+            PolygonPoint latLong = new PolygonPoint() { Latitude = latitude, Longitude = longitude };
+            double x, y;
+            latLong.GetCoordinates(out x, out y);
+
+            var labelPoint = new Point3D(x, y + 1, height + 1);
+
+            Brush background = Brushes.LightYellow;
+            if (country.ImageURI != null)
+            {
+                System.Windows.Media.Imaging.BitmapImage im =
+                    new System.Windows.Media.Imaging.BitmapImage(country.DisplayImage);
+
+                background = new ImageBrush(im);
+                background.Opacity = 0.5;
+            }
+
+            TextVisual3D text3D = new TextVisual3D()
+            {
+                Foreground = Brushes.DarkBlue,
+                Background = background,
+                BorderBrush = Brushes.PapayaWhip,
+                Height = 2,
+                FontWeight = System.Windows.FontWeights.Bold,
+                IsDoubleSided = true,
+                Position = labelPoint,
+                UpDirection = new Vector3D(0, 0.7, 1),
+                TextDirection = new Vector3D(1, 0, 0),
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
+                VerticalAlignment = System.Windows.VerticalAlignment.Bottom,
+                Text = label
+
+            };
+
+            return text3D;
+
         }
 
         private void AddCountryPagesPins(Model3DGroup modelGroup, List<OxyColor> colors, AuthorCountry authorCountry,
@@ -634,16 +675,7 @@ namespace MongoDbBooks.ViewModels
             GeometryModel3D countryGeometry = new GeometryModel3D();
             var brush = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
 
-            //if (image != null)
-            //{
-            //    System.Windows.Media.Imaging.BitmapImage im = 
-            //        new System.Windows.Media.Imaging.BitmapImage(image);
-
-            //    countryGeometry.Material = MaterialHelper.CreateImageMaterial(im, 1,false);
-
-            //}
-            //else
-                countryGeometry.Material = MaterialHelper.CreateMaterial(brush, ambient: 177);
+            countryGeometry.Material = MaterialHelper.CreateMaterial(brush, ambient: 177);
 
             var meshBuilder = new MeshBuilder(false, false);
 

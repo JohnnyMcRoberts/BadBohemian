@@ -24,6 +24,9 @@ namespace MongoDbBooks.Models
         [BsonElement("longitude")]
         public double Longitude { get; set; }
 
+        [BsonElement("flag_url")]
+        public string FlagUrl { get; set; }
+
         public string LatitudeText
         {
             get
@@ -58,7 +61,5 @@ namespace MongoDbBooks.Models
                 return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + eastWest;
             }
         }
-
-
     }
 }

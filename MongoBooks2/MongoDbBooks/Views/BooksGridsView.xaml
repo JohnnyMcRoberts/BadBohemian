@@ -497,6 +497,10 @@
                             <DataGridTextColumn Header="Longitude" 
                                                 Binding="{Binding Path=Longitude, StringFormat=N4}" 
                                                 Width="Auto"/>
+                            
+                            <DataGridTextColumn Header="Flag URL" 
+                                                Binding="{Binding FlagUrl}" 
+                                                Width="Auto"/>
                         </DataGrid.Columns>
 
                     </DataGrid>
