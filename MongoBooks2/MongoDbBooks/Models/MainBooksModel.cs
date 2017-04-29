@@ -326,7 +326,7 @@
 
                 WorldCountries.Clear();
 
-                // Country,Capital,Latitude,Longitude
+                // Country,Capital,Latitude,Longitude,Flag
 
                 while (csv.Read())
                 {
@@ -336,7 +336,8 @@
 
                     var stringFieldLatitude = csv.GetField<string>(2);
                     var stringFieldLongitude = csv.GetField<string>(3);
-                    
+                    var stringFieldFlagUrl = csv.GetField<string>(4);
+
                     double latitude = GetLatLongFromString(stringFieldLatitude, true);
                     double longitude = GetLatLongFromString(stringFieldLongitude, false);
 
@@ -347,7 +348,8 @@
                             Country = stringFieldCountry,
                             Capital = stringFieldCapital,
                             Latitude = latitude,
-                            Longitude = longitude
+                            Longitude = longitude,
+                            FlagUrl = stringFieldFlagUrl != null ? stringFieldFlagUrl : string.Empty
                         };
 
                         WorldCountries.Add(country);
@@ -797,6 +799,7 @@
         {
             ObservableCollection<WorldCountry> dbCountries = new ObservableCollection<WorldCountry>();
             ObservableCollection<WorldCountry> missingCountries = new ObservableCollection<WorldCountry>();
+            ObservableCollection<WorldCountry> updateCountries = new ObservableCollection<WorldCountry>();
 
             using (IAsyncCursor<WorldCountry> cursor = worldCountries.FindSync(filter))
             {
@@ -810,17 +813,40 @@
             foreach (var currentCountry in WorldCountries)
             {
                 bool countryInDb = false;
+                ObjectId foundId = ObjectId.Empty;
                 foreach (var dbCountry in dbCountries)
                 {
                     if (dbCountry.Country == currentCountry.Country)
+                    {
                         countryInDb = true;
+                        foundId = dbCountry.Id;
+                    }
                     if (countryInDb)
                         break;
                 }
 
                 if (!countryInDb)
                     missingCountries.Add(currentCountry);
+                else
+                {
+                    if (foundId != ObjectId.Empty)
+                    {
+                        currentCountry.Id = foundId;
+                        updateCountries.Add(currentCountry);
+                    }
+                }
             }
+
+            foreach (var updateCountry in updateCountries)
+            {
+                var filterOnId = Builders<WorldCountry>.Filter.Eq(s => s.Id, updateCountry.Id);
+
+                long totalCount = worldCountries.Count(filterOnId);
+
+                var result = worldCountries.ReplaceOne(filterOnId, updateCountry);
+            }
+            //worldCountries.u
+            //worldCountries.UpdateMany(updateCountries);
 
             worldCountries.InsertMany(missingCountries);
             worldCountries.Count(filter);
