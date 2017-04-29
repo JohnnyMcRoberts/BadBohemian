@@ -246,10 +246,11 @@ namespace MongoDbBooks.ViewModels
             PlotMonthlyPageTalliesByCalendarYear.UpdateData(_mainModel);
             PlotMonthlyBookAndPageTalliesByCalendarYear.UpdateData(_mainModel);
 
+
+            PlotWorldCountriesMap.UpdateData(_mainModel);
+            PlotWorldCountriesMapBooksRead.UpdateData(_mainModel);
             if (_mainModel.CountryGeographies != null)
             {                   
-                PlotWorldCountriesMap.UpdateData(_mainModel);
-                PlotWorldCountriesMapBooksRead.UpdateData(_mainModel);
                 PlotWorldCountriesMapPagesRead.UpdateData(_mainModel);
                 PlotWorldCountriesMapWithBooksRead.UpdateData(_mainModel);
                 PlotWorldCountriesMapLastTenLatLong.UpdateData(_mainModel);                

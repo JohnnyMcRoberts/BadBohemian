@@ -30,46 +30,62 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
             SetupLatitudeAndLongitudeAxes(newPlot);
 
-            foreach(var country in _mainModel.CountryGeographies)
+            foreach (Models.Database.Nation nation in _mainModel.Nations)
             {
-
-                int i = 0;
-                var landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
-
-                foreach (var boundary in landBlocks)
+                Models.Geography.CountryGeography country = nation.Geography;
+                if (country != null)
                 {
-                    var areaSeries = new AreaSeries
-                    {
-                        Color = OxyColors.LightGreen,
-                        Title = country.Name,
-                        RenderInLegend = false
-                    };
-                    var points = boundary.Points;
-                    if (points.Count > PolygonReducer.MaxPolygonPoints)
-                        points = PolygonReducer.AdaptativePolygonReduce(points, PolygonReducer.MaxPolygonPoints);
-
-                    foreach (var point in points)
-                    {
-                        double ptX = 0;
-                        double ptY = 0;
-                        point.GetCoordinates(out ptX, out ptY);
-                        DataPoint dataPoint = new DataPoint(ptX, ptY);
-
-                        areaSeries.Points.Add(dataPoint);
-                    }
-
-                    newPlot.Series.Add(areaSeries);
-
-                    // just do the 10 biggest bits per country (looks to be enough)
-                    i++;
-                    if (i > 10)
-                        break;
+                    OxyColor colour = OxyColors.LightGreen;
+                    string title = country.Name;
+                    string tag = "";
+                    string trackerFormat = "{0}";
+                    AddCountryGeographyAreaSeriesToPlot(newPlot, country, colour, title, tag, trackerFormat);
                 }
             }
 
             // finally update the model with the new plot
             return newPlot;
         }
+
+        private static void AddCountryGeographyAreaSeriesToPlot(
+            PlotModel newPlot, Models.Geography.CountryGeography country, OxyColor colour, string title, string tag, string trackerFormat)
+        {
+            int i = 0;
+            var landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
+
+            foreach (var boundary in landBlocks)
+            {
+                var areaSeries = new AreaSeries
+                {
+                    Color = colour,
+                    Title = title,
+                    RenderInLegend = false,
+                    Tag = tag
+                };
+                var points = boundary.Points;
+                if (points.Count > PolygonReducer.MaxPolygonPoints)
+                    points = PolygonReducer.AdaptativePolygonReduce(points, PolygonReducer.MaxPolygonPoints);
+
+                foreach (var point in points)
+                {
+                    double ptX = 0;
+                    double ptY = 0;
+                    point.GetCoordinates(out ptX, out ptY);
+
+                    DataPoint dataPoint = new DataPoint(ptX, ptY);
+                    areaSeries.Points.Add(dataPoint);
+                }
+
+                areaSeries.TrackerFormatString = trackerFormat;
+                newPlot.Series.Add(areaSeries);
+
+                // just do the 10 biggest bits per country (looks to be enough)
+                i++;
+                if (i > 10)
+                    break;
+            }
+        }
+
         private void SetupLatitudeAndLongitudeAxes(PlotModel newPlot)
         {
             var xAxis = new LinearAxis
