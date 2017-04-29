@@ -8,9 +8,12 @@ using System.Linq.Expressions;
 using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.Axes;
+using OxyPlot.Annotations;
 
 using MongoDbBooks.Models;
 using MongoDbBooks.ViewModels.Utilities;
+using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace MongoDbBooks.ViewModels.PlotGenerators
 {
@@ -42,7 +45,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             OxyPalette faintPalette;
             maxBooksRead = 
                 OxyPlotUtilities.SetupFaintPaletteForRange(maxBooksRead, out colors, out faintPalette, 128);
-
+            
             foreach (Models.Database.Nation nation in _mainModel.Nations)
             {
                 Models.Geography.CountryGeography country = nation.Geography;
@@ -59,6 +62,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             return newPlot;
         }
 
+
         private static void AddCountryGeographyToPlot(
             PlotModel newPlot, 
             Dictionary<string, int> countryToReadLookUp, 
@@ -74,42 +78,9 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                 tagString = "\nBooks Read = " + countryToReadLookUp[country.Name].ToString();
             }
 
-            int i = 0;
-            var landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
+            string trackerFormat = "{0}\nLat/Long ( {4:0.###} ,{2:0.###} )" + tagString;
+            OxyPlotUtilities.AddCountryGeographyAreaSeriesToPlot(newPlot, country, color, country.Name, tagString, trackerFormat);
 
-            foreach (var boundary in landBlocks)
-            {
-                var areaSeries = new AreaSeries
-                {
-                    Color = color,
-                    Title = country.Name,
-                    RenderInLegend = false,
-                    Tag = tagString
-                };
-
-                var points = boundary.Points;
-                if (points.Count > PolygonReducer.MaxPolygonPoints)
-                    points = PolygonReducer.AdaptativePolygonReduce(points, PolygonReducer.MaxPolygonPoints);
-
-                foreach (var point in points)
-                {
-                    double ptX = 0;
-                    double ptY = 0;
-                    point.GetCoordinates(out ptX, out ptY);
-                    DataPoint dataPoint = new DataPoint(ptX, ptY);
-
-                    areaSeries.Points.Add(dataPoint);
-                }
-
-                areaSeries.TrackerFormatString = "{0}\nLat/Long ( {4:0.###} ,{2:0.###} )" + tagString;
-                newPlot.Series.Add(areaSeries);
-                
-
-                // just do the 10 biggest bits per country (as looks good enough)
-                i++;
-                if (i > 10)
-                    break;
-            }
         }
 
         private void SetupLatitudeAndLongitudeAxes(PlotModel newPlot)

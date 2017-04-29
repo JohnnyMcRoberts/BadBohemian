@@ -11,6 +11,10 @@ using OxyPlot.Axes;
 
 using MongoDbBooks.Models;
 using MongoDbBooks.ViewModels.Utilities;
+using OxyPlot.Annotations;
+using System.IO;
+using System.Windows.Media.Imaging;
+using System.Net;
 
 namespace MongoDbBooks.ViewModels.PlotGenerators
 {
@@ -30,6 +34,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
             SetupLatitudeAndLongitudeAxes(newPlot);
 
+            int flagCount = 0;
             foreach (Models.Database.Nation nation in _mainModel.Nations)
             {
                 Models.Geography.CountryGeography country = nation.Geography;
@@ -39,52 +44,109 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                     string title = country.Name;
                     string tag = "";
                     string trackerFormat = "{0}";
-                    AddCountryGeographyAreaSeriesToPlot(newPlot, country, colour, title, tag, trackerFormat);
+                    OxyPlotUtilities.AddCountryGeographyAreaSeriesToPlot(newPlot, country, colour, title, tag, trackerFormat);
                 }
+
+                if (nation.ImageURI != null && flagCount < 10)
+                {
+                    Models.Geography.PolygonPoint capitalCity =
+                        new Models.Geography.PolygonPoint(nation.Longitude, nation.Latitude);
+                    double x, y;
+                    capitalCity.GetCoordinates(out x, out y);
+                    
+                    WebRequest req = HttpWebRequest.Create(nation.ImageURI);
+                    Stream stream = req.GetResponse().GetResponseStream();
+                    var bitmap = new System.Drawing.Bitmap(stream);
+
+                    MemoryStream memoryStream = new MemoryStream();
+                    bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Bmp);
+                    var asBytes = memoryStream.ToArray();
+
+                    var typeOfImage = GetImageFormat(asBytes);
+
+                    if (typeOfImage == ImageFormat.Unknown)
+                        continue;
+
+                    OxyImage image = new OxyImage(asBytes);
+                    newPlot.Annotations.Add(
+                        new ImageAnnotation
+                        {
+                            ImageSource = image,
+                            Opacity = 0.5,
+
+                            X = new PlotLength(x, PlotLengthUnit.Data),
+                            Y = new PlotLength(y, PlotLengthUnit.Data),
+                            Width = new PlotLength(30, PlotLengthUnit.ScreenUnits),
+                            Height = new PlotLength(20, PlotLengthUnit.ScreenUnits),
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Middle
+                        });
+
+
+                    //newPlot.Annotations.Add(new TextAnnotation { TextPosition = new DataPoint(x, y), Text = nation.Capital });
+
+                    flagCount++;
+                }
+
             }
 
             // finally update the model with the new plot
             return newPlot;
         }
 
-        private static void AddCountryGeographyAreaSeriesToPlot(
-            PlotModel newPlot, Models.Geography.CountryGeography country, OxyColor colour, string title, string tag, string trackerFormat)
+        /// <summary>
+        /// Gets the image format.
+        /// </summary>
+        /// <param name="bytes">The image bytes.</param>
+        /// <returns>The <see cref="ImageFormat" /></returns>
+        private static ImageFormat GetImageFormat(byte[] bytes)
         {
-            int i = 0;
-            var landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
-
-            foreach (var boundary in landBlocks)
+            if (bytes.Length >= 2 && bytes[0] == 0xFF && bytes[1] == 0xD8)
             {
-                var areaSeries = new AreaSeries
-                {
-                    Color = colour,
-                    Title = title,
-                    RenderInLegend = false,
-                    Tag = tag
-                };
-                var points = boundary.Points;
-                if (points.Count > PolygonReducer.MaxPolygonPoints)
-                    points = PolygonReducer.AdaptativePolygonReduce(points, PolygonReducer.MaxPolygonPoints);
+                return ImageFormat.Jpeg;
+            }
 
-                foreach (var point in points)
-                {
-                    double ptX = 0;
-                    double ptY = 0;
-                    point.GetCoordinates(out ptX, out ptY);
+            if (bytes.Length >= 2 && bytes[0] == 0x42 && bytes[1] == 0x4D)
+            {
+                return ImageFormat.Bmp;
+            }
 
-                    DataPoint dataPoint = new DataPoint(ptX, ptY);
-                    areaSeries.Points.Add(dataPoint);
-                }
+            if (bytes.Length >= 4 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47)
+            {
+                return ImageFormat.Png;
+            }
 
-                areaSeries.TrackerFormatString = trackerFormat;
-                newPlot.Series.Add(areaSeries);
+            return ImageFormat.Unknown;
+        }
 
-                // just do the 10 biggest bits per country (looks to be enough)
-                i++;
-                if (i > 10)
-                    break;
+        private System.Drawing.Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
+        {
+            // BitmapImage bitmapImage = new BitmapImage(new Uri("../Images/test.png", UriKind.Relative));
+
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+                enc.Save(outStream);
+                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
+
+                return new System.Drawing.Bitmap(bitmap);
             }
         }
+
+        public byte[] ImageToByte(System.Windows.Media.Imaging.BitmapImage imageSource)
+        {
+            byte[] data;
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(imageSource));
+            using (MemoryStream ms = new MemoryStream())
+            {
+                encoder.Save(ms);
+                data = ms.ToArray();
+            }
+            return data;
+        }
+
 
         private void SetupLatitudeAndLongitudeAxes(PlotModel newPlot)
         {
