@@ -5,6 +5,12 @@
     using System.Linq.Expressions;
     using System.Windows.Forms;
     using System.Windows.Input;
+    using System.Xml.Linq;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+    using System.Xml;
+    using System.Linq;
 
     public class MainViewModel : INotifyPropertyChanged
     {
@@ -150,6 +156,66 @@
         /// </summary>
         public void CopyPlaylistCommandAction()
         {
+            List<string> songs = GetPlaylistSongs();
+
+            string sourceDirectory = Path.GetDirectoryName(Playlist);
+
+            foreach (var song in songs)
+            {
+                var songPath = Path.Combine(sourceDirectory, song);
+                var outputSong = Path.Combine(OutputDirectory, Path.GetFileName(song));
+                File.Copy(songPath, outputSong);
+            }
+        }
+
+        private List<string> GetPlaylistSongs()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(Playlist);
+
+            List<string> songs = new List<string>();
+            XmlNode body = null;
+            foreach (XmlNode child in doc.DocumentElement.ChildNodes)
+            {
+                if (child.Name == "body")
+                {
+                    body = child;
+                    break;
+                }
+            }
+
+            XmlNode seq = null;
+            if (body != null)
+            {
+
+                foreach (XmlNode child in body.ChildNodes)
+                {
+                    if (child.Name == "seq")
+                    {
+                        seq = child;
+                        break;
+                    }
+                }
+            }
+
+            if (seq != null)
+            {
+                foreach (XmlNode child in seq.ChildNodes)
+                {
+                    if (child.Name == "media")
+                    {
+                        foreach (XmlAttribute attribute in child.Attributes)
+                        {
+                            if (attribute.Name == "src")
+                            {
+                                songs.Add(attribute.Value);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return songs;
         }
 
         #endregion

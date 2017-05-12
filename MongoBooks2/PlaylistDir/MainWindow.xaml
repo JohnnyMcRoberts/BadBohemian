@@ -14,23 +14,23 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="300*"/>
+            <ColumnDefinition Width="150"/>
 
         </Grid.ColumnDefinitions>
         
         <Label Grid.Row="0" Grid.Column="0" Content="Playlist" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" 
-                 Text="{Binding Playlist, Mode=OneWay}" VerticalAlignment="Center"  MinWidth="120"
+        <TextBox Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Stretch" Height="23" TextWrapping="Wrap" 
+                 Text="{Binding Playlist, Mode=OneWay}" VerticalAlignment="Center"  
                  Margin="10,0,10,0"/>
         <Button Grid.Row="0" Grid.Column="2"  Content="Select Playlist" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="125"
                                             Command="{Binding Path=SelectPlaylistCommand}" />
 
 
         <Label Grid.Row="1" Grid.Column="0" Content="Files Directory" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" IsReadOnly="True"  
-                 Text="{Binding OutputDirectory, Mode=OneWay}" VerticalAlignment="Center" MinWidth="120"
+        <TextBox Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Stretch"  Height="23" TextWrapping="Wrap" IsReadOnly="True"  
+                 Text="{Binding OutputDirectory, Mode=OneWay}" VerticalAlignment="Center" 
                  Margin="10,0,10,0"/>
         <Button Grid.Row="1" Grid.Column="2"  Content="Select Directory" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="125"
                                             Command="{Binding Path=SelectDirectoryCommand}" />
