@@ -47,14 +47,14 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                     OxyPlotUtilities.AddCountryGeographyAreaSeriesToPlot(newPlot, country, colour, title, tag, trackerFormat);
                 }
 
-                if (nation.ImageURI != null && flagCount < 10)
+                if (!string.IsNullOrEmpty(nation.ImageUri) && flagCount < 10)
                 {
                     Models.Geography.PolygonPoint capitalCity =
                         new Models.Geography.PolygonPoint(nation.Longitude, nation.Latitude);
                     double x, y;
                     capitalCity.GetCoordinates(out x, out y);
                     
-                    WebRequest req = HttpWebRequest.Create(nation.ImageURI);
+                    WebRequest req = HttpWebRequest.Create(nation.ImageUri);
                     Stream stream = req.GetResponse().GetResponseStream();
                     var bitmap = new System.Drawing.Bitmap(stream);
 

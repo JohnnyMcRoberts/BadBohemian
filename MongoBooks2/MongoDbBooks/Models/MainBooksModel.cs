@@ -87,21 +87,21 @@
 
         #region Public Data
 
-        public ObservableCollection<BookRead> BooksRead { get; private set; }
+        public ObservableCollection<BookRead> BooksRead { get; }
 
-        public ObservableCollection<BookAuthor> AuthorsRead { get; private set; }
+        public ObservableCollection<BookAuthor> AuthorsRead { get; }
 
-        public ObservableCollection<AuthorCountry> AuthorCountries { get; private set; }
+        public ObservableCollection<AuthorCountry> AuthorCountries { get; }
 
-        public ObservableCollection<AuthorLanguage> AuthorLanguages { get; private set; }
+        public ObservableCollection<AuthorLanguage> AuthorLanguages { get;  }
 
-        public ObservableCollection<TalliedBook> TalliedBooks { get; private set; }
+        public ObservableCollection<TalliedBook> TalliedBooks { get; }
 
-        public ObservableCollection<BooksDelta> BookDeltas { get; private set; }
+        public ObservableCollection<BooksDelta> BookDeltas { get; }
 
-        public ObservableCollection<BooksDelta> BookPerYearDeltas { get; private set; }
+        public ObservableCollection<BooksDelta> BookPerYearDeltas { get; }
 
-        public ObservableCollection<BookLocationDelta> BookLocationDeltas { get; private set; }
+        public ObservableCollection<BookLocationDelta> BookLocationDeltas { get; }
 
         public string InputFilePath { get; set; }
         public string OutputFilePath { get; set; }
@@ -155,7 +155,6 @@
                 return null;
             }
         }
-
 
         public NationDatabase NationDatabase => _nationsDatabase;
 
@@ -319,10 +318,9 @@
 
         public void ReadCountriesFromFile(string filename)
         {
-
-            using (var sr = new StreamReader(filename, Encoding.Default))
+            using (StreamReader sr = new StreamReader(filename, Encoding.Default))
             {
-                var csv = new CsvReader(sr);
+                CsvReader csv = new CsvReader(sr);
 
                 WorldCountries.Clear();
 
@@ -359,9 +357,11 @@
 
             UpdateWorldCountryLookup();
             UpdateCollections();
+            UpdateNationalFlags();
             Properties.Settings.Default.InputCountriesFile = filename;
             Properties.Settings.Default.Save();
         }
+
 
         #endregion
 
@@ -642,7 +642,7 @@
                 else
                 {
                     AuthorCountry country =
-                        new AuthorCountry() { Country = author.Nationality };
+                        new AuthorCountry(this) { Country = author.Nationality };
                     country.AuthorsFromCountry.Add(author);
                     countrySet.Add(country.Country, country);
                 }
@@ -1001,6 +1001,32 @@
                 var result = booksRead.Find(remFilter);
                 var asList = result.ToList();
                 booksRead.DeleteMany(remFilter);
+            }
+        }
+
+        private void UpdateNationalFlags()
+        {
+            foreach (Nation nation in Nations)
+            {
+                if (nation.ImageUri != null)
+                {
+                    continue;
+                }
+
+                if (_worldCountryLookup == null || _worldCountryLookup.Count == 0 ||
+                    !_worldCountryLookup.ContainsKey(nation.Name))
+                {
+                    continue;
+                }
+
+                WorldCountry country = _worldCountryLookup[nation.Name];
+                if (country.FlagUrl == null)
+                {
+                    continue;
+                }
+
+                nation.ImageUri = country.FlagUrl;
+                _nationsDatabase.UpdateDatabaseItem(nation);
             }
         }
 

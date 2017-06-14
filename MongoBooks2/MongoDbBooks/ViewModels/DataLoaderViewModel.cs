@@ -191,7 +191,6 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
-
         public void OpenCountriesLocationsCommandAction()
         {
             OpenFileDialog fileDialog = new OpenFileDialog();

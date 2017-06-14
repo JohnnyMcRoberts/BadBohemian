@@ -47,6 +47,7 @@ namespace MongoDbBooks.Models.Geography
         #region Public Data
 
         public List<string> CountryNames { get { return _countries.Keys.ToList(); } }
+
         public List<CountryGeography> Countries { get { return _countries.Values.OrderBy(x => x.Name).ToList(); } }
         
         #endregion

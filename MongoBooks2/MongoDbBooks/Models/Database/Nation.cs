@@ -8,52 +8,51 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace MongoDbBooks.Models.Database
 {
-    using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
     using System;
     using Geography;
 
-    [BsonIgnoreExtraElements]
     /// <summary>
     /// The MongoDb entity for a nation.
     /// </summary>
+    [BsonIgnoreExtraElements]
     public class Nation : BaseEntity
     {
-        [BsonElement("capital")]
         /// <summary>
         /// Gets or sets the name of the capital city.
         /// </summary>
+        [BsonElement("capital")]
         public string Capital { get; set; }
 
-        [BsonElement("latitude")]
         /// <summary>
         /// Gets or sets the latitude of the capital city.
         /// </summary>
+        [BsonElement("latitude")]
         public double Latitude { get; set; }
 
-        [BsonElement("longitude")]
         /// <summary>
         /// Gets or sets the longitude of the capital city.
         /// </summary>
+        [BsonElement("longitude")]
         public double Longitude { get; set; }
 
-        [BsonElement("image")]
         /// <summary>
         /// Gets or sets the URI string for a .jpg/.png imafe for the nation.
         /// </summary>
+        [BsonElement("image")]
         public double Image { get; set; }
 
-        [BsonElement("geography_xml")]
         /// <summary>
         /// Gets or sets the XML string for the nation's geography.
         /// </summary>
+        [BsonElement("geography_xml")]
         public string GeographyXml { get; set; }
 
-        [BsonElement("image_uri")]
         /// <summary>
         /// Gets or sets the URI string for a .jpg/.png image for the nation.
         /// </summary>
-        public string ImageURI { get; set; }
+        [BsonElement("image_uri")]
+        public string ImageUri { get; set; }
 
         /// <summary>
         /// Gets the latitude in a degree, minutes and seconds.
@@ -70,7 +69,7 @@ namespace MongoDbBooks.Models.Database
                     inDegrees *= -1.0;
                 }
                 uint degrees = (uint)inDegrees;
-                uint seconds = (uint)((inDegrees - (double)degrees) * 60.0);
+                uint seconds = (uint)((inDegrees - degrees) * 60.0);
 
                 return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + northSouth;
             }
@@ -91,7 +90,7 @@ namespace MongoDbBooks.Models.Database
                     inDegrees *= -1.0;
                 }
                 uint degrees = (uint)inDegrees;
-                uint seconds = (uint)((inDegrees - (double)degrees) * 60.0);
+                uint seconds = (uint)((inDegrees - degrees) * 60.0);
 
                 return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + eastWest;
             }
@@ -118,10 +117,10 @@ namespace MongoDbBooks.Models.Database
         {
             get
             {
-                if (ImageURI == null)
+                if (ImageUri == null)
                     return "N/A";
                 else
-                    return ImageURI.Substring(0, Math.Min(ImageURI.Length, 50)) + " ...";
+                    return ImageUri.Substring(0, Math.Min(ImageUri.Length, 50)) + " ...";
             }
         }
 
@@ -132,12 +131,7 @@ namespace MongoDbBooks.Models.Database
         {
             get
             {
-                if (ImageURI == null)
-                {
-                    return new Uri("pack://application:,,,/Images/camera_image_cancel-32.png");
-                }
-                else
-                    return new Uri(ImageURI);
+                return string.IsNullOrEmpty(ImageUri) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(ImageUri);
             }
         }
 
@@ -148,7 +142,7 @@ namespace MongoDbBooks.Models.Database
         {
             get
             {
-                if (GeographyXml == null || GeographyXml == string.Empty)
+                if (string.IsNullOrEmpty(GeographyXml))
                     return null;
 
                 if (_countryGeography == null)

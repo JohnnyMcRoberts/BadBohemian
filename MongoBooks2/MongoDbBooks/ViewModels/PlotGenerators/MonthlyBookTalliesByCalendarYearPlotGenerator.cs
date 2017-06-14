@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Linq.Expressions;
-
-using OxyPlot;
-using OxyPlot.Series;
-using OxyPlot.Axes;
-
-using MongoDbBooks.Models;
-using MongoDbBooks.ViewModels.Utilities;
-
+﻿
 namespace MongoDbBooks.ViewModels.PlotGenerators
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using OxyPlot;
+    using OxyPlot.Series;
+    using OxyPlot.Axes;
+
+    using MongoDbBooks.Models;
+    using MongoDbBooks.ViewModels.Utilities;
+
     public class MonthlyBookTalliesByCalendarYearPlotGenerator : IPlotGenerator
     {
         #region Public Types
@@ -38,7 +35,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
         #region IPlotGenerator implementation
 
-        public OxyPlot.PlotModel SetupPlot(Models.MainBooksModel mainModel)
+        public PlotModel SetupPlot(MainBooksModel mainModel)
         {
             _mainModel = mainModel;
             return SetupTalliesPerCalendarYearPlot();
@@ -48,7 +45,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
         #region Private data
 
-        private Models.MainBooksModel _mainModel;
+        private MainBooksModel _mainModel;
 
         private readonly ChartType _chartType;
 
@@ -75,7 +72,6 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
         private class MonthOfYearTally
         {
-            public int Year { get; set; }
             public int MonthOfYear { get; set; }
             public int BooksReadThisMonth { get; set; }
             public int PagesReadThisMonth { get; set; }
@@ -175,8 +171,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                 }
 
                 // then add them to the model
-                OxyPlotUtilities.AddLineSeriesToModel(newPlot, new
-                    LineSeries[] { booksReadSeries, pagesReadSeries });
+                OxyPlotUtilities.AddLineSeriesToModel(newPlot, new[] { booksReadSeries, pagesReadSeries });
                 colourIndex++;
             }
         }
@@ -240,7 +235,6 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                     List<BookRead> booksforMonth = booksByMonthOfYear[monthOfYear];
                     MonthOfYearTally tally = new MonthOfYearTally()
                     {
-                        Year = year,
                         MonthOfYear = monthOfYear,
                         BooksReadThisMonth = booksforMonth.Count(),
                         PagesReadThisMonth = booksforMonth.Sum(x => x.Pages)
