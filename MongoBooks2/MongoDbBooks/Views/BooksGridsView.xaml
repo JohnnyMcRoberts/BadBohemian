@@ -164,6 +164,11 @@
                     <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=AuthorCountries, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+                        <DataGrid.Resources>
+                            <Style x:Key="ImageCellStyle" TargetType="{x:Type DataGridCell}">
+                                <Setter Property="Background" Value="Cornsilk "/>
+                            </Style>
+                        </DataGrid.Resources>
 
 
                         <DataGrid.Columns>
@@ -191,6 +196,15 @@
                                                 Width="Auto"/>
 
 
+                            <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True" CellStyle="{StaticResource ImageCellStyle}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding DisplayImage}" MaxHeight="30" MaxWidth="30"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
                             <DataGridTemplateColumn Header="Authors">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -205,6 +219,17 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
+                            <DataGridTemplateColumn MinWidth="100" Header="Image Select">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Select Image"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"
+                                                Command="{Binding DataContext.SelectImageForNationCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" >
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            
                         </DataGrid.Columns>
 
                     </DataGrid>

@@ -609,7 +609,7 @@ namespace MongoDbBooks.ViewModels
             var labelPoint = new Point3D(x, y + 1, height + 1);
 
             Brush background = Brushes.LightYellow;
-            if (country.ImageURI != null)
+            if (country.ImageUri != null)
             {
                 System.Windows.Media.Imaging.BitmapImage im =
                     new System.Windows.Media.Imaging.BitmapImage(country.DisplayImage);

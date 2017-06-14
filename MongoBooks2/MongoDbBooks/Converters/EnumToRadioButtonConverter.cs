@@ -3,8 +3,6 @@ using System;
 using System.Windows;
 using System.Windows.Data;
 
-using MongoDbBooks.Models;
-
 namespace MongoDbBooks.Converters
 {
     public class EnumToRadioButtonConverter : IValueConverter
@@ -14,7 +12,7 @@ namespace MongoDbBooks.Converters
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             string parameterString = parameter as string;
-            if (parameterString == null)
+            if (parameterString == null || value == null)
                 return DependencyProperty.UnsetValue;
 
             if (Enum.IsDefined(value.GetType(), value) == false)
