@@ -199,7 +199,7 @@
                             <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True" CellStyle="{StaticResource ImageCellStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Image Source="{Binding DisplayImage}" MaxHeight="30" MaxWidth="30"/>
+                                        <Image Source="{Binding DisplayImage}" MaxHeight="40" MaxWidth="60"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
