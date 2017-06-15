@@ -234,6 +234,7 @@
     <Compile Include="ViewModels\DataLoaderViewModel.cs" />
     <Compile Include="ViewModels\DataUpdaterViewModel.cs" />
     <Compile Include="ViewModels\DiagramsViewModel.cs" />
+    <Compile Include="ViewModels\ExportersViewModel.cs" />
     <Compile Include="ViewModels\ImageSelectionViewModel.cs" />
     <Compile Include="ViewModels\MailboxLoaderViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -304,6 +305,9 @@
     <Compile Include="Views\ChartSelectionView.xaml.cs">
       <DependentUpon>ChartSelectionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ExportViaEmailWindow.xaml.cs">
+      <DependentUpon>ExportViaEmailWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImageSelectionWindow.xaml.cs">
       <DependentUpon>ImageSelectionWindow.xaml</DependentUpon>
     </Compile>
@@ -345,6 +349,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChartSelectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExportViaEmailWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -425,6 +433,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\camera_image_cancel-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Send_Email.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

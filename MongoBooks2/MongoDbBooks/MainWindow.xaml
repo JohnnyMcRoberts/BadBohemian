@@ -56,6 +56,12 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="_Show groups" IsCheckable="True" IsChecked="True" />
+                <MenuItem Header="Export via _E-Mail" 
+                          Command="{Binding Path=ExportersVM.ExportViaEmailCommand}" >
+                    <MenuItem.Icon>
+                        <Image Source="./Images/Send_Email.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <Grid MinHeight="625">
