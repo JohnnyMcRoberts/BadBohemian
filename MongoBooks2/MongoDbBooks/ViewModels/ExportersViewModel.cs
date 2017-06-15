@@ -10,11 +10,10 @@
 namespace MongoDbBooks.ViewModels
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Linq;
     using System.Linq.Expressions;
+    using System.Net;
+    using System.Net.Mail;
     using System.Windows;
     using System.Windows.Input;
 
@@ -99,50 +98,69 @@ namespace MongoDbBooks.ViewModels
         private string _userName;
 
         /// <summary>
-        /// The _data loaded.
+        /// The default destination e-mail address.
         /// </summary>
-        private bool _dataLoaded;
+        private string _defaultDestinationEmail;
+        
+        /// <summary>
+        /// The home e-mail address.
+        /// </summary>
+        private string _homeEmailAddress;
 
         /// <summary>
-        /// The _connected to database successfully.
+        /// The destination e-mail address.
         /// </summary>
-        private bool _connectedToDatabaseSuccessfully = false;
+        private string _destinationEmailAddress;
 
         /// <summary>
-        /// The _email address.
-        /// </summary>
-        private string _emailAddress;
-
-        /// <summary>
-        /// The _password.
+        /// The password.
         /// </summary>
         private string _password;
 
         /// <summary>
-        /// The _is valid to connect.
+        /// The text to include in the export e-mail body.
+        /// </summary>
+        private string _emailMessageText;
+
+        /// <summary>
+        /// Flag indicating whether it is valid to connect to the mailbox.
         /// </summary>
         private bool _isValidToConnect;
 
         /// <summary>
+        /// Flag indicating whether to send the books read file in the export.
+        /// </summary>
+        private bool _sendBooksReadFile;
+
+        /// <summary>
+        /// Flag indicating whether to send the locations file in the export.
+        /// </summary>
+        private bool _sendLocationsFile;
+
+        /// <summary>
+        /// Flag indicating whether it is valid to send export e-mail.
+        /// </summary>
+        private bool _isValidToSendExportEmail;
+
+        /// <summary>
         /// True if currently reading e-mails from mailbox, false otherwise.
         /// </summary>
-        private bool _readingEmails;
+        private bool _connectingToMailbox;
 
         /// <summary>
-        /// The _mail items text.
+        /// True if currently sending the e-mails from mailbox, false otherwise.
         /// </summary>
-        private string _mailItemsText;
+        private bool _sendingExportEmail;
 
         /// <summary>
-        /// The books read from email.
+        /// True if connected successfully to the mailbox, false otherwise.
         /// </summary>
-        private ObservableCollection<IBookRead> _booksReadFromEmail;
+        private bool _connectedToMailbox;
 
         /// <summary>
         /// The error message from the mailbox reader.
         /// </summary>
         private string _mailboxErrorMessage;
-
 
         /// <summary>
         /// The connect to mailbox command.
@@ -150,45 +168,28 @@ namespace MongoDbBooks.ViewModels
         private ICommand _connectToMailboxCommand;
 
         /// <summary>
-        /// The read email command.
-        /// </summary>
-        private ICommand _readEmailCommand;
-
-        /// <summary>
         /// The set default user command.
         /// </summary>
         private ICommand _setDefaultUserCommand;
-        
-        /// <summary>
-        /// The new book data input control has lost focus command.
-        /// </summary>
-        private ICommand _lostFocusCommand;
 
         /// <summary>
         /// The export via email command.
         /// </summary>
         private ICommand _exportViaEmailCommand;
 
+        /// <summary>
+        /// The set default destination e-mail command.
+        /// </summary>
+        private ICommand _setDefaultDestinationEmailCommand;
+
+        /// <summary>
+        /// The send export email command.
+        /// </summary>
+        private ICommand _sendExportEmailCommand;
+
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        /// Gets a value indicating whether is data loaded.
-        /// </summary>
-        public bool IsDataLoaded
-        {
-            get
-            {
-                return _dataLoaded;
-            }
-
-            private set
-            {
-                _dataLoaded = value;
-                OnPropertyChanged(() => IsDataLoaded);
-            }
-        }
 
         /// <summary>
         /// Gets the user name.
@@ -208,22 +209,40 @@ namespace MongoDbBooks.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the email adress.
+        /// Gets or sets the home e-mail adress.
         /// </summary>
-        public string EmailAdress
+        public string HomeEmailAdress
         {
             get
             {
-                return _emailAddress;
+                return _homeEmailAddress;
             }
 
             set
             {
-                _emailAddress = value;
-                ValidateCredentials();
-                OnPropertyChanged(() => EmailAdress);
+                _homeEmailAddress = value;
+                ValidateMailboxCredentials();
+                OnPropertyChanged(() => HomeEmailAdress);
             }
         }
+
+        /// <summary>
+        /// Gets or sets the destination e-mail adress.
+        /// </summary>
+        public string DestinationEmailAddress
+        {
+            get
+            {
+                return _destinationEmailAddress;
+            }
+
+            set
+            {
+                _destinationEmailAddress = value;
+                ValidateExportCredentials();
+                OnPropertyChanged(() => DestinationEmailAddress);
+            }
+        }       
 
         /// <summary>
         /// Gets or sets the password.
@@ -238,7 +257,7 @@ namespace MongoDbBooks.ViewModels
             set
             {
                 _password = value;
-                ValidateCredentials();
+                ValidateMailboxCredentials();
                 OnPropertyChanged(() => Password);
             }
         }
@@ -246,25 +265,96 @@ namespace MongoDbBooks.ViewModels
         /// <summary>
         /// Gets if can set the e-mail parameters ie not reading e-mails.
         /// </summary>
-        public bool CanSetEmailParameters => !_readingEmails;
+        public bool CanSetEmailParameters => !_connectingToMailbox;
 
         /// <summary>
-        /// Gets or sets if reading e-mails.
+        /// Gets or sets if connecting to the mailbox.
         /// </summary>
-        public bool ReadingEmails
+        public bool ConnectingToMailbox
         {
             get
             {
-                return _readingEmails;
+                return _connectingToMailbox;
             }
 
             set
             {
-                _readingEmails = value;
-                OnPropertyChanged(() => ReadingEmails);
+                _connectingToMailbox = value;
+                OnPropertyChanged(() => ConnectingToMailbox);
                 OnPropertyChanged(() => CanSetEmailParameters);
             }
+        }
 
+        /// <summary>
+        /// Gets or sets if sending the export e-mail.
+        /// </summary>
+        public bool SendingExportEmail
+        {
+            get
+            {
+                return _sendingExportEmail;
+            }
+
+            set
+            {
+                _sendingExportEmail = value;
+                OnPropertyChanged(() => SendingExportEmail);
+                OnPropertyChanged(() => CanSetEmailParameters);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets if connected to the mailbox.
+        /// </summary>
+        public bool ConnectedToMailbox
+        {
+            get
+            {
+                return _connectedToMailbox;
+            }
+
+            set
+            {
+                _connectedToMailbox = value;
+                OnPropertyChanged(() => ConnectedToMailbox);
+                OnPropertyChanged(() => CanSetEmailParameters);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets if to include the books read file in the export e-mail.
+        /// </summary>
+        public bool SendBooksReadFile
+        {
+            get
+            {
+                return _sendBooksReadFile;
+            }
+
+            set
+            {
+                _sendBooksReadFile = value;
+                OnPropertyChanged(() => SendBooksReadFile);
+                ValidateExportCredentials();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets if to include the locations file in the export e-mail.
+        /// </summary>
+        public bool SendLocationsFile
+        {
+            get
+            {
+                return _sendLocationsFile;
+            }
+
+            set
+            {
+                _sendLocationsFile = value;
+                OnPropertyChanged(() => SendLocationsFile);
+                ValidateExportCredentials();
+            }
         }
 
         /// <summary>
@@ -285,9 +375,31 @@ namespace MongoDbBooks.ViewModels
         }
 
         /// <summary>
+        /// Gets a value indicating whether is valid to export.
+        /// </summary>
+        public bool IsValidToSendExportEmail
+        {
+            get
+            {
+                return _isValidToSendExportEmail;
+            }
+
+            private set
+            {
+                _isValidToSendExportEmail = value;
+                OnPropertyChanged(() => IsValidToSendExportEmail);
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether there is a default user email.
         /// </summary>
         public bool IsDefaultUser => !string.IsNullOrEmpty(_userName);
+
+        /// <summary>
+        /// Gets a value indicating whether there is a default destination e-mail.
+        /// </summary>
+        public bool IsDefaultDestinationEmail => !string.IsNullOrEmpty(_defaultDestinationEmail);       
 
         /// <summary>
         /// Gets the text for the set default e-mail button.
@@ -304,8 +416,40 @@ namespace MongoDbBooks.ViewModels
                 return "No default available";
             }
         }
-        #endregion // INotifyPropertyChanged Members
 
+        /// <summary>
+        /// Gets the text for the set default e-mail button.
+        /// </summary>
+        public string SetDefaultDestinationEmailText
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_defaultDestinationEmail))
+                {
+                    return "Set e-mail to default? (" + _defaultDestinationEmail + ")";
+                }
+
+                return "No default available";
+            }
+        }
+
+
+        public string EmailMessageText
+        {
+            get
+            {
+                return _emailMessageText;
+            }
+
+            set
+            {
+                _emailMessageText = value;
+                ValidateExportCredentials();
+                OnPropertyChanged(() => EmailMessageText);
+            }
+        }
+
+        #endregion
 
         #region Commands
 
@@ -316,6 +460,12 @@ namespace MongoDbBooks.ViewModels
                                             (_exportViaEmailCommand =
                                              new CommandHandler(ExportViaEmailCommandAction, true));
 
+        /// <summary>
+        /// Gets the set defualt user command.
+        /// </summary>
+        public ICommand SetDefaultUserCommand => _setDefaultUserCommand ??
+                                                 (_setDefaultUserCommand =
+                                                  new CommandHandler(SetDefaultUserCommandAction, true));
 
         /// <summary>
         /// Gets the connect to mailbox command.
@@ -325,33 +475,108 @@ namespace MongoDbBooks.ViewModels
                                                     new CommandHandler(ConnectToMailboxCommandAction, true));
 
         /// <summary>
-        /// Gets the set defualt user command.
+        /// Gets the send export e-mail command.
         /// </summary>
-        public ICommand SetDefaultUserCommand => _setDefaultUserCommand ??
-                                                 (_setDefaultUserCommand =
-                                                  new CommandHandler(SetDefaultUserCommandAction, true));
-
-        #endregion // INotifyPropertyChanged Members
-
+        public ICommand SendExportEmailCommand => _sendExportEmailCommand ??
+                                                 (_sendExportEmailCommand =
+                                                  new CommandHandler(SendExportEmailCommandAction, true));
 
         /// <summary>
-        /// The validate credentials.
+        /// Gets the set default destination e-mail command.
         /// </summary>
-        private void ValidateCredentials()
+        public ICommand SetDefaultDestinationEmailCommand => _setDefaultDestinationEmailCommand ??
+                                                   (_setDefaultDestinationEmailCommand =
+                                                    new CommandHandler(SetDefaultDestinationEmailCommandAction, true));
+
+        #endregion
+
+        #region Utility Functions
+
+        /// <summary>
+        /// Validates the home mailbox credentials.
+        /// </summary>
+        private void ValidateMailboxCredentials()
         {
             IsValidToConnect = false;
 
             if (_password != null && _password.Length > 1 &&
-                _emailAddress != null && _emailAddress.Length > 3 &&
-                    _emailAddress.Contains("@"))
+                _homeEmailAddress != null && _homeEmailAddress.Length > 3 &&
+                    _homeEmailAddress.Contains("@"))
             {
-                if (_mainModel.MailReader.ValidateEmailAndPassword(_emailAddress, _password))
+                if (_mainModel.MailReader.ValidateEmailAndPassword(_homeEmailAddress, _password))
                 {
                     IsValidToConnect = true;
                 }
             }
         }
 
+        /// <summary>
+        /// Validates the export credentials.
+        /// </summary>
+        private void ValidateExportCredentials()
+        {
+            IsValidToSendExportEmail = false;
+
+            if (_password != null && _password.Length > 1 &&
+                _homeEmailAddress != null && _homeEmailAddress.Length > 3 &&
+                    _homeEmailAddress.Contains("@"))
+            {
+                if (_mainModel.MailReader.ValidateEmailAndPassword(_homeEmailAddress, _password))
+                {
+                    IsValidToSendExportEmail = true;
+                }
+            }
+        }
+
+        private void ConnectToMailboxWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ConnectingToMailbox = false;
+            ConnectedToMailbox = true;
+            MessageBox.Show(_mailboxErrorMessage, "Could Not Connect To Mailbox");
+        }
+
+        private void DoConnectToMailboxWork(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.Sleep(2000);
+        }
+
+        private void SendExportEmailWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            SendingExportEmail = false;
+            MessageBox.Show(_mailboxErrorMessage, "Could Not Send Export E-mail");
+        }
+
+        private void DoSendExportEmailWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress("From@gmail.com");
+                    mail.To.Add("To@hotmail.com");
+                    mail.Subject = "Hello World";
+                    mail.Body = "<h1>Hello</h1>";
+                    mail.IsBodyHtml = true;
+
+                    using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                    {
+                        smtp.Credentials = new NetworkCredential("From@gmail.com", "Password1");
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                        Console.WriteLine(@"Sent OK 1!");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(" error 1 = " + ex.Message);
+                Console.WriteLine(" ex 1 = " + ex.ToString());
+            }
+
+            System.Threading.Thread.Sleep(2000);
+        }
+
+        #endregion
 
         #region Command Actions
 
@@ -360,7 +585,7 @@ namespace MongoDbBooks.ViewModels
         /// </summary>
         public void SetDefaultUserCommandAction()
         {
-            EmailAdress = _userName;
+            HomeEmailAdress = _userName;
         }
 
         /// <summary>
@@ -378,22 +603,33 @@ namespace MongoDbBooks.ViewModels
         public void ConnectToMailboxCommandAction()
         {
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += DoReadMailWork;
-            bw.RunWorkerCompleted += ReadMailWorkerCompleted;
+            bw.DoWork += DoConnectToMailboxWork;
+            bw.RunWorkerCompleted += ConnectToMailboxWorkerCompleted;
 
-            ReadingEmails = true;
+            ConnectingToMailbox = true;
+            ConnectedToMailbox = false;
             bw.RunWorkerAsync();
         }
 
-        private void ReadMailWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        /// <summary>
+        /// The command action to set to the default destination e-mail.
+        /// </summary>
+        public void SetDefaultDestinationEmailCommandAction()
         {
-            ReadingEmails = false;
-            MessageBox.Show(_mailboxErrorMessage, "Could Not Read Mail");
+            HomeEmailAdress = _userName;
         }
 
-        private void DoReadMailWork(object sender, DoWorkEventArgs e)
+        /// <summary>
+        /// The command action to send the export e-mail.
+        /// </summary>
+        public void SendExportEmailCommandAction()
         {
-            System.Threading.Thread.Sleep(2000);
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += DoSendExportEmailWork;
+            bw.RunWorkerCompleted += SendExportEmailWorkerCompleted;
+
+            SendingExportEmail = true;
+            bw.RunWorkerAsync();
         }
 
         #endregion
@@ -423,12 +659,14 @@ namespace MongoDbBooks.ViewModels
             _mainModel = mainModel;
             _parent = parent;
             _userName = _mainModel.DefaultUserName;
-            
-            ReadingEmails = false;
-            
+            _defaultDestinationEmail = "";
+
+            ConnectingToMailbox = false;
+            ConnectedToMailbox = false;
+            SendingExportEmail = false;
+
         }
 
         #endregion
-
     }
 }
