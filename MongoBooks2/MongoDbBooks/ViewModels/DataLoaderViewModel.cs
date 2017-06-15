@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Windows.Input;
-using System.Windows.Forms;
-
-
-using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
-
-using MongoDbBooks.Models;
-using MongoDbBooks.ViewModels.Utilities;
-
-namespace MongoDbBooks.ViewModels
+﻿namespace MongoDbBooks.ViewModels
 {
+    using System;
+    using System.ComponentModel;
+    using System.Linq.Expressions;
+    using System.Windows.Input;
+    using System.Windows.Forms;
+
+    using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
+
+    using MongoDbBooks.Models;
+    using MongoDbBooks.ViewModels.Utilities;
+
     public class DataLoaderViewModel : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members

@@ -1,0 +1,98 @@
+﻿<Window x:Class="MongoDbBooks.Views.ExportViaEmailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit" 
+        xmlns:vmu="clr-namespace:MongoDbBooks.ViewModels.Utilities"
+        xmlns:converters="clr-namespace:MongoDbBooks.Converters"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Export via E-mail"
+        Icon="../Images/Send_Email.png"
+             d:DesignHeight="800" d:DesignWidth="1000">
+    <Grid>
+        <Grid Margin="10">
+            <Grid.Resources>
+                <converters:BooleanToVisibilityConverter x:Key="booleanToVisibility" />
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="140"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="160"/>
+                <RowDefinition Height="30*"/>
+            </Grid.RowDefinitions>
+            <Grid  Grid.Row="0" IsEnabled="{Binding Path=CanSetEmailParameters}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="125"/>
+                    <ColumnDefinition  Width="225"/>
+                    <ColumnDefinition  Width="15"/>
+                    <ColumnDefinition  Width="125*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Email" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <xctk:WatermarkTextBox  Grid.Row="1" Grid.Column="1" 
+                             TextWrapping="NoWrap" 
+                             Text="{Binding Path=EmailAdress, Mode=TwoWay}"  MinWidth="150"
+                                 HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <xctk:WatermarkTextBox.Watermark>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="someone@gmail.com" Margin="4,0,0,0" />
+                        </StackPanel>
+                    </xctk:WatermarkTextBox.Watermark>
+                </xctk:WatermarkTextBox>
+
+                <Button Grid.Row="1" Grid.Column="3" Content="{Binding Path=SetDefaultUserText}" Height="22"
+                                Command="{Binding Path=SetDefaultUserCommand}" MinWidth="1" HorizontalAlignment="Left"
+                                IsEnabled="{Binding Path=IsDefaultUser}"/>
+
+                <Label Grid.Row="2" Grid.Column="0"  Content="Password" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <PasswordBox PasswordChar="*" Grid.Row="2" Grid.Column="1" 
+                     MinWidth="150"
+                     vmu:PasswordHelper.Attach="True" 
+                     vmu:PasswordHelper.Password="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     HorizontalAlignment="Stretch"  VerticalAlignment="Center">
+                    <PasswordBox.InputBindings>
+                        <KeyBinding Command="{Binding Path=ReadEmailCommand}" Key="Enter"></KeyBinding>
+                    </PasswordBox.InputBindings>
+                </PasswordBox>
+
+                <Button Grid.Row="3" Grid.Column="1" Content="Connect To Mailbox" Height="22"
+                                Command="{Binding Path=ReadEmailCommand}" 
+                IsEnabled="{Binding Path=IsValidToConnect}"/>
+
+            </Grid>
+
+            <Grid Grid.Row="1" Visibility="{Binding Path=ReadingEmails, Converter={StaticResource booleanToVisibility}}">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="175"/>
+                    <ColumnDefinition  Width="125"/>
+                    <ColumnDefinition  Width="225"/>
+                    <ColumnDefinition  Width="15"/>
+                    <ColumnDefinition  Width="125*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Content="Connecting to E-Mail Inbox" FontWeight="Bold"></Label>
+                <ProgressBar Grid.Column="1" Grid.ColumnSpan="4"
+                         Height="15" Minimum="0" Maximum="1" Margin="15,2,15,2" IsIndeterminate="True" HorizontalAlignment="Left" Width="345"/>
+            </Grid>
+
+
+        </Grid>
+    </Grid>
+</Window>

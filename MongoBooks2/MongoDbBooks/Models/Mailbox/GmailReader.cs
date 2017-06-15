@@ -831,7 +831,9 @@ namespace MongoDbBooks.Models.Mailbox
             _password = password;
             List<IBookRead> emailedBooks;
             bool result = ReadEmailsUsingStdImap4(out errorMessage, out emailedBooks);
-            books = (emailedBooks == null) ? new ObservableCollection<IBookRead>() : new ObservableCollection<IBookRead>(emailedBooks);
+            books = (emailedBooks == null) ? 
+                new ObservableCollection<IBookRead>() : 
+                new ObservableCollection<IBookRead>(emailedBooks);
             return result;
         }
 
