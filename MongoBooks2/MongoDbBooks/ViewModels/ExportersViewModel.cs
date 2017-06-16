@@ -552,15 +552,15 @@ namespace MongoDbBooks.ViewModels
             {
                 using (MailMessage mail = new MailMessage())
                 {
-                    mail.From = new MailAddress("From@gmail.com");
-                    mail.To.Add("To@hotmail.com");
-                    mail.Subject = "Hello World";
-                    mail.Body = "<h1>Hello</h1>";
+                    mail.From = new MailAddress(HomeEmailAdress);
+                    mail.To.Add(DestinationEmailAddress);
+                    mail.Subject = "Export Books";
+                    mail.Body = "<h1>Export Books Notes</h1>" + "<h2>"+EmailMessageText+"</h2>";
                     mail.IsBodyHtml = true;
 
                     using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
                     {
-                        smtp.Credentials = new NetworkCredential("From@gmail.com", "Password1");
+                        smtp.Credentials = new NetworkCredential(HomeEmailAdress, Password);
                         smtp.EnableSsl = true;
                         smtp.Send(mail);
                         Console.WriteLine(@"Sent OK 1!");
