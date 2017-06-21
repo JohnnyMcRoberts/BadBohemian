@@ -588,6 +588,10 @@ namespace MongoDbBooks.ViewModels
             {
                 MessageBox.Show(_mailboxErrorMessage, "Could not connect to E-mail");
             }
+            else
+            {
+                _mainModel.DefaultRecipientName = DestinationEmailAddress;
+            }
             SendingExportEmail = false;
         }
 
@@ -666,7 +670,7 @@ namespace MongoDbBooks.ViewModels
         /// </summary>
         public void SetDefaultDestinationEmailCommandAction()
         {
-            HomeEmailAdress = _userName;
+            DestinationEmailAddress = _defaultDestinationEmail;
         }
 
         /// <summary>

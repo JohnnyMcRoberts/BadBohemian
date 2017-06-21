@@ -64,6 +64,7 @@
             InputCountriesFilePath = Properties.Settings.Default.InputCountriesFile;
             InputWorldMapFilePath = Properties.Settings.Default.InputWorldMapFile;
             _defaultUserName = Properties.Settings.Default.UserName;
+            _defaultRecipientName = Properties.Settings.Default.RecipientName;
 
             string errorMsg;
             ConnectedToDbSuccessfully = ConnectToDatabase(out errorMsg);
