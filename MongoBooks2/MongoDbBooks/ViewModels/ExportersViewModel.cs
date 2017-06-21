@@ -531,8 +531,8 @@ namespace MongoDbBooks.ViewModels
         private void ConnectToMailboxWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             ConnectingToMailbox = false;
-            ConnectedToMailbox = true;
-            MessageBox.Show(_mailboxErrorMessage, "Could Not Connect To Mailbox");
+            ConnectedToMailbox =
+                _mainModel.MailReader.ConnectToMailbox(HomeEmailAdress, _password, out _mailboxErrorMessage);
         }
 
         private void DoConnectToMailboxWork(object sender, DoWorkEventArgs e)
@@ -659,7 +659,7 @@ namespace MongoDbBooks.ViewModels
             _mainModel = mainModel;
             _parent = parent;
             _userName = _mainModel.DefaultUserName;
-            _defaultDestinationEmail = "";
+            _defaultDestinationEmail = _mainModel.DefaultRecipientName;
 
             ConnectingToMailbox = false;
             ConnectedToMailbox = false;

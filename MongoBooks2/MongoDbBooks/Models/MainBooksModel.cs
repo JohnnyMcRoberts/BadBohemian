@@ -32,6 +32,7 @@
 
         private static IMailReader _mailReader;
         private string _defaultUserName;
+        private string _defaultRecipientName;
 
         private NationDatabase _nationsDatabase;
 
@@ -120,6 +121,22 @@
                 {
                     _defaultUserName = value;
                     Properties.Settings.Default.UserName = _defaultUserName;
+                    Properties.Settings.Default.Save();
+                }
+            }
+        }
+        public string DefaultRecipientName
+        {
+            get
+            {
+                return _defaultRecipientName;
+            }
+            set
+            {
+                if (_defaultRecipientName != value)
+                {
+                    _defaultRecipientName = value;
+                    Properties.Settings.Default.RecipientName = _defaultRecipientName;
                     Properties.Settings.Default.Save();
                 }
             }

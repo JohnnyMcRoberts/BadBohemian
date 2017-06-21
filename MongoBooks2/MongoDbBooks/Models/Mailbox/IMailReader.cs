@@ -47,5 +47,19 @@ namespace MongoDbBooks.Models.Mailbox
             string password,
             out string errorMessage,
             out ObservableCollection<IBookRead> books);
+
+        /// <summary>
+        /// Tries to connect to a mailbox.
+        /// </summary>
+        /// <param name="emailAddress"> The email address.</param>
+        /// <param name="password"> The password.</param>
+        /// <param name="errorMessage"> The error message if fails.</param>
+        /// <returns>
+        /// True if got connected to the mailbox, if false an error is provided.
+        /// </returns>
+        bool ConnectToMailbox(
+            string emailAddress,
+            string password,
+            out string errorMessage);
     }
 }
