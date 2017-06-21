@@ -158,6 +158,11 @@ namespace MongoDbBooks.ViewModels
         private bool _connectedToMailbox;
 
         /// <summary>
+        /// True if sent the e-mail successfully, false otherwise.
+        /// </summary>
+        private bool _sentEmail;
+
+        /// <summary>
         /// The error message from the mailbox reader.
         /// </summary>
         private string _mailboxErrorMessage;
@@ -317,6 +322,24 @@ namespace MongoDbBooks.ViewModels
             {
                 _connectedToMailbox = value;
                 OnPropertyChanged(() => ConnectedToMailbox);
+                OnPropertyChanged(() => CanSetEmailParameters);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets if sent the export e-mail.
+        /// </summary>
+        public bool SentEmail
+        {
+            get
+            {
+                return _sentEmail;
+            }
+
+            set
+            {
+                _sentEmail = value;
+                OnPropertyChanged(() => SentEmail);
                 OnPropertyChanged(() => CanSetEmailParameters);
             }
         }
@@ -528,26 +551,54 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
-        private void ConnectToMailboxWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        /// <summary>
+        /// Handles the result of a connection to a gmail inbox.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArguments">The completed event arguments.</param>
+        private void ConnectToMailboxWorkerCompleted(object sender, RunWorkerCompletedEventArgs eventArguments)
         {
+            if (!ConnectedToMailbox)
+            {
+                MessageBox.Show(_mailboxErrorMessage, "Could not connect to E-mail");
+            }
             ConnectingToMailbox = false;
+        }
+
+        /// <summary>
+        /// Tries to connect to a gmail inbox on a separate thread.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArguments">The event arguments.</param>
+        private void DoConnectToMailboxWork(object sender, DoWorkEventArgs eventArguments)
+        {
+            ConnectingToMailbox = true;
             ConnectedToMailbox =
                 _mainModel.MailReader.ConnectToMailbox(HomeEmailAdress, _password, out _mailboxErrorMessage);
         }
 
-        private void DoConnectToMailboxWork(object sender, DoWorkEventArgs e)
+        /// <summary>
+        /// Handles the result of an attempt to send an e-mail.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArguments">The completed event arguments.</param>
+        private void SendExportEmailWorkerCompleted(object sender, RunWorkerCompletedEventArgs eventArguments)
         {
-            System.Threading.Thread.Sleep(2000);
-        }
-
-        private void SendExportEmailWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
+            if (!SentEmail)
+            {
+                MessageBox.Show(_mailboxErrorMessage, "Could not connect to E-mail");
+            }
             SendingExportEmail = false;
-            MessageBox.Show(_mailboxErrorMessage, "Could Not Send Export E-mail");
         }
 
-        private void DoSendExportEmailWork(object sender, DoWorkEventArgs e)
+        /// <summary>
+        /// Tries to send the export e-mail on a separate thread.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArguments">The event arguments.</param>
+        private void DoSendExportEmailWork(object sender, DoWorkEventArgs eventArguments)
         {
+            SentEmail = true;
             try
             {
                 using (MailMessage mail = new MailMessage())
@@ -571,9 +622,8 @@ namespace MongoDbBooks.ViewModels
             {
                 Console.WriteLine(" error 1 = " + ex.Message);
                 Console.WriteLine(" ex 1 = " + ex.ToString());
+                SentEmail = false;
             }
-
-            System.Threading.Thread.Sleep(2000);
         }
 
         #endregion
@@ -639,18 +689,10 @@ namespace MongoDbBooks.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MailboxLoaderViewModel"/> class.
         /// </summary>
-        /// <param name="mainWindow">
-        /// The main window.
-        /// </param>
-        /// <param name="log">
-        /// The log.
-        /// </param>
-        /// <param name="mainModel">
-        /// The main model.
-        /// </param>
-        /// <param name="parent">
-        /// The parent.
-        /// </param>
+        /// <param name="mainWindow">The main window.</param>
+        /// <param name="log">The log.</param>
+        /// <param name="mainModel">The main model.</param>
+        /// <param name="parent">The parent.</param>
         public ExportersViewModel(
             MainWindow mainWindow, log4net.ILog log, MainBooksModel mainModel, MainViewModel parent)
         {

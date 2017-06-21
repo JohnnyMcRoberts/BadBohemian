@@ -376,7 +376,7 @@ namespace MongoDbBooks.Models.Mailbox
         }
 
         /// <summary>
-        /// The read emails using the standard IMAP v4 interface.
+        /// Tries to connect to the e-mail indox using the standard IMAP v4 interface.
         /// </summary>
         /// <param name="errorMessage">The error Message.</param>
         /// <returns>True if connected ok.</returns>
@@ -398,7 +398,6 @@ namespace MongoDbBooks.Models.Mailbox
                     {
                         errorMessage = "Mailbox permission is " + mailbox.Permission;
                     }
-
                 }
                 catch (Exception e)
                 {
