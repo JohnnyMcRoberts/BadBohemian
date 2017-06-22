@@ -11,6 +11,7 @@ namespace MongoDbBooks.ViewModels
 {
     using System;
     using System.ComponentModel;
+    using System.IO;
     using System.Linq.Expressions;
     using System.Net;
     using System.Net.Mail;
@@ -605,12 +606,33 @@ namespace MongoDbBooks.ViewModels
             SentEmail = true;
             try
             {
+                string emailText = "<div>";
+
+                using (StringReader sr = new StringReader(EmailMessageText))
+                {
+                    string line;
+                    int lineCount = 0;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        emailText += WebUtility.HtmlEncode(line);
+
+                        if (lineCount > 0)
+                        {
+                            emailText += "<br>";
+                        }
+
+                        lineCount++;
+                    }
+                }
+
+                emailText += "</div>";
+
                 using (MailMessage mail = new MailMessage())
                 {
                     mail.From = new MailAddress(HomeEmailAdress);
                     mail.To.Add(DestinationEmailAddress);
                     mail.Subject = "Export Books";
-                    mail.Body = "<h1>Export Books Notes</h1>" + "<h2>"+EmailMessageText+"</h2>";
+                    mail.Body = "<h1>Export Books Notes</h1>" + emailText;
                     mail.IsBodyHtml = true;
 
                     using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
