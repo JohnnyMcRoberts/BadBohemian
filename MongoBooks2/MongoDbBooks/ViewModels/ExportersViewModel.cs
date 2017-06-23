@@ -11,11 +11,8 @@ namespace MongoDbBooks.ViewModels
 {
     using System;
     using System.ComponentModel;
-    using System.IO;
     using System.Linq.Expressions;
-    using System.Net;
-    using System.Net.Mail;
-    using System.Windows;
+    using System.Windows.Forms;
     using System.Windows.Input;
 
     using MongoDbBooks.Models;
@@ -103,7 +100,7 @@ namespace MongoDbBooks.ViewModels
         /// The default destination e-mail address.
         /// </summary>
         private string _defaultDestinationEmail;
-        
+
         /// <summary>
         /// The home e-mail address.
         /// </summary>
@@ -194,6 +191,11 @@ namespace MongoDbBooks.ViewModels
         /// </summary>
         private ICommand _sendExportEmailCommand;
 
+        /// <summary>
+        /// The select output directory command.
+        /// </summary>
+        private ICommand _selectDirectoryCommand;
+
         #endregion
 
         #region Public Properties
@@ -249,7 +251,7 @@ namespace MongoDbBooks.ViewModels
                 ValidateExportCredentials();
                 OnPropertyChanged(() => DestinationEmailAddress);
             }
-        }       
+        }  
 
         /// <summary>
         /// Gets or sets the password.
@@ -458,7 +460,14 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the directory to put the latest copies of the files into.
+        /// </summary>
+        public string OutputDirectory { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the email message text.
+        /// </summary>
         public string EmailMessageText
         {
             get
@@ -513,6 +522,13 @@ namespace MongoDbBooks.ViewModels
                                                    (_setDefaultDestinationEmailCommand =
                                                     new CommandHandler(SetDefaultDestinationEmailCommandAction, true));
 
+        /// <summary>
+        /// Select the output directory command.
+        /// </summary>
+        public ICommand SelectDirectoryCommand => _selectDirectoryCommand ??
+                                                  (_selectDirectoryCommand =
+                                                   new CommandHandler(SelectDirectoryCommandAction, true));
+
         #endregion
 
         #region Utility Functions
@@ -562,7 +578,7 @@ namespace MongoDbBooks.ViewModels
         {
             if (!ConnectedToMailbox)
             {
-                MessageBox.Show(_mailboxErrorMessage, "Could not connect to E-mail");
+                System.Windows.MessageBox.Show(_mailboxErrorMessage, "Could not connect to E-mail");
             }
             ConnectingToMailbox = false;
         }
@@ -588,7 +604,7 @@ namespace MongoDbBooks.ViewModels
         {
             if (!SentEmail)
             {
-                MessageBox.Show(_mailboxErrorMessage, "Could not connect to E-mail");
+                System.Windows.MessageBox.Show(_mailboxErrorMessage, "Could not connect to E-mail");
             }
             else
             {
@@ -673,6 +689,22 @@ namespace MongoDbBooks.ViewModels
             bw.RunWorkerAsync();
         }
 
+        /// <summary>
+        /// The selects the output directory to put the files into.
+        /// </summary>
+        public void SelectDirectoryCommandAction()
+        {
+            using (var dialog = new FolderBrowserDialog())
+            {
+                dialog.ShowNewFolderButton = true;
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    OutputDirectory = dialog.SelectedPath;
+                    OnPropertyChanged(() => OutputDirectory);
+                }
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -693,6 +725,7 @@ namespace MongoDbBooks.ViewModels
             _parent = parent;
             _userName = _mainModel.DefaultUserName;
             _defaultDestinationEmail = _mainModel.DefaultRecipientName;
+            OutputDirectory = _mainModel.DefaultExportDirectory;
 
             ConnectingToMailbox = false;
             ConnectedToMailbox = false;
@@ -701,5 +734,6 @@ namespace MongoDbBooks.ViewModels
         }
 
         #endregion
+
     }
 }

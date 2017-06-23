@@ -94,5 +94,17 @@ namespace MongoDbBooks.Properties {
                 this["RecipientName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExportDirectory {
+            get {
+                return ((string)(this["ExportDirectory"]));
+            }
+            set {
+                this["ExportDirectory"] = value;
+            }
+        }
     }
 }

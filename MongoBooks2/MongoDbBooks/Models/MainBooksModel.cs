@@ -33,6 +33,7 @@
         private static IMailReader _mailReader;
         private string _defaultUserName;
         private string _defaultRecipientName;
+        private string _defaultExportDirectory;
 
         private NationDatabase _nationsDatabase;
 
@@ -65,6 +66,7 @@
             InputWorldMapFilePath = Properties.Settings.Default.InputWorldMapFile;
             _defaultUserName = Properties.Settings.Default.UserName;
             _defaultRecipientName = Properties.Settings.Default.RecipientName;
+            _defaultExportDirectory = Properties.Settings.Default.ExportDirectory;
 
             string errorMsg;
             ConnectedToDbSuccessfully = ConnectToDatabase(out errorMsg);
@@ -126,6 +128,7 @@
                 }
             }
         }
+
         public string DefaultRecipientName
         {
             get
@@ -142,6 +145,26 @@
                 }
             }
         }
+
+        public string DefaultExportDirectory
+        {
+            get
+            {
+                return _defaultExportDirectory;
+            }
+            set
+            {
+                if (_defaultExportDirectory != value)
+                {
+                    _defaultExportDirectory = value;
+                    Properties.Settings.Default.RecipientName = _defaultExportDirectory;
+                    Properties.Settings.Default.Save();
+                }
+            }
+        }
+
+
+        
 
         public bool DataFromFile { get; set; }
         public bool DataFromDb { get; set; }
