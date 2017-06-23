@@ -10,6 +10,7 @@
 namespace MongoDbBooks.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
     using System.Linq.Expressions;
@@ -634,16 +635,22 @@ namespace MongoDbBooks.ViewModels
         private void DoSendExportEmailWork(object sender, DoWorkEventArgs eventArguments)
         {
             SentEmail = true;
+            List<string> outputFileNames = new List<string>();
+            bool createdFiles = _mainModel.ExportFiles(OutputDirectory, SendBooksReadFile, SendLocationsFile,
+                outputFileNames, out _mailboxErrorMessage);
 
-            GmailSender mailSender = new GmailSender()
+            if (!createdFiles)
             {
-                MessageText = EmailMessageText,
-                SourceEmail = HomeEmailAdress,
-                SourcePassword = Password,
-                DestinationEmail = DestinationEmailAddress
-            };
+                return;
+            }
 
-            SentEmail = mailSender.SendEmail(out _mailboxErrorMessage);
+            GmailSender mailSender = new GmailSender();
+            mailSender.MessageText = EmailMessageText;
+            mailSender.SourceEmail = HomeEmailAdress;
+            mailSender.SourcePassword = Password;
+            mailSender.DestinationEmail = DestinationEmailAddress;
+
+            SentEmail = mailSender.SendEmail(outputFileNames, out _mailboxErrorMessage);
         }
 
         #endregion

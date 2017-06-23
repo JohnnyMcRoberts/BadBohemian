@@ -157,7 +157,7 @@
                 if (_defaultExportDirectory != value)
                 {
                     _defaultExportDirectory = value;
-                    Properties.Settings.Default.RecipientName = _defaultExportDirectory;
+                    Properties.Settings.Default.ExportDirectory = _defaultExportDirectory;
                     Properties.Settings.Default.Save();
                 }
             }
@@ -403,6 +403,48 @@
             Properties.Settings.Default.Save();
         }
 
+        public bool ExportFiles(string outputDirectory, bool sendBooksReadFile, bool sendLocationsFile,
+            List<string> outputFileNames, out string mailboxErrorMessage)
+        {
+            mailboxErrorMessage = string.Empty;
+            if (sendBooksReadFile)
+            {
+                try
+                {
+                    string fileName = GetExportFileName(outputDirectory, "Books");
+                    WriteBooksToFile(fileName);
+
+                    outputFileNames.Add(fileName);
+                }
+                catch (Exception e)
+                {
+                    mailboxErrorMessage = e.ToString();
+                    return false;
+                }
+            }
+
+            if (sendLocationsFile)
+            {
+                try
+                {
+                    //string fileName = GetExportFileName("Locations");
+
+                    // TODO: Integrate the locations writer....
+
+                    //WriteBooksToFile(fileName);
+
+                    //outputFileNames.Add(fileName);
+                }
+                catch (Exception e)
+                {
+                    mailboxErrorMessage = e.ToString();
+                    return false;
+                }
+            }
+
+            DefaultExportDirectory = outputDirectory;
+            return true;
+        }
 
         #endregion
 
@@ -947,13 +989,13 @@
                 List<BookRead> missingItems = new List<BookRead>();
                 List<BookRead> existingItems = new List<BookRead>();
 
-                using (var cursor = booksRead.FindSync(filter))
+                using (IAsyncCursor<BookRead> cursor = booksRead.FindSync(filter))
                 {
                     existingItems = cursor.ToList();
                 }
 
                 // get the missing items
-                foreach (var book in BooksRead)
+                foreach (BookRead book in BooksRead)
                 {
                     bool alreadyThere = false;
                     foreach (var existing in existingItems)
@@ -1036,7 +1078,7 @@
                 }
             }
 
-            foreach (var dupBook in duplicateBooks)
+            foreach (BookRead dupBook in duplicateBooks)
             {
                 var remFilter = Builders<BookRead>.Filter.Eq("Id", dupBook.Id);
                 var result = booksRead.Find(remFilter);
@@ -1071,6 +1113,16 @@
             }
         }
 
+        private string GetExportFileName(string exportDirectory, string fileName)
+        {
+            DateTime time = DateTime.Now;
+            fileName += " ";
+            fileName += time.ToString("yyyy MMMM dd H-mm-ss");
+            fileName += ".csv";
+            return Path.Combine(exportDirectory, fileName);
+        }
+
         #endregion
+
     }
 }
