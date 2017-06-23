@@ -11,6 +11,7 @@ namespace MongoDbBooks.ViewModels
 {
     using System;
     using System.ComponentModel;
+    using System.IO;
     using System.Linq.Expressions;
     using System.Windows.Forms;
     using System.Windows.Input;
@@ -361,8 +362,9 @@ namespace MongoDbBooks.ViewModels
             set
             {
                 _sendBooksReadFile = value;
-                OnPropertyChanged(() => SendBooksReadFile);
                 ValidateExportCredentials();
+                OnPropertyChanged(() => SendBooksReadFile);
+                OnPropertyChanged(() => IsValidToShowExportDirectory);
             }
         }
 
@@ -379,8 +381,9 @@ namespace MongoDbBooks.ViewModels
             set
             {
                 _sendLocationsFile = value;
-                OnPropertyChanged(() => SendLocationsFile);
                 ValidateExportCredentials();
+                OnPropertyChanged(() => SendLocationsFile);
+                OnPropertyChanged(() => IsValidToShowExportDirectory);
             }
         }
 
@@ -483,6 +486,11 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether is valid to show export directory.
+        /// </summary>
+        public bool IsValidToShowExportDirectory => ConnectedToMailbox && (SendBooksReadFile || SendLocationsFile);
+
         #endregion
 
         #region Commands
@@ -556,17 +564,22 @@ namespace MongoDbBooks.ViewModels
         /// </summary>
         private void ValidateExportCredentials()
         {
+            // By default say it is not valid to send.
             IsValidToSendExportEmail = false;
 
-            if (_password != null && _password.Length > 1 &&
-                _homeEmailAddress != null && _homeEmailAddress.Length > 3 &&
-                    _homeEmailAddress.Contains("@"))
-            {
-                if (_mainModel.MailReader.ValidateEmailAndPassword(_homeEmailAddress, _password))
-                {
-                    IsValidToSendExportEmail = true;
-                }
-            }
+            // If an invalid destination email stop.
+            if (_destinationEmailAddress == null ||
+                _destinationEmailAddress.Length < 4 ||
+                !_destinationEmailAddress.Contains("@"))
+                return;
+
+            // If sending files and there is not a valid output directory stop.
+            if ((SendBooksReadFile || SendBooksReadFile) 
+                && (string.IsNullOrEmpty(OutputDirectory) || !Directory.Exists(OutputDirectory)))
+                return;
+
+            // Otherwise every is ok to allow the email to be sent.
+            IsValidToSendExportEmail = true;
         }
 
         /// <summary>
@@ -700,6 +713,7 @@ namespace MongoDbBooks.ViewModels
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     OutputDirectory = dialog.SelectedPath;
+                    ValidateExportCredentials();
                     OnPropertyChanged(() => OutputDirectory);
                 }
             }
