@@ -6,25 +6,67 @@ using System.Threading.Tasks;
 
 namespace MongoDbBooks.Models.Mailbox
 {
+    using System.IO;
     using System.Net;
     using System.Net.Mail;
 
     public class GmailSender
     {
-        public void SendEmail()
+        public bool SendEmail(out string errorMessage)
         {
+            bool sentEmail = true;
+            errorMessage = string.Empty;
             try
             {
-                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-                smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential("username", "password");
-                smtp.EnableSsl = true;
-                smtp.Send("sender@gamil.com", "receiver", "subject", "Email Body");
+                string emailText = "<div>";
+
+                using (StringReader sr = new StringReader(MessageText))
+                {
+                    string line;
+                    int lineCount = 0;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        emailText += WebUtility.HtmlEncode(line);
+
+                        if (lineCount > 0)
+                        {
+                            emailText += "<br>";
+                        }
+
+                        lineCount++;
+                    }
+                }
+
+                emailText += "</div>";
+
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress(SourceEmail);
+                    mail.To.Add(DestinationEmail);
+                    mail.Subject = "Export Books";
+                    mail.Body = "<h1>Export Books Notes</h1>" + emailText;
+                    mail.IsBodyHtml = true;
+
+                    using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                    {
+                        smtp.Credentials = new NetworkCredential(SourceEmail, SourcePassword);
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorMessage = @" Mailing Exception = " + ex.Message;
+                sentEmail = false;
             }
+
+            return sentEmail;
         }
+
+        public string MessageText { get; set; }
+        public string SourceEmail { get; set; }
+        public string SourcePassword { get; set; }
+        public string DestinationEmail { get; set; }
     }
 }

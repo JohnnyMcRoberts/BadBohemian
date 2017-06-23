@@ -891,5 +891,5 @@ namespace MongoDbBooks.Models.Mailbox
         }
 
         #endregion
-        }
+    }
 }

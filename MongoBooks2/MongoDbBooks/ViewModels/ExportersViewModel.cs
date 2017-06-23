@@ -19,6 +19,7 @@ namespace MongoDbBooks.ViewModels
     using System.Windows.Input;
 
     using MongoDbBooks.Models;
+    using MongoDbBooks.Models.Mailbox;
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.Views;
 
@@ -604,52 +605,16 @@ namespace MongoDbBooks.ViewModels
         private void DoSendExportEmailWork(object sender, DoWorkEventArgs eventArguments)
         {
             SentEmail = true;
-            try
+
+            GmailSender mailSender = new GmailSender()
             {
-                string emailText = "<div>";
+                MessageText = EmailMessageText,
+                SourceEmail = HomeEmailAdress,
+                SourcePassword = Password,
+                DestinationEmail = DestinationEmailAddress
+            };
 
-                using (StringReader sr = new StringReader(EmailMessageText))
-                {
-                    string line;
-                    int lineCount = 0;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        emailText += WebUtility.HtmlEncode(line);
-
-                        if (lineCount > 0)
-                        {
-                            emailText += "<br>";
-                        }
-
-                        lineCount++;
-                    }
-                }
-
-                emailText += "</div>";
-
-                using (MailMessage mail = new MailMessage())
-                {
-                    mail.From = new MailAddress(HomeEmailAdress);
-                    mail.To.Add(DestinationEmailAddress);
-                    mail.Subject = "Export Books";
-                    mail.Body = "<h1>Export Books Notes</h1>" + emailText;
-                    mail.IsBodyHtml = true;
-
-                    using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
-                    {
-                        smtp.Credentials = new NetworkCredential(HomeEmailAdress, Password);
-                        smtp.EnableSsl = true;
-                        smtp.Send(mail);
-                        Console.WriteLine(@"Sent OK 1!");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(" error 1 = " + ex.Message);
-                Console.WriteLine(" ex 1 = " + ex.ToString());
-                SentEmail = false;
-            }
+            SentEmail = mailSender.SendEmail(out _mailboxErrorMessage);
         }
 
         #endregion
