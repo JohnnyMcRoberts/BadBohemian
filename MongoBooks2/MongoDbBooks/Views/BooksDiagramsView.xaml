@@ -8,13 +8,29 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <TabControl>
+            <TabItem  Header="Pages by Country ">
+                <h:HelixViewport3D >
+                    <h:SunLight  />
+                    <!-- The content of this visual is defined in MainViewModel.cs -->
+                    <ModelVisual3D Content="{Binding PagesByCountryModel}"/>
+
+                    <h:HelixViewport3D.Camera>
+                        <PerspectiveCamera  
+                            Position="5,45,75" ></PerspectiveCamera>
+
+                    </h:HelixViewport3D.Camera>
+
+                </h:HelixViewport3D>
+
+            </TabItem>
+
             <TabItem  Header="Books Read By Country">
                 <h:HelixViewport3D >
                     <h:SunLight  />
                     <h:GridLinesVisual3D/>
                     <!-- The content of this visual is defined in MainViewModel.cs -->
                     <ModelVisual3D Content="{Binding BooksReadByCountryModel}"/>
-                    
+
                 </h:HelixViewport3D>
 
             </TabItem>
@@ -24,6 +40,12 @@
                     <h:GridLinesVisual3D/>
                     <!-- The content of this visual is defined in MainViewModel.cs -->
                     <ModelVisual3D Content="{Binding PagesReadByCountryModel}"/>
+
+                    <h:HelixViewport3D.Camera>
+                        <PerspectiveCamera  
+                            Position="5,45,75" ></PerspectiveCamera>
+                        
+                    </h:HelixViewport3D.Camera>
 
                 </h:HelixViewport3D>
 

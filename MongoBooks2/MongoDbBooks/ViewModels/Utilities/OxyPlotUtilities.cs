@@ -453,5 +453,46 @@ namespace MongoDbBooks.ViewModels.Utilities
             faintPalette = new OxyPalette(colors);
             return range;
         }
+
+
+        public static void AddCountryGeographyAreaSeriesToPlot(
+            PlotModel newPlot, Models.Geography.CountryGeography country, OxyColor colour, string title, string tag, string trackerFormat)
+        {
+            int i = 0;
+            var landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
+
+            foreach (var boundary in landBlocks)
+            {
+                var areaSeries = new AreaSeries
+                {
+                    Color = colour,
+                    Title = title,
+                    RenderInLegend = false,
+                    Tag = tag
+                };
+                var points = boundary.Points;
+                if (points.Count > PolygonReducer.MaxPolygonPoints)
+                    points = PolygonReducer.AdaptativePolygonReduce(points, PolygonReducer.MaxPolygonPoints);
+
+                foreach (var point in points)
+                {
+                    double ptX = 0;
+                    double ptY = 0;
+                    point.GetCoordinates(out ptX, out ptY);
+
+                    DataPoint dataPoint = new DataPoint(ptX, ptY);
+                    areaSeries.Points.Add(dataPoint);
+                }
+
+                areaSeries.TrackerFormatString = trackerFormat;
+                newPlot.Series.Add(areaSeries);
+
+                // just do the 10 biggest bits per country (looks to be enough)
+                i++;
+                if (i > 10)
+                    break;
+            }
+        }
+
     }
 }

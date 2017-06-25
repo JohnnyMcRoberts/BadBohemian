@@ -1,33 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Xml.Serialization;
-using System.Globalization;
-
-using CsvHelper;
-
-using MongoDB.Bson;
-using MongoDB.Driver;
-
-using MongoDbBooks.Models.Geography;
-
-namespace MongoDbBooks.Models
+﻿namespace MongoDbBooks.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Text;
+    using System.IO;
+    using System.Globalization;
+
+    using CsvHelper;
+
+    using MongoDB.Bson;
+    using MongoDB.Driver;
+
+    using MongoDbBooks.Models.Geography;
+    using MongoDbBooks.Models.Mailbox;
+    using Database;
+
     public class MainBooksModel
     {
         #region Private Data
 
-        private log4net.ILog _log;
+        private readonly log4net.ILog _log;
 
-        protected static IMongoClient _client;
-        protected static IMongoDatabase _booksDatabase;
-        protected static IMongoDatabase _countriesDatabase;
+        private static IMongoClient _client;
+        private static IMongoDatabase _booksDatabase;
+        private static IMongoDatabase _countriesDatabase;
 
-        protected CountriesData _countriesData;
-        protected Dictionary<string, WorldCountry> _worldCountryLookup;
+        private CountriesData _countriesData;
+        private Dictionary<string, WorldCountry> _worldCountryLookup;
+
+        private static IMailReader _mailReader;
+        private string _defaultUserName;
+
+        private NationDatabase _nationsDatabase;
 
         #endregion
 
@@ -56,13 +62,19 @@ namespace MongoDbBooks.Models
             OutputFilePath = Properties.Settings.Default.OutputFile;
             InputCountriesFilePath = Properties.Settings.Default.InputCountriesFile;
             InputWorldMapFilePath = Properties.Settings.Default.InputWorldMapFile;
-            
+            _defaultUserName = Properties.Settings.Default.UserName;
 
-            string errorMsg = "test";
+            string errorMsg;
             ConnectedToDbSuccessfully = ConnectToDatabase(out errorMsg);
             if (!ConnectedToDbSuccessfully)
                 _log.Debug("error connecting to db : " + errorMsg);
 
+            _mailReader = new GmailReader();
+
+            _nationsDatabase = new NationDatabase(DatabaseConnectionString);
+
+            if (ConnectedToDbSuccessfully)
+                _nationsDatabase.UpdateNationsDatabase(WorldCountries);
         }
 
         #endregion
@@ -75,26 +87,43 @@ namespace MongoDbBooks.Models
 
         #region Public Data
 
-        public ObservableCollection<BookRead> BooksRead { get; private set; }
+        public ObservableCollection<BookRead> BooksRead { get; }
 
-        public ObservableCollection<BookAuthor> AuthorsRead { get; private set; }
+        public ObservableCollection<BookAuthor> AuthorsRead { get; }
 
-        public ObservableCollection<AuthorCountry> AuthorCountries { get; private set; }
+        public ObservableCollection<AuthorCountry> AuthorCountries { get; }
 
-        public ObservableCollection<AuthorLanguage> AuthorLanguages { get; private set; }
+        public ObservableCollection<AuthorLanguage> AuthorLanguages { get;  }
 
-        public ObservableCollection<TalliedBook> TalliedBooks { get; private set; }
+        public ObservableCollection<TalliedBook> TalliedBooks { get; }
 
-        public ObservableCollection<BooksDelta> BookDeltas { get; private set; }
+        public ObservableCollection<BooksDelta> BookDeltas { get; }
 
-        public ObservableCollection<BooksDelta> BookPerYearDeltas { get; private set; }
+        public ObservableCollection<BooksDelta> BookPerYearDeltas { get; }
 
-        public ObservableCollection<BookLocationDelta> BookLocationDeltas { get; private set; }
+        public ObservableCollection<BookLocationDelta> BookLocationDeltas { get; }
 
         public string InputFilePath { get; set; }
         public string OutputFilePath { get; set; }
         public string InputCountriesFilePath { get; set; }
         public string InputWorldMapFilePath { get; set; }
+
+        public string DefaultUserName
+        {
+            get
+            {
+                return _defaultUserName;
+            }
+            set
+            {
+                if (_defaultUserName != value)
+                {
+                    _defaultUserName = value;
+                    Properties.Settings.Default.UserName = _defaultUserName;
+                    Properties.Settings.Default.Save();
+                }
+            }
+        }
 
         public bool DataFromFile { get; set; }
         public bool DataFromDb { get; set; }
@@ -113,7 +142,21 @@ namespace MongoDbBooks.Models
             }
         }
 
-        public CountriesData CountriesData { get { return _countriesData; } }
+        public CountriesData CountriesData => _countriesData;
+
+        public IMailReader MailReader => _mailReader;
+
+        public ObservableCollection<Nation> Nations
+        {
+            get
+            {
+                if (_nationsDatabase != null && _nationsDatabase.LoadedItems != null)
+                    return new ObservableCollection<Nation>(_nationsDatabase.LoadedItems);
+                return null;
+            }
+        }
+
+        public NationDatabase NationDatabase => _nationsDatabase;
 
         #endregion
 
@@ -147,7 +190,7 @@ namespace MongoDbBooks.Models
                     if (DateTime.TryParseExact(stringFieldDDMMYYYY, "d/M/yyyy",
                         CultureInfo.InvariantCulture, DateTimeStyles.None, out dateForBook))
                     {
-                        UInt16 pages = 0;
+                        UInt16 pages;
                         UInt16.TryParse(stringFieldPages, out pages);
                         BookRead book = new BookRead()
                         {
@@ -174,13 +217,14 @@ namespace MongoDbBooks.Models
             DataFromFile = true;
         }
 
-        internal void ReadWorldMapFromFile(string filename)
+        public void ReadWorldMapFromFile(string filename)
         {
             using (var sr = new StreamReader(filename, Encoding.Default))
             {
                 string asStringXml = sr.ReadToEnd();
                 _countriesData = new CountriesData(asStringXml);
             }
+            _nationsDatabase.UpdateNationsDatabase(_countriesData);
             UpdateCollections();
             Properties.Settings.Default.InputWorldMapFile = filename;
             Properties.Settings.Default.Save();
@@ -274,14 +318,13 @@ namespace MongoDbBooks.Models
 
         public void ReadCountriesFromFile(string filename)
         {
-
-            using (var sr = new StreamReader(filename, Encoding.Default))
+            using (StreamReader sr = new StreamReader(filename, Encoding.Default))
             {
-                var csv = new CsvReader(sr);
+                CsvReader csv = new CsvReader(sr);
 
                 WorldCountries.Clear();
 
-                // Country,Capital,Latitude,Longitude
+                // Country,Capital,Latitude,Longitude,Flag
 
                 while (csv.Read())
                 {
@@ -291,11 +334,10 @@ namespace MongoDbBooks.Models
 
                     var stringFieldLatitude = csv.GetField<string>(2);
                     var stringFieldLongitude = csv.GetField<string>(3);
+                    var stringFieldFlagUrl = csv.GetField<string>(4);
 
-                    double latitude = -300, longitude = -300;
-
-                    latitude = GetLatLongFromString(stringFieldLatitude, true);
-                    longitude = GetLatLongFromString(stringFieldLongitude, false);
+                    double latitude = GetLatLongFromString(stringFieldLatitude, true);
+                    double longitude = GetLatLongFromString(stringFieldLongitude, false);
 
                     if (latitude > -100 & longitude > -190)
                     {
@@ -304,19 +346,22 @@ namespace MongoDbBooks.Models
                             Country = stringFieldCountry,
                             Capital = stringFieldCapital,
                             Latitude = latitude,
-                            Longitude = longitude
+                            Longitude = longitude,
+                            FlagUrl = stringFieldFlagUrl != null ? stringFieldFlagUrl : string.Empty
                         };
 
                         WorldCountries.Add(country);
                     }
                 }
             }
+
             UpdateWorldCountryLookup();
             UpdateCollections();
+            UpdateNationalFlags();
             Properties.Settings.Default.InputCountriesFile = filename;
             Properties.Settings.Default.Save();
-
         }
+
 
         #endregion
 
@@ -327,7 +372,7 @@ namespace MongoDbBooks.Models
             if (stringField == null || stringField.Length < 7) return -360.0;
 
             char lastChar = stringField.ToUpper()[stringField.Length - 1];
-            bool isPositive = true;
+            bool isPositive;
             switch(lastChar)
             {
                 case 'E':
@@ -351,15 +396,15 @@ namespace MongoDbBooks.Models
             }
 
             string degreesStr = stringField.Substring(0, stringField.Length - 5);
-            ushort degrees = 1000;
+            ushort degrees;
             if(!UInt16.TryParse(degreesStr, out degrees)) return -360;
 
 
             string minsStr = stringField.Substring(degreesStr.Length + 1, 2);
-            ushort mins = 1000;
+            ushort mins;
             if (!UInt16.TryParse(minsStr, out mins)) return -360;
 
-            double angle = (double)degrees + ((double)mins / 60.0);
+            double angle = degrees + (mins / 60.0);
             if (!isPositive)
                 angle *= -1.0;
             return angle;
@@ -368,9 +413,9 @@ namespace MongoDbBooks.Models
         private void UpdateCollections()
         {
             UpdateAuthors();
-            int booksReadWorldwide = 0;
-            UInt32 pagesReadWorldwide = 0;
-            UpdateCountries(ref booksReadWorldwide, ref pagesReadWorldwide);
+            int booksReadWorldwide;
+            UInt32 pagesReadWorldwide;
+            UpdateCountries(out booksReadWorldwide, out pagesReadWorldwide);
             UpdateLanguages(booksReadWorldwide, pagesReadWorldwide);
             UpdateTalliedBooks();
             UpdateBookDeltas();
@@ -578,7 +623,7 @@ namespace MongoDbBooks.Models
             }
         }
 
-        private void UpdateCountries(ref int booksReadWorldwide, ref UInt32 pagesReadWorldwide)
+        private void UpdateCountries(out int booksReadWorldwide, out UInt32 pagesReadWorldwide)
         {
             // clear the list & counts
             AuthorCountries.Clear();
@@ -597,7 +642,7 @@ namespace MongoDbBooks.Models
                 else
                 {
                     AuthorCountry country =
-                        new AuthorCountry() { Country = author.Nationality };
+                        new AuthorCountry(this) { Country = author.Nationality };
                     country.AuthorsFromCountry.Add(author);
                     countrySet.Add(country.Country, country);
                 }
@@ -673,11 +718,11 @@ namespace MongoDbBooks.Models
 
             if (totalCount == 0 && WorldCountries.Count != 0)
             {
-                totalCount = AddLoadedCountriesToBlankDatabase(worldCountries, filter, totalCount);
+                AddLoadedCountriesToBlankDatabase(worldCountries, filter);
             }
             else if (WorldCountries.Count != 0)
             {
-                totalCount = AddNewCountriesToExistingDatabase(worldCountries, filter, totalCount);
+                AddNewCountriesToExistingDatabase(worldCountries, filter);
             }
             else if (totalCount != 0 && WorldCountries.Count == 0)
             {
@@ -685,12 +730,12 @@ namespace MongoDbBooks.Models
             }
             else if (totalCount != 0 && totalCount < WorldCountries.Count)
             {
-                totalCount = UpdateDatabaseCountries(worldCountries, filter, totalCount);
+                UpdateDatabaseCountries(worldCountries, filter);
             }
 
             if (WorldCountries.Count > 0)
             {
-                var orderedCountries = WorldCountries.OrderBy(c => c.Country).ToList();
+                List<WorldCountry> orderedCountries = WorldCountries.OrderBy(c => c.Country).ToList();
                 WorldCountries.Clear();
                 foreach (var orderedCountry in orderedCountries)
                     WorldCountries.Add(orderedCountry);
@@ -700,11 +745,10 @@ namespace MongoDbBooks.Models
 
         }
 
-        private long UpdateDatabaseCountries(IMongoCollection<WorldCountry> worldCountries, 
-            FilterDefinition<WorldCountry> filter, long totalCount)
+        private void UpdateDatabaseCountries(IMongoCollection<WorldCountry> worldCountries, FilterDefinition<WorldCountry> filter)
         {
             List<WorldCountry> missingItems = new List<WorldCountry>();
-            List<WorldCountry> existingItems = new List<WorldCountry>();
+            List<WorldCountry> existingItems;
 
             using (var cursor = worldCountries.FindSync(filter))
             {
@@ -730,8 +774,7 @@ namespace MongoDbBooks.Models
             // then insert them to the list
 
             worldCountries.InsertMany(missingItems);
-            totalCount = worldCountries.Count(filter);
-            return totalCount;
+            worldCountries.Count(filter);
         }
 
         private void LoadAllCountriesFromDatabase(IMongoCollection<WorldCountry> worldCountries, 
@@ -752,15 +795,15 @@ namespace MongoDbBooks.Models
             DataFromDb = true;
         }
 
-        private long AddNewCountriesToExistingDatabase(IMongoCollection<WorldCountry> worldCountries, 
-            FilterDefinition<WorldCountry> filter, long totalCount)
+        private void AddNewCountriesToExistingDatabase(IMongoCollection<WorldCountry> worldCountries, FilterDefinition<WorldCountry> filter)
         {
             ObservableCollection<WorldCountry> dbCountries = new ObservableCollection<WorldCountry>();
             ObservableCollection<WorldCountry> missingCountries = new ObservableCollection<WorldCountry>();
+            ObservableCollection<WorldCountry> updateCountries = new ObservableCollection<WorldCountry>();
 
-            using (var cursor = worldCountries.FindSync(filter))
+            using (IAsyncCursor<WorldCountry> cursor = worldCountries.FindSync(filter))
             {
-                var countryList = cursor.ToList();
+                List<WorldCountry> countryList = cursor.ToList();
                 foreach (var country in countryList)
                 {
                     dbCountries.Add(country);
@@ -770,29 +813,50 @@ namespace MongoDbBooks.Models
             foreach (var currentCountry in WorldCountries)
             {
                 bool countryInDb = false;
+                ObjectId foundId = ObjectId.Empty;
                 foreach (var dbCountry in dbCountries)
                 {
                     if (dbCountry.Country == currentCountry.Country)
+                    {
                         countryInDb = true;
+                        foundId = dbCountry.Id;
+                    }
                     if (countryInDb)
                         break;
                 }
 
                 if (!countryInDb)
                     missingCountries.Add(currentCountry);
+                else
+                {
+                    if (foundId != ObjectId.Empty)
+                    {
+                        currentCountry.Id = foundId;
+                        updateCountries.Add(currentCountry);
+                    }
+                }
             }
 
+            foreach (var updateCountry in updateCountries)
+            {
+                var filterOnId = Builders<WorldCountry>.Filter.Eq(s => s.Id, updateCountry.Id);
+
+                long totalCount = worldCountries.Count(filterOnId);
+
+                var result = worldCountries.ReplaceOne(filterOnId, updateCountry);
+            }
+            //worldCountries.u
+            //worldCountries.UpdateMany(updateCountries);
+
             worldCountries.InsertMany(missingCountries);
-            totalCount = worldCountries.Count(filter);
-            return totalCount;
+            worldCountries.Count(filter);
         }
 
         private long AddLoadedCountriesToBlankDatabase(IMongoCollection<WorldCountry> worldCountries, 
-            FilterDefinition<WorldCountry> filter, long totalCount)
+            FilterDefinition<WorldCountry> filter)
         {
             worldCountries.InsertMany(WorldCountries);
-            totalCount = worldCountries.Count(filter);
-            return totalCount;
+            return worldCountries.Count(filter);
         }
 
         private void ConnectToBooksDatabase()
@@ -927,8 +991,6 @@ namespace MongoDbBooks.Models
 
                         if (Math.Abs(hours) < 48)
                             duplicateBooks.Add(dupBook);
-                        else
-                            timeDiff = extBook.Date - dupBook.Date;
                     }
                 }
             }
@@ -939,6 +1001,32 @@ namespace MongoDbBooks.Models
                 var result = booksRead.Find(remFilter);
                 var asList = result.ToList();
                 booksRead.DeleteMany(remFilter);
+            }
+        }
+
+        private void UpdateNationalFlags()
+        {
+            foreach (Nation nation in Nations)
+            {
+                if (nation.ImageUri != null)
+                {
+                    continue;
+                }
+
+                if (_worldCountryLookup == null || _worldCountryLookup.Count == 0 ||
+                    !_worldCountryLookup.ContainsKey(nation.Name))
+                {
+                    continue;
+                }
+
+                WorldCountry country = _worldCountryLookup[nation.Name];
+                if (country.FlagUrl == null)
+                {
+                    continue;
+                }
+
+                nation.ImageUri = country.FlagUrl;
+                _nationsDatabase.UpdateDatabaseItem(nation);
             }
         }
 

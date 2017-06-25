@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Data;
@@ -10,10 +9,14 @@ using System.Data;
 
 using MongoDbBooks.Models;
 using MongoDbBooks.Models.Geography;
-using MongoDbBooks.ViewModels.Utilities;
+using MongoDbBooks.Models.Database;
 
 namespace MongoDbBooks.ViewModels
 {
+    using System.Windows.Input;
+    using MongoDbBooks.ViewModels.Utilities;
+    using MongoDbBooks.Views;
+
     public class DataGridsViewModel : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
@@ -45,19 +48,24 @@ namespace MongoDbBooks.ViewModels
 
         private MainWindow _mainWindow;
         private log4net.ILog _log;
-        private MainBooksModel _mainModel;
+        private readonly MainBooksModel _mainModel;
         private MainViewModel _parent;
 
-        private List<object> _rawBooksData;
+        private readonly List<object> _rawBooksData;
 
         private DataTable _languageDeltasTable;
         private DataTable _countryDeltasTable;
+
+        /// <summary>
+        /// The select image for nation command.
+        /// </summary>
+        private ICommand _selectImageForNationCommand;
 
         #endregion
 
         #region Constants
 
-        private static BookRead _book = new BookRead()
+        private static readonly BookRead _book = new BookRead()
         {
             Audio = "",
             Author = "",
@@ -88,8 +96,8 @@ namespace MongoDbBooks.ViewModels
                 new KeyValuePair<string,string>("Audio", "Audio" ),
             };
 
-        private static List<Tuple<string, string, Type>> RawDataTitleToPropertyMappings =
-            new List<Tuple<string, string, Type>>()
+        private static readonly List<Tuple<string, string, Type>> RawDataTitleToPropertyMappings =
+            new List<Tuple<string, string, Type>>
             {
                                             //  Header      PropertyName    Type       
                 new Tuple<string,string, Type>("Date String", "DateString" , _book.DateString.GetType()),
@@ -148,6 +156,16 @@ namespace MongoDbBooks.ViewModels
                 return _mainModel.CountryGeographies;
             }
         }
+
+
+        public ObservableCollection<Nation> Nations
+        {
+            get
+            {
+                return new ObservableCollection<Nation>(_mainModel.Nations.OrderBy(n => n.Name));
+            }
+        }
+
 
         public ObservableCollection<BookLocationDelta> BookLocationDeltas { get { return _mainModel.BookLocationDeltas; } }
 
@@ -430,6 +448,67 @@ namespace MongoDbBooks.ViewModels
             }
 
             return seriesTable;
+        }
+
+        #endregion
+
+        #region Commands
+
+        /// <summary>
+        /// Gets the select image for nation command.
+        /// </summary>
+        public ICommand SelectImageForNationCommand => _selectImageForNationCommand ??
+                                            (_selectImageForNationCommand =
+                                             new RelayCommandHandler(SelectImageForNationCommandAction) {IsEnabled = true});
+        #endregion
+
+        #region Command Handlers
+
+        /// <summary>
+        /// The command action to add a new book from the email to the database.
+        /// </summary>
+        public void SelectImageForNationCommandAction(object parameter)
+        {
+            Nation nation = parameter as Nation;
+            if (nation != null)
+            {
+                SelectImageForNation(nation);
+                return;
+            }
+
+            AuthorCountry authorCountry = parameter as AuthorCountry;
+            if (authorCountry?.Nation != null)
+            {
+                SelectImageForNation(authorCountry.Nation);
+            }
+        }
+
+        #endregion
+
+        #region Utility Methods
+
+        private void SelectImageForNation(Nation nation)
+        {
+            _log.Debug("Getting Nation information for " + nation.Name);
+
+            ImageSelectionViewModel selectionViewModel = new ImageSelectionViewModel(_log, nation.Name);
+
+            ImageSelectionWindow imageSelectDialog = new ImageSelectionWindow {DataContext = selectionViewModel};
+            var success = imageSelectDialog.ShowDialog();
+            if (success.HasValue && success.Value)
+            {
+                _log.Debug("Success Getting Nation information for " + nation.Name +
+                           "\n   Img = " + selectionViewModel.SelectedImageAddress);
+
+                nation.ImageUri = selectionViewModel.SelectedImageAddress;
+                _mainModel.NationDatabase.UpdateDatabaseItem(nation);
+
+                OnPropertyChanged(() => Nations);
+            }
+            else
+            {
+                _log.Debug("Failed Getting Nation information for " + nation.Name);
+            }
         }
 
         #endregion

@@ -51,6 +51,8 @@ namespace MongoDbBooks.Models.Geography
 
         public List<PolygonBoundary> LandBlocks { get; set; }
 
+        public XmlElement XmlElement { get; set; }
+
         public CountryGeography()
         {
             LandBlocks = new List<PolygonBoundary>();
@@ -83,7 +85,16 @@ namespace MongoDbBooks.Models.Geography
 
             country.UpdateLatLongs();
 
+            country.XmlElement = element;
+
             return country;
+        }
+
+        public static CountryGeography Create(string geographyXml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(geographyXml);
+            return Create(doc.DocumentElement);
         }
 
         public void UpdateLatLongs()
@@ -112,5 +123,6 @@ namespace MongoDbBooks.Models.Geography
             CentroidLongitude /= totalArea;
             CentroidLatitude /= totalArea;
         }
+
     }
 }

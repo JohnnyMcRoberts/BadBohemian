@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Linq.Expressions;
-
-using OxyPlot;
-using OxyPlot.Series;
-using OxyPlot.Axes;
-using OxyPlot.Annotations;
-
-using MongoDbBooks.Models;
-using MongoDbBooks.ViewModels.Utilities;
-
-
-namespace MongoDbBooks.ViewModels.PlotGenerators
+﻿namespace MongoDbBooks.ViewModels.PlotGenerators
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using OxyPlot;
+
+    using MongoDbBooks.ViewModels.Utilities;
+
     public class CurrentBooksReadByCountryPlotGenerator : IPlotGenerator
     {
         public OxyPlot.PlotModel SetupPlot(Models.MainBooksModel mainModel)
@@ -39,14 +30,29 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             // Country, ttl books, ttl books %, ttl pages, ttl pages%
             //Tuple<string, UInt32, double, UInt32, double>
 
+            int ttlOtherBooks = 0;
+            double ttlOtherPercentage = 0;
             foreach (var country in currentResults.OverallTally.CountryTotals)
             {
                 string countryName = country.Item1;
                 int ttlBooks = (int)country.Item2;
-                countryTotals.Add(new KeyValuePair<string, int>(countryName, ttlBooks));
+                double countryPercentage = country.Item3;
+                if (countryPercentage > 1.0)
+                {
+                    countryTotals.Add(new KeyValuePair<string, int>(countryName, ttlBooks));
+                }
+                else
+                {
+                    ttlOtherPercentage += countryPercentage;
+                    ttlOtherBooks += ttlBooks;
+                }
             }
 
             var sortedCountryTotals = countryTotals.OrderByDescending(x => x.Value).ToList();
+
+            if (ttlOtherPercentage > 1.0)
+                sortedCountryTotals.Add(new KeyValuePair<string, int>("Other", ttlOtherBooks));
+
             return OxyPlotUtilities.CreatePieSeriesModelForResultsSet(
                 sortedCountryTotals, "Current Books Read by Country", 128);
         }
