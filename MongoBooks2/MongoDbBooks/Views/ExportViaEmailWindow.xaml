@@ -2,26 +2,24 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit" 
         xmlns:vmu="clr-namespace:MongoDbBooks.ViewModels.Utilities"
         xmlns:converters="clr-namespace:MongoDbBooks.Converters"
-        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Export via E-mail"
         Icon="../Images/Send_Email.png"
-             d:DesignHeight="800" d:DesignWidth="1000">
+             d:DesignHeight="550" d:DesignWidth="800">
     <Grid>
         <Grid Margin="10">
             <Grid.Resources>
-                <converters:BooleanToVisibilityConverter x:Key="booleanToVisibility" />
+                <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
             </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition Height="140"/>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="160"/>
-                <RowDefinition Height="30*"/>
+                <RowDefinition Height="280"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Grid  Grid.Row="0" IsEnabled="{Binding Path=CanSetEmailParameters}">
 
@@ -40,16 +38,16 @@
                 </Grid.ColumnDefinitions>
 
 
-                <Label Grid.Row="1" Grid.Column="0" Content="Email" 
+                <Label Grid.Row="1" Grid.Column="0" Content="Home E-mail" 
                             HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
                 <xctk:WatermarkTextBox  Grid.Row="1" Grid.Column="1" 
                              TextWrapping="NoWrap" 
-                             Text="{Binding Path=EmailAdress, Mode=TwoWay}"  MinWidth="150"
+                             Text="{Binding Path=HomeEmailAdress, Mode=TwoWay}"  MinWidth="150"
                                  HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <xctk:WatermarkTextBox.Watermark>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="someone@gmail.com" Margin="4,0,0,0" />
+                            <TextBlock Text="my_email@gmail.com" Margin="4,0,0,0" />
                         </StackPanel>
                     </xctk:WatermarkTextBox.Watermark>
                 </xctk:WatermarkTextBox>
@@ -67,17 +65,17 @@
                      vmu:PasswordHelper.Password="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      HorizontalAlignment="Stretch"  VerticalAlignment="Center">
                     <PasswordBox.InputBindings>
-                        <KeyBinding Command="{Binding Path=ReadEmailCommand}" Key="Enter"></KeyBinding>
+                        <KeyBinding Command="{Binding Path=ConnectToMailboxCommand}" Key="Enter"></KeyBinding>
                     </PasswordBox.InputBindings>
                 </PasswordBox>
 
                 <Button Grid.Row="3" Grid.Column="1" Content="Connect To Mailbox" Height="22"
-                                Command="{Binding Path=ReadEmailCommand}" 
+                                Command="{Binding Path=ConnectToMailboxCommand}" 
                 IsEnabled="{Binding Path=IsValidToConnect}"/>
 
             </Grid>
 
-            <Grid Grid.Row="1" Visibility="{Binding Path=ReadingEmails, Converter={StaticResource booleanToVisibility}}">
+            <Grid Grid.Row="1" Visibility="{Binding Path=ConnectingToMailbox, Converter={StaticResource BooleanToVisibility}}">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition  Width="175"/>
@@ -92,6 +90,105 @@
                          Height="15" Minimum="0" Maximum="1" Margin="15,2,15,2" IsIndeterminate="True" HorizontalAlignment="Left" Width="345"/>
             </Grid>
 
+            <Grid  Grid.Row="2"  Visibility="{Binding Path=ConnectedToMailbox, Converter={StaticResource BooleanToVisibility}}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="125"/>
+                    <ColumnDefinition  Width="225"/>
+                    <ColumnDefinition  Width="15"/>
+                    <ColumnDefinition  Width="125*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Destination E-mail" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <xctk:WatermarkTextBox  Grid.Row="1" Grid.Column="1" 
+                             TextWrapping="NoWrap" 
+                             Text="{Binding Path=DestinationEmailAddress, Mode=TwoWay}"  MinWidth="150"
+                                 HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <xctk:WatermarkTextBox.Watermark>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="their_email@gmail.com" Margin="4,0,0,0" />
+                        </StackPanel>
+                    </xctk:WatermarkTextBox.Watermark>
+                </xctk:WatermarkTextBox>
+
+                <Button Grid.Row="1" Grid.Column="3" Content="{Binding Path=SetDefaultDestinationEmailText}" Height="22"
+                                Command="{Binding Path=SetDefaultDestinationEmailCommand}" MinWidth="1" HorizontalAlignment="Left"
+                                IsEnabled="{Binding Path=IsDefaultDestinationEmail}"/>
+
+                <Label Grid.Row="2" Grid.Column="0"  Content="Message Text" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <TextBox Grid.Row="2" Grid.Column="1"  Grid.ColumnSpan="3" Margin="0,5,5,5" 
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            ScrollViewer.CanContentScroll="True"
+                            Text="{Binding Path=EmailMessageText, Mode=TwoWay}" 
+                            AcceptsReturn="True" TextWrapping="Wrap" SpellCheck.IsEnabled="True" Language="en-US"
+                            />
+
+                <CheckBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Send Books Read file?" 
+                            IsChecked="{Binding  Path=SendBooksReadFile}"
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <CheckBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Content="Send Locations file?" 
+                            IsChecked="{Binding  Path=SendLocationsFile}"
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <Grid Grid.Row="4" Column="0" ColumnSpan="4"
+                      Visibility="{Binding Path=IsValidToShowExportDirectory, Converter={StaticResource BooleanToVisibility}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="300*"/>
+                        <ColumnDefinition Width="125"/>
+
+                    </Grid.ColumnDefinitions>
+
+
+                    <Label Grid.Column="0" Content="Files Directory" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1"  HorizontalAlignment="Stretch"  Height="23" TextWrapping="Wrap" IsReadOnly="True"  
+                             Text="{Binding OutputDirectory, Mode=OneWay}" VerticalAlignment="Center" 
+                             Margin="10,0,10,0"/>
+                    <Button Grid.Column="2" Content="Select Directory" 
+                             HorizontalAlignment="Center"  VerticalAlignment="Center" Width="125"
+                             Command="{Binding Path=SelectDirectoryCommand}" />
+
+                </Grid>
+
+                <Button Grid.Row="5" Grid.Column="1" Content="Send Export E-mail" Height="22"
+                                Command="{Binding Path=SendExportEmailCommand}" 
+                IsEnabled="{Binding Path=IsValidToSendExportEmail}"/>
+
+            </Grid>
+
+            <Grid Grid.Row="3" Visibility="{Binding Path=SendingExportEmail, Converter={StaticResource BooleanToVisibility}}">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="175"/>
+                    <ColumnDefinition  Width="125"/>
+                    <ColumnDefinition  Width="225"/>
+                    <ColumnDefinition  Width="15"/>
+                    <ColumnDefinition  Width="125*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Content="Sending E-Mail" FontWeight="Bold"></Label>
+                <ProgressBar Grid.Column="1" Grid.ColumnSpan="4"
+                         Height="15" Minimum="0" Maximum="1" Margin="15,2,15,2" IsIndeterminate="True" HorizontalAlignment="Left" Width="345"/>
+            </Grid>
 
         </Grid>
     </Grid>

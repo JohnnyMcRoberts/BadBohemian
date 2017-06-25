@@ -35,6 +35,11 @@ namespace MongoDbBooks.Models.Mailbox
         private const string ImapServerAddress = "imap.gmail.com";
 
         /// <summary>
+        /// The standard mailbox name.
+        /// </summary>
+        private const string StandardMailBoxName = "INBOX";
+
+        /// <summary>
         /// The day names.
         /// </summary>
         private readonly string[] _dayNames =
@@ -371,18 +376,47 @@ namespace MongoDbBooks.Models.Mailbox
         }
 
         /// <summary>
-        /// The read emails using the standard IMAP v4 interface.
+        /// Tries to connect to the e-mail indox using the standard IMAP v4 interface.
         /// </summary>
-        /// <param name="errorMessage">
-        /// The error Message.
-        /// </param>
-        /// <param name="books">
-        /// The books read if successful.
-        /// </param>
+        /// <param name="errorMessage">The error Message.</param>
+        /// <returns>True if connected ok.</returns>
+        private bool ConnectToMailboxUsingStdImap4(out string errorMessage)
+        {
+            errorMessage = string.Empty;
+            string selectedMailBox = StandardMailBoxName;
+
+            using (var clientImap4 = new Imap4Client())
+            {
+                try
+                {
+                    clientImap4.ConnectSsl(ImapServerAddress, ImapPort);
+                    clientImap4.Login(_emailAddress, _password);
+
+                    Mailbox mailbox = clientImap4.SelectMailbox(selectedMailBox);
+
+                    if (mailbox.Permission != MailboxPermission.ReadWrite)
+                    {
+                        errorMessage = "Mailbox permission is " + mailbox.Permission;
+                    }
+                }
+                catch (Exception e)
+                {
+                    errorMessage = e.Message + " : " + e.InnerException;
+                }
+            }
+
+            return string.IsNullOrEmpty(errorMessage);
+        }
+
+        /// <summary>
+        /// Reads the emails using the standard IMAP v4 interface.
+        /// </summary>
+        /// <param name="errorMessage">The error Message.</param>
+        /// <param name="books">The books read if successful.</param>
         /// <returns>True if read books ok.</returns>
         private bool ReadEmailsUsingStdImap4(out string errorMessage, out List<IBookRead> books)
         {
-            string selectedMailBox = "INBOX";
+            string selectedMailBox = StandardMailBoxName;
             books = null;
 
             using (var clientImap4 = new Imap4Client())
@@ -837,6 +871,25 @@ namespace MongoDbBooks.Models.Mailbox
             return result;
         }
 
-        #endregion        
+        /// <summary>
+        /// Tries to connect to a mailbox.
+        /// </summary>
+        /// <param name="emailAddress"> The email address.</param>
+        /// <param name="password"> The password.</param>
+        /// <param name="errorMessage"> The error message if fails.</param>
+        /// <returns>
+        /// True if got connected to the mailbox, if false an error is provided.
+        /// </returns>
+        public bool ConnectToMailbox(
+            string emailAddress,
+            string password,
+            out string errorMessage)
+        {
+            _emailAddress = emailAddress;
+            _password = password;
+            return ConnectToMailboxUsingStdImap4(out errorMessage);
+        }
+
+        #endregion
     }
 }

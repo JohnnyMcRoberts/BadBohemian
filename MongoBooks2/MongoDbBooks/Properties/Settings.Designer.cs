@@ -82,5 +82,29 @@ namespace MongoDbBooks.Properties {
                 this["UserName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RecipientName {
+            get {
+                return ((string)(this["RecipientName"]));
+            }
+            set {
+                this["RecipientName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExportDirectory {
+            get {
+                return ((string)(this["ExportDirectory"]));
+            }
+            set {
+                this["ExportDirectory"] = value;
+            }
+        }
     }
 }
