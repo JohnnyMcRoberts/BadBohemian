@@ -505,6 +505,46 @@
             UpdateBookPerYearDeltas();
             UpdateWorldCountryLookup();
             UpdateBookLocationDeltas();
+            UpdateBooksPerMonth();
+        }
+
+        public Dictionary<DateTime,List<BookRead>> BookMonths { get; set; }
+
+        private void UpdateBooksPerMonth()
+        {
+            // clear the list and the counts
+            BookMonths = new Dictionary<DateTime, List<BookRead>>();
+            if (BooksRead.Count < 1) return;
+            DateTime startDate = BooksRead[0].Date;
+            DateTime endDate = BooksRead.Last().Date;
+
+            DateTime monthStart = new DateTime(startDate.Year, startDate.Month, 1);
+            DateTime monthEnd = monthStart.AddMonths(1).AddSeconds(-1);
+
+            // get all the months a book has been read
+            while (monthStart < endDate)
+            {
+                List<BookRead> monthList = new List<BookRead>();
+
+                foreach(var book in BooksRead)
+                {
+                    if (book.Date >= monthStart && book.Date <= monthEnd)
+                    {
+                        monthList.Add(book);
+                    }
+                }
+
+                if (monthList.Count > 0)
+                {
+                    BookMonths.Add(monthStart, monthList);
+                }
+
+                monthStart = monthStart.AddMonths(1);
+                monthEnd = monthEnd.AddMonths(1);
+            }
+
+
+            int count = BookMonths.Count;
         }
 
         private void UpdateBookLocationDeltas()
