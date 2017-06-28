@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MailboxLoaderViewModel.cs" company="N/A">
+// <copyright file="ExportersViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The mailbox loader view model.
+//   The exporters view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ namespace MongoDbBooks.ViewModels
     using MongoDbBooks.Views;
 
     /// <summary>
-    /// The mailbox loader view model.
+    /// The exporters view model.
     /// </summary>
     public class ExportersViewModel : INotifyPropertyChanged
     {

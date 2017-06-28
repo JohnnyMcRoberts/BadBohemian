@@ -227,6 +227,7 @@
     <Compile Include="Models\Mailbox\GmailReader.cs" />
     <Compile Include="Models\Mailbox\GmailSender.cs" />
     <Compile Include="Models\Mailbox\IMailReader.cs" />
+    <Compile Include="Models\TalliedMonth.cs" />
     <Compile Include="Models\WorldCountry.cs" />
     <Compile Include="Utilities\Logger.cs" />
     <Compile Include="ViewModels\ChartSelectionViewModel.cs" />
