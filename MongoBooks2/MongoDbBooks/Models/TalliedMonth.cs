@@ -25,17 +25,12 @@ namespace MongoDbBooks.Models
         /// <summary>
         /// Gets the month as a string to display.
         /// </summary>
-        public string DisplayString => MonthDate.ToString("yyyy MMMM");
+        public string DisplayString => MonthDate.ToString("MMMM yyyy");
 
         /// <summary>
         /// Gets or sets the number of days in the month.
         /// </summary>
         public int DaysInTheMonth { get; }
-
-        /// <summary>
-        /// Gets or sets the list of books read in this month.
-        /// </summary>
-        public List<BookRead> BooksRead { get;  }
 
         /// <summary>
         /// Gets the total books read in the month.
@@ -65,7 +60,7 @@ namespace MongoDbBooks.Models
         /// <summary>
         /// Gets the percentage of books read in English for the month.
         /// </summary>
-        public double PercentageInEnglish { get; private set; }
+        public double PercentageInEnglish { get; }
 
         /// <summary>
         /// Gets the percentage of books read in translation for the month.
@@ -85,12 +80,17 @@ namespace MongoDbBooks.Models
         /// <summary>
         /// Gets the average pages per book for the month.
         /// </summary>
-        public double PagesPerBook => (double)TotalPagesRead / (double)DaysInTheMonth;
+        public double PagesPerBook => (double)TotalPagesRead / (double)TotalBooks;
 
         /// <summary>
         /// Gets the expected books per year for the month.
         /// </summary>
         public double BooksPerYear => 365.25 / (double)DaysPerBook;
+
+        /// <summary>
+        /// Gets or sets the list of books read in this month.
+        /// </summary>
+        public List<BookRead> BooksRead { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TalliedMonth" /> class.

@@ -490,6 +490,90 @@
                 </ScrollViewer>
             </TabItem>
 
+            <TabItem Header="Per Month Tallies">
+                <ScrollViewer>
+                    <DataGrid AutoGenerateColumns="False" 
+                                    ItemsSource="{Binding Path=TalliedMonths, Mode=OneWay}"
+                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+
+                        <DataGrid.Columns>
+
+
+                            <DataGridTextColumn Header="Month" 
+                                                Binding="{Binding DisplayString}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Days in the Month" 
+                                                Binding="{Binding DaysInTheMonth}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Total Books" 
+                                                Binding="{Binding TotalBooks}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Total Pages" 
+                                                Binding="{Binding TotalPagesRead}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Book" 
+                                                Binding="{Binding TotalBookFormat }" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Comic" 
+                                                Binding="{Binding TotalComicFormat }" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Audio" 
+                                                Binding="{Binding TotalAudioFormat }" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="% in English" 
+                                                Binding="{Binding Path=PercentageInEnglish, StringFormat=N2}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="% in Translation" 
+                                                Binding="{Binding Path=PercentageInTranslation, StringFormat=N2}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Page Rate" 
+                                                Binding="{Binding Path=PageRate, StringFormat=N2}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Days per Book" 
+                                                Binding="{Binding Path=DaysPerBook, StringFormat=N2}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Pages per Book" 
+                                                Binding="{Binding Path=PagesPerBook, StringFormat=N2}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Books per Year" 
+                                                Binding="{Binding Path=BooksPerYear, StringFormat=N2}" 
+                                                Width="Auto"/>
+
+
+                            <DataGridTemplateColumn Header="Books">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ListBox ItemsSource="{Binding BooksRead }">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Path=Title}" />
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+                </ScrollViewer>
+            </TabItem>
+            
+            
             <TabItem Header="World Countries">
                 <ScrollViewer >
                     <DataGrid AutoGenerateColumns="False" 
