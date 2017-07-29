@@ -78,6 +78,7 @@
     </ApplicationDefinition>
     <Compile Include="AppBootStrapper.cs" />
     <Compile Include="ViewModels\DataGridTestViewModel.cs" />
+    <Compile Include="ViewModels\Extras.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\DataGridTestView.xaml.cs">
       <DependentUpon>DataGridTestView.xaml</DependentUpon>

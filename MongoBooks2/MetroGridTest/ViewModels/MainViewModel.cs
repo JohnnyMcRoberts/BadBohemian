@@ -8,7 +8,7 @@ namespace MetroGridTest.ViewModels
 {
     public class MainViewModel : Caliburn.Micro.PropertyChangedBase
     {
-        private const string WindowTitleDefault = "So. Just Note It";
+        private const string WindowTitleDefault = "THE grid tester !";
 
         private string _windowTitle = WindowTitleDefault;
 
