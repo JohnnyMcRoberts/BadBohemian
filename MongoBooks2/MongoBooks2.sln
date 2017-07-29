@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailTestApp", "MailTestApp\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistDir", "PlaylistDir\PlaylistDir.csproj", "{A6EA1B0A-B377-41A4-B9C6-A8A3405F5224}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetroGridTest", "MetroGridTest\MetroGridTest.csproj", "{ED92BD15-BB19-4447-A55D-815C3B6720E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,14 @@ Global
 		{A6EA1B0A-B377-41A4-B9C6-A8A3405F5224}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A6EA1B0A-B377-41A4-B9C6-A8A3405F5224}.Release|x86.ActiveCfg = Release|Any CPU
 		{A6EA1B0A-B377-41A4-B9C6-A8A3405F5224}.Release|x86.Build.0 = Release|Any CPU
+		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Debug|x86.Build.0 = Debug|Any CPU
+		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Release|x86.ActiveCfg = Release|Any CPU
+		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
