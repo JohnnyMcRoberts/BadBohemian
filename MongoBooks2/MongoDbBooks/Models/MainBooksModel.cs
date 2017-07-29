@@ -54,6 +54,7 @@
             BookPerYearDeltas = new ObservableCollection<BooksDelta>();
             WorldCountries = new ObservableCollection<WorldCountry>();
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
+            TalliedMonths = new ObservableCollection<TalliedMonth>();
 
             InputFilePath = Properties.Settings.Default.InputFile;
             OutputFilePath = Properties.Settings.Default.OutputFile;
@@ -106,6 +107,8 @@
         public ObservableCollection<BooksDelta> BookPerYearDeltas { get; }
 
         public ObservableCollection<BookLocationDelta> BookLocationDeltas { get; }
+
+        public ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
 
         public string InputFilePath { get; set; }
         public string OutputFilePath { get; set; }
@@ -508,12 +511,11 @@
             UpdateBooksPerMonth();
         }
 
-        public Dictionary<DateTime,List<BookRead>> BookMonths { get; set; }
 
         private void UpdateBooksPerMonth()
         {
             // clear the list and the counts
-            BookMonths = new Dictionary<DateTime, List<BookRead>>();
+            Dictionary<DateTime, List<BookRead>> bookMonths = new Dictionary<DateTime, List<BookRead>>();
             if (BooksRead.Count < 1) return;
             DateTime startDate = BooksRead[0].Date;
             DateTime endDate = BooksRead.Last().Date;
@@ -526,7 +528,7 @@
             {
                 List<BookRead> monthList = new List<BookRead>();
 
-                foreach(var book in BooksRead)
+                foreach(BookRead book in BooksRead)
                 {
                     if (book.Date >= monthStart && book.Date <= monthEnd)
                     {
@@ -536,15 +538,18 @@
 
                 if (monthList.Count > 0)
                 {
-                    BookMonths.Add(monthStart, monthList);
+                    bookMonths.Add(monthStart, monthList);
                 }
 
                 monthStart = monthStart.AddMonths(1);
                 monthEnd = monthEnd.AddMonths(1);
             }
 
-
-            int count = BookMonths.Count;
+            TalliedMonths.Clear();
+            foreach (DateTime date in bookMonths.Keys.OrderBy(x => x))
+            {
+                TalliedMonths.Add(new TalliedMonth(date, bookMonths[date]));
+            }
         }
 
         private void UpdateBookLocationDeltas()
