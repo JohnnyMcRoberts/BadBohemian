@@ -211,5 +211,23 @@ namespace MongoDbBooks.Views
             try { browser.Refresh(); }
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
+
+        private void Browser_OnLoadCompleted(object sender, NavigationEventArgs e)
+        {
+            WebBrowser webBrowser = sender as WebBrowser;
+
+            if (webBrowser?.Document == null)
+                return;
+
+            dynamic document = webBrowser.Document;
+
+            if (document.readyState != "complete")
+                return;
+
+            dynamic script = document.createElement("script");
+            script.type = @"text/javascript";
+            script.text = @"window.onerror = function(msg,url,line){return true;}";
+            document.head.appendChild(script);
+        }
     }
 }

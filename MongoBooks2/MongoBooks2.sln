@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoBooks2", "MongoBooks2\MongoBooks2.csproj", "{EAE31CC9-4938-4DCE-9C40-FEB70BEDF547}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDbBooks", "MongoDbBooks\MongoDbBooks.csproj", "{F7A750B3-2C51-417E-BA0D-4C4708939FBE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelixTester", "HelixTester\HelixTester.csproj", "{100731CD-7BDB-484B-8A80-4FA42AFA0D0B}"
@@ -15,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistDir", "PlaylistDir\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetroGridTest", "MetroGridTest\MetroGridTest.csproj", "{ED92BD15-BB19-4447-A55D-815C3B6720E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrimLineEndSpaces", "TrimLineEndSpaces\TrimLineEndSpaces.csproj", "{66CF698D-5874-45C5-AC18-834D6A4DA4D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +23,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EAE31CC9-4938-4DCE-9C40-FEB70BEDF547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EAE31CC9-4938-4DCE-9C40-FEB70BEDF547}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EAE31CC9-4938-4DCE-9C40-FEB70BEDF547}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EAE31CC9-4938-4DCE-9C40-FEB70BEDF547}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EAE31CC9-4938-4DCE-9C40-FEB70BEDF547}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EAE31CC9-4938-4DCE-9C40-FEB70BEDF547}.Release|x86.ActiveCfg = Release|Any CPU
 		{F7A750B3-2C51-417E-BA0D-4C4708939FBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F7A750B3-2C51-417E-BA0D-4C4708939FBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7A750B3-2C51-417E-BA0D-4C4708939FBE}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -65,6 +59,14 @@ Global
 		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Release|x86.ActiveCfg = Release|Any CPU
 		{ED92BD15-BB19-4447-A55D-815C3B6720E9}.Release|x86.Build.0 = Release|Any CPU
+		{66CF698D-5874-45C5-AC18-834D6A4DA4D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66CF698D-5874-45C5-AC18-834D6A4DA4D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66CF698D-5874-45C5-AC18-834D6A4DA4D1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{66CF698D-5874-45C5-AC18-834D6A4DA4D1}.Debug|x86.Build.0 = Debug|Any CPU
+		{66CF698D-5874-45C5-AC18-834D6A4DA4D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66CF698D-5874-45C5-AC18-834D6A4DA4D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66CF698D-5874-45C5-AC18-834D6A4DA4D1}.Release|x86.ActiveCfg = Release|Any CPU
+		{66CF698D-5874-45C5-AC18-834D6A4DA4D1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
