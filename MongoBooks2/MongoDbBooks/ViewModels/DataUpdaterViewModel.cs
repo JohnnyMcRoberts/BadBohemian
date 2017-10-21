@@ -420,19 +420,10 @@ namespace MongoDbBooks.ViewModels
 
         private string GetImageSearchTerm(BookRead book)
         {
-
-            // https://www.google.com/search?tbm=bks&q=Love+and+other+demons
-            // https://www.google.com/search?tbm=bks&q=Gabriel+Garcia+Marquez+Of+Love+and+other+demons
-            // https://www.google.com/search?tbm=bks&q=Gabriel+Garcia+Marquez+Of+Love+and+other+demons
-            // http://www.google.com/search?tbm=bks&q=Gabriel+Garcia+Marquez+Of+Love+and+other+demons
-
-            //
-            // http://www.google.co.uk/search?tbm=isch&source=hp&biw=1275&bih=716&q=Gabriel+Garcia+Marquez+Of+Love+and+other+demons
-            // https://www.google.com/search?tbm=ish&q=Gabriel+Garcia+Marquez+Of+Love+and+other+demons
-            string nameAndTitle = book.Author + " " + book.Title + " png";
+            string nameAndTitle = book.Author + " " + book.Title + " amazon";
             string[] words = nameAndTitle.Split(' ');
 
-            string term = "http://www.google.co.uk/search?tbm=isch&source=hp&biw=1275&bih=716&q=" + words[0];
+            string term = "http://www.google.co.uk/search?q=" + words[0];
 
             for(int i = 1; i < words.Length; i++)
             {
