@@ -275,6 +275,7 @@
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPagesReadPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapWithBooksReadPlotGenerator.cs" />
+    <Compile Include="ViewModels\ReportsViewModel.cs" />
     <Compile Include="ViewModels\Utilities\CommandHandler.cs" />
     <Compile Include="ViewModels\Utilities\DialogCloserExtension.cs" />
     <Compile Include="ViewModels\Utilities\ICurveFitter.cs" />
@@ -288,6 +289,9 @@
     <Compile Include="ViewModels\Utilities\WaitCursor.cs" />
     <Compile Include="Views\BindableWebBrowser.xaml.cs">
       <DependentUpon>BindableWebBrowser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BookReportsView.xaml.cs">
+      <DependentUpon>BookReportsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BooksChartsView.xaml.cs">
       <DependentUpon>BooksChartsView.xaml</DependentUpon>
@@ -327,6 +331,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\BindableWebBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BookReportsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

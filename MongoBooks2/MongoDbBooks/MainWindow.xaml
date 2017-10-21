@@ -97,6 +97,13 @@
                     </TabItem>
 
 
+                    <TabItem Header="Reports">
+                        <Grid Background="#FFE5E5E5" >
+                            <Views:BookReportsView  DataContext="{Binding Path=ReportsVM}" />
+                        </Grid>
+                    </TabItem>
+
+
 
                     <TabItem Header="Chart Selection">
                         <Grid Background="#FFE5E5E5" >

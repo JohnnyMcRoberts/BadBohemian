@@ -50,7 +50,7 @@ namespace MongoDbBooks.Models
         /// </summary>
         public BookRead()
         {
-            this.Format = BookFormat.Book;
+            Format = BookFormat.Book;
         }
 
         #endregion
@@ -113,15 +113,15 @@ namespace MongoDbBooks.Models
         {
             get
             {
-                return this._isBook;
+                return _isBook;
             }
 
             set
             {
-                this._isBook = value;
-                if (!string.IsNullOrEmpty(this._isBook))
+                _isBook = value;
+                if (!string.IsNullOrEmpty(_isBook))
                 {
-                    this.Format = BookFormat.Book;
+                    Format = BookFormat.Book;
                 }
             }
         }
@@ -133,15 +133,15 @@ namespace MongoDbBooks.Models
         {
             get
             {
-                return this._isComic;
+                return _isComic;
             }
 
             set
             {
-                this._isComic = value;
-                if (!string.IsNullOrEmpty(this._isComic))
+                _isComic = value;
+                if (!string.IsNullOrEmpty(_isComic))
                 {
-                    this.Format = BookFormat.Comic;
+                    Format = BookFormat.Comic;
                 }
             }
         }
@@ -153,15 +153,15 @@ namespace MongoDbBooks.Models
         {
             get
             {
-                return this._isAudio;
+                return _isAudio;
             }
 
             set
             {
-                this._isAudio = value;
-                if (!string.IsNullOrEmpty(this._isAudio))
+                _isAudio = value;
+                if (!string.IsNullOrEmpty(_isAudio))
                 {
-                    this.Format = BookFormat.Audio;
+                    Format = BookFormat.Audio;
                 }
             }
         }
