@@ -160,6 +160,48 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
+
+
+                                <DataGridTextColumn Header="Pages" 
+                                                Binding="{Binding Pages}" 
+                                                Width="Auto"/>
+
+                                <DataGridTextColumn Header="Nationality" 
+                                                Binding="{Binding Nationality}" 
+                                                Width="Auto"/>
+
+                                <DataGridTextColumn Header="Original Language" 
+                                                Binding="{Binding OriginalLanguage}" 
+                                                Width="Auto"/>
+
+                                <DataGridTextColumn Header="Format" 
+                                                Binding="{Binding Format}" 
+                                                Width="Auto"/>
+
+                                <DataGridTemplateColumn MinWidth="100" Header="Image Select">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Select Image"
+                                                Command="{Binding DataContext.SelectImageForBookCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" 
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}">
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+
+                                <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding DisplayImage}" MaxHeight="30" MaxWidth="30"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="Note" 
+                                                Binding="{Binding Note}" 
+                                                Width="Auto"/>
+
                             </DataGrid.Columns>
                         </DataGrid>
 

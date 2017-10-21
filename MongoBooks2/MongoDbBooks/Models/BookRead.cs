@@ -106,6 +106,9 @@ namespace MongoDbBooks.Models
         [BsonElement("originalLanguage")]
         public string OriginalLanguage { get; set; }
 
+        [BsonElement("image_url")]
+        public string ImageUrl { get; set; }
+
         /// <summary>
         /// Gets or sets the book.
         /// </summary>
@@ -201,6 +204,30 @@ namespace MongoDbBooks.Models
             }
         }
 
+        /// <summary>
+        /// Gets the image address ready to be displayed.
+        /// </summary>
+        public string DisplayImageAddress
+        {
+            get
+            {
+                if (ImageUrl == null)
+                    return "N/A";
+                else
+                    return ImageUrl.Substring(0, Math.Min(ImageUrl.Length, 50)) + " ...";
+            }
+        }
+
+        /// <summary>
+        /// Gets the image URI ready to be displayed.
+        /// </summary>
+        public Uri DisplayImage
+        {
+            get
+            {
+                return string.IsNullOrEmpty(ImageUrl) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(ImageUrl);
+            }
+        }
         #endregion
     }
 }
