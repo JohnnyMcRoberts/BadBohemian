@@ -66,6 +66,10 @@
 
         public string Title => "Reports";
 
+        public ObservableCollection<TalliedMonth> TalliedMonths { get { return _mainModel.TalliedMonths; } }
+
+        public DateTime SelectedMonth { get; set; }
+
         #endregion
         #region Constructor
 
@@ -77,6 +81,8 @@
             _log = log;
             _mainModel = mainModel;
             _parent = parent;
+
+            SelectedMonth = _mainModel.TalliedMonths.First().MonthDate;
         }
 
         #endregion
