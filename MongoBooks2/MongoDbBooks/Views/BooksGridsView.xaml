@@ -52,6 +52,10 @@
                             <DataGridTextColumn Header="Format" 
                                                 Binding="{Binding Format}" 
                                                 Width="Auto"/>
+                            
+                            <DataGridTextColumn Header="Note" 
+                                                Binding="{Binding Note}" 
+                                                Width="Auto"/>
                         </DataGrid.Columns>
 
                     </DataGrid>

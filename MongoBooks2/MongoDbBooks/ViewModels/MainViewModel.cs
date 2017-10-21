@@ -55,6 +55,7 @@ namespace MongoDbBooks.ViewModels
             _chartSelectionVM = new ChartSelectionViewModel(_mainWindow, log, _mainModel, this);
             _mailboxLoaderVM = new MailboxLoaderViewModel(_mainWindow, log, _mainModel, this);
             _exportersVM = new ExportersViewModel(_mainWindow, log, _mainModel, this);
+            _reportsVM = new ReportsViewModel(_mainWindow, log, _mainModel, this);
 
             if (_mainModel.ConnectedToDbSuccessfully)
                 UpdateData();
@@ -77,6 +78,7 @@ namespace MongoDbBooks.ViewModels
         private ChartSelectionViewModel _chartSelectionVM;
         private MailboxLoaderViewModel _mailboxLoaderVM;
         private ExportersViewModel _exportersVM;
+        private ReportsViewModel _reportsVM;
 
         #endregion
 
@@ -129,6 +131,11 @@ namespace MongoDbBooks.ViewModels
             get { return _exportersVM; }
         }
 
+        public ReportsViewModel ReportsVM
+        {
+            get { return _reportsVM; }
+        }
+
         #endregion
 
         #region Public Methods
@@ -140,6 +147,7 @@ namespace MongoDbBooks.ViewModels
             DataGridsVM.UpdateData();
             DataUpdaterVM.UpdateData();
             ChartSelectionVM.UpdateData();
+            ReportsVM.UpdateData();
         }
 
         #endregion

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 using MongoDbBooks.Models;
 using MongoDbBooks.ViewModels.Utilities;
-
+using MongoDbBooks.Views;
 
 namespace MongoDbBooks.ViewModels
 {
@@ -55,6 +55,12 @@ namespace MongoDbBooks.ViewModels
 
         private BookRead _newBook;
         private BookRead _existingBook;
+
+        /// <summary>
+        /// The select image for nation command.
+        /// </summary>
+        private ICommand _selectImageForBookCommand;
+
 
         #endregion
 
@@ -174,24 +180,6 @@ namespace MongoDbBooks.ViewModels
 
         #endregion
 
-        private void UpdateExistingBook()
-        {
-            OnPropertyChanged(() => ExistingBook);
-            OnPropertyChanged(() => ExistingBookDate);
-            OnPropertyChanged(() => ExistingBookDate);
-            OnPropertyChanged(() => ExistingBookAuthor);
-            OnPropertyChanged(() => ExistingBookTitle);
-            OnPropertyChanged(() => ExistingBookPages);
-            OnPropertyChanged(() => ExistingBookNote);
-            OnPropertyChanged(() => ExistingBookNationality);
-            OnPropertyChanged(() => ExistingBookOriginalLanguage);
-            OnPropertyChanged(() => ExistingBookFormat);
-            OnPropertyChanged(() => ExistingBookDateText);
-            OnPropertyChanged(() => ExistingBookAuthorText);
-            OnPropertyChanged(() => ExistingBookNationalityText);
-            OnPropertyChanged(() => ExistingBookOriginalLanguageText);
-        }
-
         #region Public Methods
 
         public void UpdateData()
@@ -257,8 +245,6 @@ namespace MongoDbBooks.ViewModels
 
         public void UpdateExistingBookCommandAction()
         {
-            string errorMsg;
-
             // update the book with what has been typed in
             if (_existingBook.Author == null && !string.IsNullOrEmpty(ExistingBookAuthorText))
                 ExistingBookAuthor = ExistingBookAuthorText;
@@ -268,6 +254,7 @@ namespace MongoDbBooks.ViewModels
                 ExistingBookOriginalLanguage = ExistingBookOriginalLanguageText;
 
             // Update in the DB.
+            string errorMsg;
             if (!_mainModel.UpdateBook(_existingBook, out errorMsg))
             {
                 MessageBox.Show(errorMsg);
@@ -284,6 +271,24 @@ namespace MongoDbBooks.ViewModels
         #endregion
 
         #region Utility Functions
+
+        private void UpdateExistingBook()
+        {
+            OnPropertyChanged(() => ExistingBook);
+            OnPropertyChanged(() => ExistingBookDate);
+            OnPropertyChanged(() => ExistingBookDate);
+            OnPropertyChanged(() => ExistingBookAuthor);
+            OnPropertyChanged(() => ExistingBookTitle);
+            OnPropertyChanged(() => ExistingBookPages);
+            OnPropertyChanged(() => ExistingBookNote);
+            OnPropertyChanged(() => ExistingBookNationality);
+            OnPropertyChanged(() => ExistingBookOriginalLanguage);
+            OnPropertyChanged(() => ExistingBookFormat);
+            OnPropertyChanged(() => ExistingBookDateText);
+            OnPropertyChanged(() => ExistingBookAuthorText);
+            OnPropertyChanged(() => ExistingBookNationalityText);
+            OnPropertyChanged(() => ExistingBookOriginalLanguageText);
+        }
 
         private string GetBookDateText(bool isNew = true)
         {
@@ -378,6 +383,83 @@ namespace MongoDbBooks.ViewModels
         {
             if (_mainModel.BooksRead.Count > 0)
                 _existingBook = _mainModel.BooksRead.Last();
+        }
+
+        private void SelectImageForBook(BookRead book)
+        {
+            _log.Debug("Getting Book information for " + book.Title);
+
+            // https://books.google.co.uk/
+            string searchTerm = GetImageSearchTerm(book);
+            ImageSelectionViewModel selectionViewModel = new ImageSelectionViewModel(_log, book.Title, searchTerm);
+
+            ImageSelectionWindow imageSelectDialog = new ImageSelectionWindow { DataContext = selectionViewModel };
+            var success = imageSelectDialog.ShowDialog();
+            if (success.HasValue && success.Value)
+            {
+                _log.Debug("Success Getting image information for " + book.Title +
+                           "\n   Img = " + selectionViewModel.SelectedImageAddress);
+
+                book.ImageUrl = selectionViewModel.SelectedImageAddress;
+
+                // Update in the DB.
+                string errorMsg;
+                if (!_mainModel.UpdateBook(book, out errorMsg))
+                {
+                    MessageBox.Show(errorMsg);
+                    return;
+                }
+
+                OnPropertyChanged(() => book);
+            }
+            else
+            {
+                _log.Debug("Failed Getting Book information for " + book.Title);
+            }
+        }
+
+        private string GetImageSearchTerm(BookRead book)
+        {
+            string nameAndTitle = book.Author + " " + book.Title + " amazon";
+            string[] words = nameAndTitle.Split(' ');
+
+            string term = "http://www.google.co.uk/search?q=" + words[0];
+
+            for(int i = 1; i < words.Length; i++)
+            {
+                term += "+";
+                term += words[i];
+            }
+
+            return term;
+        }
+
+        #endregion
+
+
+        #region Commands
+
+        /// <summary>
+        /// Gets the select image for nation command.
+        /// </summary>
+        public ICommand SelectImageForBookCommand => _selectImageForBookCommand ??
+                                            (_selectImageForBookCommand =
+                                             new RelayCommandHandler(SelectImageForBookCommandAction) { IsEnabled = true });
+        #endregion
+
+        #region Command Handlers
+
+        /// <summary>
+        /// The command action to add a new book from the email to the database.
+        /// </summary>
+        public void SelectImageForBookCommandAction(object parameter)
+        {
+            BookRead book = parameter as BookRead;
+            if (book != null)
+            {
+                SelectImageForBook(book);
+                return;
+            }
         }
 
         #endregion
