@@ -48,6 +48,9 @@
         private log4net.ILog _log;
         private readonly MainBooksModel _mainModel;
         private MainViewModel _parent;
+        private DateTime _selectedMonth;
+        private DateTime _firstMonth;
+        private DateTime _lastMonth;
 
         /// <summary>
         /// The select image for nation command.
@@ -66,6 +69,47 @@
 
         public string Title => "Reports";
 
+        public ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
+
+        public DateTime SelectedMonth
+        {
+            get { return _selectedMonth; }
+            set
+            {
+                if (_selectedMonth.Year != value.Year || _selectedMonth.Month != value.Month)
+                {
+                    _selectedMonth = value;
+                    OnPropertyChanged(() => SelectedMonth);
+                    GetSelectedMonthTally();
+                }
+            }
+        }
+
+        public DateTime FirstMonth
+        {
+            get { return _firstMonth; }
+            set
+            {
+                _firstMonth = value;
+                OnPropertyChanged(() => FirstMonth);
+            }
+        }
+
+
+        public DateTime LastMonth
+        {
+            get { return _lastMonth; }
+            set
+            {
+                _lastMonth = value;
+                OnPropertyChanged(() => LastMonth);
+            }
+        }
+
+        /*
+                <Calendar DisplayMode = "Year" AllowDrop="True" SelectedDate="{Binding Path=SelectedMonth}"
+                          DisplayDateStart="{Binding Path=FirstMonth}" DisplayDateEnd="{Binding Path=LastMonth}"/>
+                          */
         #endregion
         #region Constructor
 
@@ -77,9 +121,19 @@
             _log = log;
             _mainModel = mainModel;
             _parent = parent;
+
+            FirstMonth = _mainModel.TalliedMonths.First().MonthDate;
+            var lastMonth = _mainModel.TalliedMonths.Last().MonthDate;
+            lastMonth = lastMonth.AddMonths(1);
+            lastMonth = lastMonth.AddDays(-1);
+            LastMonth = lastMonth;
+            _selectedMonth = lastMonth.AddMonths(-1);
+            TalliedMonths = new ObservableCollection<TalliedMonth>();
+            GetSelectedMonthTally();
         }
 
         #endregion
+
         #region Public Methods
 
         public void UpdateData()
@@ -90,6 +144,23 @@
         #endregion
 
         #region Utility Functions
+
+        private TalliedMonth GetSelectedMonthTally()
+        {
+            var selected = _mainModel.TalliedMonths.First();
+            foreach(var month in _mainModel.TalliedMonths)
+            {
+                if (month.MonthDate.Year == _selectedMonth.Year && month.MonthDate.Month == _selectedMonth.Month)
+                {
+                    selected = month;
+                    break;
+                }
+            }
+            TalliedMonths.Clear();
+            TalliedMonths.Add(selected);
+            OnPropertyChanged(() => TalliedMonths);
+            return selected;
+        }
 
         #endregion
 
