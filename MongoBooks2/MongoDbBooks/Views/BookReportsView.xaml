@@ -14,7 +14,13 @@
             <Label Content="{Binding Title}" />
             <StackPanel Orientation="Horizontal" >
                 <Label Content="Select Month:" />
-                <Calendar DisplayMode="Year" AllowDrop="True" IsTodayHighlighted="True" SelectionMode="SingleDate"/>
+               
+                <DatePicker SelectedDate="{Binding Path=SelectedMonth}" IsDropDownOpen="False"
+                          DisplayDateStart="{Binding Path=FirstMonth}" DisplayDateEnd="{Binding Path=LastMonth}"/>
+                <!--
+                          <Calendar DisplayMode="Year" AllowDrop="True" SelectedDate="{Binding Path=SelectedMonth}"
+                          DisplayDateStart="{Binding Path=FirstMonth}" DisplayDateEnd="{Binding Path=LastMonth}"/>
+                -->
 
 
             </StackPanel>
