@@ -20,7 +20,7 @@
                           DisplayDateStart="{Binding Path=FirstMonth}" DisplayDateEnd="{Binding Path=LastMonth}"/>
             </StackPanel>
 
-            <ScrollViewer MaxHeight="300">
+            <ScrollViewer MaxHeight="300" Margin="10,10">
                 <ItemsControl Margin="10"  ScrollViewer.CanContentScroll="True"
                       ItemsSource="{Binding Path=SelectedMonthBooksRead}" MinHeight="100">
 
@@ -31,7 +31,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="10,10" MaxWidth="460">
+                            <Grid Margin="10,10" Width="460">
                                 <Grid.Resources>
                                     <converters:StringToVisibilityConverter  x:Key="StringToVisibility" />
                                 </Grid.Resources>

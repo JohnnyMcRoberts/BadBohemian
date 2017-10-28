@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Converters="clr-namespace:MongoDbBooks.Converters" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
@@ -206,9 +207,10 @@
                         </DataGrid>
 
 
+                        <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding IsUpdating}">
+                            
 
-
-                        <Grid Grid.Row="1">
+                        <Grid>
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="40"/>
@@ -218,16 +220,13 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
-                                <RowDefinition Height="40*"/>
-                                <RowDefinition Height="40"/>
-
                             </Grid.RowDefinitions>
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150"/>
                                 <ColumnDefinition Width="300"/>
                                 <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="150*"/>
+                                <ColumnDefinition Width="350"/>
                             </Grid.ColumnDefinitions>
 
                             <Label Grid.Row="0" Content="Date" 
@@ -262,6 +261,16 @@
                                      HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
                             <Image Grid.Row="2"  Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="5" MinHeight="100" MinWidth="100"
                                    HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding ExistingBookImageSource}" />
+
+                            <Label Grid.Row="1" Grid.Column="3" Content="Notes" 
+                            HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <TextBox Grid.Row="2" Grid.Column="3"  Grid.RowSpan="4" Margin="5,5,5,0" 
+                                     MinHeight="23" TextWrapping="Wrap" 
+                                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                     ScrollViewer.CanContentScroll="True"
+                                     Text="{Binding Path=ExistingBookNote, Mode=TwoWay}" 
+                                     HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="190"/>
 
 
                             <Label Grid.Row="3" Content="Pages" 
@@ -301,36 +310,17 @@
                                       SelectedValue="{Binding Path=ExistingBookFormat}"
                                       HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
 
-                            <!--
-                                <Grid.Resources>
-                                    <Converters:EnumToRadioButtonConverter x:Key="enumBooleanConverter" />
-                                </Grid.Resources>
-                                <StackPanel >
-                                    <RadioButton IsChecked="{Binding Path=ExistingBookFormat, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Book}">Book</RadioButton>
-                                    <RadioButton IsChecked="{Binding Path=ExistingBookFormat, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Comic}">Comic</RadioButton>
-                                    <RadioButton IsChecked="{Binding Path=ExistingBookFormat, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Audio}">Audio</RadioButton>
-                                </StackPanel>
-                                -->
-                           
 
-
-                            <Label Grid.Row="7" Content="Notes" 
-                            HorizontalAlignment="Left" VerticalAlignment="Top" />
-                            <TextBox Grid.Row="7" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0" 
-                                     Height="23" TextWrapping="Wrap" 
-                                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                     ScrollViewer.CanContentScroll="True"
-                                     Text="{Binding Path=ExistingBookNote, Mode=TwoWay}" 
-                                     HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="290"/>
-
-
-                            <Button Content="Update Existing Book" Grid.Row="8" HorizontalAlignment="Left" Margin="10,10,0,0"
+                                <Button Content="Update Existing Book" Grid.Row="6" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,0"
                                 VerticalAlignment="Top" Width="125" Height="22"
                                 Command="{Binding Path=UpdateExistingBookCommand}" />
 
 
                         </Grid>
+
+
+                        </xctk:BusyIndicator>
+
                     </Grid>
                 </ScrollViewer>
             </TabItem>

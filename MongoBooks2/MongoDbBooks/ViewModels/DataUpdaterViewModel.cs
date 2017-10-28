@@ -185,8 +185,23 @@ namespace MongoDbBooks.ViewModels
         public string ExistingBookNationalityText { get; set; }
         public string ExistingBookOriginalLanguageText { get; set; }
         public Uri ExistingBookImageSource => _existingBook?.DisplayImage;
-
         public Dictionary<BookFormat, string> BookFormats => _bookFormats;
+
+        private bool _isUpdating;
+        public bool IsUpdating
+        {
+            get { return _isUpdating; }
+            set
+            {
+                if (value != _isUpdating)
+                {
+                    _isUpdating = value;
+                    OnPropertyChanged(() => IsUpdating);
+                }
+            }
+        }
+            
+
 
         #endregion
 
@@ -271,17 +286,38 @@ namespace MongoDbBooks.ViewModels
                 ExistingBookOriginalLanguage = ExistingBookOriginalLanguageText;
 
             // Update in the DB.
-            string errorMsg;
-            if (!_mainModel.UpdateBook(_existingBook, out errorMsg))
+            string errorMsg = string.Empty;
+            bool isError = false;
+
+            BackgroundWorker worker = new BackgroundWorker();
+
+            worker.DoWork += (o, ea) =>
             {
-                MessageBox.Show(errorMsg);
-            }
-            else
+                if (!_mainModel.UpdateBook(_existingBook, out errorMsg, false))
+                {
+                    isError = true;
+                }
+                else
+                {
+                    InitialiseEditBook();
+                }
+            };
+
+
+            worker.RunWorkerCompleted += (o, ea) =>
             {
-                InitialiseEditBook();
-            }
-            _parent.UpdateData();
-            OnPropertyChanged("");
+                IsUpdating  = false;
+                if (isError)
+                {
+                    MessageBox.Show(errorMsg);
+                }
+                _parent.UpdateData();
+                OnPropertyChanged("BooksRead");
+                OnPropertyChanged("");
+            };
+
+            IsUpdating = true;
+            worker.RunWorkerAsync();
         }
 
         /// <summary>

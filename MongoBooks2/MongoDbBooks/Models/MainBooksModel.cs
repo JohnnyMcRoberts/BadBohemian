@@ -350,14 +350,15 @@
             return true;
         }
 
-        public bool UpdateBook(BookRead editBook, out string errorMsg)
+        public bool UpdateBook(BookRead editBook, out string errorMsg, bool updateCollections = true)
         {
             errorMsg = "";
 
             if (DataFromDb)
                 UpdateBookInDatabase(editBook);
 
-            UpdateCollections();
+            if (updateCollections)
+                UpdateCollections();
 
             return true;
         }
