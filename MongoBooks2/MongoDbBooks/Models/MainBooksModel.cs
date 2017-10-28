@@ -167,7 +167,8 @@
         }
 
 
-        
+        public TalliedMonth SelectedMonthTally { get; set; }
+
 
         public bool DataFromFile { get; set; }
         public bool DataFromDb { get; set; }
@@ -350,14 +351,15 @@
             return true;
         }
 
-        public bool UpdateBook(BookRead editBook, out string errorMsg)
+        public bool UpdateBook(BookRead editBook, out string errorMsg, bool updateCollections = true)
         {
             errorMsg = "";
 
             if (DataFromDb)
                 UpdateBookInDatabase(editBook);
 
-            UpdateCollections();
+            if (updateCollections)
+                UpdateCollections();
 
             return true;
         }

@@ -14,6 +14,7 @@
     using MongoDbBooks.Models.Database;
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.Views;
+    using PlotGenerators;
 
     public class ReportsViewModel : INotifyPropertyChanged
     {
@@ -51,7 +52,7 @@
         private DateTime _selectedMonth;
         private DateTime _firstMonth;
         private DateTime _lastMonth;
-        private TalliedMonth _selectedMonthTally;
+        //private TalliedMonth _selectedMonthTally;
 
         /// <summary>
         /// The select image for nation command.
@@ -79,10 +80,12 @@
                 if (_selectedMonth.Year != value.Year || _selectedMonth.Month != value.Month)
                 {
                     _selectedMonth = value;
-                    _selectedMonthTally = GetSelectedMonthTally();
+                    _mainModel.SelectedMonthTally = GetSelectedMonthTally();
                     OnPropertyChanged(() => SelectedMonth);
                     OnPropertyChanged(() => SelectedMonthTally);
                     OnPropertyChanged(() => SelectedMonthBooksRead);
+                    PlotCurrentMonthPagesReadByLanguage.UpdateData(_mainModel);
+                    PlotCurrentMonthPagesReadByCountry.UpdateData(_mainModel);
                 }
             }
         }
@@ -107,9 +110,13 @@
             }
         }
 
-        public TalliedMonth SelectedMonthTally => _selectedMonthTally;
+        public TalliedMonth SelectedMonthTally => _mainModel.SelectedMonthTally;
 
-        public List<BookRead> SelectedMonthBooksRead => _selectedMonthTally.BooksRead;
+        public List<BookRead> SelectedMonthBooksRead => _mainModel.SelectedMonthTally.BooksRead;
+
+        public OxyPlotPair PlotCurrentMonthPagesReadByLanguage { get; private set; }
+
+        public OxyPlotPair PlotCurrentMonthPagesReadByCountry { get; private set; }
 
         #endregion
 
@@ -131,8 +138,16 @@
             LastMonth = lastMonth;
             _selectedMonth = lastMonth.AddMonths(-1);
             TalliedMonths = new ObservableCollection<TalliedMonth>();
-            _selectedMonthTally = GetSelectedMonthTally();
+            _mainModel.SelectedMonthTally = GetSelectedMonthTally();
+
+            PlotCurrentMonthPagesReadByLanguage =
+                new OxyPlotPair(new CurrentMonthPagesReadByLanguagePlotGenerator(), "CurrentMonthPagesReadByLanguage");
+            PlotCurrentMonthPagesReadByCountry =
+                new OxyPlotPair(new CurrentMonthPagesReadByCountryPlotGenerator(), "CurrentMonthPagesReadByCountry");
         }
+
+        // should think about a flow doc and then html ....
+        // https://msdn.microsoft.com/en-us/library/aa972129.aspx
 
         #endregion
 
@@ -140,6 +155,12 @@
 
         public void UpdateData()
         {
+            // if no data don't waste time trying to create plots
+            if (_mainModel == null || _mainModel.BooksRead == null || _mainModel.BooksRead.Count == 0)
+                return;
+
+            PlotCurrentMonthPagesReadByLanguage.UpdateData(_mainModel);
+            PlotCurrentMonthPagesReadByCountry.UpdateData(_mainModel);
             OnPropertyChanged("");
         }
 
