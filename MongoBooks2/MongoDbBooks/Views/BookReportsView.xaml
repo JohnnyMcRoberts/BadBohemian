@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit" 
              xmlns:local="clr-namespace:MongoDbBooks.Views"
+             xmlns:converters="clr-namespace:MongoDbBooks.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -14,18 +15,94 @@
             <Label Content="{Binding Title}" />
             <StackPanel Orientation="Horizontal" >
                 <Label Content="Select Month:" />
-               
+
                 <DatePicker SelectedDate="{Binding Path=SelectedMonth}" IsDropDownOpen="False"
                           DisplayDateStart="{Binding Path=FirstMonth}" DisplayDateEnd="{Binding Path=LastMonth}"/>
-                <!--
-                          <Calendar DisplayMode="Year" AllowDrop="True" SelectedDate="{Binding Path=SelectedMonth}"
-                          DisplayDateStart="{Binding Path=FirstMonth}" DisplayDateEnd="{Binding Path=LastMonth}"/>
-                -->
-
-
             </StackPanel>
 
             <ScrollViewer MaxHeight="300">
+                <ItemsControl Margin="10"  ScrollViewer.CanContentScroll="True"
+                      ItemsSource="{Binding Path=SelectedMonthBooksRead}" MinHeight="100">
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="10,10" MaxWidth="460">
+                                <Grid.Resources>
+                                    <converters:StringToVisibilityConverter  x:Key="StringToVisibility" />
+                                </Grid.Resources>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition MinWidth="330"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Image Grid.Row="0" Grid.Column="0"  
+                                       HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding DisplayImage}" 
+                                       />
+
+                                <Grid Grid.Row="0" Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" TextWrapping="Wrap">
+                                        <Run Text="Title: " FontWeight="Bold" />
+                                        <Run Text="{Binding Title}" />
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="1" TextWrapping="Wrap">
+                                        <Run Text="Author: " FontWeight="Bold" />
+                                        <Run Text="{Binding Author}" />
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="2" TextWrapping="Wrap">
+                                        <Run Text="Pages: " FontWeight="Bold" />
+                                        <Run Text="{Binding Pages}" />
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="3" TextWrapping="Wrap">
+                                        <Run Text="Nationality: " FontWeight="Bold" />
+                                        <Run Text="{Binding Nationality}" />
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="4" TextWrapping="Wrap">
+                                        <Run Text="Original Language: " FontWeight="Bold" />
+                                        <Run Text="{Binding OriginalLanguage}" />
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="5" TextWrapping="Wrap">
+                                        <Run Text="Date: " FontWeight="Bold" />
+                                        <Run Text="{Binding DateString}" />
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="6" TextWrapping="Wrap">
+                                        <Run Text="Format: " FontWeight="Bold" />
+                                        <Run Text="{Binding Format}" />
+                                    </TextBlock>
+                                </Grid>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                               TextWrapping="Wrap" MaxWidth="450" HorizontalAlignment="Left"
+                                               Visibility="{Binding Path=Note, Converter={StaticResource StringToVisibility}}">
+                                        <Run Text="Notes: " FontWeight="Bold" />
+                                        <Run Text="{Binding Note}" />
+                                    </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </ScrollViewer>
+
+
+                <ScrollViewer MaxHeight="100">
                 <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=TalliedMonths, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">

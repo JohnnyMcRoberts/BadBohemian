@@ -208,6 +208,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\StringToVisibilityConverter.cs" />
     <Compile Include="Models\BaseMongoEntity.cs" />
     <Compile Include="Models\BookFormat.cs" />
     <Compile Include="Models\BookLocation.cs" />

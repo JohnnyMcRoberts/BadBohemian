@@ -51,6 +51,7 @@
         private DateTime _selectedMonth;
         private DateTime _firstMonth;
         private DateTime _lastMonth;
+        private TalliedMonth _selectedMonthTally;
 
         /// <summary>
         /// The select image for nation command.
@@ -58,7 +59,6 @@
         private ICommand _selectImageForNationCommand;
 
         #endregion
-
 
         #region Constants
 
@@ -79,8 +79,10 @@
                 if (_selectedMonth.Year != value.Year || _selectedMonth.Month != value.Month)
                 {
                     _selectedMonth = value;
+                    _selectedMonthTally = GetSelectedMonthTally();
                     OnPropertyChanged(() => SelectedMonth);
-                    GetSelectedMonthTally();
+                    OnPropertyChanged(() => SelectedMonthTally);
+                    OnPropertyChanged(() => SelectedMonthBooksRead);
                 }
             }
         }
@@ -95,7 +97,6 @@
             }
         }
 
-
         public DateTime LastMonth
         {
             get { return _lastMonth; }
@@ -106,11 +107,12 @@
             }
         }
 
-        /*
-                <Calendar DisplayMode = "Year" AllowDrop="True" SelectedDate="{Binding Path=SelectedMonth}"
-                          DisplayDateStart="{Binding Path=FirstMonth}" DisplayDateEnd="{Binding Path=LastMonth}"/>
-                          */
+        public TalliedMonth SelectedMonthTally => _selectedMonthTally;
+
+        public List<BookRead> SelectedMonthBooksRead => _selectedMonthTally.BooksRead;
+
         #endregion
+
         #region Constructor
 
         public ReportsViewModel(
@@ -129,7 +131,7 @@
             LastMonth = lastMonth;
             _selectedMonth = lastMonth.AddMonths(-1);
             TalliedMonths = new ObservableCollection<TalliedMonth>();
-            GetSelectedMonthTally();
+            _selectedMonthTally = GetSelectedMonthTally();
         }
 
         #endregion

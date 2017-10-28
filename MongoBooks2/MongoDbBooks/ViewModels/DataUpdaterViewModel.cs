@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Data;
-using System.Windows.Input;
-using System.Windows.Forms;
-
-using MongoDbBooks.Models;
-using MongoDbBooks.ViewModels.Utilities;
-using MongoDbBooks.Views;
+﻿
 
 namespace MongoDbBooks.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.ComponentModel;
+    using System.Linq.Expressions;
+    using System.Windows.Input;
+    using System.Windows.Forms;
+
+    using MongoDbBooks.Models;
+    using MongoDbBooks.ViewModels.Utilities;
+    using MongoDbBooks.Views;
+
     public class DataUpdaterViewModel : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
@@ -61,6 +61,12 @@ namespace MongoDbBooks.ViewModels
         /// </summary>
         private ICommand _selectImageForBookCommand;
 
+        private readonly Dictionary<BookFormat, string> _bookFormats = new Dictionary<BookFormat, string>()
+        {
+            {BookFormat.Book, "Book"},
+            {BookFormat.Comic, "Comic"},
+            {BookFormat.Audio, "Audio"}
+        };
 
         #endregion
 
@@ -171,12 +177,16 @@ namespace MongoDbBooks.ViewModels
             get { if (_existingBook != null) return _existingBook.Format; return BookFormat.Book; }
             set { if (_existingBook != null) _existingBook.Format = value; OnPropertyChanged(() => ExistingBookFormat); }
         }
+
         public string ExistingBookDateText
         { get { if (_existingBook == null) return ""; _existingBook.DateString = GetBookDateText(false); return _existingBook.DateString; } }
 
         public string ExistingBookAuthorText { get; set; }
         public string ExistingBookNationalityText { get; set; }
         public string ExistingBookOriginalLanguageText { get; set; }
+        public Uri ExistingBookImageSource => _existingBook?.DisplayImage;
+
+        public Dictionary<BookFormat, string> BookFormats => _bookFormats;
 
         #endregion
 
@@ -211,6 +221,13 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets the select image for nation command.
+        /// </summary>
+        public ICommand SelectImageForBookCommand => _selectImageForBookCommand ??
+                                                     (_selectImageForBookCommand =
+                                                         new RelayCommandHandler(SelectImageForBookCommandAction) { IsEnabled = true });
+
         #endregion
 
         #region Command Handlers
@@ -233,7 +250,6 @@ namespace MongoDbBooks.ViewModels
             if (!_mainModel.AddNewBook(_newBook, out errorMsg))
             {
                 MessageBox.Show(errorMsg);
-                return;
             }
             else
             {
@@ -246,7 +262,8 @@ namespace MongoDbBooks.ViewModels
         public void UpdateExistingBookCommandAction()
         {
             // update the book with what has been typed in
-            if (_existingBook.Author == null && !string.IsNullOrEmpty(ExistingBookAuthorText))
+            if (!string.IsNullOrEmpty(ExistingBookAuthorText) && 
+                (_existingBook.Author == null || _existingBook.Author != ExistingBookAuthorText))
                 ExistingBookAuthor = ExistingBookAuthorText;
             if (_existingBook.Nationality == null && !string.IsNullOrEmpty(ExistingBookNationalityText))
                 ExistingBookNationality = ExistingBookNationalityText;
@@ -258,7 +275,6 @@ namespace MongoDbBooks.ViewModels
             if (!_mainModel.UpdateBook(_existingBook, out errorMsg))
             {
                 MessageBox.Show(errorMsg);
-                return;
             }
             else
             {
@@ -266,6 +282,18 @@ namespace MongoDbBooks.ViewModels
             }
             _parent.UpdateData();
             OnPropertyChanged("");
+        }
+
+        /// <summary>
+        /// The command action to add a new book from the email to the database.
+        /// </summary>
+        public void SelectImageForBookCommandAction(object parameter)
+        {
+            BookRead book = parameter as BookRead;
+            if (book != null)
+            {
+                SelectImageForBook(book);
+            }
         }
 
         #endregion
@@ -288,6 +316,7 @@ namespace MongoDbBooks.ViewModels
             OnPropertyChanged(() => ExistingBookAuthorText);
             OnPropertyChanged(() => ExistingBookNationalityText);
             OnPropertyChanged(() => ExistingBookOriginalLanguageText);
+            OnPropertyChanged(() => ExistingBookImageSource);
         }
 
         private string GetBookDateText(bool isNew = true)
@@ -319,30 +348,30 @@ namespace MongoDbBooks.ViewModels
 
         }
 
-        private bool IsBookValid(BookRead _newBook, out string errorMsg)
+        private bool IsBookValid(BookRead newBook, out string errorMsg)
         {
             errorMsg = "";
-            if (string.IsNullOrEmpty(_newBook.Author))
+            if (string.IsNullOrEmpty(newBook.Author))
             {
                 errorMsg = "Must provide an Author";
                 return false;
             }
-            if (string.IsNullOrEmpty(_newBook.Title))
+            if (string.IsNullOrEmpty(newBook.Title))
             {
                 errorMsg = "Must provide the Books's Title";
                 return false;
             }
-            if (string.IsNullOrEmpty(_newBook.Nationality))
+            if (string.IsNullOrEmpty(newBook.Nationality))
             {
                 errorMsg = "Must provide the Author's Home Country";
                 return false;
             }
-            if (string.IsNullOrEmpty(_newBook.OriginalLanguage))
+            if (string.IsNullOrEmpty(newBook.OriginalLanguage))
             {
                 errorMsg = "Must provide the Books's Original Language";
                 return false;
             }
-            if (_newBook.Pages < 1 && _newBook.Format == BookFormat.Book)
+            if (_newBook.Pages < 1 && newBook.Format == BookFormat.Book)
             {
                 errorMsg = "Must provide the number of pages for the books";
                 return false;
@@ -427,6 +456,8 @@ namespace MongoDbBooks.ViewModels
 
             for(int i = 1; i < words.Length; i++)
             {
+                if (words[i] == "&")
+                    continue;
                 term += "+";
                 term += words[i];
             }
@@ -435,33 +466,6 @@ namespace MongoDbBooks.ViewModels
         }
 
         #endregion
-
-
-        #region Commands
-
-        /// <summary>
-        /// Gets the select image for nation command.
-        /// </summary>
-        public ICommand SelectImageForBookCommand => _selectImageForBookCommand ??
-                                            (_selectImageForBookCommand =
-                                             new RelayCommandHandler(SelectImageForBookCommandAction) { IsEnabled = true });
-        #endregion
-
-        #region Command Handlers
-
-        /// <summary>
-        /// The command action to add a new book from the email to the database.
-        /// </summary>
-        public void SelectImageForBookCommandAction(object parameter)
-        {
-            BookRead book = parameter as BookRead;
-            if (book != null)
-            {
-                SelectImageForBook(book);
-                return;
-            }
-        }
-
-        #endregion
+        
     }
 }
