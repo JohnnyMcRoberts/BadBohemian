@@ -251,6 +251,8 @@
                                       Text="{Binding Path=ExistingBookAuthorText, Mode=TwoWay}"/>
                             <Label Grid.Row="1" Content="Selected Image"  Grid.Column="2"
                                    HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <Label Grid.Row="1" Grid.Column="3" Content="Notes" 
+                                   HorizontalAlignment="Left" VerticalAlignment="Top" />
 
 
                             <Label Grid.Row="2" Content="Title"
@@ -262,8 +264,6 @@
                             <Image Grid.Row="2"  Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="5" MinHeight="100" MinWidth="100"
                                    HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding ExistingBookImageSource}" />
 
-                            <Label Grid.Row="1" Grid.Column="3" Content="Notes" 
-                            HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <TextBox Grid.Row="2" Grid.Column="3"  Grid.RowSpan="4" Margin="5,5,5,0" 
                                      MinHeight="23" TextWrapping="Wrap" 
                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"

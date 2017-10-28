@@ -167,7 +167,8 @@
         }
 
 
-        
+        public TalliedMonth SelectedMonthTally { get; set; }
+
 
         public bool DataFromFile { get; set; }
         public bool DataFromDb { get; set; }

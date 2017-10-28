@@ -303,7 +303,6 @@ namespace MongoDbBooks.ViewModels
                 }
             };
 
-
             worker.RunWorkerCompleted += (o, ea) =>
             {
                 IsUpdating  = false;

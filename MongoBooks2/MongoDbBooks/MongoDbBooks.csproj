@@ -250,6 +250,8 @@
     <Compile Include="ViewModels\PlotGenerators\CountryLocationsBooksAndPagesPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\CountryLocationsBooksReadPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\CurrentBooksReadByCountryPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\CurrentMonthPagesReadByCountryPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\CurrentMonthPagesReadByLanguagePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\CurrentPagesReadByCountryPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookWithTimePlotGenerator.cs" />
