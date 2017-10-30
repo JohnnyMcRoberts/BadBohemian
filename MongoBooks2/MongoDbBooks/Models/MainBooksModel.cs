@@ -232,6 +232,7 @@
                     var stringFieldBook = csv.GetField<string>(8);
                     var stringFieldComic = csv.GetField<string>(9);
                     var stringFieldAudio = csv.GetField<string>(10);
+                    var stringFieldimage = csv.GetField<string>(11);
 
                     DateTime dateForBook;
                     if (DateTime.TryParseExact(stringFieldDDMMYYYY, "d/M/yyyy",
@@ -252,6 +253,7 @@
                             Audio = stringFieldAudio,
                             Book = stringFieldBook,
                             Comic = stringFieldComic,
+                            ImageUrl = stringFieldimage
                         };
 
                         BooksRead.Add(book);
@@ -283,7 +285,7 @@
 
             // write the header
             sw.WriteLine(
-                "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio"
+                "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image"
                 );
 
             // write the records
@@ -301,6 +303,7 @@
                 csv.WriteField(book.Format == BookFormat.Book ? "x" : "");
                 csv.WriteField(book.Format == BookFormat.Comic ? "x" : "");
                 csv.WriteField(book.Format == BookFormat.Audio ? "x" : "");
+                csv.WriteField(book.ImageUrl);
                 csv.NextRecord();
             }
 
