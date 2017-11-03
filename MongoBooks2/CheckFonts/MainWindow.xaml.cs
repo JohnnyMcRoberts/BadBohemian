@@ -291,6 +291,7 @@
             UpdatedFontFile = @"msgothic.ttc";
             _missingCharacters = string.Empty;
             _originalFontFamily = "Arial";
+            _updatedFontFile = "Arial";
             _isRunning = false;
 
             DataContext = this;
