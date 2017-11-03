@@ -575,7 +575,7 @@ namespace MongoDbBooks.ViewModels
                 return;
 
             // If sending files and there is not a valid output directory stop.
-            if ((SendBooksReadFile || SendBooksReadFile) 
+            if ((SendBooksReadFile || SendLocationsFile) 
                 && (string.IsNullOrEmpty(OutputDirectory) || !Directory.Exists(OutputDirectory)))
                 return;
 
