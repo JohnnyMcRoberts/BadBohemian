@@ -62,6 +62,12 @@
                         <Image Source="./Images/Send_Email.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Post to _Blog" 
+                          Command="{Binding Path=BloggerVM.AddBlogPostCommand}" >
+                    <MenuItem.Icon>
+                        <Image Source="./Images/Blogger-icon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <Grid MinHeight="625">

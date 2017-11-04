@@ -231,6 +231,7 @@
     <Compile Include="Models\TalliedMonth.cs" />
     <Compile Include="Models\WorldCountry.cs" />
     <Compile Include="Utilities\Logger.cs" />
+    <Compile Include="ViewModels\BloggerViewModel.cs" />
     <Compile Include="ViewModels\ChartSelectionViewModel.cs" />
     <Compile Include="ViewModels\ChartsViewModel.cs" />
     <Compile Include="ViewModels\DataGridsViewModel.cs" />
@@ -449,6 +450,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Send_Email.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Blogger-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

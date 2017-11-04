@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ExportersViewModel.cs" company="N/A">
+// <copyright file="BloggerViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The exporters view model.
+//   The blogger view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -23,9 +23,9 @@ namespace MongoDbBooks.ViewModels
     using MongoDbBooks.Views;
 
     /// <summary>
-    /// The exporters view model.
+    /// The blogger view model.
     /// </summary>
-    public class ExportersViewModel : INotifyPropertyChanged
+    public class BloggerViewModel : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
 
@@ -179,9 +179,9 @@ namespace MongoDbBooks.ViewModels
         private ICommand _setDefaultUserCommand;
 
         /// <summary>
-        /// The export via email command.
+        /// The add blog post command.
         /// </summary>
-        private ICommand _exportViaEmailCommand;
+        private ICommand _addBlogPostCommand;
 
         /// <summary>
         /// The set default destination e-mail command.
@@ -253,7 +253,7 @@ namespace MongoDbBooks.ViewModels
                 ValidateExportCredentials();
                 OnPropertyChanged(() => DestinationEmailAddress);
             }
-        }  
+        }
 
         /// <summary>
         /// Gets or sets the password.
@@ -430,7 +430,7 @@ namespace MongoDbBooks.ViewModels
         /// <summary>
         /// Gets a value indicating whether there is a default destination e-mail.
         /// </summary>
-        public bool IsDefaultDestinationEmail => !string.IsNullOrEmpty(_defaultDestinationEmail);       
+        public bool IsDefaultDestinationEmail => !string.IsNullOrEmpty(_defaultDestinationEmail);
 
         /// <summary>
         /// Gets the text for the set default e-mail button.
@@ -497,11 +497,11 @@ namespace MongoDbBooks.ViewModels
         #region Commands
 
         /// <summary>
-        /// Gets the export via email command.
+        /// Gets the add blog post command.
         /// </summary>
-        public ICommand ExportViaEmailCommand => _exportViaEmailCommand ??
-                                            (_exportViaEmailCommand =
-                                             new CommandHandler(ExportViaEmailCommandAction, true));
+        public ICommand AddBlogPostCommand => _addBlogPostCommand ??
+                                            (_addBlogPostCommand =
+                                             new CommandHandler(AddBlogPostCommandAction, true));
 
         /// <summary>
         /// Gets the set defualt user command.
@@ -575,7 +575,7 @@ namespace MongoDbBooks.ViewModels
                 return;
 
             // If sending files and there is not a valid output directory stop.
-            if ((SendBooksReadFile || SendLocationsFile) 
+            if ((SendBooksReadFile || SendLocationsFile)
                 && (string.IsNullOrEmpty(OutputDirectory) || !Directory.Exists(OutputDirectory)))
                 return;
 
@@ -593,10 +593,6 @@ namespace MongoDbBooks.ViewModels
             if (!ConnectedToMailbox)
             {
                 System.Windows.MessageBox.Show(_mailboxErrorMessage, "Could not connect to E-mail");
-            }
-            else
-            {
-                _mainModel.DefaultUserName = _userName;
             }
             ConnectingToMailbox = false;
         }
@@ -662,20 +658,20 @@ namespace MongoDbBooks.ViewModels
         #region Command Actions
 
         /// <summary>
+        /// The add blog post command action.
+        /// </summary>
+        public void AddBlogPostCommandAction()
+        {
+            ExportViaEmailWindow mailDialog = new ExportViaEmailWindow { DataContext = this };
+            mailDialog.ShowDialog();
+        }
+
+        /// <summary>
         /// The command action to set to the default e-mail.
         /// </summary>
         public void SetDefaultUserCommandAction()
         {
             HomeEmailAdress = _userName;
-        }
-
-        /// <summary>
-        /// The connect to mailbox command action.
-        /// </summary>
-        public void ExportViaEmailCommandAction()
-        {
-            ExportViaEmailWindow mailDialog = new ExportViaEmailWindow { DataContext = this };
-            mailDialog.ShowDialog();
         }
 
         /// <summary>
@@ -741,7 +737,7 @@ namespace MongoDbBooks.ViewModels
         /// <param name="log">The log.</param>
         /// <param name="mainModel">The main model.</param>
         /// <param name="parent">The parent.</param>
-        public ExportersViewModel(
+        public BloggerViewModel(
             MainWindow mainWindow, log4net.ILog log, MainBooksModel mainModel, MainViewModel parent)
         {
             _mainWindow = mainWindow;
@@ -755,6 +751,7 @@ namespace MongoDbBooks.ViewModels
             ConnectingToMailbox = false;
             ConnectedToMailbox = false;
             SendingExportEmail = false;
+
         }
 
         #endregion
