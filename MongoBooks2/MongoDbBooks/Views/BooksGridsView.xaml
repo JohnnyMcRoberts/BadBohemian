@@ -13,236 +13,226 @@
                               MaxWidth="{Binding ElementName=UserControl, Path=ActualWidth}">
 
             <TabItem Header="Raw Data">
-                <ScrollViewer>
-                    <DataGrid AutoGenerateColumns="False" 
-                                    ItemsSource="{Binding Path=BooksRead, Mode=OneWay}"
-                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+                <DataGrid AutoGenerateColumns="False" 
+                                ItemsSource="{Binding Path=BooksRead, Mode=OneWay}"
+                                MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
-                            <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
 
-                            <DataGridTextColumn Header="Author" 
-                                                Binding="{Binding Author}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Author" 
+                                            Binding="{Binding Author}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Title" 
-                                                Binding="{Binding Title}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Title" 
+                                            Binding="{Binding Title}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Pages" 
-                                                Binding="{Binding Pages}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Pages" 
+                                            Binding="{Binding Pages}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Nationality" 
-                                                Binding="{Binding Nationality}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Nationality" 
+                                            Binding="{Binding Nationality}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Original Language" 
-                                                Binding="{Binding OriginalLanguage}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Original Language" 
+                                            Binding="{Binding OriginalLanguage}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Format" 
-                                                Binding="{Binding Format}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Format" 
+                                            Binding="{Binding Format}" 
+                                            Width="Auto"/>
                             
-                            <DataGridTextColumn Header="Note" 
-                                                Binding="{Binding Note}" 
-                                                Width="Auto"/>
-                        </DataGrid.Columns>
+                        <DataGridTextColumn Header="Note" 
+                                            Binding="{Binding Note}" 
+                                            Width="Auto"/>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Authors">
-                <ScrollViewer>
-                    <DataGrid AutoGenerateColumns="False" 
-                                    ItemsSource="{Binding Path=AuthorsRead, Mode=OneWay}"
-                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+                <DataGrid AutoGenerateColumns="False" 
+                                ItemsSource="{Binding Path=AuthorsRead, Mode=OneWay}"
+                                MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
 
-                            <DataGridTextColumn Header="Author" 
-                                                Binding="{Binding Author}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Author" 
+                                            Binding="{Binding Author}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Nationality" 
-                                                Binding="{Binding Nationality}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Nationality" 
+                                            Binding="{Binding Nationality}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Language" 
-                                                Binding="{Binding Language}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Language" 
+                                            Binding="{Binding Language}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Total Pages" 
-                                                Binding="{Binding TotalPages}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Total Pages" 
+                                            Binding="{Binding TotalPages}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Total Books Read By" 
-                                                Binding="{Binding TotalBooksReadBy}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Total Books Read By" 
+                                            Binding="{Binding TotalBooksReadBy}" 
+                                            Width="Auto"/>
 
 
-                            <DataGridTemplateColumn Header="Books">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ListBox ItemsSource="{Binding BooksReadBy }">
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Title}" />
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Books">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ListBox ItemsSource="{Binding BooksReadBy }">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=Title}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                        </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Languages">
-                <ScrollViewer>
-
-                    <DataGrid AutoGenerateColumns="False" 
-                                    ItemsSource="{Binding Path=AuthorLanguages, Mode=OneWay}"
-                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+                <DataGrid AutoGenerateColumns="False" 
+                                ItemsSource="{Binding Path=AuthorLanguages, Mode=OneWay}"
+                                MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
-                            <DataGridTextColumn Header="Language " 
-                                                Binding="{Binding Language }" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Language " 
+                                            Binding="{Binding Language }" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Total Pages" 
-                                                Binding="{Binding TotalPagesReadInLanguage  }" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Total Pages" 
+                                            Binding="{Binding TotalPagesReadInLanguage  }" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="% of all Pages Read" 
-                                                Binding="{Binding PercentageOfPagesRead, StringFormat=N2 }" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="% of all Pages Read" 
+                                            Binding="{Binding PercentageOfPagesRead, StringFormat=N2 }" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Total Books Read In Language" 
-                                                Binding="{Binding TotalBooksReadInLanguage}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Total Books Read In Language" 
+                                            Binding="{Binding TotalBooksReadInLanguage}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="% of all Books Read" 
-                                                Binding="{Binding PercentageOfBooksRead, StringFormat=N2}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="% of all Books Read" 
+                                            Binding="{Binding PercentageOfBooksRead, StringFormat=N2}" 
+                                            Width="Auto"/>
 
-                            <DataGridTemplateColumn Header="Authors">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ListBox ItemsSource="{Binding AuthorsInLanguage }">
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Author}" />
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Authors">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ListBox ItemsSource="{Binding AuthorsInLanguage }">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=Author}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                        </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Countries">
-                <ScrollViewer>
-                    <DataGrid AutoGenerateColumns="False" 
-                                    ItemsSource="{Binding Path=AuthorCountries, Mode=OneWay}"
-                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
-                        <DataGrid.Resources>
-                            <Style x:Key="ImageCellStyle" TargetType="{x:Type DataGridCell}">
-                                <Setter Property="Background" Value="Cornsilk "/>
-                            </Style>
-                        </DataGrid.Resources>
+                <DataGrid AutoGenerateColumns="False" 
+                                ItemsSource="{Binding Path=AuthorCountries, Mode=OneWay}"
+                                MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+                    <DataGrid.Resources>
+                        <Style x:Key="ImageCellStyle" TargetType="{x:Type DataGridCell}">
+                            <Setter Property="Background" Value="Cornsilk "/>
+                        </Style>
+                    </DataGrid.Resources>
 
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
 
-                            <DataGridTextColumn Header="Country " 
-                                                Binding="{Binding Country }" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Country " 
+                                            Binding="{Binding Country }" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Total Pages" 
-                                                Binding="{Binding TotalPagesReadFromCountry }" 
-                                                Width="Auto"/>
-
-
-                            <DataGridTextColumn Header="% of all Pages Read" 
-                                                Binding="{Binding PercentageOfPagesRead, StringFormat=N2 }" 
-                                                Width="Auto"/>
-
-                            <DataGridTextColumn Header="Total Books Read From" 
-                                                Binding="{Binding TotalBooksReadFromCountry}" 
-                                                Width="Auto"/>
-
-                            <DataGridTextColumn Header="% of all Books Read" 
-                                                Binding="{Binding PercentageOfBooksRead, StringFormat=N2}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Total Pages" 
+                                            Binding="{Binding TotalPagesReadFromCountry }" 
+                                            Width="Auto"/>
 
 
-                            <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True" CellStyle="{StaticResource ImageCellStyle}">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Image Source="{Binding DisplayImage}" MaxHeight="40" MaxWidth="60"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="% of all Pages Read" 
+                                            Binding="{Binding PercentageOfPagesRead, StringFormat=N2 }" 
+                                            Width="Auto"/>
+
+                        <DataGridTextColumn Header="Total Books Read From" 
+                                            Binding="{Binding TotalBooksReadFromCountry}" 
+                                            Width="Auto"/>
+
+                        <DataGridTextColumn Header="% of all Books Read" 
+                                            Binding="{Binding PercentageOfBooksRead, StringFormat=N2}" 
+                                            Width="Auto"/>
 
 
-                            <DataGridTemplateColumn Header="Authors">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ListBox ItemsSource="{Binding AuthorsFromCountry }">
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Author}" />
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True" CellStyle="{StaticResource ImageCellStyle}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding DisplayImage}" MaxHeight="40" MaxWidth="60"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn MinWidth="100" Header="Image Select">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="Select Image"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"
-                                                Command="{Binding DataContext.SelectImageForNationCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" >
-                                        </Button>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Authors">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ListBox ItemsSource="{Binding AuthorsFromCountry }">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=Author}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn MinWidth="100" Header="Image Select">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Select Image"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"
+                                            Command="{Binding DataContext.SelectImageForNationCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" >
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                             
-                        </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Tallies">
-                <ScrollViewer>
-                    <DataGrid AutoGenerateColumns="False" 
+                <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=TalliedBooks, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
@@ -289,490 +279,456 @@
                         </DataGrid.Columns>
 
                     </DataGrid>
-                </ScrollViewer>
             </TabItem>
 
             <TabItem Header="Deltas">
-                <ScrollViewer>
-
-                    <DataGrid AutoGenerateColumns="False" 
+                <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=BookDeltas, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
-                            <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Days Since Start" 
+                        <DataGridTextColumn Header="Days Since Start" 
                                                 Binding="{Binding DaysSinceStart}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Pages" 
+                        <DataGridTextColumn Header="Overall Pages" 
                                                 Binding="{Binding Path=OverallTally.TotalPages}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Books Read" 
+                        <DataGridTextColumn Header="Overall Books Read" 
                                                 Binding="{Binding Path=OverallTally.TotalBooks}" 
                                                 Width="Auto"/>
 
 
-                            <DataGridTextColumn Header="Overall % in English" 
+                        <DataGridTextColumn Header="Overall % in English" 
                                                 Binding="{Binding Path=OverallTally.PercentageInEnglish, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall % in Translation" 
+                        <DataGridTextColumn Header="Overall % in Translation" 
                                                 Binding="{Binding Path=OverallTally.PercentageInTranslation, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Page Rate" 
+                        <DataGridTextColumn Header="Overall Page Rate" 
                                                 Binding="{Binding Path=OverallTally.PageRate, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Days Per Book" 
+                        <DataGridTextColumn Header="Overall Days Per Book" 
                                                 Binding="{Binding Path=OverallTally.DaysPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Pages Per Book" 
+                        <DataGridTextColumn Header="Overall Pages Per Book" 
                                                 Binding="{Binding Path=OverallTally.PagesPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Books Per Year" 
+                        <DataGridTextColumn Header="Overall Books Per Year" 
                                                 Binding="{Binding Path=OverallTally.BooksPerYear, StringFormat=N2}" 
                                                 Width="Auto"/>
 
 
-                            <DataGridTextColumn Header="Last 10 % in English" 
+                        <DataGridTextColumn Header="Last 10 % in English" 
                                                 Binding="{Binding Path=LastTenTally.PercentageInEnglish, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 % in Translation" 
+                        <DataGridTextColumn Header="Last 10 % in Translation" 
                                                 Binding="{Binding Path=LastTenTally.PercentageInTranslation, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 Page Rate" 
+                        <DataGridTextColumn Header="Last 10 Page Rate" 
                                                 Binding="{Binding Path=LastTenTally.PageRate, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 Days Per Book" 
+                        <DataGridTextColumn Header="Last 10 Days Per Book" 
                                                 Binding="{Binding Path=LastTenTally.DaysPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 Pages Per Book" 
+                        <DataGridTextColumn Header="Last 10 Pages Per Book" 
                                                 Binding="{Binding Path=LastTenTally.PagesPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 Books Per Year" 
+                        <DataGridTextColumn Header="Last 10 Books Per Year" 
                                                 Binding="{Binding Path=LastTenTally.BooksPerYear, StringFormat=N2}" 
                                                 Width="Auto"/>
 
 
-                        </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Language Deltas">
-                <ScrollViewer>
-
-                    <DataGrid AutoGenerateColumns="True" 
-                                    ItemsSource="{Binding Path=LanguageDeltasTable, Mode=OneWay}"
-                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+                <DataGrid AutoGenerateColumns="True" 
+                                ItemsSource="{Binding Path=LanguageDeltasTable, Mode=OneWay}"
+                                MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
 
-                    </DataGrid>
-
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Country Deltas">
-                <ScrollViewer>
-
-                    <DataGrid AutoGenerateColumns="True" 
-                                    ItemsSource="{Binding Path=CountryDeltasTable, Mode=OneWay}"
-                                    MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
-
-
-                    </DataGrid>
-
-                </ScrollViewer>
+                <DataGrid AutoGenerateColumns="True" 
+                                ItemsSource="{Binding Path=CountryDeltasTable, Mode=OneWay}"
+                                MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Per Year Deltas">
-                <ScrollViewer>
-
-                    <DataGrid AutoGenerateColumns="False" 
+                <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=BookPerYearDeltas, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
-                            <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Days Since Start" 
+                        <DataGridTextColumn Header="Days Since Start" 
                                                 Binding="{Binding DaysSinceStart}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Pages" 
+                        <DataGridTextColumn Header="Overall Pages" 
                                                 Binding="{Binding Path=OverallTally.TotalPages}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Books Read" 
+                        <DataGridTextColumn Header="Overall Books Read" 
                                                 Binding="{Binding Path=OverallTally.TotalBooks}" 
                                                 Width="Auto"/>
 
 
-                            <DataGridTextColumn Header="Overall % in English" 
+                        <DataGridTextColumn Header="Overall % in English" 
                                                 Binding="{Binding Path=OverallTally.PercentageInEnglish, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall % in Translation" 
+                        <DataGridTextColumn Header="Overall % in Translation" 
                                                 Binding="{Binding Path=OverallTally.PercentageInTranslation, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Page Rate" 
+                        <DataGridTextColumn Header="Overall Page Rate" 
                                                 Binding="{Binding Path=OverallTally.PageRate, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Days Per Book" 
+                        <DataGridTextColumn Header="Overall Days Per Book" 
                                                 Binding="{Binding Path=OverallTally.DaysPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Pages Per Book" 
+                        <DataGridTextColumn Header="Overall Pages Per Book" 
                                                 Binding="{Binding Path=OverallTally.PagesPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Overall Books Per Year" 
+                        <DataGridTextColumn Header="Overall Books Per Year" 
                                                 Binding="{Binding Path=OverallTally.BooksPerYear, StringFormat=N2}" 
                                                 Width="Auto"/>
 
 
-                            <DataGridTextColumn Header="Last 10 % in English" 
+                        <DataGridTextColumn Header="Last 10 % in English" 
                                                 Binding="{Binding Path=LastTenTally.PercentageInEnglish, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 % in Translation" 
+                        <DataGridTextColumn Header="Last 10 % in Translation" 
                                                 Binding="{Binding Path=LastTenTally.PercentageInTranslation, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 Page Rate" 
+                        <DataGridTextColumn Header="Last 10 Page Rate" 
                                                 Binding="{Binding Path=LastTenTally.PageRate, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 Days Per Book" 
+                        <DataGridTextColumn Header="Last 10 Days Per Book" 
                                                 Binding="{Binding Path=LastTenTally.DaysPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 Pages Per Book" 
+                        <DataGridTextColumn Header="Last 10 Pages Per Book" 
                                                 Binding="{Binding Path=LastTenTally.PagesPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Last 10 Books Per Year" 
+                        <DataGridTextColumn Header="Last 10 Books Per Year" 
                                                 Binding="{Binding Path=LastTenTally.BooksPerYear, StringFormat=N2}" 
                                                 Width="Auto"/>
 
 
-                        </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Per Month Tallies">
-                <ScrollViewer>
-                    <DataGrid AutoGenerateColumns="False" 
+                <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=TalliedMonths, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
 
-                            <DataGridTextColumn Header="Month" 
+                        <DataGridTextColumn Header="Month" 
                                                 Binding="{Binding DisplayString}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Days in the Month" 
+                        <DataGridTextColumn Header="Days in the Month" 
                                                 Binding="{Binding DaysInTheMonth}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Total Books" 
+                        <DataGridTextColumn Header="Total Books" 
                                                 Binding="{Binding TotalBooks}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Total Pages" 
+                        <DataGridTextColumn Header="Total Pages" 
                                                 Binding="{Binding TotalPagesRead}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Book" 
+                        <DataGridTextColumn Header="Book" 
                                                 Binding="{Binding TotalBookFormat }" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Comic" 
+                        <DataGridTextColumn Header="Comic" 
                                                 Binding="{Binding TotalComicFormat }" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Audio" 
+                        <DataGridTextColumn Header="Audio" 
                                                 Binding="{Binding TotalAudioFormat }" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="% in English" 
+                        <DataGridTextColumn Header="% in English" 
                                                 Binding="{Binding Path=PercentageInEnglish, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="% in Translation" 
+                        <DataGridTextColumn Header="% in Translation" 
                                                 Binding="{Binding Path=PercentageInTranslation, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Page Rate" 
+                        <DataGridTextColumn Header="Page Rate" 
                                                 Binding="{Binding Path=PageRate, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Days per Book" 
+                        <DataGridTextColumn Header="Days per Book" 
                                                 Binding="{Binding Path=DaysPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Pages per Book" 
+                        <DataGridTextColumn Header="Pages per Book" 
                                                 Binding="{Binding Path=PagesPerBook, StringFormat=N2}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Books per Year" 
+                        <DataGridTextColumn Header="Books per Year" 
                                                 Binding="{Binding Path=BooksPerYear, StringFormat=N2}" 
                                                 Width="Auto"/>
 
 
-                            <DataGridTemplateColumn Header="Books">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ListBox ItemsSource="{Binding BooksRead }">
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Title}" />
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Books">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ListBox ItemsSource="{Binding BooksRead }">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=Title}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                        </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
-            
-            
+
             <TabItem Header="World Countries">
-                <ScrollViewer >
-                    <DataGrid AutoGenerateColumns="False" 
+                <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=WorldCountries, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" >
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
 
-                            <DataGridTextColumn Header="Country" 
-                                                Binding="{Binding Country}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Country" 
+                                            Binding="{Binding Country}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Capital" 
-                                                Binding="{Binding Capital}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Capital" 
+                                            Binding="{Binding Capital}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="LatitudeText" 
-                                                Binding="{Binding LatitudeText}"
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="LatitudeText" 
+                                            Binding="{Binding LatitudeText}"
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="LongitudeText" 
-                                                Binding="{Binding LongitudeText}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="LongitudeText" 
+                                            Binding="{Binding LongitudeText}" 
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Latitude" 
-                                                Binding="{Binding Path=Latitude, StringFormat=N4}"
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Latitude" 
+                                            Binding="{Binding Path=Latitude, StringFormat=N4}"
+                                            Width="Auto"/>
 
-                            <DataGridTextColumn Header="Longitude" 
-                                                Binding="{Binding Path=Longitude, StringFormat=N4}" 
-                                                Width="Auto"/>
+                        <DataGridTextColumn Header="Longitude" 
+                                            Binding="{Binding Path=Longitude, StringFormat=N4}" 
+                                            Width="Auto"/>
                             
-                            <DataGridTextColumn Header="Flag URL" 
-                                                Binding="{Binding FlagUrl}" 
-                                                Width="Auto"/>
-                        </DataGrid.Columns>
+                        <DataGridTextColumn Header="Flag URL" 
+                                            Binding="{Binding FlagUrl}" 
+                                            Width="Auto"/>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
             
             <TabItem Header="World Country Geographies">
-                <ScrollViewer >
-                    <DataGrid AutoGenerateColumns="False" 
+                <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=CountryGeographies, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" >
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
 
-                            <DataGridTextColumn Header="Country" 
+                        <DataGridTextColumn Header="Country" 
                                                 Binding="{Binding Name}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Description" 
+                        <DataGridTextColumn Header="Description" 
                                                 Binding="{Binding Description}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Central Latitude" 
+                        <DataGridTextColumn Header="Central Latitude" 
                                                 Binding="{Binding Path=CentralLatitude, StringFormat=N4}"
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Central Longitude" 
+                        <DataGridTextColumn Header="Central Longitude" 
                                                 Binding="{Binding Path=CentralLongitude, StringFormat=N4}" 
                                                 Width="Auto"/>
-                        </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Nations">
-                <ScrollViewer >
-                    <DataGrid AutoGenerateColumns="False" 
+                <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=Nations, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" >
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
 
-                            <DataGridTextColumn Header="Country" 
+                        <DataGridTextColumn Header="Country" 
                                                 Binding="{Binding Name}" 
                                                 Width="Auto"/>
-                            
-                            <DataGridTemplateColumn MinWidth="100" Header="Image Select">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="Select Image"
+
+                        <DataGridTemplateColumn MinWidth="100" Header="Image Select">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Select Image"
                                                 Command="{Binding DataContext.SelectImageForNationCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" 
                                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}">
-                                        </Button>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
 
-                            <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Image Source="{Binding DisplayImage}" MaxHeight="30" MaxWidth="30"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding DisplayImage}" MaxHeight="30" MaxWidth="30"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
 
 
-                            <DataGridTextColumn Header="Capital" 
+                        <DataGridTextColumn Header="Capital" 
                                                 Binding="{Binding Capital}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="LatitudeText" 
+                        <DataGridTextColumn Header="LatitudeText" 
                                                 Binding="{Binding LatitudeText}"
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="LongitudeText" 
+                        <DataGridTextColumn Header="LongitudeText" 
                                                 Binding="{Binding LongitudeText}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Geography XML" 
+                        <DataGridTextColumn Header="Geography XML" 
                                                 Binding="{Binding DisplayXML}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="Image Address" 
+                        <DataGridTextColumn Header="Image Address" 
                                                 Binding="{Binding DisplayImageAddress}" 
                                                 Width="Auto"/>
 
-                        </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-                </ScrollViewer>
+                </DataGrid>
             </TabItem>
 
             <TabItem Header="Location Deltas">
-
-                <ScrollViewer>
-
-                    <DataGrid AutoGenerateColumns="False" 
+                <DataGrid AutoGenerateColumns="False" 
                                     ItemsSource="{Binding Path=BookLocationDeltas, Mode=OneWay}"
                                     MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
 
-                        <DataGrid.Columns>
+                    <DataGrid.Columns>
 
-                            <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="Date">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}"	/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Days Since Start" 
+                        <DataGridTextColumn Header="Days Since Start" 
                                                 Binding="{Binding DaysSinceStart}" 
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="AverageLatitude" 
+                        <DataGridTextColumn Header="AverageLatitude" 
                                                 Binding="{Binding Path=AverageLatitude, StringFormat=N4}"
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="AverageLongitude" 
+                        <DataGridTextColumn Header="AverageLongitude" 
                                                 Binding="{Binding Path=AverageLongitude, StringFormat=N4}"
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="WeightedLatitude" 
+                        <DataGridTextColumn Header="WeightedLatitude" 
                                                 Binding="{Binding Path=WeightedLatitude, StringFormat=N4}"
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="WeightedLongitude" 
+                        <DataGridTextColumn Header="WeightedLongitude" 
                                                 Binding="{Binding Path=WeightedLongitude, StringFormat=N4}"
                                                 Width="Auto"/>
 
 
-                            <DataGridTextColumn Header="AverageLatitudeLastTen" 
+                        <DataGridTextColumn Header="AverageLatitudeLastTen" 
                                                 Binding="{Binding Path=AverageLatitudeLastTen, StringFormat=N4}"
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="AverageLongitudeLastTen" 
+                        <DataGridTextColumn Header="AverageLongitudeLastTen" 
                                                 Binding="{Binding Path=AverageLongitudeLastTen, StringFormat=N4}"
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="WeightedLatitudeLastTen" 
+                        <DataGridTextColumn Header="WeightedLatitudeLastTen" 
                                                 Binding="{Binding Path=WeightedLatitudeLastTen, StringFormat=N4}"
                                                 Width="Auto"/>
 
-                            <DataGridTextColumn Header="WeightedLongitudeLastTen" 
+                        <DataGridTextColumn Header="WeightedLongitudeLastTen" 
                                                 Binding="{Binding Path=WeightedLongitudeLastTen, StringFormat=N4}"
                                                 Width="Auto"/>
 
-                        </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                    </DataGrid>
-
-                </ScrollViewer>
-
+                </DataGrid>
             </TabItem>
             
         </TabControl>
