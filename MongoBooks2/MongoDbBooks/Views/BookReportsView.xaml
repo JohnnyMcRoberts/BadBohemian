@@ -8,277 +8,411 @@
              xmlns:converters="clr-namespace:MongoDbBooks.Converters"
              xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="400" d:DesignWidth="600">
     <Grid>
 
         <StackPanel Orientation="Vertical">
 
             <Label Content="{Binding Title}" />
-            <StackPanel Orientation="Horizontal" >
-                <Label Content="Select Month:" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Select Month:" />
 
-                <DatePicker SelectedDate="{Binding Path=SelectedMonth}" IsDropDownOpen="False"
+                <DatePicker Grid.Column="1" SelectedDate="{Binding Path=SelectedMonth}" IsDropDownOpen="False"
                           DisplayDateStart="{Binding Path=FirstMonth}" DisplayDateEnd="{Binding Path=LastMonth}"/>
-            </StackPanel>
 
-            <Expander IsExpanded="True" Header="Books">
+                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                    <Button Content="Save" MinWidth="80" Margin="10,0"/>
+                    <Button Content="Print" MinWidth="80" Margin="10,0" 
+                            Command="{Binding Path=PrintCommand}"/>
+                </StackPanel>
+            </Grid>
+
+            <TabControl Margin="10,10,0,0" MinHeight="550" MinWidth="800" 
+                        HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"
+                        MaxHeight="{Binding ElementName=UserControl, Path=ActualHeight}"
+                        MaxWidth="{Binding ElementName=UserControl, Path=ActualWidth}">
+
+                <TabItem Header="Screen View">
+                    <StackPanel>
+                        <Expander IsExpanded="True" Header="Books">
                 
-                <ScrollViewer MaxHeight="300" Margin="10,10">
+                            <ScrollViewer MaxHeight="300" Margin="10,10">
 
-                    <ItemsControl Margin="10"  ScrollViewer.CanContentScroll="True"
-                      ItemsSource="{Binding Path=SelectedMonthBooksRead}" MinHeight="100">
+                                <ItemsControl Margin="10"  ScrollViewer.CanContentScroll="True"
+                                  ItemsSource="{Binding Path=SelectedMonthBooksRead}" MinHeight="100">
 
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="10,10" Width="460">
-                                    <Grid.Resources>
-                                        <converters:StringToVisibilityConverter  x:Key="StringToVisibility" />
-                                    </Grid.Resources>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="10,10" Width="460">
+                                                <Grid.Resources>
+                                                    <converters:StringToVisibilityConverter  x:Key="StringToVisibility" />
+                                                </Grid.Resources>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="150"/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition MinWidth="330"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Image Grid.Row="0" Grid.Column="0"  
+                                                   HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding DisplayImage}" />
+
+                                                <Grid Grid.Row="0" Grid.Column="1">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    <TextBlock Grid.Row="0" TextWrapping="Wrap">
+                                                        <Run Text="Title: " FontWeight="Bold" />
+                                                        <Run Text="{Binding Title}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="1" TextWrapping="Wrap">
+                                                        <Run Text="Author: " FontWeight="Bold" />
+                                                        <Run Text="{Binding Author}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="2" TextWrapping="Wrap">
+                                                        <Run Text="Pages: " FontWeight="Bold" />
+                                                        <Run Text="{Binding Pages}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="3" TextWrapping="Wrap">
+                                                        <Run Text="Nationality: " FontWeight="Bold" />
+                                                        <Run Text="{Binding Nationality}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="4" TextWrapping="Wrap">
+                                                        <Run Text="Original Language: " FontWeight="Bold" />
+                                                        <Run Text="{Binding OriginalLanguage}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="5" TextWrapping="Wrap">
+                                                        <Run Text="Date: " FontWeight="Bold" />
+                                                        <Run Text="{Binding DateString}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="6" TextWrapping="Wrap">
+                                                        <Run Text="Format: " FontWeight="Bold" />
+                                                        <Run Text="{Binding Format}" />
+                                                    </TextBlock>
+                                                </Grid>
+
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                                           TextWrapping="Wrap" MaxWidth="450" HorizontalAlignment="Left"
+                                                           Visibility="{Binding Path=Note, Converter={StaticResource StringToVisibility}}">
+                                                    <Run Text="Notes: " FontWeight="Bold" />
+                                                    <Run Text="{Binding Note}" />
+                                                </TextBlock>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                            </ScrollViewer>
+            
+                        </Expander>
+
+                        <Expander IsExpanded="True" Header="Totals">
+                
+                                <DataGrid AutoGenerateColumns="False"  MaxHeight="100" Margin="10,10"
+                                                    ItemsSource="{Binding Path=TalliedMonths, Mode=OneWay}"
+                                        
+                                                    IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+                                    <DataGrid.Columns>
+
+                                        <DataGridTextColumn Header="Month" 
+                                                                Binding="{Binding DisplayString}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Days in the Month" 
+                                                                Binding="{Binding DaysInTheMonth}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Total Books" 
+                                                                Binding="{Binding TotalBooks}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Total Pages" 
+                                                                Binding="{Binding TotalPagesRead}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Book" 
+                                                                Binding="{Binding TotalBookFormat }" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Comic" 
+                                                                Binding="{Binding TotalComicFormat }" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Audio" 
+                                                                Binding="{Binding TotalAudioFormat }" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="% in English" 
+                                                                Binding="{Binding Path=PercentageInEnglish, StringFormat=N2}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="% in Translation" 
+                                                                Binding="{Binding Path=PercentageInTranslation, StringFormat=N2}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Page Rate" 
+                                                                Binding="{Binding Path=PageRate, StringFormat=N2}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Days per Book" 
+                                                                Binding="{Binding Path=DaysPerBook, StringFormat=N2}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Pages per Book" 
+                                                                Binding="{Binding Path=PagesPerBook, StringFormat=N2}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Header="Books per Year"
+                                                                Binding="{Binding Path=BooksPerYear, StringFormat=N2}" 
+                                                                Width="Auto">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                    </DataGrid.Columns>
+
+                                </DataGrid>
+                    
+                        </Expander>
+
+                        <Expander IsExpanded="True" Header="Charts">
+                
+                            <ScrollViewer MaxHeight="420" Margin="10,10">
+                                <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="150"/>
-                                        <RowDefinition/>
+                                        <RowDefinition Height="5"/>
+                                        <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition MinWidth="330"/>
+                                        <ColumnDefinition Width="50*"/>
+                                        <ColumnDefinition Width="50*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Image Grid.Row="0" Grid.Column="0"  
-                                       HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding DisplayImage}" 
-                                       />
+                                    <oxy:PlotView Grid.Row="1" Grid.Column="0" Height="400" Padding="10,10"
+                                        Model="{Binding Path=PlotCurrentMonthPagesReadByLanguage.Model}"
+                                        Controller="{Binding Path=PlotCurrentMonthPagesReadByLanguage.ViewController}" />
 
-                                    <Grid Grid.Row="0" Grid.Column="1">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Grid.Row="0" TextWrapping="Wrap">
-                                        <Run Text="Title: " FontWeight="Bold" />
-                                        <Run Text="{Binding Title}" />
-                                        </TextBlock>
-                                        <TextBlock Grid.Row="1" TextWrapping="Wrap">
-                                        <Run Text="Author: " FontWeight="Bold" />
-                                        <Run Text="{Binding Author}" />
-                                        </TextBlock>
-                                        <TextBlock Grid.Row="2" TextWrapping="Wrap">
-                                        <Run Text="Pages: " FontWeight="Bold" />
-                                        <Run Text="{Binding Pages}" />
-                                        </TextBlock>
-                                        <TextBlock Grid.Row="3" TextWrapping="Wrap">
-                                        <Run Text="Nationality: " FontWeight="Bold" />
-                                        <Run Text="{Binding Nationality}" />
-                                        </TextBlock>
-                                        <TextBlock Grid.Row="4" TextWrapping="Wrap">
-                                        <Run Text="Original Language: " FontWeight="Bold" />
-                                        <Run Text="{Binding OriginalLanguage}" />
-                                        </TextBlock>
-                                        <TextBlock Grid.Row="5" TextWrapping="Wrap">
-                                        <Run Text="Date: " FontWeight="Bold" />
-                                        <Run Text="{Binding DateString}" />
-                                        </TextBlock>
-                                        <TextBlock Grid.Row="6" TextWrapping="Wrap">
-                                        <Run Text="Format: " FontWeight="Bold" />
-                                        <Run Text="{Binding Format}" />
-                                        </TextBlock>
-                                    </Grid>
+                                    <oxy:PlotView Grid.Row="1" Grid.Column="1" Height="400" Padding="10,10"
+                                        Model="{Binding Path=PlotCurrentMonthPagesReadByCountry.Model}"
+                                        Controller="{Binding Path=PlotCurrentMonthPagesReadByCountry.ViewController}" />
 
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                               TextWrapping="Wrap" MaxWidth="450" HorizontalAlignment="Left"
-                                               Visibility="{Binding Path=Note, Converter={StaticResource StringToVisibility}}">
-                                        <Run Text="Notes: " FontWeight="Bold" />
-                                        <Run Text="{Binding Note}" />
-                                    </TextBlock>
                                 </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
 
-                </ScrollViewer>
-            
-            </Expander>
+                            </ScrollViewer>
 
-            <Expander IsExpanded="True" Header="Totals">
-                
-                    <DataGrid AutoGenerateColumns="False"  MaxHeight="100" Margin="10,10"
-                                        ItemsSource="{Binding Path=TalliedMonths, Mode=OneWay}"
-                                        
-                                        IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+                        </Expander>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Document View">
 
-                        <DataGrid.Columns>
+                    <FlowDocumentScrollViewer VerticalScrollBarVisibility="Visible" MaxHeight="600">
+                        <FlowDocument FontFamily="Cambria" FontSize="14">
+                            <Paragraph>Here are the books</Paragraph>
+                            <BlockUIContainer FontFamily="Arial" FontSize="12">
+                                
+                                <ItemsControl Margin="10"  ScrollViewer.CanContentScroll="True"
+                                    ItemsSource="{Binding Path=SelectedMonthBooksRead}" MinHeight="100">
 
-                            <DataGridTextColumn Header="Month" 
-                                                    Binding="{Binding DisplayString}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="10,10" Width="460">
+                                                <Grid.Resources>
+                                                    <converters:StringToVisibilityConverter  x:Key="StringToVisibility" />
+                                                </Grid.Resources>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="150"/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition MinWidth="330"/>
+                                                </Grid.ColumnDefinitions>
 
-                            <DataGridTextColumn Header="Days in the Month" 
-                                                    Binding="{Binding DaysInTheMonth}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                                                <Image Grid.Row="0" Grid.Column="0"  
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding DisplayImage}" />
 
-                            <DataGridTextColumn Header="Total Books" 
-                                                    Binding="{Binding TotalBooks}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                                                <Grid Grid.Row="0" Grid.Column="1">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    <TextBlock Grid.Row="0" TextWrapping="Wrap">
+                                                <Run Text="Title: " FontWeight="Bold" />
+                                                <Run Text="{Binding Title}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="1" TextWrapping="Wrap">
+                                                <Run Text="Author: " FontWeight="Bold" />
+                                                <Run Text="{Binding Author}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="2" TextWrapping="Wrap">
+                                                <Run Text="Pages: " FontWeight="Bold" />
+                                                <Run Text="{Binding Pages}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="3" TextWrapping="Wrap">
+                                                <Run Text="Nationality: " FontWeight="Bold" />
+                                                <Run Text="{Binding Nationality}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="4" TextWrapping="Wrap">
+                                                <Run Text="Original Language: " FontWeight="Bold" />
+                                                <Run Text="{Binding OriginalLanguage}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="5" TextWrapping="Wrap">
+                                                <Run Text="Date: " FontWeight="Bold" />
+                                                <Run Text="{Binding DateString}" />
+                                                    </TextBlock>
+                                                    <TextBlock Grid.Row="6" TextWrapping="Wrap">
+                                                <Run Text="Format: " FontWeight="Bold" />
+                                                <Run Text="{Binding Format}" />
+                                                    </TextBlock>
+                                                </Grid>
 
-                            <DataGridTextColumn Header="Total Pages" 
-                                                    Binding="{Binding TotalPagesRead}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                                   TextWrapping="Wrap" MaxWidth="450" HorizontalAlignment="Left"
+                                                   Visibility="{Binding Path=Note, Converter={StaticResource StringToVisibility}}">
+                                            <Run Text="Notes: " FontWeight="Bold" />
+                                            <Run Text="{Binding Note}" />
+                                                </TextBlock>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
 
-                            <DataGridTextColumn Header="Book" 
-                                                    Binding="{Binding TotalBookFormat }" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                            </BlockUIContainer>
+                            <Paragraph>Here is the table</Paragraph>
+                            <Paragraph>Here are the Page by Language Charts</Paragraph>
+                            <BlockUIContainer FontFamily="Arial" FontSize="12">
+                                <StackPanel Orientation="Vertical" Width="600">
 
-                            <DataGridTextColumn Header="Comic" 
-                                                    Binding="{Binding TotalComicFormat }" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                                    <oxy:PlotView  Height="400" Padding="10,10"
+                                                  Model="{Binding Path=PlotCurrentMonthDocumentPagesReadByLanguage.Model}"
+                                                  Controller="{Binding Path=PlotCurrentMonthDocumentPagesReadByLanguage.ViewController}" />
+                                </StackPanel>
 
-                            <DataGridTextColumn Header="Audio" 
-                                                    Binding="{Binding TotalAudioFormat }" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                            </BlockUIContainer>
+                            <Paragraph>Here are the Page by Country Charts</Paragraph>
+                            <BlockUIContainer FontFamily="Arial" FontSize="12">
+                                <StackPanel Orientation="Vertical" Width="600">
 
-                            <DataGridTextColumn Header="% in English" 
-                                                    Binding="{Binding Path=PercentageInEnglish, StringFormat=N2}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                                    <oxy:PlotView  Height="400" Padding="10,10"
+                                                   Model="{Binding Path=PlotCurrentMonthDocumentPagesReadByCountry.Model}"
+                                                   Controller="{Binding Path=PlotCurrentDocumentMonthPagesReadByCountry.ViewController}" />
 
-                            <DataGridTextColumn Header="% in Translation" 
-                                                    Binding="{Binding Path=PercentageInTranslation, StringFormat=N2}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                                </StackPanel>
 
-                            <DataGridTextColumn Header="Page Rate" 
-                                                    Binding="{Binding Path=PageRate, StringFormat=N2}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                            </BlockUIContainer>
 
-                            <DataGridTextColumn Header="Days per Book" 
-                                                    Binding="{Binding Path=DaysPerBook, StringFormat=N2}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
 
-                            <DataGridTextColumn Header="Pages per Book" 
-                                                    Binding="{Binding Path=PagesPerBook, StringFormat=N2}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-
-                            <DataGridTextColumn Header="Books per Year"
-                                                    Binding="{Binding Path=BooksPerYear, StringFormat=N2}" 
-                                                    Width="Auto">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Right" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-
-                        </DataGrid.Columns>
-
-                    </DataGrid>
-                    
-            </Expander>
-
-            <Expander IsExpanded="True" Header="Charts">
-                
-                <ScrollViewer MaxHeight="420" Margin="10,10">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="5"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50*"/>
-                            <ColumnDefinition Width="50*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <oxy:PlotView Grid.Row="1" Grid.Column="0" Height="400" Padding="10,10"
-                            Model="{Binding Path=PlotCurrentMonthPagesReadByLanguage.Model}"
-                            Controller="{Binding Path=PlotCurrentMonthPagesReadByLanguage.ViewController}" />
-
-                        <oxy:PlotView Grid.Row="1" Grid.Column="1" Height="400" Padding="10,10"
-                            Model="{Binding Path=PlotCurrentMonthPagesReadByCountry.Model}"
-                            Controller="{Binding Path=PlotCurrentMonthPagesReadByCountry.ViewController}" />
-
-                    </Grid>
-
-                </ScrollViewer>
-
-            </Expander>
+                        </FlowDocument>
+                    </FlowDocumentScrollViewer>
+                </TabItem>
+            </TabControl>
 
         </StackPanel>
+        
     </Grid>
 </UserControl>

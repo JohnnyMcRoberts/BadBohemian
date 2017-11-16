@@ -7,14 +7,11 @@
     using System.Linq;
     using System.ComponentModel;
     using System.Linq.Expressions;
-    using System.Data;
+    using System.Windows.Documents;
 
     using MongoDbBooks.Models;
-    using MongoDbBooks.Models.Geography;
-    using MongoDbBooks.Models.Database;
     using MongoDbBooks.ViewModels.Utilities;
-    using MongoDbBooks.Views;
-    using PlotGenerators;
+    using MongoDbBooks.ViewModels.PlotGenerators;
 
     public class ReportsViewModel : INotifyPropertyChanged
     {
@@ -55,9 +52,9 @@
         //private TalliedMonth _selectedMonthTally;
 
         /// <summary>
-        /// The select image for nation command.
+        /// The print command.
         /// </summary>
-        private ICommand _selectImageForNationCommand;
+        private ICommand _printCommand;
 
         #endregion
 
@@ -86,6 +83,8 @@
                     OnPropertyChanged(() => SelectedMonthBooksRead);
                     PlotCurrentMonthPagesReadByLanguage.UpdateData(_mainModel);
                     PlotCurrentMonthPagesReadByCountry.UpdateData(_mainModel);
+                    PlotCurrentMonthDocumentPagesReadByLanguage.UpdateData(_mainModel);
+                    PlotCurrentMonthDocumentPagesReadByCountry.UpdateData(_mainModel);
                 }
             }
         }
@@ -118,6 +117,10 @@
 
         public OxyPlotPair PlotCurrentMonthPagesReadByCountry { get; private set; }
 
+        public OxyPlotPair PlotCurrentMonthDocumentPagesReadByLanguage { get; private set; }
+
+        public OxyPlotPair PlotCurrentMonthDocumentPagesReadByCountry { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -144,6 +147,11 @@
                 new OxyPlotPair(new CurrentMonthPagesReadByLanguagePlotGenerator(), "CurrentMonthPagesReadByLanguage");
             PlotCurrentMonthPagesReadByCountry =
                 new OxyPlotPair(new CurrentMonthPagesReadByCountryPlotGenerator(), "CurrentMonthPagesReadByCountry");
+
+            PlotCurrentMonthDocumentPagesReadByLanguage =
+                new OxyPlotPair(new CurrentMonthPagesReadByLanguagePlotGenerator(), "CurrentMonthPagesReadByLanguage");
+            PlotCurrentMonthDocumentPagesReadByCountry =
+                new OxyPlotPair(new CurrentMonthPagesReadByCountryPlotGenerator(), "CurrentMonthPagesReadByCountry");
         }
 
         // should think about a flow doc and then html ....
@@ -161,6 +169,9 @@
 
             PlotCurrentMonthPagesReadByLanguage.UpdateData(_mainModel);
             PlotCurrentMonthPagesReadByCountry.UpdateData(_mainModel);
+
+            PlotCurrentMonthDocumentPagesReadByLanguage.UpdateData(_mainModel);
+            PlotCurrentMonthDocumentPagesReadByCountry.UpdateData(_mainModel);
             OnPropertyChanged("");
         }
 
@@ -192,9 +203,9 @@
         /// <summary>
         /// Gets the select image for nation command.
         /// </summary>
-        public ICommand SelectImageForNationCommand => _selectImageForNationCommand ??
-                                            (_selectImageForNationCommand =
-                                             new RelayCommandHandler(SelectImageForNationCommandAction) { IsEnabled = true });
+        public ICommand PrintCommand => _printCommand ??
+                                            (_printCommand =
+                                             new RelayCommandHandler(PrintCommandAction) { IsEnabled = true });
         #endregion
 
         #region Command Handlers
@@ -202,9 +213,34 @@
         /// <summary>
         /// The command action to add a new book from the email to the database.
         /// </summary>
-        public void SelectImageForNationCommandAction(object parameter)
+        public void PrintCommandAction(object parameter)
         {
-            Nation nation = parameter as Nation;
+            string path = "test.xps";
+
+            System.IO.Packaging.Package package = System.IO.Packaging.Package.Open(path, System.IO.FileMode.Create);
+            System.Windows.Xps.Packaging.XpsDocument document = new System.Windows.Xps.Packaging.XpsDocument(package);
+            System.Windows.Xps.XpsDocumentWriter writer = System.Windows.Xps.Packaging.XpsDocument.CreateXpsDocumentWriter(document);
+            FixedDocument doc = new FixedDocument();
+
+            FixedPage page1 = new FixedPage();
+            PageContent page1Content = new PageContent();
+            ((System.Windows.Markup.IAddChild)page1Content).AddChild(page1);
+
+            // add the content
+            //System.Windows.Controls.Button button = new System.Windows.Controls.Button() { Content = };
+            //page1.Children.Add();
+
+            doc.Pages.Add(page1Content);
+            writer.Write(doc);
+            document.Close();
+            package.Close();
+
+            System.Windows.Controls.PrintDialog printDialog = new System.Windows.Controls.PrintDialog();
+            if (printDialog.ShowDialog() == true)
+            {
+                printDialog.PrintDocument(((IDocumentPaginatorSource)doc).DocumentPaginator, "Flow Document Print Job");
+            }
+
         }
 
         #endregion
