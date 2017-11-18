@@ -497,15 +497,6 @@ namespace MongoDbBooks.ViewModels
 
         #endregion
 
-#if nope
-
-        'MongoDbBooks.exe' (CLR v4.0.30319: MongoDbBooks.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\PresentationFramework-SystemCore\v4.0_4.0.0.0__b77a5c561934e089\PresentationFramework-SystemCore.dll'. Skipped loading symbols.Module is optimized and the debugger option 'Just My Code' is enabled.
-System.Windows.Data Error: 40 : BindingExpression path error: 'NewBookImageSource' property not found on 'object' ''MailboxLoaderViewModel' (HashCode=53808606)'. BindingExpression:Path=NewBookImageSource; DataItem='MailboxLoaderViewModel' (HashCode=53808606); target element is 'Image' (Name=''); target property is 'Source' (type 'ImageSource')
-System.Windows.Data Error: 40 : BindingExpression path error: 'SelectBookImageCommand' property not found on 'object' ''MailboxLoaderViewModel' (HashCode=53808606)'. BindingExpression:Path=SelectBookImageCommand; DataItem='MailboxLoaderViewModel' (HashCode=53808606); target element is 'Button' (Name=''); target property is 'Command' (type 'ICommand')
-'MongoDbBooks.exe' (CLR v4.0.30319: MongoDbBooks.exe): Loaded 'C:\WINDOWS\system32\WinMetadata\Windows.UI.winmd'. Module was built without symbols.
-
-#endif
-
         #region Commands
 
         /// <summary>
@@ -549,7 +540,6 @@ System.Windows.Data Error: 40 : BindingExpression path error: 'SelectBookImageCo
         public ICommand SelectImageForBookCommand => _selectImageForBookCommand ??
                                                      (_selectImageForBookCommand =
                                                          new RelayCommandHandler(SelectImageForBookCommandAction) { IsEnabled = true });
-
 
         #endregion
 
