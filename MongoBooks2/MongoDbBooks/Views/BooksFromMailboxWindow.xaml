@@ -10,7 +10,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Import Books From Mailbox"
-             d:DesignHeight="800" d:DesignWidth="1000">
+             d:DesignHeight="800" d:DesignWidth="1200">
     <Grid>
         <Grid Margin="10">
             <Grid.Resources>
@@ -213,6 +213,10 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
+                        <Image Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="4" 
+                               MinHeight="100" MinWidth="100"
+                               HorizontalAlignment="Left" VerticalAlignment="Center" 
+                               Source="{Binding NewBookImageSource}" />
 
 
                         <Label Grid.Row="3" Grid.Column="0" Content="Pages" 
@@ -271,6 +275,10 @@
                                 <RadioButton IsChecked="{Binding Path=NewBookFormatIsAudio}">Audio</RadioButton>
                             </StackPanel>
                         </Grid>
+                        <Button Content="Select Image" Grid.Row="6" Grid.Column="2" 
+                             HorizontalAlignment="Left" Margin="10,10,0,0"
+                             VerticalAlignment="Top" Width="125" Height="22"
+                             Command="{Binding Path=SelectImageForBookCommand}" />
 
 
                         <Label Grid.Row="7" Grid.Column="0" Content="Notes" 
@@ -281,8 +289,7 @@
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              ScrollViewer.CanContentScroll="True"
                              Text="{Binding Path=NewBookNote, Mode=TwoWay}" 
-                                 HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="290"/>
-
+                             HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="290"/>
 
 
                     </Grid>

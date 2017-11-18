@@ -199,9 +199,7 @@ namespace MongoDbBooks.ViewModels
                     OnPropertyChanged(() => IsUpdating);
                 }
             }
-        }
-            
-
+        }            
 
         #endregion
 
@@ -210,6 +208,24 @@ namespace MongoDbBooks.ViewModels
         public void UpdateData()
         {
             OnPropertyChanged("");
+        }
+
+        public static string GetImageSearchTerm(BookRead book)
+        {
+            string nameAndTitle = book.Author + " " + book.Title + " amazon";
+            string[] words = nameAndTitle.Split(' ');
+
+            string term = "http://www.google.co.uk/search?q=" + words[0];
+
+            for (int i = 1; i < words.Length; i++)
+            {
+                if (words[i] == "&")
+                    continue;
+                term += "+";
+                term += words[i];
+            }
+
+            return term;
         }
 
         #endregion
@@ -474,30 +490,12 @@ namespace MongoDbBooks.ViewModels
                     return;
                 }
 
-                OnPropertyChanged(() => book);
+                OnPropertyChanged(() => ExistingBookImageSource);
             }
             else
             {
                 _log.Debug("Failed Getting Book information for " + book.Title);
             }
-        }
-
-        private string GetImageSearchTerm(BookRead book)
-        {
-            string nameAndTitle = book.Author + " " + book.Title + " amazon";
-            string[] words = nameAndTitle.Split(' ');
-
-            string term = "http://www.google.co.uk/search?q=" + words[0];
-
-            for(int i = 1; i < words.Length; i++)
-            {
-                if (words[i] == "&")
-                    continue;
-                term += "+";
-                term += words[i];
-            }
-
-            return term;
         }
 
         #endregion

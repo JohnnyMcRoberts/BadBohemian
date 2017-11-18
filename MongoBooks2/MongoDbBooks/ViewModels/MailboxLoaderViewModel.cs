@@ -182,7 +182,12 @@ namespace MongoDbBooks.ViewModels
         /// The new book data input control has lost focus command.
         /// </summary>
         private ICommand _lostFocusCommand;
-        
+
+        /// <summary>
+        /// The select image for nation command.
+        /// </summary>
+        private ICommand _selectImageForBookCommand;
+
         #endregion
 
         #region Public Properties
@@ -488,7 +493,18 @@ namespace MongoDbBooks.ViewModels
 
         public bool CanAddSelectedBook => AreAllRequiredBookFieldsComplete();
 
+        public Uri NewBookImageSource => _newBook != null ? _newBook?.DisplayImage : new Uri("pack://application:,,,/Images/camera_image_cancel-32.png");
+
         #endregion
+
+#if nope
+
+        'MongoDbBooks.exe' (CLR v4.0.30319: MongoDbBooks.exe): Loaded 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\PresentationFramework-SystemCore\v4.0_4.0.0.0__b77a5c561934e089\PresentationFramework-SystemCore.dll'. Skipped loading symbols.Module is optimized and the debugger option 'Just My Code' is enabled.
+System.Windows.Data Error: 40 : BindingExpression path error: 'NewBookImageSource' property not found on 'object' ''MailboxLoaderViewModel' (HashCode=53808606)'. BindingExpression:Path=NewBookImageSource; DataItem='MailboxLoaderViewModel' (HashCode=53808606); target element is 'Image' (Name=''); target property is 'Source' (type 'ImageSource')
+System.Windows.Data Error: 40 : BindingExpression path error: 'SelectBookImageCommand' property not found on 'object' ''MailboxLoaderViewModel' (HashCode=53808606)'. BindingExpression:Path=SelectBookImageCommand; DataItem='MailboxLoaderViewModel' (HashCode=53808606); target element is 'Button' (Name=''); target property is 'Command' (type 'ICommand')
+'MongoDbBooks.exe' (CLR v4.0.30319: MongoDbBooks.exe): Loaded 'C:\WINDOWS\system32\WinMetadata\Windows.UI.winmd'. Module was built without symbols.
+
+#endif
 
         #region Commands
 
@@ -526,7 +542,14 @@ namespace MongoDbBooks.ViewModels
         public ICommand LostFocusCommand => _lostFocusCommand ??
                                                    (_lostFocusCommand =
                                                     new CommandHandler(LostFocusCommandAction, true));
-        
+
+        /// <summary>
+        /// Gets the select image for nation command.
+        /// </summary>
+        public ICommand SelectImageForBookCommand => _selectImageForBookCommand ??
+                                                     (_selectImageForBookCommand =
+                                                         new RelayCommandHandler(SelectImageForBookCommandAction) { IsEnabled = true });
+
 
         #endregion
 
@@ -607,6 +630,7 @@ namespace MongoDbBooks.ViewModels
             OnPropertyChanged(() => NewBookFormatIsAudio);
             OnPropertyChanged(() => NewBookFormatIsBook);
             OnPropertyChanged(() => NewBookFormatIsComic);
+            OnPropertyChanged(() => NewBookImageSource);
         }
 
         private void UpdateNewBook()
@@ -766,6 +790,38 @@ namespace MongoDbBooks.ViewModels
         public void LostFocusCommandAction()
         {
             OnPropertyChanged(() => CanAddSelectedBook);
+        }
+
+        /// <summary>
+        /// The command action to add a new book from the email to the database.
+        /// </summary>
+        public void SelectImageForBookCommandAction(object parameter)
+        {
+            BookRead book = _newBook as BookRead;
+            if (book != null)
+            {
+                _log.Debug("Getting Book information for " + book.Title);
+
+                // https://books.google.co.uk/
+                string searchTerm = DataUpdaterViewModel.GetImageSearchTerm(book);
+                ImageSelectionViewModel selectionViewModel = new ImageSelectionViewModel(_log, book.Title, searchTerm);
+
+                ImageSelectionWindow imageSelectDialog = new ImageSelectionWindow { DataContext = selectionViewModel };
+                var success = imageSelectDialog.ShowDialog();
+                if (success.HasValue && success.Value)
+                {
+                    _log.Debug("Success Getting image information for " + book.Title +
+                               "\n   Img = " + selectionViewModel.SelectedImageAddress);
+
+                    book.ImageUrl = selectionViewModel.SelectedImageAddress;
+
+                    OnPropertyChanged(() => NewBookImageSource);
+                }
+                else
+                {
+                    _log.Debug("Failed Getting Book information for " + book.Title);
+                }
+            }
         }
 
         #endregion
