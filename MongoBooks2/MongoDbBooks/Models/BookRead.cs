@@ -12,6 +12,7 @@ namespace MongoDbBooks.Models
     using System;
 
     using MongoDB.Bson.Serialization.Attributes;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The book read.
@@ -51,6 +52,7 @@ namespace MongoDbBooks.Models
         public BookRead()
         {
             Format = BookFormat.Book;
+            Tags = new List<string>();
         }
 
         #endregion
@@ -108,6 +110,9 @@ namespace MongoDbBooks.Models
 
         [BsonElement("image_url")]
         public string ImageUrl { get; set; }
+
+        [BsonElement("tags")]
+        public List<string> Tags { get; set; }
 
         /// <summary>
         /// Gets or sets the book.
