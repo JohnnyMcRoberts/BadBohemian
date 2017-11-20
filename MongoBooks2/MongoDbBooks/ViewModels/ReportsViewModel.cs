@@ -6,13 +6,21 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.ComponentModel;
+    using System.Drawing.Printing;
+    using System.IO;
     using System.Linq.Expressions;
     using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
     using System.Windows.Documents;
-
+    using System.Windows.Markup;
+    using System.Windows.Media;
+    using System.Windows.Threading;
+    using System.Xml;
     using MongoDbBooks.Models;
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.ViewModels.PlotGenerators;
+    using OxyPlot.Wpf;
 
     public class ReportsViewModel : INotifyPropertyChanged
     {
@@ -91,6 +99,8 @@
                     PlotCurrentMonthPagesReadByCountry.UpdateData(_mainModel);
                     PlotCurrentMonthDocumentPagesReadByLanguage.UpdateData(_mainModel);
                     PlotCurrentMonthDocumentPagesReadByCountry.UpdateData(_mainModel);
+                    PlotCurrentMonthPrintPagesReadByLanguage.UpdateData(_mainModel);
+                    PlotCurrentMonthPrintPagesReadByCountry.UpdateData(_mainModel);
                 }
             }
         }
@@ -127,7 +137,13 @@
 
         public OxyPlotPair PlotCurrentMonthDocumentPagesReadByCountry { get; private set; }
 
+        public OxyPlotPair PlotCurrentMonthPrintPagesReadByLanguage { get; private set; }
+
+        public OxyPlotPair PlotCurrentMonthPrintPagesReadByCountry { get; private set; }
+
         public FlowDocument MonthlyReportDocument { get; set; }
+
+        public string ReportTitle => "Report for " + SelectedMonth.ToString("MMMM yyyy");
 
         #endregion
 
@@ -160,6 +176,11 @@
                 new OxyPlotPair(new CurrentMonthPagesReadByLanguagePlotGenerator(), "CurrentMonthPagesReadByLanguage");
             PlotCurrentMonthDocumentPagesReadByCountry =
                 new OxyPlotPair(new CurrentMonthPagesReadByCountryPlotGenerator(), "CurrentMonthPagesReadByCountry");
+
+            PlotCurrentMonthPrintPagesReadByLanguage =
+                new OxyPlotPair(new CurrentMonthPagesReadByLanguagePlotGenerator(), "CurrentMonthPagesReadByLanguage");
+            PlotCurrentMonthPrintPagesReadByCountry =
+                new OxyPlotPair(new CurrentMonthPagesReadByCountryPlotGenerator(), "CurrentMonthPagesReadByCountry");
         }
 
         // should think about a flow doc and then html ....
@@ -180,6 +201,9 @@
 
             PlotCurrentMonthDocumentPagesReadByLanguage.UpdateData(_mainModel);
             PlotCurrentMonthDocumentPagesReadByCountry.UpdateData(_mainModel);
+
+            PlotCurrentMonthPrintPagesReadByLanguage.UpdateData(_mainModel);
+            PlotCurrentMonthPrintPagesReadByCountry.UpdateData(_mainModel);
             OnPropertyChanged("");
         }
 
@@ -230,6 +254,36 @@
         {
         }
 
+        private static string ForceRenderFlowDocumentXaml =
+@"<Window xmlns=""http://schemas.microsoft.com/netfx/2007/xaml/presentation""
+        xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+    <FlowDocumentScrollViewer Name=""viewer""/>
+</Window>";
+
+        public static void ForceRenderFlowDocument(FlowDocument document)
+        {
+            using (XmlTextReader reader = new XmlTextReader(new StringReader(ForceRenderFlowDocumentXaml)))
+            {
+                Window window = XamlReader.Load(reader) as Window;
+                if (window == null)
+                    return;
+                FlowDocumentScrollViewer viewer = LogicalTreeHelper.FindLogicalNode(window, "viewer") as FlowDocumentScrollViewer;
+                if (viewer == null)
+                    return;
+                viewer.Document = document;
+                // Show the window way off-screen
+                window.WindowStartupLocation = WindowStartupLocation.Manual;
+                window.Top = Int32.MaxValue;
+                window.Left = Int32.MaxValue;
+                window.ShowInTaskbar = false;
+                window.Show();
+                // Ensure that dispatcher has done the layout and render passes
+                Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Loaded, new Action(() => { }));
+                viewer.Document = null;
+                window.Close();
+            }
+        }
+
         private void DoThePrint(System.Windows.Documents.FlowDocument document)
         {
             // Clone the source document's content into a new FlowDocument.
@@ -238,32 +292,30 @@
             // We print the copy, rather that the original FlowDocument.
             System.IO.MemoryStream s = new System.IO.MemoryStream();
             TextRange source = new TextRange(document.ContentStart, document.ContentEnd);
-            source.Save(s, DataFormats.Xaml);
-            FlowDocument copy = new FlowDocument();
-            TextRange dest = new TextRange(copy.ContentStart, copy.ContentEnd);
-            dest.Load(s, DataFormats.Xaml);
+            source.Save(s, System.Windows.DataFormats.Xaml);
 
-            // Create a XpsDocumentWriter object, implicitly opening a Windows common print dialog,
-            // and allowing the user to select a printer.
+            FlowDocument doc = GetPrintFlowDocument();
 
+            ForceRenderFlowDocument(doc);
+            
             // get information about the dimensions of the seleted printer+media.
             System.Printing.PrintDocumentImageableArea ia = null;
             System.Windows.Xps.XpsDocumentWriter docWriter = System.Printing.PrintQueue.CreateXpsDocumentWriter(ref ia);
 
             if (docWriter != null && ia != null)
             {
-                DocumentPaginator paginator = ((IDocumentPaginatorSource)copy).DocumentPaginator;
+                DocumentPaginator paginator = ((IDocumentPaginatorSource)doc).DocumentPaginator;
 
                 // Change the PageSize and PagePadding for the document to match the CanvasSize for the printer device.
                 paginator.PageSize = new Size(ia.MediaSizeWidth, ia.MediaSizeHeight);
                 Thickness t = new Thickness(72);  // copy.PagePadding;
-                copy.PagePadding = new Thickness(
+                doc.PagePadding = new Thickness(
                                  Math.Max(ia.OriginWidth, t.Left),
                                    Math.Max(ia.OriginHeight, t.Top),
                                    Math.Max(ia.MediaSizeWidth - (ia.OriginWidth + ia.ExtentWidth), t.Right),
                                    Math.Max(ia.MediaSizeHeight - (ia.OriginHeight + ia.ExtentHeight), t.Bottom));
 
-                copy.ColumnWidth = double.PositiveInfinity;
+                doc.ColumnWidth = double.PositiveInfinity;
                 //copy.PageWidth = 528; // allow the page to be the natural with of the output device
 
                 // Send content to the printer.
@@ -271,6 +323,67 @@
             }
 
         }
+
+        private FlowDocument GetPrintFlowDocument()
+        {
+            FlowDocument doc = new FlowDocument();
+
+            Paragraph p = new Paragraph(new Run("Hello, world!"));
+            p.FontSize = 36;
+            doc.Blocks.Add(p);
+
+            BlockUIContainer titleBlockContainer = new BlockUIContainer();
+
+
+            StackPanel stackPanel = new StackPanel {Orientation = Orientation.Vertical, Width = 1000};
+
+
+            Label testLabel = new Label();
+            Binding reportTitleBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("ReportTitle"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+
+            BindingOperations.SetBinding(testLabel, ContentControl.ContentProperty, reportTitleBinding);
+
+
+            stackPanel.Children.Add(testLabel);
+
+            titleBlockContainer.Child = stackPanel;
+
+            doc.Blocks.Add(titleBlockContainer);
+
+
+            BlockUIContainer chartBlockUiContainerBlockContainer = new BlockUIContainer();
+
+            PlotView plotView = new PlotView {Height = 400, Width = 600, Padding = new Thickness(10)};
+            Binding chartModelBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("PlotCurrentMonthPrintPagesReadByCountry.Model"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(plotView, PlotView.ModelProperty, chartModelBinding);
+
+            Binding chartControllerBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("PlotCurrentPrintMonthPagesReadByCountry.ViewController"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(plotView, PlotView.ControllerProperty, chartControllerBinding);
+
+            chartBlockUiContainerBlockContainer.Child = plotView;
+
+            doc.Blocks.Add(chartBlockUiContainerBlockContainer);
+            return doc;
+        }
+
 
         /// <summary>
         /// The command action to add a new book from the email to the database.
