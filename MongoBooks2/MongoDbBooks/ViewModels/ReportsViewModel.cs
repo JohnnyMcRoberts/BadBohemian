@@ -7,6 +7,7 @@
     using System.Linq;
     using System.ComponentModel;
     using System.Linq.Expressions;
+    using System.Windows;
     using System.Windows.Documents;
 
     using MongoDbBooks.Models;
@@ -55,6 +56,11 @@
         /// The print command.
         /// </summary>
         private ICommand _printCommand;
+
+        /// <summary>
+        /// The month report has loaded command.
+        /// </summary>
+        private ICommand _monthlyReportLoadedCommand;
 
         #endregion
 
@@ -120,6 +126,8 @@
         public OxyPlotPair PlotCurrentMonthDocumentPagesReadByLanguage { get; private set; }
 
         public OxyPlotPair PlotCurrentMonthDocumentPagesReadByCountry { get; private set; }
+
+        public FlowDocument MonthlyReportDocument { get; set; }
 
         #endregion
 
@@ -206,6 +214,11 @@
         public ICommand PrintCommand => _printCommand ??
                                             (_printCommand =
                                              new RelayCommandHandler(PrintCommandAction) { IsEnabled = true });
+
+        public ICommand MonthlyReportLoadedCommand => _monthlyReportLoadedCommand ??
+                                                      (_monthlyReportLoadedCommand =
+                                                          new RelayCommandHandler(MonthlyReportLoadedCommandAction) { IsEnabled = true });
+
         #endregion
 
         #region Command Handlers
@@ -213,37 +226,95 @@
         /// <summary>
         /// The command action to add a new book from the email to the database.
         /// </summary>
+        public void MonthlyReportLoadedCommandAction(object parameter)
+        {
+        }
+
+        private void DoThePrint(System.Windows.Documents.FlowDocument document)
+        {
+            // Clone the source document's content into a new FlowDocument.
+            // This is because the pagination for the printer needs to be
+            // done differently than the pagination for the displayed page.
+            // We print the copy, rather that the original FlowDocument.
+            System.IO.MemoryStream s = new System.IO.MemoryStream();
+            TextRange source = new TextRange(document.ContentStart, document.ContentEnd);
+            source.Save(s, DataFormats.Xaml);
+            FlowDocument copy = new FlowDocument();
+            TextRange dest = new TextRange(copy.ContentStart, copy.ContentEnd);
+            dest.Load(s, DataFormats.Xaml);
+
+            // Create a XpsDocumentWriter object, implicitly opening a Windows common print dialog,
+            // and allowing the user to select a printer.
+
+            // get information about the dimensions of the seleted printer+media.
+            System.Printing.PrintDocumentImageableArea ia = null;
+            System.Windows.Xps.XpsDocumentWriter docWriter = System.Printing.PrintQueue.CreateXpsDocumentWriter(ref ia);
+
+            if (docWriter != null && ia != null)
+            {
+                DocumentPaginator paginator = ((IDocumentPaginatorSource)copy).DocumentPaginator;
+
+                // Change the PageSize and PagePadding for the document to match the CanvasSize for the printer device.
+                paginator.PageSize = new Size(ia.MediaSizeWidth, ia.MediaSizeHeight);
+                Thickness t = new Thickness(72);  // copy.PagePadding;
+                copy.PagePadding = new Thickness(
+                                 Math.Max(ia.OriginWidth, t.Left),
+                                   Math.Max(ia.OriginHeight, t.Top),
+                                   Math.Max(ia.MediaSizeWidth - (ia.OriginWidth + ia.ExtentWidth), t.Right),
+                                   Math.Max(ia.MediaSizeHeight - (ia.OriginHeight + ia.ExtentHeight), t.Bottom));
+
+                copy.ColumnWidth = double.PositiveInfinity;
+                //copy.PageWidth = 528; // allow the page to be the natural with of the output device
+
+                // Send content to the printer.
+                docWriter.Write(paginator);
+            }
+
+        }
+
+        /// <summary>
+        /// The command action to add a new book from the email to the database.
+        /// </summary>
         public void PrintCommandAction(object parameter)
         {
+            if (MonthlyReportDocument == null)
+                return;
+
+            DoThePrint(MonthlyReportDocument);
+#if old
+
             string path = "test.xps";
 
             System.IO.Packaging.Package package = System.IO.Packaging.Package.Open(path, System.IO.FileMode.Create);
             System.Windows.Xps.Packaging.XpsDocument document = new System.Windows.Xps.Packaging.XpsDocument(package);
             System.Windows.Xps.XpsDocumentWriter writer = System.Windows.Xps.Packaging.XpsDocument.CreateXpsDocumentWriter(document);
-            FixedDocument doc = new FixedDocument();
+            //FixedDocument doc = new FixedDocument();
 
-            FixedPage page1 = new FixedPage();
-            PageContent page1Content = new PageContent();
-            ((System.Windows.Markup.IAddChild)page1Content).AddChild(page1);
+            //FixedPage page1 = new FixedPage();
+            //PageContent page1Content = new PageContent();
+            //((System.Windows.Markup.IAddChild)page1Content).AddChild(page1);
 
-            // add the content
-            //System.Windows.Controls.Button button = new System.Windows.Controls.Button() { Content = };
-            //page1.Children.Add();
+            //// add the content
+            ////System.Windows.Controls.Button button = new System.Windows.Controls.Button() { Content = };
 
-            doc.Pages.Add(page1Content);
-            writer.Write(doc);
-            document.Close();
-            package.Close();
+            ////if (MonthlyReportDocument != null)
+            ////page1.Children.Add(MonthlyReportDocument);
+
+            //doc.Pages.Add(page1Content);
+            //writer.Write(doc);
+            //document.Close();
+            //package.Close();
 
             System.Windows.Controls.PrintDialog printDialog = new System.Windows.Controls.PrintDialog();
             if (printDialog.ShowDialog() == true)
             {
-                printDialog.PrintDocument(((IDocumentPaginatorSource)doc).DocumentPaginator, "Flow Document Print Job");
+                printDialog.PrintDocument(((IDocumentPaginatorSource)MonthlyReportDocument).DocumentPaginator, "Flow Document Print Job");
             }
 
+#endif
         }
 
-        #endregion
+#endregion
 
     }
 }

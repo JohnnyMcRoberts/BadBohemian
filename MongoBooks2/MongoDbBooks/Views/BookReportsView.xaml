@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:MongoDbBooks.Views"
              xmlns:converters="clr-namespace:MongoDbBooks.Converters"
              xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
     <Grid>
@@ -301,7 +302,8 @@
                 <TabItem Header="Document View">
 
                     <FlowDocumentScrollViewer VerticalScrollBarVisibility="Visible" MaxHeight="600">
-                        <FlowDocument FontFamily="Cambria" FontSize="14">
+                        <FlowDocument x:Name="MonthlyReportDocument" FontFamily="Cambria" FontSize="14" Loaded="MonthlyReportDocument_OnLoaded" >
+
                             <Paragraph>Here are the books</Paragraph>
                             <BlockUIContainer FontFamily="Arial" FontSize="12">
                                 

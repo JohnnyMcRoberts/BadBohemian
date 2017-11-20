@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 
 namespace MongoDbBooks.Views
 {
+    using MongoDbBooks.ViewModels;
+
     /// <summary>
     /// Interaction logic for BookReportsView.xaml
     /// </summary>
@@ -23,6 +25,16 @@ namespace MongoDbBooks.Views
         public BookReportsView()
         {
             InitializeComponent();
+        }
+
+        private void MonthlyReportDocument_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ReportsViewModel reports = DataContext as ReportsViewModel;
+            FlowDocument doc = sender as FlowDocument;
+            if (reports != null && doc != null)
+            {
+                reports.MonthlyReportDocument = doc;
+            }
         }
     }
 }
