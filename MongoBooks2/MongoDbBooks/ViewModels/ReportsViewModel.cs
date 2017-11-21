@@ -333,11 +333,108 @@
             BlockUIContainer titleBlockContainer = GetTitleBlockContainer();
             doc.Blocks.Add(titleBlockContainer);
 
+            BlockUIContainer itemsBlockContainer = GetItemsBlockContainer();
+            doc.Blocks.Add(itemsBlockContainer);
+
 
             BlockUIContainer chartBlockUiContainerBlockContainer = GetChartBlockUiContainerBlockContainer();
             doc.Blocks.Add(chartBlockUiContainerBlockContainer);
 
             return doc;
+        }
+
+        public DataTemplate CreateDataTemplate()
+        {
+
+            StringReader stringReader = new StringReader(
+                @"<DataTemplate 
+        xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""> 
+            <Grid Margin=""10, 10"" Width=""460"">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height = ""150"" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+ 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition MinWidth = ""330"" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Row = ""0"" Grid.Column = ""0"" HorizontalAlignment = ""Left"" VerticalAlignment = ""Center"" Source = ""{Binding DisplayImage}"" />
+
+						
+								
+                <Grid Grid.Row = ""0"" Grid.Column = ""1"" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />       
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row = ""0"" TextWrapping = ""Wrap"" >
+                        <Run Text = ""Title: "" FontWeight = ""Bold"" />
+                        <Run Text = ""{ Binding Title}"" />
+                    </TextBlock>
+                    <TextBlock Grid.Row = ""1"" TextWrapping = ""Wrap"" >
+                        <Run Text = ""Author: "" FontWeight = ""Bold"" />
+                    </TextBlock>
+                    <TextBlock Grid.Row=""2"" TextWrapping=""Wrap"">
+                <Run Text=""Pages: "" FontWeight=""Bold"" />
+                <Run Text=""{Binding Pages}"" />
+                    </TextBlock>
+                    <TextBlock Grid.Row=""3"" TextWrapping=""Wrap"">
+                <Run Text=""Nationality: "" FontWeight=""Bold"" />
+                <Run Text=""{Binding Nationality}"" />
+                    </TextBlock>
+                    <TextBlock Grid.Row=""4"" TextWrapping=""Wrap"">
+                <Run Text=""Original Language: "" FontWeight=""Bold"" />
+                <Run Text=""{Binding OriginalLanguage}"" />
+                    </TextBlock>
+                    <TextBlock Grid.Row=""5"" TextWrapping=""Wrap"">
+                <Run Text=""Date: "" FontWeight=""Bold"" />
+                <Run Text=""{Binding DateString}"" />
+                    </TextBlock>
+                    <TextBlock Grid.Row=""6"" TextWrapping=""Wrap"">
+                <Run Text=""Format: "" FontWeight=""Bold"" />
+                <Run Text=""{Binding Format}"" />
+                    </TextBlock>
+                </Grid>  
+
+            </Grid>
+            </DataTemplate>");
+            XmlReader xmlReader = XmlReader.Create(stringReader);
+            return XamlReader.Load(xmlReader) as DataTemplate;
+        }
+
+        private BlockUIContainer GetItemsBlockContainer()
+        {
+            BlockUIContainer titleBlockContainer = new BlockUIContainer();
+
+            ItemsControl itemsControl = new ItemsControl { Margin = new Thickness(10), MinHeight = 100};
+
+            Binding itemsControlItemSourceBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("SelectedMonthBooksRead"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(itemsControl, ItemsControl.ItemsSourceProperty, itemsControlItemSourceBinding);
+
+            FrameworkElementFactory wrapPanelFactory = new FrameworkElementFactory { Type = typeof(WrapPanel) };
+            wrapPanelFactory.SetValue(WrapPanel.OrientationProperty, Orientation.Horizontal);
+
+            ItemsPanelTemplate itemsPanelTemplate = new ItemsPanelTemplate();
+            itemsPanelTemplate.VisualTree = wrapPanelFactory;
+            itemsControl.ItemsPanel = itemsPanelTemplate;
+
+            itemsControl.ItemTemplate = CreateDataTemplate();
+
+            titleBlockContainer.Child = itemsControl;
+            return titleBlockContainer;
         }
 
         private BlockUIContainer GetTitleBlockContainer()
@@ -354,7 +451,6 @@
                 Mode = BindingMode.OneWay,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
-
             BindingOperations.SetBinding(testLabel, ContentControl.ContentProperty, reportTitleBinding);
 
             stackPanel.Children.Add(testLabel);
