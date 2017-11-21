@@ -80,6 +80,7 @@ namespace MongoDbBooks.ViewModels.Utilities
             newPlot.LegendPosition = LegendPosition.TopRight;
             newPlot.LegendBackground = OxyColor.FromAColor(200, OxyColors.White);
             newPlot.LegendBorder = OxyColors.Black;
+            newPlot.LegendMargin = 20;
         }
 
         public static void AddLineSeriesToModel(PlotModel newPlot, LineSeries[] lineSeries)
@@ -377,7 +378,7 @@ namespace MongoDbBooks.ViewModels.Utilities
         public static void GetNewModelForPieSeries(
             out PlotModel modelP1, out dynamic seriesP1, string title)
         {
-            modelP1 = new PlotModel { Title = title };
+            modelP1 = new PlotModel { Title = title, Padding = new OxyThickness(15), LegendPadding = 15, TitlePadding = 15 };
 
             seriesP1 = new PieSeries
             {

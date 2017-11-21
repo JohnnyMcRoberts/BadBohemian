@@ -6,7 +6,6 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.ComponentModel;
-    using System.Drawing.Printing;
     using System.IO;
     using System.Linq.Expressions;
     using System.Windows;
@@ -14,9 +13,9 @@
     using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Markup;
-    using System.Windows.Media;
     using System.Windows.Threading;
     using System.Xml;
+
     using MongoDbBooks.Models;
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.ViewModels.PlotGenerators;
@@ -284,15 +283,15 @@
             }
         }
 
-        private void DoThePrint(System.Windows.Documents.FlowDocument document)
+        private void DoThePrint(FlowDocument document)
         {
             // Clone the source document's content into a new FlowDocument.
             // This is because the pagination for the printer needs to be
             // done differently than the pagination for the displayed page.
             // We print the copy, rather that the original FlowDocument.
-            System.IO.MemoryStream s = new System.IO.MemoryStream();
+            MemoryStream s = new MemoryStream();
             TextRange source = new TextRange(document.ContentStart, document.ContentEnd);
-            source.Save(s, System.Windows.DataFormats.Xaml);
+            source.Save(s, DataFormats.Xaml);
 
             FlowDocument doc = GetPrintFlowDocument();
 
@@ -328,15 +327,24 @@
         {
             FlowDocument doc = new FlowDocument();
 
-            Paragraph p = new Paragraph(new Run("Hello, world!"));
-            p.FontSize = 36;
+            Paragraph p = new Paragraph(new Run("Monthly Report")) { FontSize = 36, FontWeight = FontWeights.Bold };
             doc.Blocks.Add(p);
 
+            BlockUIContainer titleBlockContainer = GetTitleBlockContainer();
+            doc.Blocks.Add(titleBlockContainer);
+
+
+            BlockUIContainer chartBlockUiContainerBlockContainer = GetChartBlockUiContainerBlockContainer();
+            doc.Blocks.Add(chartBlockUiContainerBlockContainer);
+
+            return doc;
+        }
+
+        private BlockUIContainer GetTitleBlockContainer()
+        {
             BlockUIContainer titleBlockContainer = new BlockUIContainer();
 
-
             StackPanel stackPanel = new StackPanel {Orientation = Orientation.Vertical, Width = 1000};
-
 
             Label testLabel = new Label();
             Binding reportTitleBinding = new Binding
@@ -349,39 +357,67 @@
 
             BindingOperations.SetBinding(testLabel, ContentControl.ContentProperty, reportTitleBinding);
 
-
             stackPanel.Children.Add(testLabel);
 
             titleBlockContainer.Child = stackPanel;
+            return titleBlockContainer;
+        }
 
-            doc.Blocks.Add(titleBlockContainer);
-
-
+        private BlockUIContainer GetChartBlockUiContainerBlockContainer()
+        {
             BlockUIContainer chartBlockUiContainerBlockContainer = new BlockUIContainer();
 
-            PlotView plotView = new PlotView {Height = 400, Width = 600, Padding = new Thickness(10)};
-            Binding chartModelBinding = new Binding
+            StackPanel chartsStackPanel = new StackPanel {Orientation = Orientation.Vertical, Width = 800};
+
+            PlotView plotViewByCountry = new PlotView {Height = 400, Width = 600, Padding = new Thickness(10)};
+            Binding chartModelByCountryBinding = new Binding
             {
                 Source = this,
                 Path = new PropertyPath("PlotCurrentMonthPrintPagesReadByCountry.Model"),
                 Mode = BindingMode.OneWay,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
-            BindingOperations.SetBinding(plotView, PlotView.ModelProperty, chartModelBinding);
+            BindingOperations.SetBinding(plotViewByCountry, PlotView.ModelProperty, chartModelByCountryBinding);
 
-            Binding chartControllerBinding = new Binding
+            Binding chartControllerByCountryBinding = new Binding
             {
                 Source = this,
                 Path = new PropertyPath("PlotCurrentPrintMonthPagesReadByCountry.ViewController"),
                 Mode = BindingMode.OneWay,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
-            BindingOperations.SetBinding(plotView, PlotView.ControllerProperty, chartControllerBinding);
+            BindingOperations.SetBinding(plotViewByCountry, PlotView.ControllerProperty, chartControllerByCountryBinding);
 
-            chartBlockUiContainerBlockContainer.Child = plotView;
+            chartsStackPanel.Children.Add(plotViewByCountry);
 
-            doc.Blocks.Add(chartBlockUiContainerBlockContainer);
-            return doc;
+
+            //PlotCurrentMonthPrintPagesReadByLanguage
+
+
+
+            PlotView plotViewByLanguage = new PlotView { Height = 400, Width = 600, Padding = new Thickness(10) };
+            Binding chartModelByLanguageBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("PlotCurrentMonthPrintPagesReadByLanguage.Model"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(plotViewByLanguage, PlotView.ModelProperty, chartModelByLanguageBinding);
+
+            Binding chartControllerByLanguageBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("PlotCurrentPrintMonthPagesReadByLanguage.ViewController"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(plotViewByLanguage, PlotView.ControllerProperty, chartControllerByLanguageBinding);
+
+            chartsStackPanel.Children.Add(plotViewByLanguage);
+
+            chartBlockUiContainerBlockContainer.Child = chartsStackPanel;
+            return chartBlockUiContainerBlockContainer;
         }
 
 
