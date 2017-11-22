@@ -74,6 +74,134 @@
         #region Constants
 
 
+        private static string ForceRenderFlowDocumentXaml =
+            @"<Window xmlns=""http://schemas.microsoft.com/netfx/2007/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                <FlowDocumentScrollViewer Name=""viewer""/>
+            </Window>";
+
+        private const string DataTemplateForBookWithNotes =
+          @"<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
+                <Grid Margin=""10,10"" Width=""460"">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height=""150""/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition MinWidth=""330""/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Row=""0"" Grid.Column=""0""  
+                        HorizontalAlignment=""Left"" VerticalAlignment=""Center"" Source=""{Binding DisplayImage}"" />
+
+                    <Grid Grid.Row=""0"" Grid.Column=""1"">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row=""0"" TextWrapping=""Wrap"">
+                            <Run Text=""Title: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Title}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""1"" TextWrapping=""Wrap"">
+                            <Run Text=""Author: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Author}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""2"" TextWrapping=""Wrap"">
+                            <Run Text=""Pages: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Pages}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""3"" TextWrapping=""Wrap"">
+                            <Run Text=""Nationality: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Nationality}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""4"" TextWrapping=""Wrap"">
+                            <Run Text=""Original Language: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding OriginalLanguage}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""5"" TextWrapping=""Wrap"">
+                            <Run Text=""Date: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding DateString}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""6"" TextWrapping=""Wrap"">
+                            <Run Text=""Format: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Format}"" />
+                        </TextBlock>
+                    </Grid>
+
+                    <TextBlock Grid.Row=""1"" Grid.Column=""0"" Grid.ColumnSpan=""2""
+                                TextWrapping=""Wrap"" MaxWidth=""450"" HorizontalAlignment=""Left"">
+                        <Run Text=""Notes: "" FontWeight=""Bold"" />
+                        <Run Text=""{Binding Note}"" />
+                    </TextBlock>
+                </Grid>
+            </DataTemplate>";
+
+
+        private const string DataTemplateForBookWithotNotesXaml =
+            @"<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
+                <Grid Margin=""10, 10"" Width=""460"">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height = ""150"" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+ 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition MinWidth = ""330"" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Row = ""0"" Grid.Column = ""0"" HorizontalAlignment = ""Left"" 
+                        VerticalAlignment = ""Center"" Source = ""{Binding DisplayImage}"" />
+								
+                    <Grid Grid.Row = ""0"" Grid.Column = ""1"" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />       
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row = ""0"" TextWrapping = ""Wrap"" >
+                            <Run Text = ""Title: "" FontWeight = ""Bold"" />
+                            <Run Text = ""{ Binding Title}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row = ""1"" TextWrapping = ""Wrap"" >
+                            <Run Text = ""Author: "" FontWeight = ""Bold"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""2"" TextWrapping=""Wrap"">
+                    <Run Text=""Pages: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding Pages}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""3"" TextWrapping=""Wrap"">
+                    <Run Text=""Nationality: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding Nationality}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""4"" TextWrapping=""Wrap"">
+                    <Run Text=""Original Language: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding OriginalLanguage}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""5"" TextWrapping=""Wrap"">
+                    <Run Text=""Date: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding DateString}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""6"" TextWrapping=""Wrap"">
+                    <Run Text=""Format: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding Format}"" />
+                        </TextBlock>
+                    </Grid>  
+
+                </Grid>
+            </DataTemplate>";
+
         #endregion
 
         #region Public Data
@@ -227,39 +355,7 @@
             return selected;
         }
 
-        #endregion
-
-        #region Commands
-
-        /// <summary>
-        /// Gets the select image for nation command.
-        /// </summary>
-        public ICommand PrintCommand => _printCommand ??
-                                            (_printCommand =
-                                             new RelayCommandHandler(PrintCommandAction) { IsEnabled = true });
-
-        public ICommand MonthlyReportLoadedCommand => _monthlyReportLoadedCommand ??
-                                                      (_monthlyReportLoadedCommand =
-                                                          new RelayCommandHandler(MonthlyReportLoadedCommandAction) { IsEnabled = true });
-
-        #endregion
-
-        #region Command Handlers
-
-        /// <summary>
-        /// The command action to add a new book from the email to the database.
-        /// </summary>
-        public void MonthlyReportLoadedCommandAction(object parameter)
-        {
-        }
-
-        private static string ForceRenderFlowDocumentXaml =
-@"<Window xmlns=""http://schemas.microsoft.com/netfx/2007/xaml/presentation""
-        xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
-    <FlowDocumentScrollViewer Name=""viewer""/>
-</Window>";
-
-        public static void ForceRenderFlowDocument(FlowDocument document)
+        private void ForceRenderFlowDocument(FlowDocument document)
         {
             using (XmlTextReader reader = new XmlTextReader(new StringReader(ForceRenderFlowDocumentXaml)))
             {
@@ -296,7 +392,7 @@
             FlowDocument doc = GetPrintFlowDocument();
 
             ForceRenderFlowDocument(doc);
-            
+
             // get information about the dimensions of the seleted printer+media.
             System.Printing.PrintDocumentImageableArea ia = null;
             System.Windows.Xps.XpsDocumentWriter docWriter = System.Printing.PrintQueue.CreateXpsDocumentWriter(ref ia);
@@ -333,9 +429,14 @@
             BlockUIContainer titleBlockContainer = GetTitleBlockContainer();
             doc.Blocks.Add(titleBlockContainer);
 
-            BlockUIContainer itemsBlockContainer = GetItemsBlockContainer();
-            doc.Blocks.Add(itemsBlockContainer);
-
+            for (int i = 0; i < SelectedMonthBooksRead.Count; i++)
+            {
+                BlockUIContainer bookBlockContainer = GetBookBlockContainer(i, SelectedMonthBooksRead[i]);
+                if (bookBlockContainer != null)
+                {
+                    doc.Blocks.Add(bookBlockContainer);
+                }
+            }
 
             BlockUIContainer chartBlockUiContainerBlockContainer = GetChartBlockUiContainerBlockContainer();
             doc.Blocks.Add(chartBlockUiContainerBlockContainer);
@@ -343,105 +444,43 @@
             return doc;
         }
 
-        public DataTemplate CreateDataTemplate()
+        private BlockUIContainer GetBookBlockContainer(int itemIndex, BookRead bookRead)
         {
+            BlockUIContainer bookBlockContainer = new BlockUIContainer();
 
-            StringReader stringReader = new StringReader(
-                @"<DataTemplate 
-        xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""> 
-            <Grid Margin=""10, 10"" Width=""460"">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height = ""150"" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
- 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition MinWidth = ""330"" />
-                </Grid.ColumnDefinitions>
+            ContentControl contentControl = new ContentControl { Margin = new Thickness(10), MinHeight = 100 };
 
-                <Image Grid.Row = ""0"" Grid.Column = ""0"" HorizontalAlignment = ""Left"" VerticalAlignment = ""Center"" Source = ""{Binding DisplayImage}"" />
+            string itemPath = "SelectedMonthBooksRead[" + itemIndex + "]";
 
-						
-								
-                <Grid Grid.Row = ""0"" Grid.Column = ""1"" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />       
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row = ""0"" TextWrapping = ""Wrap"" >
-                        <Run Text = ""Title: "" FontWeight = ""Bold"" />
-                        <Run Text = ""{ Binding Title}"" />
-                    </TextBlock>
-                    <TextBlock Grid.Row = ""1"" TextWrapping = ""Wrap"" >
-                        <Run Text = ""Author: "" FontWeight = ""Bold"" />
-                    </TextBlock>
-                    <TextBlock Grid.Row=""2"" TextWrapping=""Wrap"">
-                <Run Text=""Pages: "" FontWeight=""Bold"" />
-                <Run Text=""{Binding Pages}"" />
-                    </TextBlock>
-                    <TextBlock Grid.Row=""3"" TextWrapping=""Wrap"">
-                <Run Text=""Nationality: "" FontWeight=""Bold"" />
-                <Run Text=""{Binding Nationality}"" />
-                    </TextBlock>
-                    <TextBlock Grid.Row=""4"" TextWrapping=""Wrap"">
-                <Run Text=""Original Language: "" FontWeight=""Bold"" />
-                <Run Text=""{Binding OriginalLanguage}"" />
-                    </TextBlock>
-                    <TextBlock Grid.Row=""5"" TextWrapping=""Wrap"">
-                <Run Text=""Date: "" FontWeight=""Bold"" />
-                <Run Text=""{Binding DateString}"" />
-                    </TextBlock>
-                    <TextBlock Grid.Row=""6"" TextWrapping=""Wrap"">
-                <Run Text=""Format: "" FontWeight=""Bold"" />
-                <Run Text=""{Binding Format}"" />
-                    </TextBlock>
-                </Grid>  
-
-            </Grid>
-            </DataTemplate>");
-            XmlReader xmlReader = XmlReader.Create(stringReader);
-            return XamlReader.Load(xmlReader) as DataTemplate;
-        }
-
-        private BlockUIContainer GetItemsBlockContainer()
-        {
-            BlockUIContainer titleBlockContainer = new BlockUIContainer();
-
-            ItemsControl itemsControl = new ItemsControl { Margin = new Thickness(10), MinHeight = 100};
-
-            Binding itemsControlItemSourceBinding = new Binding
+            Binding itemSourceBinding = new Binding
             {
                 Source = this,
-                Path = new PropertyPath("SelectedMonthBooksRead"),
+                Path = new PropertyPath(itemPath),
                 Mode = BindingMode.OneWay,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
-            BindingOperations.SetBinding(itemsControl, ItemsControl.ItemsSourceProperty, itemsControlItemSourceBinding);
+            BindingOperations.SetBinding(contentControl, ContentControl.ContentProperty, itemSourceBinding);
 
-            FrameworkElementFactory wrapPanelFactory = new FrameworkElementFactory { Type = typeof(WrapPanel) };
-            wrapPanelFactory.SetValue(WrapPanel.OrientationProperty, Orientation.Horizontal);
+            contentControl.ContentTemplate = CreateDataTemplate(!string.IsNullOrEmpty(bookRead.Note));
 
-            ItemsPanelTemplate itemsPanelTemplate = new ItemsPanelTemplate();
-            itemsPanelTemplate.VisualTree = wrapPanelFactory;
-            itemsControl.ItemsPanel = itemsPanelTemplate;
+            bookBlockContainer.Child = contentControl;
+            return bookBlockContainer;
 
-            itemsControl.ItemTemplate = CreateDataTemplate();
+        }
 
-            titleBlockContainer.Child = itemsControl;
-            return titleBlockContainer;
+        public DataTemplate CreateDataTemplate(bool hasNotes = false)
+        {
+            StringReader stringReader =
+                new StringReader(hasNotes ? DataTemplateForBookWithNotes : DataTemplateForBookWithotNotesXaml);
+            XmlReader xmlReader = XmlReader.Create(stringReader);
+            return XamlReader.Load(xmlReader) as DataTemplate;
         }
 
         private BlockUIContainer GetTitleBlockContainer()
         {
             BlockUIContainer titleBlockContainer = new BlockUIContainer();
 
-            StackPanel stackPanel = new StackPanel {Orientation = Orientation.Vertical, Width = 1000};
+            StackPanel stackPanel = new StackPanel { Orientation = Orientation.Vertical, Width = 1000 };
 
             Label testLabel = new Label();
             Binding reportTitleBinding = new Binding
@@ -463,9 +502,9 @@
         {
             BlockUIContainer chartBlockUiContainerBlockContainer = new BlockUIContainer();
 
-            StackPanel chartsStackPanel = new StackPanel {Orientation = Orientation.Vertical, Width = 800};
+            StackPanel chartsStackPanel = new StackPanel { Orientation = Orientation.Vertical, Width = 800 };
 
-            PlotView plotViewByCountry = new PlotView {Height = 400, Width = 600, Padding = new Thickness(10)};
+            PlotView plotViewByCountry = new PlotView { Height = 400, Width = 600, Padding = new Thickness(10) };
             Binding chartModelByCountryBinding = new Binding
             {
                 Source = this,
@@ -515,6 +554,33 @@
             chartBlockUiContainerBlockContainer.Child = chartsStackPanel;
             return chartBlockUiContainerBlockContainer;
         }
+
+        #endregion
+
+        #region Commands
+
+        /// <summary>
+        /// Gets the select image for nation command.
+        /// </summary>
+        public ICommand PrintCommand => _printCommand ??
+                                            (_printCommand =
+                                             new RelayCommandHandler(PrintCommandAction) { IsEnabled = true });
+
+        public ICommand MonthlyReportLoadedCommand => _monthlyReportLoadedCommand ??
+                                                      (_monthlyReportLoadedCommand =
+                                                          new RelayCommandHandler(MonthlyReportLoadedCommandAction) { IsEnabled = true });
+
+        #endregion
+
+        #region Command Handlers
+
+        /// <summary>
+        /// The command action to add a new book from the email to the database.
+        /// </summary>
+        public void MonthlyReportLoadedCommandAction(object parameter)
+        {
+        }
+
 
 
         /// <summary>

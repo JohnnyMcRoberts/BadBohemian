@@ -402,7 +402,7 @@
 
                                     <oxy:PlotView  Height="400" Padding="10,10"
                                                    Model="{Binding Path=PlotCurrentMonthDocumentPagesReadByCountry.Model}"
-                                                   Controller="{Binding Path=PlotCurrentDocumentMonthPagesReadByCountry.ViewController}" />
+                                                   Controller="{Binding Path=PlotCurrentMonthDocumentPagesReadByCountry.ViewController}" />
 
                                 </StackPanel>
 
