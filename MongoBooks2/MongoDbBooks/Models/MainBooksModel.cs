@@ -526,12 +526,13 @@
             if (BooksRead.Count < 1) return;
             DateTime startDate = BooksRead[0].Date;
             DateTime endDate = BooksRead.Last().Date;
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             DateTime monthStart = new DateTime(startDate.Year, startDate.Month, 1);
             DateTime monthEnd = monthStart.AddMonths(1).AddSeconds(-1);
 
             // get all the months a book has been read
-            while (monthStart < endDate)
+            while (monthStart <= endDate)
             {
                 List<BookRead> monthList = new List<BookRead>();
 
@@ -549,7 +550,7 @@
                 }
 
                 monthStart = monthStart.AddMonths(1);
-                monthEnd = monthEnd.AddMonths(1);
+                monthEnd = monthStart.AddMonths(1).AddSeconds(-1);
             }
 
             TalliedMonths.Clear();

@@ -23,5 +23,8 @@
     <Setting Name="ExportDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="MonthlyReportFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\temp</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
