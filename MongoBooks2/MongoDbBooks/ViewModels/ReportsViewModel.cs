@@ -6,15 +6,20 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.ComponentModel;
+    using System.IO;
     using System.Linq.Expressions;
-    using System.Data;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Markup;
+    using System.Windows.Threading;
+    using System.Xml;
 
     using MongoDbBooks.Models;
-    using MongoDbBooks.Models.Geography;
-    using MongoDbBooks.Models.Database;
     using MongoDbBooks.ViewModels.Utilities;
-    using MongoDbBooks.Views;
-    using PlotGenerators;
+    using MongoDbBooks.ViewModels.PlotGenerators;
+    using OxyPlot.Wpf;
 
     public class ReportsViewModel : INotifyPropertyChanged
     {
@@ -55,14 +60,147 @@
         //private TalliedMonth _selectedMonthTally;
 
         /// <summary>
-        /// The select image for nation command.
+        /// The print command.
         /// </summary>
-        private ICommand _selectImageForNationCommand;
+        private ICommand _printCommand;
+
+        /// <summary>
+        /// The month report has loaded command.
+        /// </summary>
+        private ICommand _monthlyReportLoadedCommand;
 
         #endregion
 
         #region Constants
 
+
+        private static string ForceRenderFlowDocumentXaml =
+            @"<Window xmlns=""http://schemas.microsoft.com/netfx/2007/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"">
+                <FlowDocumentScrollViewer Name=""viewer""/>
+            </Window>";
+
+        private const string DataTemplateForBookWithNotes =
+          @"<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
+                <Grid Margin=""10,10"" Width=""460"">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height=""150""/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition MinWidth=""330""/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Row=""0"" Grid.Column=""0""  
+                        HorizontalAlignment=""Left"" VerticalAlignment=""Center"" Source=""{Binding DisplayImage}"" />
+
+                    <Grid Grid.Row=""0"" Grid.Column=""1"">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row=""0"" TextWrapping=""Wrap"">
+                            <Run Text=""Title: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Title}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""1"" TextWrapping=""Wrap"">
+                            <Run Text=""Author: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Author}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""2"" TextWrapping=""Wrap"">
+                            <Run Text=""Pages: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Pages}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""3"" TextWrapping=""Wrap"">
+                            <Run Text=""Nationality: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Nationality}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""4"" TextWrapping=""Wrap"">
+                            <Run Text=""Original Language: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding OriginalLanguage}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""5"" TextWrapping=""Wrap"">
+                            <Run Text=""Date: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding DateString}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""6"" TextWrapping=""Wrap"">
+                            <Run Text=""Format: "" FontWeight=""Bold"" />
+                            <Run Text=""{Binding Format}"" />
+                        </TextBlock>
+                    </Grid>
+
+                    <TextBlock Grid.Row=""1"" Grid.Column=""0"" Grid.ColumnSpan=""2""
+                                TextWrapping=""Wrap"" MaxWidth=""450"" HorizontalAlignment=""Left"">
+                        <Run Text=""Notes: "" FontWeight=""Bold"" />
+                        <Run Text=""{Binding Note}"" />
+                    </TextBlock>
+                </Grid>
+            </DataTemplate>";
+
+
+        private const string DataTemplateForBookWithotNotesXaml =
+            @"<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
+                <Grid Margin=""10, 10"" Width=""460"">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height = ""150"" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+ 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition MinWidth = ""330"" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Row = ""0"" Grid.Column = ""0"" HorizontalAlignment = ""Left"" 
+                        VerticalAlignment = ""Center"" Source = ""{Binding DisplayImage}"" />
+								
+                    <Grid Grid.Row = ""0"" Grid.Column = ""1"" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />       
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row = ""0"" TextWrapping = ""Wrap"" >
+                            <Run Text = ""Title: "" FontWeight = ""Bold"" />
+                            <Run Text = ""{ Binding Title}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row = ""1"" TextWrapping = ""Wrap"" >
+                            <Run Text = ""Author: "" FontWeight = ""Bold"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""2"" TextWrapping=""Wrap"">
+                    <Run Text=""Pages: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding Pages}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""3"" TextWrapping=""Wrap"">
+                    <Run Text=""Nationality: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding Nationality}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""4"" TextWrapping=""Wrap"">
+                    <Run Text=""Original Language: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding OriginalLanguage}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""5"" TextWrapping=""Wrap"">
+                    <Run Text=""Date: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding DateString}"" />
+                        </TextBlock>
+                        <TextBlock Grid.Row=""6"" TextWrapping=""Wrap"">
+                    <Run Text=""Format: "" FontWeight=""Bold"" />
+                    <Run Text=""{Binding Format}"" />
+                        </TextBlock>
+                    </Grid>  
+
+                </Grid>
+            </DataTemplate>";
 
         #endregion
 
@@ -86,6 +224,10 @@
                     OnPropertyChanged(() => SelectedMonthBooksRead);
                     PlotCurrentMonthPagesReadByLanguage.UpdateData(_mainModel);
                     PlotCurrentMonthPagesReadByCountry.UpdateData(_mainModel);
+                    PlotCurrentMonthDocumentPagesReadByLanguage.UpdateData(_mainModel);
+                    PlotCurrentMonthDocumentPagesReadByCountry.UpdateData(_mainModel);
+                    PlotCurrentMonthPrintPagesReadByLanguage.UpdateData(_mainModel);
+                    PlotCurrentMonthPrintPagesReadByCountry.UpdateData(_mainModel);
                 }
             }
         }
@@ -118,6 +260,18 @@
 
         public OxyPlotPair PlotCurrentMonthPagesReadByCountry { get; private set; }
 
+        public OxyPlotPair PlotCurrentMonthDocumentPagesReadByLanguage { get; private set; }
+
+        public OxyPlotPair PlotCurrentMonthDocumentPagesReadByCountry { get; private set; }
+
+        public OxyPlotPair PlotCurrentMonthPrintPagesReadByLanguage { get; private set; }
+
+        public OxyPlotPair PlotCurrentMonthPrintPagesReadByCountry { get; private set; }
+
+        public FlowDocument MonthlyReportDocument { get; set; }
+
+        public string ReportTitle => "Report for " + SelectedMonth.ToString("MMMM yyyy");
+
         #endregion
 
         #region Constructor
@@ -144,6 +298,16 @@
                 new OxyPlotPair(new CurrentMonthPagesReadByLanguagePlotGenerator(), "CurrentMonthPagesReadByLanguage");
             PlotCurrentMonthPagesReadByCountry =
                 new OxyPlotPair(new CurrentMonthPagesReadByCountryPlotGenerator(), "CurrentMonthPagesReadByCountry");
+
+            PlotCurrentMonthDocumentPagesReadByLanguage =
+                new OxyPlotPair(new CurrentMonthPagesReadByLanguagePlotGenerator(), "CurrentMonthPagesReadByLanguage");
+            PlotCurrentMonthDocumentPagesReadByCountry =
+                new OxyPlotPair(new CurrentMonthPagesReadByCountryPlotGenerator(), "CurrentMonthPagesReadByCountry");
+
+            PlotCurrentMonthPrintPagesReadByLanguage =
+                new OxyPlotPair(new CurrentMonthPagesReadByLanguagePlotGenerator(), "CurrentMonthPagesReadByLanguage");
+            PlotCurrentMonthPrintPagesReadByCountry =
+                new OxyPlotPair(new CurrentMonthPagesReadByCountryPlotGenerator(), "CurrentMonthPagesReadByCountry");
         }
 
         // should think about a flow doc and then html ....
@@ -161,6 +325,12 @@
 
             PlotCurrentMonthPagesReadByLanguage.UpdateData(_mainModel);
             PlotCurrentMonthPagesReadByCountry.UpdateData(_mainModel);
+
+            PlotCurrentMonthDocumentPagesReadByLanguage.UpdateData(_mainModel);
+            PlotCurrentMonthDocumentPagesReadByCountry.UpdateData(_mainModel);
+
+            PlotCurrentMonthPrintPagesReadByLanguage.UpdateData(_mainModel);
+            PlotCurrentMonthPrintPagesReadByCountry.UpdateData(_mainModel);
             OnPropertyChanged("");
         }
 
@@ -185,6 +355,206 @@
             return selected;
         }
 
+        private void ForceRenderFlowDocument(FlowDocument document)
+        {
+            using (XmlTextReader reader = new XmlTextReader(new StringReader(ForceRenderFlowDocumentXaml)))
+            {
+                Window window = XamlReader.Load(reader) as Window;
+                if (window == null)
+                    return;
+                FlowDocumentScrollViewer viewer = LogicalTreeHelper.FindLogicalNode(window, "viewer") as FlowDocumentScrollViewer;
+                if (viewer == null)
+                    return;
+                viewer.Document = document;
+                // Show the window way off-screen
+                window.WindowStartupLocation = WindowStartupLocation.Manual;
+                window.Top = Int32.MaxValue;
+                window.Left = Int32.MaxValue;
+                window.ShowInTaskbar = false;
+                window.Show();
+                // Ensure that dispatcher has done the layout and render passes
+                Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Loaded, new Action(() => { }));
+                viewer.Document = null;
+                window.Close();
+            }
+        }
+
+        private void DoThePrint(FlowDocument document)
+        {
+            // Clone the source document's content into a new FlowDocument.
+            // This is because the pagination for the printer needs to be
+            // done differently than the pagination for the displayed page.
+            // We print the copy, rather that the original FlowDocument.
+            MemoryStream s = new MemoryStream();
+            TextRange source = new TextRange(document.ContentStart, document.ContentEnd);
+            source.Save(s, DataFormats.Xaml);
+
+            FlowDocument doc = GetPrintFlowDocument();
+
+            ForceRenderFlowDocument(doc);
+
+            // get information about the dimensions of the seleted printer+media.
+            System.Printing.PrintDocumentImageableArea ia = null;
+            System.Windows.Xps.XpsDocumentWriter docWriter = System.Printing.PrintQueue.CreateXpsDocumentWriter(ref ia);
+
+            if (docWriter != null && ia != null)
+            {
+                DocumentPaginator paginator = ((IDocumentPaginatorSource)doc).DocumentPaginator;
+
+                // Change the PageSize and PagePadding for the document to match the CanvasSize for the printer device.
+                paginator.PageSize = new Size(ia.MediaSizeWidth, ia.MediaSizeHeight);
+                Thickness t = new Thickness(72);  // copy.PagePadding;
+                doc.PagePadding = new Thickness(
+                                 Math.Max(ia.OriginWidth, t.Left),
+                                   Math.Max(ia.OriginHeight, t.Top),
+                                   Math.Max(ia.MediaSizeWidth - (ia.OriginWidth + ia.ExtentWidth), t.Right),
+                                   Math.Max(ia.MediaSizeHeight - (ia.OriginHeight + ia.ExtentHeight), t.Bottom));
+
+                doc.ColumnWidth = double.PositiveInfinity;
+                //copy.PageWidth = 528; // allow the page to be the natural with of the output device
+
+                // Send content to the printer.
+                docWriter.Write(paginator);
+            }
+
+        }
+
+        private FlowDocument GetPrintFlowDocument()
+        {
+            FlowDocument doc = new FlowDocument();
+
+            Paragraph p = new Paragraph(new Run("Monthly Report")) { FontSize = 36, FontWeight = FontWeights.Bold };
+            doc.Blocks.Add(p);
+
+            BlockUIContainer titleBlockContainer = GetTitleBlockContainer();
+            doc.Blocks.Add(titleBlockContainer);
+
+            for (int i = 0; i < SelectedMonthBooksRead.Count; i++)
+            {
+                BlockUIContainer bookBlockContainer = GetBookBlockContainer(i, SelectedMonthBooksRead[i]);
+                if (bookBlockContainer != null)
+                {
+                    doc.Blocks.Add(bookBlockContainer);
+                }
+            }
+
+            BlockUIContainer chartBlockUiContainerBlockContainer = GetChartBlockUiContainerBlockContainer();
+            doc.Blocks.Add(chartBlockUiContainerBlockContainer);
+
+            return doc;
+        }
+
+        private BlockUIContainer GetBookBlockContainer(int itemIndex, BookRead bookRead)
+        {
+            BlockUIContainer bookBlockContainer = new BlockUIContainer();
+
+            ContentControl contentControl = new ContentControl { Margin = new Thickness(10), MinHeight = 100 };
+
+            string itemPath = "SelectedMonthBooksRead[" + itemIndex + "]";
+
+            Binding itemSourceBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath(itemPath),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(contentControl, ContentControl.ContentProperty, itemSourceBinding);
+
+            contentControl.ContentTemplate = CreateDataTemplate(!string.IsNullOrEmpty(bookRead.Note));
+
+            bookBlockContainer.Child = contentControl;
+            return bookBlockContainer;
+
+        }
+
+        public DataTemplate CreateDataTemplate(bool hasNotes = false)
+        {
+            StringReader stringReader =
+                new StringReader(hasNotes ? DataTemplateForBookWithNotes : DataTemplateForBookWithotNotesXaml);
+            XmlReader xmlReader = XmlReader.Create(stringReader);
+            return XamlReader.Load(xmlReader) as DataTemplate;
+        }
+
+        private BlockUIContainer GetTitleBlockContainer()
+        {
+            BlockUIContainer titleBlockContainer = new BlockUIContainer();
+
+            StackPanel stackPanel = new StackPanel { Orientation = Orientation.Vertical, Width = 1000 };
+
+            Label testLabel = new Label();
+            Binding reportTitleBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("ReportTitle"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(testLabel, ContentControl.ContentProperty, reportTitleBinding);
+
+            stackPanel.Children.Add(testLabel);
+
+            titleBlockContainer.Child = stackPanel;
+            return titleBlockContainer;
+        }
+
+        private BlockUIContainer GetChartBlockUiContainerBlockContainer()
+        {
+            BlockUIContainer chartBlockUiContainerBlockContainer = new BlockUIContainer();
+
+            StackPanel chartsStackPanel = new StackPanel { Orientation = Orientation.Vertical, Width = 800 };
+
+            PlotView plotViewByCountry = new PlotView { Height = 400, Width = 600, Padding = new Thickness(10) };
+            Binding chartModelByCountryBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("PlotCurrentMonthPrintPagesReadByCountry.Model"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(plotViewByCountry, PlotView.ModelProperty, chartModelByCountryBinding);
+
+            Binding chartControllerByCountryBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("PlotCurrentPrintMonthPagesReadByCountry.ViewController"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(plotViewByCountry, PlotView.ControllerProperty, chartControllerByCountryBinding);
+
+            chartsStackPanel.Children.Add(plotViewByCountry);
+
+
+            //PlotCurrentMonthPrintPagesReadByLanguage
+
+
+
+            PlotView plotViewByLanguage = new PlotView { Height = 400, Width = 600, Padding = new Thickness(10) };
+            Binding chartModelByLanguageBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("PlotCurrentMonthPrintPagesReadByLanguage.Model"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(plotViewByLanguage, PlotView.ModelProperty, chartModelByLanguageBinding);
+
+            Binding chartControllerByLanguageBinding = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("PlotCurrentPrintMonthPagesReadByLanguage.ViewController"),
+                Mode = BindingMode.OneWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            BindingOperations.SetBinding(plotViewByLanguage, PlotView.ControllerProperty, chartControllerByLanguageBinding);
+
+            chartsStackPanel.Children.Add(plotViewByLanguage);
+
+            chartBlockUiContainerBlockContainer.Child = chartsStackPanel;
+            return chartBlockUiContainerBlockContainer;
+        }
+
         #endregion
 
         #region Commands
@@ -192,9 +562,14 @@
         /// <summary>
         /// Gets the select image for nation command.
         /// </summary>
-        public ICommand SelectImageForNationCommand => _selectImageForNationCommand ??
-                                            (_selectImageForNationCommand =
-                                             new RelayCommandHandler(SelectImageForNationCommandAction) { IsEnabled = true });
+        public ICommand PrintCommand => _printCommand ??
+                                            (_printCommand =
+                                             new RelayCommandHandler(PrintCommandAction) { IsEnabled = true });
+
+        public ICommand MonthlyReportLoadedCommand => _monthlyReportLoadedCommand ??
+                                                      (_monthlyReportLoadedCommand =
+                                                          new RelayCommandHandler(MonthlyReportLoadedCommandAction) { IsEnabled = true });
+
         #endregion
 
         #region Command Handlers
@@ -202,12 +577,55 @@
         /// <summary>
         /// The command action to add a new book from the email to the database.
         /// </summary>
-        public void SelectImageForNationCommandAction(object parameter)
+        public void MonthlyReportLoadedCommandAction(object parameter)
         {
-            Nation nation = parameter as Nation;
         }
 
-        #endregion
+
+
+        /// <summary>
+        /// The command action to add a new book from the email to the database.
+        /// </summary>
+        public void PrintCommandAction(object parameter)
+        {
+            if (MonthlyReportDocument == null)
+                return;
+
+            DoThePrint(MonthlyReportDocument);
+#if old
+
+            string path = "test.xps";
+
+            System.IO.Packaging.Package package = System.IO.Packaging.Package.Open(path, System.IO.FileMode.Create);
+            System.Windows.Xps.Packaging.XpsDocument document = new System.Windows.Xps.Packaging.XpsDocument(package);
+            System.Windows.Xps.XpsDocumentWriter writer = System.Windows.Xps.Packaging.XpsDocument.CreateXpsDocumentWriter(document);
+            //FixedDocument doc = new FixedDocument();
+
+            //FixedPage page1 = new FixedPage();
+            //PageContent page1Content = new PageContent();
+            //((System.Windows.Markup.IAddChild)page1Content).AddChild(page1);
+
+            //// add the content
+            ////System.Windows.Controls.Button button = new System.Windows.Controls.Button() { Content = };
+
+            ////if (MonthlyReportDocument != null)
+            ////page1.Children.Add(MonthlyReportDocument);
+
+            //doc.Pages.Add(page1Content);
+            //writer.Write(doc);
+            //document.Close();
+            //package.Close();
+
+            System.Windows.Controls.PrintDialog printDialog = new System.Windows.Controls.PrintDialog();
+            if (printDialog.ShowDialog() == true)
+            {
+                printDialog.PrintDocument(((IDocumentPaginatorSource)MonthlyReportDocument).DocumentPaginator, "Flow Document Print Job");
+            }
+
+#endif
+        }
+
+#endregion
 
     }
 }
