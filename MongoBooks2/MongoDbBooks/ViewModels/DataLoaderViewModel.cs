@@ -50,6 +50,7 @@
         private ICommand _connectToDatabaseCommand;
         private ICommand _openCountriesLocationsCommand;
         private ICommand _openWorldMapFileCommand;
+        private ICommand _updateBooksFromTextCommand;
 
         private bool _dataLoaded = false;
         private bool _connectedToDatabaseSuccessfully = false;
@@ -101,7 +102,6 @@
             }
         }
 
-
         public ICommand OpenCountriesLocationsCommand
         {
             get
@@ -112,7 +112,6 @@
             }
         }
 
-
         public ICommand OpenWorldMapFileCommand
         {
             get
@@ -122,8 +121,6 @@
                         new CommandHandler(() => OpenWorldMapFileCommandAction(), true));
             }
         }
-
-
 
         public ICommand SaveTextCommand
         {
@@ -145,6 +142,15 @@
             }
         }
 
+        public ICommand UpdateBooksFromTextCommand
+        {
+            get
+            {
+                return _updateBooksFromTextCommand ??
+                    (_updateBooksFromTextCommand =
+                        new CommandHandler(() => UpdateBooksFromTextCommandAction(), true));
+            }
+        }
         #endregion
 
         #region Command Handlers
@@ -248,6 +254,25 @@
                     _parent.UpdateData();
                     OnPropertyChanged("");
                 }
+            }
+        }
+
+        public void UpdateBooksFromTextCommandAction()
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.FileName = _mainModel.InputFilePath;
+
+            fileDialog.Filter = @"All files (*.*)|*.*|CSV Files (*.csv)|*.csv";
+            fileDialog.FilterIndex = 4;
+            fileDialog.RestoreDirectory = true;
+
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _mainModel.UpdateBooksFromFile(fileDialog.FileName);
+
+                IsDataLoaded = true;
+                _parent.UpdateData();
+                OnPropertyChanged("");
             }
         }
 

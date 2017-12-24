@@ -98,7 +98,7 @@
 
         public ObservableCollection<AuthorCountry> AuthorCountries { get; }
 
-        public ObservableCollection<AuthorLanguage> AuthorLanguages { get;  }
+        public ObservableCollection<AuthorLanguage> AuthorLanguages { get; }
 
         public ObservableCollection<TalliedBook> TalliedBooks { get; }
 
@@ -203,7 +203,7 @@
 
         public NationDatabase NationDatabase => _nationsDatabase;
 
-       
+
 
         #endregion
 
@@ -211,59 +211,43 @@
 
         public void ReadBooksFromFile(string filename)
         {
+            ObservableCollection<BookRead> readItems = GetBooksFromFile(filename);
 
-            using (var sr = new StreamReader(filename, Encoding.Default))
-            {
-                var csv = new CsvReader(sr);
+            BooksRead.Clear();
+            foreach (var book in readItems)
+                BooksRead.Add(book);
 
-                BooksRead.Clear();
-
-                // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio
-                while (csv.Read())
-                {
-                    var stringFieldDate = csv.GetField<string>(0);
-                    var stringFieldDDMMYYYY = csv.GetField<string>(1);
-                    var stringFieldAuthor = csv.GetField<string>(2);
-                    var stringFieldTitle = csv.GetField<string>(3);
-                    var stringFieldPages = csv.GetField<string>(4);
-                    var stringFieldNote = csv.GetField<string>(5);
-                    var stringFieldNationality = csv.GetField<string>(6);
-                    var stringFieldOriginalLanguage = csv.GetField<string>(7);
-                    var stringFieldBook = csv.GetField<string>(8);
-                    var stringFieldComic = csv.GetField<string>(9);
-                    var stringFieldAudio = csv.GetField<string>(10);
-                    var stringFieldimage = csv.GetField<string>(11);
-
-                    DateTime dateForBook;
-                    if (DateTime.TryParseExact(stringFieldDDMMYYYY, "d/M/yyyy",
-                        CultureInfo.InvariantCulture, DateTimeStyles.None, out dateForBook))
-                    {
-                        UInt16 pages;
-                        UInt16.TryParse(stringFieldPages, out pages);
-                        BookRead book = new BookRead()
-                        {
-                            DateString = stringFieldDate,
-                            Date = dateForBook,
-                            Author = stringFieldAuthor,
-                            Title = stringFieldTitle,
-                            Pages = pages,
-                            Note = stringFieldNote,
-                            Nationality = stringFieldNationality,
-                            OriginalLanguage = stringFieldOriginalLanguage,
-                            Audio = stringFieldAudio,
-                            Book = stringFieldBook,
-                            Comic = stringFieldComic,
-                            ImageUrl = stringFieldimage
-                        };
-
-                        BooksRead.Add(book);
-                    }
-                }
-            }
             UpdateCollections();
             Properties.Settings.Default.InputFile = filename;
             Properties.Settings.Default.Save();
             DataFromFile = true;
+        }
+
+        public void UpdateBooksFromFile(string fileName)
+        {
+            ObservableCollection<BookRead> readItems = GetBooksFromFile(fileName);
+
+            foreach (var readItem in readItems.OrderBy(x => x.Date))
+            {
+                BookRead existingReadBook = FindExistingBookRead(readItem);
+                if (existingReadBook == null)
+                {
+                    if (!AddNewBook(readItem, out string error))
+                    {
+                        _log.Debug("Add new book failed:" + error + "\n Title: " + readItem.Title +
+                            "\n Author " + readItem.Audio +
+                            "\n Date: " + readItem.DateString);
+                    }
+                }
+                else
+                {
+                    MergeBookData(existingReadBook, readItem);
+                    if (!UpdateBook(existingReadBook, out string error, false))
+                    {
+                        _log.Debug("Update existing book failed:" + error);
+                    }
+                }
+            }
         }
 
         public void ReadWorldMapFromFile(string filename)
@@ -379,8 +363,8 @@
 
                 while (csv.Read())
                 {
-                    
-                    var stringFieldCountry = csv.GetField<string>(0);                    
+
+                    var stringFieldCountry = csv.GetField<string>(0);
                     var stringFieldCapital = csv.GetField<string>(1);
 
                     var stringFieldLatitude = csv.GetField<string>(2);
@@ -466,7 +450,7 @@
 
             char lastChar = stringField.ToUpper()[stringField.Length - 1];
             bool isPositive;
-            switch(lastChar)
+            switch (lastChar)
             {
                 case 'E':
                     if (isLat) return -360.0;
@@ -490,7 +474,7 @@
 
             string degreesStr = stringField.Substring(0, stringField.Length - 5);
             ushort degrees;
-            if(!UInt16.TryParse(degreesStr, out degrees)) return -360;
+            if (!UInt16.TryParse(degreesStr, out degrees)) return -360;
 
 
             string minsStr = stringField.Substring(degreesStr.Length + 1, 2);
@@ -518,7 +502,6 @@
             UpdateBooksPerMonth();
         }
 
-
         private void UpdateBooksPerMonth()
         {
             // clear the list and the counts
@@ -536,7 +519,7 @@
             {
                 List<BookRead> monthList = new List<BookRead>();
 
-                foreach(BookRead book in BooksRead)
+                foreach (BookRead book in BooksRead)
                 {
                     if (book.Date >= monthStart && book.Date <= monthEnd)
                     {
@@ -581,7 +564,7 @@
                         WorldCountry country = GetCountryForBook(book);
                         if (country != null)
                         {
-                            BookLocation location = 
+                            BookLocation location =
                                 new BookLocation() { Book = book, Latitude = country.Latitude, Longitude = country.Longitude };
 
                             delta.BooksLocationsToDate.Add(location);
@@ -597,7 +580,7 @@
 
         private WorldCountry GetCountryForBook(BookRead book)
         {
-            if (_worldCountryLookup == null || _worldCountryLookup.Count == 0 || 
+            if (_worldCountryLookup == null || _worldCountryLookup.Count == 0 ||
                 !_worldCountryLookup.ContainsKey(book.Nationality)) return null;
             return _worldCountryLookup[book.Nationality];
         }
@@ -913,7 +896,7 @@
             worldCountries.Count(filter);
         }
 
-        private void LoadAllCountriesFromDatabase(IMongoCollection<WorldCountry> worldCountries, 
+        private void LoadAllCountriesFromDatabase(IMongoCollection<WorldCountry> worldCountries,
             FilterDefinition<WorldCountry> filter)
         {
             WorldCountries.Clear();
@@ -988,7 +971,7 @@
             worldCountries.Count(filter);
         }
 
-        private long AddLoadedCountriesToBlankDatabase(IMongoCollection<WorldCountry> worldCountries, 
+        private long AddLoadedCountriesToBlankDatabase(IMongoCollection<WorldCountry> worldCountries,
             FilterDefinition<WorldCountry> filter)
         {
             worldCountries.InsertMany(WorldCountries);
@@ -1088,13 +1071,13 @@
 
             List<BookRead> duplicateBooks = new List<BookRead>();
 
-            for(int i = 0; i < existingItems.Count; i++)
+            for (int i = 0; i < existingItems.Count; i++)
             {
                 var extBook = existingItems[i];
 
                 // if in the duplicate list skip on
                 bool inDuplicatedList = false;
-                foreach(var dupBook in duplicateBooks)
+                foreach (var dupBook in duplicateBooks)
                 {
                     if (dupBook.Author == extBook.Author &&
                         dupBook.Title == extBook.Title &&
@@ -1112,7 +1095,7 @@
                 for (int j = 0; j < existingItems.Count; j++)
                 {
                     // ignore self
-                    if (j == i) 
+                    if (j == i)
                         continue;
 
                     var dupBook = existingItems[j];
@@ -1123,7 +1106,7 @@
                         dupBook.Pages == extBook.Pages)
                     {
                         var timeDiff = dupBook.Date - extBook.Date;
-                        int hours = (timeDiff.Days * 24) +  timeDiff.Hours;
+                        int hours = (timeDiff.Days * 24) + timeDiff.Hours;
 
                         if (Math.Abs(hours) < 48)
                             duplicateBooks.Add(dupBook);
@@ -1175,7 +1158,120 @@
             return Path.Combine(exportDirectory, fileName);
         }
 
+
+        private void MergeBookData(BookRead existingReadBook, BookRead readItem)
+        {
+            if (existingReadBook.Author != readItem.Author)
+                existingReadBook.Author = readItem.Author;
+
+            if (existingReadBook.Date != readItem.Date)
+                existingReadBook.Date = readItem.Date;
+
+            if (existingReadBook.ImageUrl != readItem.ImageUrl)
+                existingReadBook.ImageUrl = readItem.ImageUrl;
+
+            if (existingReadBook.Nationality != readItem.Nationality)
+                existingReadBook.Nationality = readItem.Nationality;
+
+            if (existingReadBook.OriginalLanguage != readItem.OriginalLanguage)
+                existingReadBook.OriginalLanguage = readItem.OriginalLanguage;
+
+            if (existingReadBook.Format != readItem.Format)
+                existingReadBook.Format = readItem.Format;
+
+            if (existingReadBook.Pages != readItem.Pages)
+                existingReadBook.Pages = readItem.Pages;
+
+            if (existingReadBook.Title != readItem.Title)
+                existingReadBook.Title = readItem.Title;
+
+            if (existingReadBook.Note != readItem.Note &&
+                !string.IsNullOrEmpty(readItem.Note))
+            {
+                if (!string.IsNullOrEmpty(existingReadBook.Note) && 
+                    existingReadBook.Note.Length < readItem.Note.Length)
+                    existingReadBook.Note = readItem.Note;
+                else if (string.IsNullOrEmpty(existingReadBook.Note))
+                    existingReadBook.Note = readItem.Note;
+            }
+        }
+
+        private static ObservableCollection<BookRead> GetBooksFromFile(string filename)
+        {
+            ObservableCollection<BookRead> readItems = new ObservableCollection<BookRead>();
+            using (var sr = new StreamReader(filename, Encoding.Default))
+            {
+                var csv = new CsvReader(sr);
+
+                readItems.Clear();
+
+                // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio
+                while (csv.Read())
+                {
+                    var stringFieldDate = csv.GetField<string>(0);
+                    var stringFieldDDMMYYYY = csv.GetField<string>(1);
+                    var stringFieldAuthor = csv.GetField<string>(2);
+                    var stringFieldTitle = csv.GetField<string>(3);
+                    var stringFieldPages = csv.GetField<string>(4);
+                    var stringFieldNote = csv.GetField<string>(5);
+                    var stringFieldNationality = csv.GetField<string>(6);
+                    var stringFieldOriginalLanguage = csv.GetField<string>(7);
+                    var stringFieldBook = csv.GetField<string>(8);
+                    var stringFieldComic = csv.GetField<string>(9);
+                    var stringFieldAudio = csv.GetField<string>(10);
+                    var stringFieldImage = csv.GetField<string>(11);
+
+                    DateTime dateForBook;
+                    if (DateTime.TryParseExact(stringFieldDDMMYYYY, "d/M/yyyy",
+                        CultureInfo.InvariantCulture, DateTimeStyles.None, out dateForBook))
+                    {
+                        UInt16 pages;
+                        UInt16.TryParse(stringFieldPages, out pages);
+                        BookRead book = new BookRead()
+                        {
+                            DateString = stringFieldDate,
+                            Date = dateForBook,
+                            Author = stringFieldAuthor,
+                            Title = stringFieldTitle,
+                            Pages = pages,
+                            Note = stringFieldNote,
+                            Nationality = stringFieldNationality,
+                            OriginalLanguage = stringFieldOriginalLanguage,
+                            Audio = stringFieldAudio,
+                            Book = stringFieldBook,
+                            Comic = stringFieldComic,
+                            ImageUrl = stringFieldImage
+                        };
+
+                        readItems.Add(book);
+                    }
+                }
+            }
+
+            return readItems;
+        }
+
+        private BookRead FindExistingBookRead(BookRead readItem)
+        {
+            foreach(var book in BooksRead)
+            {
+                int matches = 0;
+
+                if (readItem.Title == book.Title) matches++;
+                if (readItem.Author == book.Author) matches++;
+                if (readItem.Pages == book.Pages) matches++;
+                if ((readItem.Date - book.Date).Days < 1) matches++;
+
+                if (matches > 2)
+                {
+                    return book;
+                }
+            }
+
+            return null;
+        }
+
         #endregion
 
+        }
     }
-}

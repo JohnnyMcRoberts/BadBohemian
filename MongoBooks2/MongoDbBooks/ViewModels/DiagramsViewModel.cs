@@ -611,11 +611,18 @@ namespace MongoDbBooks.ViewModels
             Brush background = Brushes.LightYellow;
             if (country.ImageUri != null)
             {
-                System.Windows.Media.Imaging.BitmapImage im =
-                    new System.Windows.Media.Imaging.BitmapImage(country.DisplayImage);
+                try
+                {
+                    System.Windows.Media.Imaging.BitmapImage im =
+                        new System.Windows.Media.Imaging.BitmapImage(country.DisplayImage);
 
-                background = new ImageBrush(im);
-                background.Opacity = 0.5;
+                    background = new ImageBrush(im);
+                    background.Opacity = 0.5;
+                }
+                catch(Exception e)
+                {
+                    _log.Debug(e);
+                }
             }
 
             TextVisual3D text3D = new TextVisual3D()
