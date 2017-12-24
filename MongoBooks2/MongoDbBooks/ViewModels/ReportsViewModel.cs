@@ -22,6 +22,7 @@
     using MongoDbBooks.Models.Exporters;
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.ViewModels.PlotGenerators;
+
     using OxyPlot.Wpf;
 
     public class ReportsViewModel : INotifyPropertyChanged
@@ -725,7 +726,8 @@
         {
             // Generate a new temporary file.
             var ticks = DateTime.Now.Ticks;
-            string temporaryFileName = @"d:\temp\chart_"+ ticks + ".png";
+            string outputDir = _mainModel.DefaultExportDirectory;
+            string temporaryFileName = outputDir + @"\chart_" + ticks + ".png";
 
             // Get a control to render the image into.
             UIElement target = plotElement;
