@@ -1,18 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestBlogWpfApp.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
   <Profiles />
-  <Settings>
-    <Setting Name="client_id" Type="System.String" Scope="User">
-      <Value Profile="(Default)">414518999210-he70rmsarq131hc9s6c5r905l9jld5aq.apps.googleusercontent.com</Value>
-    </Setting>
-    <Setting Name="project_id" Type="System.String" Scope="User">
-      <Value Profile="(Default)">booksblogger-187001</Value>
-    </Setting>
-    <Setting Name="client_secret" Type="System.String" Scope="User">
-      <Value Profile="(Default)">z6ADhprsTngtXyEIlC9mZP1k</Value>
-    </Setting>
-    <Setting Name="redirect_uris" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[ "urn:ietf:wg:oauth:2.0:oob", "http://localhost" ]</Value>
-    </Setting>
-  </Settings>
+  <Settings />
 </SettingsFile>

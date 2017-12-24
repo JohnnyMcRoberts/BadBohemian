@@ -1,13 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TestBlogWpfApp.ViewModels
+﻿namespace TestBlogWpfApp.ViewModels
 {
+    using System;
+    using System.ComponentModel;
+    using System.Linq.Expressions;
+    using System.Windows.Input;
+    using System.Threading.Tasks;
+
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.ComponentModel;
+    using System.Linq.Expressions;
+    using System.Data;
+
+    using Google.Apis.Auth.OAuth2;
+    using Google.Apis.Blogger.v3;
+    using Google.Apis.Services;
+
+
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Google.Apis.Auth.OAuth2;
+    using Google.Apis.Blogger.v3;
+    using Google.Apis.Services;
+    using System.IO;
+
     public class MainViewModel : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
@@ -42,11 +69,19 @@ namespace TestBlogWpfApp.ViewModels
         /// </summary>
         private string _emailAddress;
 
-
         /// <summary>
         /// The title to display.
         /// </summary>
         private string _title;
+
+        /// <summary>
+        /// The print command.
+        /// </summary>
+        private ICommand _getBlogsCommand;
+
+
+        private UserCredential credential;
+        private BloggerService service;
 
 
         #endregion
@@ -74,7 +109,7 @@ namespace TestBlogWpfApp.ViewModels
             }
         }
 
-
+        public ObservableCollection<Google.Apis.Blogger.v3.Data.Blog> Blogs { get; set; }
         #endregion
 
         #region Constructors
@@ -86,10 +121,119 @@ namespace TestBlogWpfApp.ViewModels
         {
             _title = "Blogger Test";
             //_emailAddress = string.Empty;
+
+            Blogs = new ObservableCollection<Google.Apis.Blogger.v3.Data.Blog>();
         }
 
         #endregion // Constructors
 
+        #region Commands
+
+        /// <summary>
+        /// Gets the select image for nation command.
+        /// </summary>
+        public ICommand GetBlogsCommand => _getBlogsCommand ??
+                                            (_getBlogsCommand =
+                                                    new CommandHandler(GetBlogsCommandAction, true));
+        #endregion
+
+        #region Command Actions
+
+        /// <summary>
+        /// The command action to set to get the blogs.
+        /// </summary>
+        public void GetBlogsCommandAction()
+        {
+            GetBlogsAsync();
+        }
+
+        #endregion
+
+        #region Utility Functions
+
+        private async Task AuthenticateAsync()
+        {
+            if (service != null)
+                return;
+
+            string file = @"C:\Users\Johnathan\Downloads\client_id.json";
+            UserCredential credential;
+            var stream = new FileStream(file, FileMode.Open, FileAccess.Read);
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(20));
+            CancellationToken ct = cts.Token;
+
+            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+            GoogleClientSecrets.Load(stream).Secrets,
+            new[] { BloggerService.Scope.BloggerReadonly },
+            "user",
+            ct
+            );
+
+            //credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+            //    new Uri("ms-appx:///Assets/client_secrets.json"),
+            //    new[] { BloggerService.Scope.BloggerReadonly },
+            //    "user",
+            //    CancellationToken.None);
+
+            var initializer = new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = "BloggerApp",
+            };
+
+            service = new BloggerService(initializer);
+        }
+
+        public async Task RepositoryGetBlogsAsync()
+        {
+            await AuthenticateAsync();
+            
+            var list = await service.Blogs.ListByUser("self").ExecuteAsync();
+
+
+            Blogs.Clear();
+            if (list.Items == null)
+            {
+                return;
+            }
+
+            var blogs = from blog in list.Items
+                   select new Google.Apis.Blogger.v3.Data.Blog
+                   {
+                       Id = blog.Id,
+                       Name = blog.Name
+                   };
+
+            foreach (var blog in blogs)
+                Blogs.Add(blog);
+        }
+
+        /// <summary>Asynchronously gets all the blogs.</summary>
+        public async void GetBlogsAsync()
+        {
+            await RepositoryGetBlogsAsync();
+            
+
+#if not_await
+            // Fill the blogs collection should be from the thread that created the collection.
+            //await UIUtils.InvokeFromUIThread(() =>
+            {
+                Blogs.Clear();
+                foreach (var b in blogs)
+                {
+                    Blogs.Add(new BlogViewModel(repository)
+                    {
+                        Name = b.Name,
+                        Id = b.Id
+                    });
+                }
+            });
+#endif
+        }
+
+#endregion
 
     }
 }
