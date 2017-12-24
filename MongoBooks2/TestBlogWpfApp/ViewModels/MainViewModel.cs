@@ -156,7 +156,7 @@
             if (service != null)
                 return;
 
-            string file = @"C:\Users\Johnathan\Downloads\client_id.json";
+            string file = @"C:\temp\client_id.json";
             UserCredential credential;
             var stream = new FileStream(file, FileMode.Open, FileAccess.Read);
 
