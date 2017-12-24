@@ -13,7 +13,7 @@ namespace MongoDbBooks.Views
     /// <summary>
     /// Interaction logic for BindableWebBrowser.xaml
     /// </summary>
-    public partial class BindableWebBrowser : UserControl
+    public partial class BindableWebBrowser
     {
         private const string SkipSourceChange = "Skip";
 
@@ -114,11 +114,11 @@ namespace MongoDbBooks.Views
             {
                 if ((bool)e.NewValue)
                 {
-                    browser.Navigated += new NavigatedEventHandler(Browser_Navigated);
+                    browser.Navigated += Browser_Navigated;
                 }
                 else
                 {
-                    browser.Navigated -= new NavigatedEventHandler(Browser_Navigated);
+                    browser.Navigated -= Browser_Navigated;
                 }
             }
         }

@@ -220,6 +220,9 @@
     <Compile Include="Models\Database\IDatabaseConnection.cs" />
     <Compile Include="Models\Database\Nation.cs" />
     <Compile Include="Models\Database\NationDatabase.cs" />
+    <Compile Include="Models\Exporters\BaseFileExporter.cs" />
+    <Compile Include="Models\Exporters\ExportMonthlyReportToToHtml.cs" />
+    <Compile Include="Models\Exporters\IFileExporter.cs" />
     <Compile Include="Models\Geography\CountriesData.cs" />
     <Compile Include="Models\Geography\CountryGeography.cs" />
     <Compile Include="Models\Geography\IGeographicEntity.cs" />

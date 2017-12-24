@@ -53,7 +53,7 @@ namespace MongoDbBooks.Models.Mailbox
         private readonly string[] _monthNames =
         {
             "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "Novemeber", "December",
+            "July", "August", "September", "October", "November", "December",
         };
 
         /// <summary>

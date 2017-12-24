@@ -34,6 +34,8 @@ namespace MongoDbBooks.Views
             if (reports != null && doc != null)
             {
                 reports.MonthlyReportDocument = doc;
+                reports.CurrentMonthPagesReadByCountryChart = CurrentMonthPagesReadByCountry;
+                reports.CurrentMonthPagesReadByLanguageChart = CurrentMonthPagesReadByLanguage;
             }
         }
     }

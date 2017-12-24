@@ -106,5 +106,17 @@ namespace MongoDbBooks.Properties {
                 this["ExportDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\temp")]
+        public string MonthlyReportFile {
+            get {
+                return ((string)(this["MonthlyReportFile"]));
+            }
+            set {
+                this["MonthlyReportFile"] = value;
+            }
+        }
     }
 }
