@@ -111,8 +111,11 @@
         public ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
 
         public string InputFilePath { get; set; }
+
         public string OutputFilePath { get; set; }
+
         public string InputCountriesFilePath { get; set; }
+
         public string InputWorldMapFilePath { get; set; }
 
         public string DefaultUserName
@@ -166,11 +169,10 @@
             }
         }
 
-
         public TalliedMonth SelectedMonthTally { get; set; }
 
-
         public bool DataFromFile { get; set; }
+
         public bool DataFromDb { get; set; }
 
         public bool ConnectedToDbSuccessfully { get; private set; }
@@ -202,9 +204,7 @@
         }
 
         public NationDatabase NationDatabase => _nationsDatabase;
-
-
-
+        
         #endregion
 
         #region Public Methods
@@ -1157,8 +1157,7 @@
             fileName += ".csv";
             return Path.Combine(exportDirectory, fileName);
         }
-
-
+        
         private void MergeBookData(BookRead existingReadBook, BookRead readItem)
         {
             if (existingReadBook.Author != readItem.Author)
