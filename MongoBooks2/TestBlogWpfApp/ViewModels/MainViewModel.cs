@@ -87,7 +87,9 @@
         /// </summary>
         private ICommand _setDefaultSecretFileNameCommand;
 
-        private ICommand _newBlogPostCommandCommand;
+        private ICommand _newBlogPostCommand;
+
+        private ICommand _updateBlogPostCommand;
 
         private UserCredential credential;
         private BloggerService service;
@@ -99,6 +101,9 @@
         private Google.Apis.Blogger.v3.Data.Blog _selectedBlog;
 
         private BlogViewModel _selectedBlogModel;
+
+        private Google.Apis.Blogger.v3.Data.Post _selectedPost;
+
         #endregion
 
         #region Public Data
@@ -172,6 +177,8 @@
              !string.IsNullOrEmpty(NewPostContent) &&
              SelectedBlog != null;
 
+        public bool IsDataForUpdatePost => IsDataForNewPost && SelectedPost != null;
+
         public ObservableCollection<Google.Apis.Blogger.v3.Data.Blog> Blogs { get; set; }
 
         public ObservableCollection<PostViewModel> Posts { get
@@ -184,6 +191,17 @@
             } }
 
         /// <summary>Gets or sets the selected blog.</summary>
+        public Google.Apis.Blogger.v3.Data.Post SelectedPost
+        {
+            get { return _selectedPost; }
+            set
+            {
+                _selectedPost = value;
+                OnPropertyChanged(() => SelectedPost);
+                OnPropertyChanged(() => IsDataForUpdatePost);
+            }
+        }
+        /// <summary>Gets or sets the selected blog.</summary>
         public Google.Apis.Blogger.v3.Data.Blog SelectedBlog
         {
             get { return _selectedBlog; }
@@ -192,6 +210,7 @@
                 _selectedBlog = value;
                 if (_selectedBlog != null)
                 {
+                    SelectedPost = null;
                     SelectedBlogModel = new BlogViewModel(this, _selectedBlog.Id, _selectedBlog.Name);
                     RepositoryGetBlogPosts(_selectedBlog.Id);
                 }
@@ -254,10 +273,13 @@
                                             (_setDefaultSecretFileNameCommand =
                                                     new CommandHandler(SetDefaultSecretFileNameCommandAction, true));
 
-        public ICommand NewBlogPostCommand => _newBlogPostCommandCommand ??
-                                            (_newBlogPostCommandCommand =
+        public ICommand NewBlogPostCommand => _newBlogPostCommand ??
+                                            (_newBlogPostCommand =
                                                     new CommandHandler(NewBlogPostCommandAction, true));
 
+        public ICommand UpdateBlogPostCommand => _updateBlogPostCommand ??
+                                            (_updateBlogPostCommand =
+                                                    new CommandHandler(UpdateBlogPostCommandAction, true));
 
         #endregion       
 
@@ -294,6 +316,11 @@
         public async void NewBlogPostCommandAction()
         {
             await RepositoryAddBlogPost(_newPostTitle, _newPostContent);
+        }
+
+        public async void UpdateBlogPostCommandAction()
+        {
+            await RepositoryUpdateBlogPost(_newPostTitle, _newPostContent);
         }
 
         #endregion
@@ -376,7 +403,8 @@
                    select new Google.Apis.Blogger.v3.Data.Post
                    {
                        Title = post.Title,
-                       Content = post.Content
+                       Content = post.Content,
+                       Id = post.Id
                    };
 
             foreach (var post in posts)
@@ -416,6 +444,40 @@
             
         }
 
+        public async Task RepositoryUpdateBlogPost(string title, string content)
+        {
+            string blogId = _selectedBlog.Id;
+            string postId = _selectedPost.Id;
+            await AuthenticateAsync();
+
+
+            var newPost = new Google.Apis.Blogger.v3.Data.Post()
+            {
+                Kind = "blogger#post",
+                Id = postId,
+                Blog = new Google.Apis.Blogger.v3.Data.Post.BlogData() { Id = blogId },
+                Title = title,
+                Content = "<div xmlns='http://www.w3.org/1999/xhtml'>" +
+              "<p>Mr. Darcy has <em>proposed an Update </em> to me!</p>" +
+              "<p>Whatever shall I not do?</p>" +
+              "<p>" + content + "</p>" +
+              "</div>"
+            };
+
+            try
+            {
+                var insertRequest = service.Posts.Update(newPost, blogId, postId);
+                await insertRequest.ExecuteAsync();
+
+            }
+            catch (Exception e)
+            {
+                Console.Write(e);
+            }
+
+
+        }
+
         public async Task<IEnumerable<Google.Apis.Blogger.v3.Data.Post>> GetPostsAsync(string blogId)
         {
             await AuthenticateAsync();
@@ -424,7 +486,8 @@
                    select new Google.Apis.Blogger.v3.Data.Post
                    {
                        Title = post.Title,
-                       Content = post.Content
+                       Content = post.Content,
+                       Id = post.Id
                    };
         }
 

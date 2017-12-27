@@ -96,7 +96,8 @@
                 Posts.Add(new PostViewModel
                 {
                     Title = p.Title,
-                    Content = p.Content
+                    Content = p.Content,
+                    Id = p.Id
                 });
             }
         }

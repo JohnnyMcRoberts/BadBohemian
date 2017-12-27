@@ -27,6 +27,8 @@ namespace MongoDbBooks.Models.Exporters
 
         private readonly IList<string> _chartFiles;
 
+        private readonly bool _forBlog;
+
         #endregion
 
         #region Public Data
@@ -98,6 +100,21 @@ td {
             return true;
         }
 
+        #endregion
+
+        #region Utility Methods
+
+        private static void WriteCharts(HtmlTextWriter writer)
+        {
+            writer.WriteLine();
+            writer.AddStyleAttribute("font-size", "14pt");
+            writer.RenderBeginTag(HtmlTextWriterTag.P);
+            writer.Write("Charts");
+            
+            writer.RenderEndTag();
+            writer.WriteLine();
+        }
+
         private static void WriteHeaderContent(HtmlTextWriter writer)
         {
             writer.AddAttribute(HtmlTextWriterAttribute.Name, "viewport");
@@ -132,21 +149,6 @@ td {
             writer.WriteLine();
         }
 
-        #endregion
-
-        #region Utility Methods
-
-        private static void WriteCharts(HtmlTextWriter writer)
-        {
-            writer.WriteLine();
-            writer.AddStyleAttribute("font-size", "14pt");
-            writer.RenderBeginTag(HtmlTextWriterTag.P);
-            writer.Write("Charts");
-            
-            writer.RenderEndTag();
-            writer.WriteLine();
-        }
-        
         private void WriteTitle(HtmlTextWriter writer)
         {
             writer.WriteLine();
@@ -454,8 +456,10 @@ td {
         public ExportMonthlyReportToToHtml(
             TalliedMonth selectedMonthTally,
             IList<ReportsViewModel.MonthlyReportsTally> reportsTallies,
-            IList<string> chartFiles)
+            IList<string> chartFiles,
+            bool forBlog = false)
         {
+            _forBlog = forBlog;
             _selectedMonthTally = selectedMonthTally;
             _reportsTallies = reportsTallies;
             _chartFiles = chartFiles;

@@ -10,6 +10,7 @@
     using System.Threading;
     using System.Collections.ObjectModel;
     using System.Data;
+    using System.Web;
 
     using Google.Apis.Auth.OAuth2;
     using Google.Apis.Blogger.v3;
@@ -54,6 +55,7 @@
 
         #endregion // INotifyPropertyChanged Members
 
+        //public string DisplayContent =>  Windows.Data.Html.HtmlUtilities.ConvertToText(content);
 
         private string content;
         /// <summary>Gets or sets the post content.</summary>
@@ -76,6 +78,18 @@
             {
                 title = value;
                 OnPropertyChanged(() => Title);
+            }
+        }
+
+        private string id;
+        /// <summary>Gets or sets the post Id.</summary>
+        public string Id
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                OnPropertyChanged(() => Id);
             }
         }
 

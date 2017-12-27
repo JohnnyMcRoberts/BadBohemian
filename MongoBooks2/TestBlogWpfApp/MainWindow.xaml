@@ -68,12 +68,11 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ListBox Grid.Row="4" ItemsSource="{Binding BlogPosts}">
+        <ListBox Grid.Row="4" ItemsSource="{Binding BlogPosts}" SelectedItem="{Binding SelectedPost, Mode=TwoWay}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Title}"  FontWeight="Bold"/>
-                        <TextBlock Text="{Binding Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxWidth="125"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -100,9 +99,14 @@
             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=NewPostContent}"
                       MinWidth="100" HorizontalAlignment="Stretch"/>
 
-            <Button Grid.Row="2" Grid.Column="1" Content="New Blog Post" Height="22"
+            <Button Grid.Row="2" Grid.Column="0" Content="New Blog Post" Height="22"
                                 Command="{Binding Path=NewBlogPostCommand}" MinWidth="1" HorizontalAlignment="Left"
                                 IsEnabled="{Binding Path=IsDataForNewPost}"/>
+
+            <Button Grid.Row="2" Grid.Column="1" Content="Update Blog Post" Height="22"
+                                Command="{Binding Path=UpdateBlogPostCommand}" MinWidth="1" HorizontalAlignment="Left"
+                                IsEnabled="{Binding Path=IsDataForUpdatePost}"/>
+
 
 
         </Grid>
