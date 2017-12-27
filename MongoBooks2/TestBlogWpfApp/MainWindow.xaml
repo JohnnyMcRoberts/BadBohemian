@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit" 
         xmlns:local="clr-namespace:TestBlogWpfApp"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="350" Width="525">
@@ -10,6 +11,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition />
@@ -21,8 +23,43 @@
             </TextBlock>
         </Grid>
 
-        <Button Grid.Row="1" Content="Get Blogs" Command="{Binding GetBlogsCommand}" />
-        <ListBox Grid.Row="2" ItemsSource="{Binding Blogs}" SelectedItem="{Binding SelectedBlog, Mode=TwoWay}" >
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+        <Label Grid.Column="0" Content="Secret File" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+        <xctk:WatermarkTextBox  Grid.Column="1" 
+                             TextWrapping="NoWrap" 
+                             Text="{Binding Path=SecretFileName, Mode=TwoWay}"  MinWidth="150"
+                                 HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <xctk:WatermarkTextBox.Watermark>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="client_secret.json" Margin="4,0,0,0" />
+                </StackPanel>
+            </xctk:WatermarkTextBox.Watermark>
+        </xctk:WatermarkTextBox>
+
+            <Button Grid.Column="2" Content="Select Secret File" Height="22"
+                                Command="{Binding Path=SelectSecretFileCommand}" MinWidth="1" 
+                                HorizontalAlignment="Left"
+                                />
+
+            <Button Grid.Column="3" Content="{Binding Path=DefaultSecretFileName}" Height="22"
+                                Command="{Binding Path=SetDefaultSecretFileNameCommand}" MinWidth="1" HorizontalAlignment="Left"
+                                IsEnabled="{Binding Path=IsDefaultSecretFileName}"/>
+
+
+        </Grid>
+        <Button Grid.Row="2" Content="Get Blogs" Command="{Binding GetBlogsCommand}" 
+                IsEnabled="{Binding Path=HaveSecretFile}"/>
+
+        <ListBox Grid.Row="3" ItemsSource="{Binding Blogs}" SelectedItem="{Binding SelectedBlog, Mode=TwoWay}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" />
@@ -30,10 +67,13 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ListBox Grid.Row="3" ItemsSource="{Binding SelectedBlog.Posts}">
+        <ListBox Grid.Row="4" ItemsSource="{Binding BlogPosts}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Title}" />
+                    <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Title}"  FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxWidth="125"/>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

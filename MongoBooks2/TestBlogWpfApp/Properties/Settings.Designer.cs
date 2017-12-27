@@ -22,5 +22,17 @@ namespace TestBlogWpfApp.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultSecretFileName {
+            get {
+                return ((string)(this["DefaultSecretFileName"]));
+            }
+            set {
+                this["DefaultSecretFileName"] = value;
+            }
+        }
     }
 }
