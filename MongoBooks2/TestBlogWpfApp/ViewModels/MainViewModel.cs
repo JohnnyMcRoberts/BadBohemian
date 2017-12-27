@@ -15,18 +15,9 @@
     using Google.Apis.Blogger.v3;
     using Google.Apis.Services;
 
-
-    using System;
+    
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using Google.Apis.Auth.OAuth2;
-    using Google.Apis.Blogger.v3;
-    using Google.Apis.Services;
     using System.IO;
-    using Google.GData.Client;
 
     public class MainViewModel : INotifyPropertyChanged
     {
@@ -201,6 +192,7 @@
                 OnPropertyChanged(() => IsDataForUpdatePost);
             }
         }
+
         /// <summary>Gets or sets the selected blog.</summary>
         public Google.Apis.Blogger.v3.Data.Blog SelectedBlog
         {
