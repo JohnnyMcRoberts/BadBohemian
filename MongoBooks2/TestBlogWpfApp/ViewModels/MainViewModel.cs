@@ -26,6 +26,7 @@
     using Google.Apis.Blogger.v3;
     using Google.Apis.Services;
     using System.IO;
+    using Google.GData.Client;
 
     public class MainViewModel : INotifyPropertyChanged
     {
@@ -86,9 +87,14 @@
         /// </summary>
         private ICommand _setDefaultSecretFileNameCommand;
 
+        private ICommand _newBlogPostCommandCommand;
+
         private UserCredential credential;
         private BloggerService service;
 
+
+        private string _newPostTitle;
+        private string _newPostContent;
 
         private Google.Apis.Blogger.v3.Data.Blog _selectedBlog;
 
@@ -101,6 +107,27 @@
         /// Gets the title of the app.
         /// </summary>
         public string Title => _title;
+
+        public string NewPostTitle
+        {
+            get { return _newPostTitle; }
+            set
+            {
+                _newPostTitle = value;
+                OnPropertyChanged(() => NewPostTitle);
+                OnPropertyChanged(() => IsDataForNewPost);
+            }
+        }
+        public string NewPostContent
+        {
+            get { return _newPostContent; }
+            set
+            {
+                _newPostContent = value;
+                OnPropertyChanged(() => NewPostContent);
+                OnPropertyChanged(() => IsDataForNewPost);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the client secret to use for the blogger.
@@ -139,6 +166,11 @@
         public bool IsDefaultSecretFileName => !string.IsNullOrEmpty(DefaultSecretFileName);
 
         public bool HaveSecretFile => !string.IsNullOrEmpty(SecretFileName);
+
+        public bool IsDataForNewPost => !string.IsNullOrEmpty(SecretFileName) &&
+             !string.IsNullOrEmpty(NewPostTitle) &&
+             !string.IsNullOrEmpty(NewPostContent) &&
+             SelectedBlog != null;
 
         public ObservableCollection<Google.Apis.Blogger.v3.Data.Blog> Blogs { get; set; }
 
@@ -192,7 +224,6 @@
         {
             _title = "Blogger Test";
             _defaultSecretFileName = Properties.Settings.Default.DefaultSecretFileName;
-            //_emailAddress = string.Empty;
 
             Blogs = new ObservableCollection<Google.Apis.Blogger.v3.Data.Blog>();
             BlogPosts = new ObservableCollection<Google.Apis.Blogger.v3.Data.Post>();
@@ -222,6 +253,11 @@
         public ICommand SetDefaultSecretFileNameCommand => _setDefaultSecretFileNameCommand ??
                                             (_setDefaultSecretFileNameCommand =
                                                     new CommandHandler(SetDefaultSecretFileNameCommandAction, true));
+
+        public ICommand NewBlogPostCommand => _newBlogPostCommandCommand ??
+                                            (_newBlogPostCommandCommand =
+                                                    new CommandHandler(NewBlogPostCommandAction, true));
+
 
         #endregion       
 
@@ -255,6 +291,11 @@
             SecretFileName = DefaultSecretFileName;
         }
 
+        public async void NewBlogPostCommandAction()
+        {
+            await RepositoryAddBlogPost(_newPostTitle, _newPostContent);
+        }
+
         #endregion
 
         #region Utility Functions
@@ -273,7 +314,7 @@
 
             credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 GoogleClientSecrets.Load(stream).Secrets,
-                new[] { BloggerService.Scope.BloggerReadonly },
+                new[] { BloggerService.Scope.Blogger },
                 "user",
                 ct
                 );
@@ -340,6 +381,39 @@
 
             foreach (var post in posts)
                 BlogPosts.Add(post);
+        }
+
+        public async Task RepositoryAddBlogPost(string title, string content)
+        {
+            string blogId = _selectedBlog.Id;
+            await AuthenticateAsync();
+            
+
+            var newPost = new Google.Apis.Blogger.v3.Data.Post()
+            {
+                Kind = "blogger#post",
+                Blog = new Google.Apis.Blogger.v3.Data.Post.BlogData() { Id = blogId },
+                Title = title,
+                Content = "<div xmlns='http://www.w3.org/1999/xhtml'>" +
+              "<p>Mr. Darcy has <em>proposed marriage</em> to me!</p>" +
+              "<p>He is the last man on earth I would ever desire to marry.</p>" +
+              "<p>Whatever shall I do?</p>" +
+              "<p>" + content + "</p>" +
+              "</div>"
+            };
+
+            try
+            {
+                var insertRequest = service.Posts.Insert(newPost, blogId);
+                await insertRequest.ExecuteAsync();
+                
+            }
+            catch(Exception e)
+            {
+                Console.Write(e);
+            }
+
+            
         }
 
         public async Task<IEnumerable<Google.Apis.Blogger.v3.Data.Post>> GetPostsAsync(string blogId)

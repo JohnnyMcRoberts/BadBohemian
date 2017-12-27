@@ -6,13 +6,14 @@
         xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit" 
         xmlns:local="clr-namespace:TestBlogWpfApp"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="350" Width="525">
+        Title="{Binding Title}" Height="550" Width="525">
     <Grid>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="100" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition />
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
@@ -77,5 +78,33 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+
+        <Grid Grid.Row="5">
+            <Grid.RowDefinitions >
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Content="Title" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=NewPostTitle}"
+                      MinWidth="100" HorizontalAlignment="Stretch"/>
+
+            <Label Grid.Row="1" Grid.Column="0" Content="Contents"
+                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=NewPostContent}"
+                      MinWidth="100" HorizontalAlignment="Stretch"/>
+
+            <Button Grid.Row="2" Grid.Column="1" Content="New Blog Post" Height="22"
+                                Command="{Binding Path=NewBlogPostCommand}" MinWidth="1" HorizontalAlignment="Left"
+                                IsEnabled="{Binding Path=IsDataForNewPost}"/>
+
+
+        </Grid>
     </Grid>
 </Window>
