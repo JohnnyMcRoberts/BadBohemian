@@ -1,14 +1,10 @@
 ﻿namespace BlogReadWrite.ViewModels
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.IO;
     using System.Linq.Expressions;
     using System.Windows.Forms;
     using System.Windows.Input;
-    using System.Linq;
-    using System.Threading;
     using System.Collections.ObjectModel;
 
     using BlogReadWrite.Utilities;
@@ -141,8 +137,10 @@
                 if (_selectedBlog != null)
                 {
                     SelectedPost = null;
-                    _blogRepostory.GetBlogPosts(_selectedBlog.Id).Wait();
+                    _blogRepostory.GetBlogPosts(_selectedBlog.Id);
                     OnPropertyChanged(() => BlogPosts);
+                    OnPropertyChanged(() => IsDataForNewPost);
+                    OnPropertyChanged(() => IsDataForUpdatePost);
                 }
             }
         }

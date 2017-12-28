@@ -23,6 +23,8 @@
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.ViewModels.PlotGenerators;
 
+    using BlogReadWrite;
+
     using OxyPlot.Wpf;
 
     public class ReportsViewModel : INotifyPropertyChanged
@@ -68,6 +70,8 @@
         private ICommand _printCommand;
 
         private ICommand _saveAsHtmlCommand;
+
+        private ICommand _postToBlogCommand;
 
         #endregion
 
@@ -779,6 +783,11 @@
                                              (_saveAsHtmlCommand =
                                                  new RelayCommandHandler(SaveAsHtmlCommandAction) { IsEnabled = true });
 
+
+        public ICommand PostToBlogCommand => _postToBlogCommand ??
+                                             (_postToBlogCommand =
+                                                 new RelayCommandHandler(PostToBlogCommandAction) { IsEnabled = true });
+
         #endregion
 
         #region Command Handlers
@@ -812,6 +821,36 @@
             if (exporter.WriteToFile(out outfile))
             {
                 
+            }
+        }
+
+
+        /// <summary>
+        /// The command action to generate an html document for the selected month.
+        /// </summary>
+        public void PostToBlogCommandAction(object parameter)
+        {
+            if (MonthlyReportDocument == null)
+                return;
+            
+            ExportMonthlyReportToToHtml exporter =
+                new ExportMonthlyReportToToHtml(SelectedMonthTally, ReportsTallies, new List<string>(), true);
+            string title;
+            string content;
+            if (exporter.GetAsBlogPost(out title, out content))
+            {
+                BlogReadWrite.ViewModels.AddBlogPostViewModel addPostVM = 
+                    new BlogReadWrite.ViewModels.AddBlogPostViewModel()
+                {
+                    BlogPostTitle = title,
+                    BlogPostContent = content,
+                    ApplictionName = "Books DB",
+                    WindowTitle = "Books Blogger"
+                };
+
+                BlogReadWrite.Views.AddBlogPostView bloggerDialog = new BlogReadWrite.Views.AddBlogPostView
+                { DataContext = addPostVM };
+                bloggerDialog.ShowDialog();
             }
         }
 

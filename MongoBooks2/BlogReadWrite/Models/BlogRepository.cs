@@ -147,14 +147,14 @@ namespace BlogReadWrite.Models
             if (_service != null)
                 return;
 
-            UserCredential credential;
+            //UserCredential credential;
             var stream = new FileStream(SecretFileName, FileMode.Open, FileAccess.Read);
 
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(20));
             CancellationToken ct = cts.Token;
 
-            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+            _credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 GoogleClientSecrets.Load(stream).Secrets,
                 new[] { BloggerService.Scope.Blogger },
                 "user",
@@ -163,7 +163,7 @@ namespace BlogReadWrite.Models
 
             var initializer = new BaseClientService.Initializer()
             {
-                HttpClientInitializer = credential,
+                HttpClientInitializer = _credential,
                 ApplicationName = ApplicationName
             };
 

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit" 
-             xmlns:local="clr-namespace:BlogReadWrite.Views"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
@@ -88,7 +87,7 @@
         <Grid Grid.Row="5" Margin="10,10,10,10">
             <Grid.RowDefinitions >
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -96,15 +95,11 @@
                 <ColumnDefinition Width="300*" />
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Content="Title" 
+            <Label Grid.Row="0" Grid.Column="0" Content="Post Title" 
                             HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=NewPostTitle}"
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=BlogPostTitle}" IsReadOnly="True"
                       MinWidth="100" HorizontalAlignment="Stretch"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Content="Contents"
-                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=NewPostContent}"
-                      MinWidth="100" HorizontalAlignment="Stretch"/>
 
             <Button Grid.Row="2" Grid.Column="0" Content="New Blog Post" Height="22"
                                 Command="{Binding Path=NewBlogPostCommand}" MinWidth="1" HorizontalAlignment="Left"

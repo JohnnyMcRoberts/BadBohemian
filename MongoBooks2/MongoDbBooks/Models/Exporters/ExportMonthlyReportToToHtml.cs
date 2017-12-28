@@ -102,6 +102,42 @@ td {
 
         #endregion
 
+        #region Public Functions
+
+        public bool GetAsBlogPost(out string title, out string content)
+        {
+            title = string.Empty;
+            content = string.Empty;
+            if (_selectedMonthTally == null)
+                return false;
+
+            StringWriter sw = new StringWriter();
+
+            HtmlTextWriter writer = new HtmlTextWriter(sw);
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Head);
+
+            WriteHeaderContent(writer);
+
+            writer.RenderEndTag();
+            writer.WriteLine();
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Body);
+
+            WriteTitle(writer);
+            WriteIndividualBooks(writer);
+            WriteTotalsTable(writer);
+
+            writer.RenderEndTag();
+
+            title = _selectedMonthTally.DisplayString;
+            content = sw.ToString();
+
+            return true;
+        }
+
+        #endregion
+
         #region Utility Methods
 
         private static void WriteCharts(HtmlTextWriter writer)

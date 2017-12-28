@@ -28,6 +28,8 @@
                           DisplayDateStart="{Binding Path=FirstMonth}" DisplayDateEnd="{Binding Path=LastMonth}"/>
 
                 <StackPanel Grid.Column="3" Orientation="Horizontal">
+                    <Button Content="Post to Blog" MinWidth="80" Margin="10,0" 
+                            Command="{Binding Path=PostToBlogCommand}"/>
                     <Button Content="Save as HTML" MinWidth="80" Margin="10,0" 
                             Command="{Binding Path=SaveAsHtmlCommand}"/>
                     <Button Content="Print" MinWidth="80" Margin="10,0" 
