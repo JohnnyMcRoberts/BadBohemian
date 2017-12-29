@@ -135,7 +135,11 @@ namespace MongoDbBooks.ViewModels
         }
 
 
-        public BookRead ExistingBook { get { return _existingBook; } set { _existingBook = value; UpdateExistingBook(); } }
+        public BookRead ExistingBook
+        {
+            get { return _existingBook; }
+            set { _existingBook = value; UpdateExistingBook(); }
+        }
 
         public DateTime ExistingBookDate
         {

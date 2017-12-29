@@ -16,6 +16,7 @@ namespace MongoDbBooks.Models.Exporters
         public string OutputFilePath { get; set; }
 
         public abstract bool WriteToFile(string filename);
+
         public abstract string GetFilter();
 
         public bool GetNewFileName(string filter, out string newFileName)

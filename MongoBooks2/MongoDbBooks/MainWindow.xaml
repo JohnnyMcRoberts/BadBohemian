@@ -43,6 +43,16 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
+
+                <MenuItem Header="Update From _Text" 
+                          Command="{Binding Path=DataLoaderVM.UpdateBooksFromTextCommand}" >
+                    <MenuItem.Icon>
+                        <Image Source="./Images/Update-Icon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                
+                <Separator />
+                
                 <MenuItem Header="_Exit">
                     <MenuItem.Icon>
                         <Image Source="./Images/File_Exit_16.png" />

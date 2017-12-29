@@ -27,6 +27,8 @@ namespace MongoDbBooks.Models.Exporters
 
         private readonly IList<string> _chartFiles;
 
+        private readonly bool _forBlog;
+
         #endregion
 
         #region Public Data
@@ -98,6 +100,57 @@ td {
             return true;
         }
 
+        #endregion
+
+        #region Public Functions
+
+        public bool GetAsBlogPost(out string title, out string content)
+        {
+            title = string.Empty;
+            content = string.Empty;
+            if (!_forBlog || _selectedMonthTally == null)
+                return false;
+
+            StringWriter sw = new StringWriter();
+
+            HtmlTextWriter writer = new HtmlTextWriter(sw);
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Head);
+
+            WriteHeaderContent(writer);
+
+            writer.RenderEndTag();
+            writer.WriteLine();
+
+            writer.RenderBeginTag(HtmlTextWriterTag.Body);
+
+            WriteTitle(writer);
+            WriteIndividualBooks(writer);
+            WriteTotalsTable(writer);
+
+            writer.RenderEndTag();
+
+            title = _selectedMonthTally.DisplayString;
+            content = sw.ToString();
+
+            return true;
+        }
+
+        #endregion
+
+        #region Utility Methods
+
+        private static void WriteCharts(HtmlTextWriter writer)
+        {
+            writer.WriteLine();
+            writer.AddStyleAttribute("font-size", "14pt");
+            writer.RenderBeginTag(HtmlTextWriterTag.P);
+            writer.Write("Charts");
+            
+            writer.RenderEndTag();
+            writer.WriteLine();
+        }
+
         private static void WriteHeaderContent(HtmlTextWriter writer)
         {
             writer.AddAttribute(HtmlTextWriterAttribute.Name, "viewport");
@@ -132,21 +185,6 @@ td {
             writer.WriteLine();
         }
 
-        #endregion
-
-        #region Utility Methods
-
-        private static void WriteCharts(HtmlTextWriter writer)
-        {
-            writer.WriteLine();
-            writer.AddStyleAttribute("font-size", "14pt");
-            writer.RenderBeginTag(HtmlTextWriterTag.P);
-            writer.Write("Charts");
-            
-            writer.RenderEndTag();
-            writer.WriteLine();
-        }
-        
         private void WriteTitle(HtmlTextWriter writer)
         {
             writer.WriteLine();
@@ -172,11 +210,11 @@ td {
             writer.WriteLine();
         }
 
-        private static void WriteIndividualBookTable(HtmlTextWriter writer, BookRead book)
+        private void WriteIndividualBookTable(HtmlTextWriter writer, BookRead book)
         {
             writer.WriteLine();
             writer.AddStyleAttribute("font-size", "12pt");
-            writer.AddStyleAttribute("width", "75%");
+            writer.AddStyleAttribute("width", _forBlog ? "90%" : "75%");
             writer.AddAttribute(HtmlTextWriterAttribute.Align, "center");
             writer.RenderBeginTag(HtmlTextWriterTag.Table);
             {
@@ -263,9 +301,9 @@ td {
             writer.WriteLine();
         }
 
-        private static void AddBookImageTableCell(HtmlTextWriter writer, BookRead book)
+        private void AddBookImageTableCell(HtmlTextWriter writer, BookRead book)
         {
-            writer.AddStyleAttribute("width", "20%");
+            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
             writer.AddAttribute(HtmlTextWriterAttribute.Rowspan, "7");
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             {
@@ -278,9 +316,9 @@ td {
             writer.RenderEndTag();
         }
 
-        private static void AddBookValueTableCell(HtmlTextWriter writer, string dataTitle, string dataValue)
+        private void AddBookValueTableCell(HtmlTextWriter writer, string dataTitle, string dataValue)
         {
-            writer.AddStyleAttribute("width", "20%");
+            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
             writer.RenderBeginTag(HtmlTextWriterTag.Th);
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.B);
@@ -307,7 +345,7 @@ td {
             writer.WriteLine();
 
             writer.AddStyleAttribute("font-size", "12pt");
-            writer.AddStyleAttribute("width", "60%");
+            writer.AddStyleAttribute("width", _forBlog ? "90%" : "60%");
             writer.AddStyleAttribute("border", "none");
 
             List<Tuple<string, string, string>> tableRowValues = GetTotalsTableRowValues();
@@ -356,7 +394,7 @@ td {
             writer.WriteLine();
         }
 
-        private static void WriteTotalsTableDataRow(HtmlTextWriter writer, Tuple<string, string, string> tableRow)
+        private void WriteTotalsTableDataRow(HtmlTextWriter writer, Tuple<string, string, string> tableRow)
         {
             string rowHeader = tableRow.Item1;
             string rowOverallValue = tableRow.Item2;
@@ -366,7 +404,7 @@ td {
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
             {
                 // Write the header cell.
-                writer.AddStyleAttribute("width", "20%");
+                writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
                 writer.AddStyleAttribute("text-align", "left");
                 writer.AddStyleAttribute("background-color", "Beige");
                 writer.AddStyleAttribute("border", "none");
@@ -386,9 +424,9 @@ td {
             writer.RenderEndTag();
         }
 
-        private static void WriteTotalsTableDataRowValueCell(HtmlTextWriter writer, string rowDataValue)
+        private void WriteTotalsTableDataRowValueCell(HtmlTextWriter writer, string rowDataValue)
         {
-            writer.AddStyleAttribute("width", "20%");
+            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
             writer.AddStyleAttribute("text-align", "right");
             writer.AddStyleAttribute("background-color", "LightSteelBlue");
             writer.AddStyleAttribute("border", "none");
@@ -400,9 +438,9 @@ td {
             writer.WriteLine();
         }
 
-        private static void WriteTotalsTableHeaderCell(HtmlTextWriter writer, string headerText)
+        private void WriteTotalsTableHeaderCell(HtmlTextWriter writer, string headerText)
         {
-            writer.AddStyleAttribute("width", "20%");
+            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
             writer.AddStyleAttribute("text-align", "center");
             writer.AddStyleAttribute("font-size", "18pt");
             writer.AddStyleAttribute("background-color", string.IsNullOrEmpty(headerText) ? "Beige" : "LightSteelBlue");
@@ -454,8 +492,10 @@ td {
         public ExportMonthlyReportToToHtml(
             TalliedMonth selectedMonthTally,
             IList<ReportsViewModel.MonthlyReportsTally> reportsTallies,
-            IList<string> chartFiles)
+            IList<string> chartFiles,
+            bool forBlog = false)
         {
+            _forBlog = forBlog;
             _selectedMonthTally = selectedMonthTally;
             _reportsTallies = reportsTallies;
             _chartFiles = chartFiles;
