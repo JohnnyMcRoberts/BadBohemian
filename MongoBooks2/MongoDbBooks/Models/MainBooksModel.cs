@@ -32,6 +32,8 @@
 
         private static IMailReader _mailReader;
         private string _defaultUserName;
+        private string _defaultRecipientName;
+        private string _defaultExportDirectory;
 
         private NationDatabase _nationsDatabase;
 
@@ -52,6 +54,7 @@
             BookPerYearDeltas = new ObservableCollection<BooksDelta>();
             WorldCountries = new ObservableCollection<WorldCountry>();
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
+            TalliedMonths = new ObservableCollection<TalliedMonth>();
 
             InputFilePath = Properties.Settings.Default.InputFile;
             OutputFilePath = Properties.Settings.Default.OutputFile;
@@ -63,6 +66,8 @@
             InputCountriesFilePath = Properties.Settings.Default.InputCountriesFile;
             InputWorldMapFilePath = Properties.Settings.Default.InputWorldMapFile;
             _defaultUserName = Properties.Settings.Default.UserName;
+            _defaultRecipientName = Properties.Settings.Default.RecipientName;
+            _defaultExportDirectory = Properties.Settings.Default.ExportDirectory;
 
             string errorMsg;
             ConnectedToDbSuccessfully = ConnectToDatabase(out errorMsg);
@@ -93,7 +98,7 @@
 
         public ObservableCollection<AuthorCountry> AuthorCountries { get; }
 
-        public ObservableCollection<AuthorLanguage> AuthorLanguages { get;  }
+        public ObservableCollection<AuthorLanguage> AuthorLanguages { get; }
 
         public ObservableCollection<TalliedBook> TalliedBooks { get; }
 
@@ -103,9 +108,14 @@
 
         public ObservableCollection<BookLocationDelta> BookLocationDeltas { get; }
 
+        public ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
+
         public string InputFilePath { get; set; }
+
         public string OutputFilePath { get; set; }
+
         public string InputCountriesFilePath { get; set; }
+
         public string InputWorldMapFilePath { get; set; }
 
         public string DefaultUserName
@@ -125,7 +135,44 @@
             }
         }
 
+        public string DefaultRecipientName
+        {
+            get
+            {
+                return _defaultRecipientName;
+            }
+            set
+            {
+                if (_defaultRecipientName != value)
+                {
+                    _defaultRecipientName = value;
+                    Properties.Settings.Default.RecipientName = _defaultRecipientName;
+                    Properties.Settings.Default.Save();
+                }
+            }
+        }
+
+        public string DefaultExportDirectory
+        {
+            get
+            {
+                return _defaultExportDirectory;
+            }
+            set
+            {
+                if (_defaultExportDirectory != value)
+                {
+                    _defaultExportDirectory = value;
+                    Properties.Settings.Default.ExportDirectory = _defaultExportDirectory;
+                    Properties.Settings.Default.Save();
+                }
+            }
+        }
+
+        public TalliedMonth SelectedMonthTally { get; set; }
+
         public bool DataFromFile { get; set; }
+
         public bool DataFromDb { get; set; }
 
         public bool ConnectedToDbSuccessfully { get; private set; }
@@ -157,64 +204,50 @@
         }
 
         public NationDatabase NationDatabase => _nationsDatabase;
-
+        
         #endregion
 
         #region Public Methods
 
         public void ReadBooksFromFile(string filename)
         {
+            ObservableCollection<BookRead> readItems = GetBooksFromFile(filename);
 
-            using (var sr = new StreamReader(filename, Encoding.Default))
-            {
-                var csv = new CsvReader(sr);
+            BooksRead.Clear();
+            foreach (var book in readItems)
+                BooksRead.Add(book);
 
-                BooksRead.Clear();
-
-                // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio
-                while (csv.Read())
-                {
-                    var stringFieldDate = csv.GetField<string>(0);
-                    var stringFieldDDMMYYYY = csv.GetField<string>(1);
-                    var stringFieldAuthor = csv.GetField<string>(2);
-                    var stringFieldTitle = csv.GetField<string>(3);
-                    var stringFieldPages = csv.GetField<string>(4);
-                    var stringFieldNote = csv.GetField<string>(5);
-                    var stringFieldNationality = csv.GetField<string>(6);
-                    var stringFieldOriginalLanguage = csv.GetField<string>(7);
-                    var stringFieldBook = csv.GetField<string>(8);
-                    var stringFieldComic = csv.GetField<string>(9);
-                    var stringFieldAudio = csv.GetField<string>(10);
-
-                    DateTime dateForBook;
-                    if (DateTime.TryParseExact(stringFieldDDMMYYYY, "d/M/yyyy",
-                        CultureInfo.InvariantCulture, DateTimeStyles.None, out dateForBook))
-                    {
-                        UInt16 pages;
-                        UInt16.TryParse(stringFieldPages, out pages);
-                        BookRead book = new BookRead()
-                        {
-                            DateString = stringFieldDate,
-                            Date = dateForBook,
-                            Author = stringFieldAuthor,
-                            Title = stringFieldTitle,
-                            Pages = pages,
-                            Note = stringFieldNote,
-                            Nationality = stringFieldNationality,
-                            OriginalLanguage = stringFieldOriginalLanguage,
-                            Audio = stringFieldAudio,
-                            Book = stringFieldBook,
-                            Comic = stringFieldComic,
-                        };
-
-                        BooksRead.Add(book);
-                    }
-                }
-            }
             UpdateCollections();
             Properties.Settings.Default.InputFile = filename;
             Properties.Settings.Default.Save();
             DataFromFile = true;
+        }
+
+        public void UpdateBooksFromFile(string fileName)
+        {
+            ObservableCollection<BookRead> readItems = GetBooksFromFile(fileName);
+
+            foreach (var readItem in readItems.OrderBy(x => x.Date))
+            {
+                BookRead existingReadBook = FindExistingBookRead(readItem);
+                if (existingReadBook == null)
+                {
+                    if (!AddNewBook(readItem, out string error))
+                    {
+                        _log.Debug("Add new book failed:" + error + "\n Title: " + readItem.Title +
+                            "\n Author " + readItem.Audio +
+                            "\n Date: " + readItem.DateString);
+                    }
+                }
+                else
+                {
+                    MergeBookData(existingReadBook, readItem);
+                    if (!UpdateBook(existingReadBook, out string error, false))
+                    {
+                        _log.Debug("Update existing book failed:" + error);
+                    }
+                }
+            }
         }
 
         public void ReadWorldMapFromFile(string filename)
@@ -236,7 +269,7 @@
 
             // write the header
             sw.WriteLine(
-                "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio"
+                "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image"
                 );
 
             // write the records
@@ -254,6 +287,7 @@
                 csv.WriteField(book.Format == BookFormat.Book ? "x" : "");
                 csv.WriteField(book.Format == BookFormat.Comic ? "x" : "");
                 csv.WriteField(book.Format == BookFormat.Audio ? "x" : "");
+                csv.WriteField(book.ImageUrl);
                 csv.NextRecord();
             }
 
@@ -304,14 +338,15 @@
             return true;
         }
 
-        public bool UpdateBook(BookRead editBook, out string errorMsg)
+        public bool UpdateBook(BookRead editBook, out string errorMsg, bool updateCollections = true)
         {
             errorMsg = "";
 
             if (DataFromDb)
                 UpdateBookInDatabase(editBook);
 
-            UpdateCollections();
+            if (updateCollections)
+                UpdateCollections();
 
             return true;
         }
@@ -328,8 +363,8 @@
 
                 while (csv.Read())
                 {
-                    
-                    var stringFieldCountry = csv.GetField<string>(0);                    
+
+                    var stringFieldCountry = csv.GetField<string>(0);
                     var stringFieldCapital = csv.GetField<string>(1);
 
                     var stringFieldLatitude = csv.GetField<string>(2);
@@ -362,6 +397,48 @@
             Properties.Settings.Default.Save();
         }
 
+        public bool ExportFiles(string outputDirectory, bool sendBooksReadFile, bool sendLocationsFile,
+            List<string> outputFileNames, out string mailboxErrorMessage)
+        {
+            mailboxErrorMessage = string.Empty;
+            if (sendBooksReadFile)
+            {
+                try
+                {
+                    string fileName = GetExportFileName(outputDirectory, "Books");
+                    WriteBooksToFile(fileName);
+
+                    outputFileNames.Add(fileName);
+                }
+                catch (Exception e)
+                {
+                    mailboxErrorMessage = e.ToString();
+                    return false;
+                }
+            }
+
+            if (sendLocationsFile)
+            {
+                try
+                {
+                    //string fileName = GetExportFileName("Locations");
+
+                    // TODO: Integrate the locations writer....
+
+                    //WriteBooksToFile(fileName);
+
+                    //outputFileNames.Add(fileName);
+                }
+                catch (Exception e)
+                {
+                    mailboxErrorMessage = e.ToString();
+                    return false;
+                }
+            }
+
+            DefaultExportDirectory = outputDirectory;
+            return true;
+        }
 
         #endregion
 
@@ -373,7 +450,7 @@
 
             char lastChar = stringField.ToUpper()[stringField.Length - 1];
             bool isPositive;
-            switch(lastChar)
+            switch (lastChar)
             {
                 case 'E':
                     if (isLat) return -360.0;
@@ -397,7 +474,7 @@
 
             string degreesStr = stringField.Substring(0, stringField.Length - 5);
             ushort degrees;
-            if(!UInt16.TryParse(degreesStr, out degrees)) return -360;
+            if (!UInt16.TryParse(degreesStr, out degrees)) return -360;
 
 
             string minsStr = stringField.Substring(degreesStr.Length + 1, 2);
@@ -422,6 +499,48 @@
             UpdateBookPerYearDeltas();
             UpdateWorldCountryLookup();
             UpdateBookLocationDeltas();
+            UpdateBooksPerMonth();
+        }
+
+        private void UpdateBooksPerMonth()
+        {
+            // clear the list and the counts
+            Dictionary<DateTime, List<BookRead>> bookMonths = new Dictionary<DateTime, List<BookRead>>();
+            if (BooksRead.Count < 1) return;
+            DateTime startDate = BooksRead[0].Date;
+            DateTime endDate = BooksRead.Last().Date;
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            DateTime monthStart = new DateTime(startDate.Year, startDate.Month, 1);
+            DateTime monthEnd = monthStart.AddMonths(1).AddSeconds(-1);
+
+            // get all the months a book has been read
+            while (monthStart <= endDate)
+            {
+                List<BookRead> monthList = new List<BookRead>();
+
+                foreach (BookRead book in BooksRead)
+                {
+                    if (book.Date >= monthStart && book.Date <= monthEnd)
+                    {
+                        monthList.Add(book);
+                    }
+                }
+
+                if (monthList.Count > 0)
+                {
+                    bookMonths.Add(monthStart, monthList);
+                }
+
+                monthStart = monthStart.AddMonths(1);
+                monthEnd = monthStart.AddMonths(1).AddSeconds(-1);
+            }
+
+            TalliedMonths.Clear();
+            foreach (DateTime date in bookMonths.Keys.OrderBy(x => x))
+            {
+                TalliedMonths.Add(new TalliedMonth(date, bookMonths[date]));
+            }
         }
 
         private void UpdateBookLocationDeltas()
@@ -445,7 +564,7 @@
                         WorldCountry country = GetCountryForBook(book);
                         if (country != null)
                         {
-                            BookLocation location = 
+                            BookLocation location =
                                 new BookLocation() { Book = book, Latitude = country.Latitude, Longitude = country.Longitude };
 
                             delta.BooksLocationsToDate.Add(location);
@@ -461,7 +580,7 @@
 
         private WorldCountry GetCountryForBook(BookRead book)
         {
-            if (_worldCountryLookup == null || _worldCountryLookup.Count == 0 || 
+            if (_worldCountryLookup == null || _worldCountryLookup.Count == 0 ||
                 !_worldCountryLookup.ContainsKey(book.Nationality)) return null;
             return _worldCountryLookup[book.Nationality];
         }
@@ -777,7 +896,7 @@
             worldCountries.Count(filter);
         }
 
-        private void LoadAllCountriesFromDatabase(IMongoCollection<WorldCountry> worldCountries, 
+        private void LoadAllCountriesFromDatabase(IMongoCollection<WorldCountry> worldCountries,
             FilterDefinition<WorldCountry> filter)
         {
             WorldCountries.Clear();
@@ -852,7 +971,7 @@
             worldCountries.Count(filter);
         }
 
-        private long AddLoadedCountriesToBlankDatabase(IMongoCollection<WorldCountry> worldCountries, 
+        private long AddLoadedCountriesToBlankDatabase(IMongoCollection<WorldCountry> worldCountries,
             FilterDefinition<WorldCountry> filter)
         {
             worldCountries.InsertMany(WorldCountries);
@@ -906,13 +1025,13 @@
                 List<BookRead> missingItems = new List<BookRead>();
                 List<BookRead> existingItems = new List<BookRead>();
 
-                using (var cursor = booksRead.FindSync(filter))
+                using (IAsyncCursor<BookRead> cursor = booksRead.FindSync(filter))
                 {
                     existingItems = cursor.ToList();
                 }
 
                 // get the missing items
-                foreach (var book in BooksRead)
+                foreach (BookRead book in BooksRead)
                 {
                     bool alreadyThere = false;
                     foreach (var existing in existingItems)
@@ -952,13 +1071,13 @@
 
             List<BookRead> duplicateBooks = new List<BookRead>();
 
-            for(int i = 0; i < existingItems.Count; i++)
+            for (int i = 0; i < existingItems.Count; i++)
             {
                 var extBook = existingItems[i];
 
                 // if in the duplicate list skip on
                 bool inDuplicatedList = false;
-                foreach(var dupBook in duplicateBooks)
+                foreach (var dupBook in duplicateBooks)
                 {
                     if (dupBook.Author == extBook.Author &&
                         dupBook.Title == extBook.Title &&
@@ -976,7 +1095,7 @@
                 for (int j = 0; j < existingItems.Count; j++)
                 {
                     // ignore self
-                    if (j == i) 
+                    if (j == i)
                         continue;
 
                     var dupBook = existingItems[j];
@@ -987,7 +1106,7 @@
                         dupBook.Pages == extBook.Pages)
                     {
                         var timeDiff = dupBook.Date - extBook.Date;
-                        int hours = (timeDiff.Days * 24) +  timeDiff.Hours;
+                        int hours = (timeDiff.Days * 24) + timeDiff.Hours;
 
                         if (Math.Abs(hours) < 48)
                             duplicateBooks.Add(dupBook);
@@ -995,7 +1114,7 @@
                 }
             }
 
-            foreach (var dupBook in duplicateBooks)
+            foreach (BookRead dupBook in duplicateBooks)
             {
                 var remFilter = Builders<BookRead>.Filter.Eq("Id", dupBook.Id);
                 var result = booksRead.Find(remFilter);
@@ -1030,6 +1149,128 @@
             }
         }
 
+        private string GetExportFileName(string exportDirectory, string fileName)
+        {
+            DateTime time = DateTime.Now;
+            fileName += " ";
+            fileName += time.ToString("yyyy MMMM dd H-mm-ss");
+            fileName += ".csv";
+            return Path.Combine(exportDirectory, fileName);
+        }
+        
+        private void MergeBookData(BookRead existingReadBook, BookRead readItem)
+        {
+            if (existingReadBook.Author != readItem.Author)
+                existingReadBook.Author = readItem.Author;
+
+            if (existingReadBook.Date != readItem.Date)
+                existingReadBook.Date = readItem.Date;
+
+            if (existingReadBook.ImageUrl != readItem.ImageUrl)
+                existingReadBook.ImageUrl = readItem.ImageUrl;
+
+            if (existingReadBook.Nationality != readItem.Nationality)
+                existingReadBook.Nationality = readItem.Nationality;
+
+            if (existingReadBook.OriginalLanguage != readItem.OriginalLanguage)
+                existingReadBook.OriginalLanguage = readItem.OriginalLanguage;
+
+            if (existingReadBook.Format != readItem.Format)
+                existingReadBook.Format = readItem.Format;
+
+            if (existingReadBook.Pages != readItem.Pages)
+                existingReadBook.Pages = readItem.Pages;
+
+            if (existingReadBook.Title != readItem.Title)
+                existingReadBook.Title = readItem.Title;
+
+            if (existingReadBook.Note != readItem.Note &&
+                !string.IsNullOrEmpty(readItem.Note))
+            {
+                if (!string.IsNullOrEmpty(existingReadBook.Note) && 
+                    existingReadBook.Note.Length < readItem.Note.Length)
+                    existingReadBook.Note = readItem.Note;
+                else if (string.IsNullOrEmpty(existingReadBook.Note))
+                    existingReadBook.Note = readItem.Note;
+            }
+        }
+
+        private static ObservableCollection<BookRead> GetBooksFromFile(string filename)
+        {
+            ObservableCollection<BookRead> readItems = new ObservableCollection<BookRead>();
+            using (var sr = new StreamReader(filename, Encoding.Default))
+            {
+                var csv = new CsvReader(sr);
+
+                readItems.Clear();
+
+                // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio
+                while (csv.Read())
+                {
+                    var stringFieldDate = csv.GetField<string>(0);
+                    var stringFieldDDMMYYYY = csv.GetField<string>(1);
+                    var stringFieldAuthor = csv.GetField<string>(2);
+                    var stringFieldTitle = csv.GetField<string>(3);
+                    var stringFieldPages = csv.GetField<string>(4);
+                    var stringFieldNote = csv.GetField<string>(5);
+                    var stringFieldNationality = csv.GetField<string>(6);
+                    var stringFieldOriginalLanguage = csv.GetField<string>(7);
+                    var stringFieldBook = csv.GetField<string>(8);
+                    var stringFieldComic = csv.GetField<string>(9);
+                    var stringFieldAudio = csv.GetField<string>(10);
+                    var stringFieldImage = csv.GetField<string>(11);
+
+                    DateTime dateForBook;
+                    if (DateTime.TryParseExact(stringFieldDDMMYYYY, "d/M/yyyy",
+                        CultureInfo.InvariantCulture, DateTimeStyles.None, out dateForBook))
+                    {
+                        UInt16 pages;
+                        UInt16.TryParse(stringFieldPages, out pages);
+                        BookRead book = new BookRead()
+                        {
+                            DateString = stringFieldDate,
+                            Date = dateForBook,
+                            Author = stringFieldAuthor,
+                            Title = stringFieldTitle,
+                            Pages = pages,
+                            Note = stringFieldNote,
+                            Nationality = stringFieldNationality,
+                            OriginalLanguage = stringFieldOriginalLanguage,
+                            Audio = stringFieldAudio,
+                            Book = stringFieldBook,
+                            Comic = stringFieldComic,
+                            ImageUrl = stringFieldImage
+                        };
+
+                        readItems.Add(book);
+                    }
+                }
+            }
+
+            return readItems;
+        }
+
+        private BookRead FindExistingBookRead(BookRead readItem)
+        {
+            foreach(var book in BooksRead)
+            {
+                int matches = 0;
+
+                if (readItem.Title == book.Title) matches++;
+                if (readItem.Author == book.Author) matches++;
+                if (readItem.Pages == book.Pages) matches++;
+                if ((readItem.Date - book.Date).Days < 1) matches++;
+
+                if (matches > 2)
+                {
+                    return book;
+                }
+            }
+
+            return null;
+        }
+
         #endregion
+
+        }
     }
-}

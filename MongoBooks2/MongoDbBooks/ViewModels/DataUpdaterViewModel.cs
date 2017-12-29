@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Data;
-using System.Windows.Input;
-using System.Windows.Forms;
-
-using MongoDbBooks.Models;
-using MongoDbBooks.ViewModels.Utilities;
-
+﻿
 
 namespace MongoDbBooks.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.ComponentModel;
+    using System.Linq.Expressions;
+    using System.Windows.Input;
+    using System.Windows.Forms;
+
+    using MongoDbBooks.Models;
+    using MongoDbBooks.ViewModels.Utilities;
+    using MongoDbBooks.Views;
+
     public class DataUpdaterViewModel : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
@@ -55,6 +55,18 @@ namespace MongoDbBooks.ViewModels
 
         private BookRead _newBook;
         private BookRead _existingBook;
+
+        /// <summary>
+        /// The select image for nation command.
+        /// </summary>
+        private ICommand _selectImageForBookCommand;
+
+        private readonly Dictionary<BookFormat, string> _bookFormats = new Dictionary<BookFormat, string>()
+        {
+            {BookFormat.Book, "Book"},
+            {BookFormat.Comic, "Comic"},
+            {BookFormat.Audio, "Audio"}
+        };
 
         #endregion
 
@@ -123,7 +135,11 @@ namespace MongoDbBooks.ViewModels
         }
 
 
-        public BookRead ExistingBook { get { return _existingBook; } set { _existingBook = value; UpdateExistingBook(); } }
+        public BookRead ExistingBook
+        {
+            get { return _existingBook; }
+            set { _existingBook = value; UpdateExistingBook(); }
+        }
 
         public DateTime ExistingBookDate
         {
@@ -165,38 +181,55 @@ namespace MongoDbBooks.ViewModels
             get { if (_existingBook != null) return _existingBook.Format; return BookFormat.Book; }
             set { if (_existingBook != null) _existingBook.Format = value; OnPropertyChanged(() => ExistingBookFormat); }
         }
+
         public string ExistingBookDateText
         { get { if (_existingBook == null) return ""; _existingBook.DateString = GetBookDateText(false); return _existingBook.DateString; } }
 
         public string ExistingBookAuthorText { get; set; }
         public string ExistingBookNationalityText { get; set; }
         public string ExistingBookOriginalLanguageText { get; set; }
+        public Uri ExistingBookImageSource => _existingBook?.DisplayImage;
+        public Dictionary<BookFormat, string> BookFormats => _bookFormats;
+
+        private bool _isUpdating;
+        public bool IsUpdating
+        {
+            get { return _isUpdating; }
+            set
+            {
+                if (value != _isUpdating)
+                {
+                    _isUpdating = value;
+                    OnPropertyChanged(() => IsUpdating);
+                }
+            }
+        }            
 
         #endregion
-
-        private void UpdateExistingBook()
-        {
-            OnPropertyChanged(() => ExistingBook);
-            OnPropertyChanged(() => ExistingBookDate);
-            OnPropertyChanged(() => ExistingBookDate);
-            OnPropertyChanged(() => ExistingBookAuthor);
-            OnPropertyChanged(() => ExistingBookTitle);
-            OnPropertyChanged(() => ExistingBookPages);
-            OnPropertyChanged(() => ExistingBookNote);
-            OnPropertyChanged(() => ExistingBookNationality);
-            OnPropertyChanged(() => ExistingBookOriginalLanguage);
-            OnPropertyChanged(() => ExistingBookFormat);
-            OnPropertyChanged(() => ExistingBookDateText);
-            OnPropertyChanged(() => ExistingBookAuthorText);
-            OnPropertyChanged(() => ExistingBookNationalityText);
-            OnPropertyChanged(() => ExistingBookOriginalLanguageText);
-        }
 
         #region Public Methods
 
         public void UpdateData()
         {
             OnPropertyChanged("");
+        }
+
+        public static string GetImageSearchTerm(BookRead book)
+        {
+            string nameAndTitle = book.Author + " " + book.Title + " amazon";
+            string[] words = nameAndTitle.Split(' ');
+
+            string term = "http://www.google.co.uk/search?q=" + words[0];
+
+            for (int i = 1; i < words.Length; i++)
+            {
+                if (words[i] == "&")
+                    continue;
+                term += "+";
+                term += words[i];
+            }
+
+            return term;
         }
 
         #endregion
@@ -223,6 +256,13 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets the select image for nation command.
+        /// </summary>
+        public ICommand SelectImageForBookCommand => _selectImageForBookCommand ??
+                                                     (_selectImageForBookCommand =
+                                                         new RelayCommandHandler(SelectImageForBookCommandAction) { IsEnabled = true });
+
         #endregion
 
         #region Command Handlers
@@ -245,7 +285,6 @@ namespace MongoDbBooks.ViewModels
             if (!_mainModel.AddNewBook(_newBook, out errorMsg))
             {
                 MessageBox.Show(errorMsg);
-                return;
             }
             else
             {
@@ -257,10 +296,9 @@ namespace MongoDbBooks.ViewModels
 
         public void UpdateExistingBookCommandAction()
         {
-            string errorMsg;
-
             // update the book with what has been typed in
-            if (_existingBook.Author == null && !string.IsNullOrEmpty(ExistingBookAuthorText))
+            if (!string.IsNullOrEmpty(ExistingBookAuthorText) && 
+                (_existingBook.Author == null || _existingBook.Author != ExistingBookAuthorText))
                 ExistingBookAuthor = ExistingBookAuthorText;
             if (_existingBook.Nationality == null && !string.IsNullOrEmpty(ExistingBookNationalityText))
                 ExistingBookNationality = ExistingBookNationalityText;
@@ -268,22 +306,73 @@ namespace MongoDbBooks.ViewModels
                 ExistingBookOriginalLanguage = ExistingBookOriginalLanguageText;
 
             // Update in the DB.
-            if (!_mainModel.UpdateBook(_existingBook, out errorMsg))
+            string errorMsg = string.Empty;
+            bool isError = false;
+
+            BackgroundWorker worker = new BackgroundWorker();
+
+            worker.DoWork += (o, ea) =>
             {
-                MessageBox.Show(errorMsg);
-                return;
-            }
-            else
+                if (!_mainModel.UpdateBook(_existingBook, out errorMsg, false))
+                {
+                    isError = true;
+                }
+                else
+                {
+                    InitialiseEditBook();
+                }
+            };
+
+            worker.RunWorkerCompleted += (o, ea) =>
             {
-                InitialiseEditBook();
+                IsUpdating  = false;
+                if (isError)
+                {
+                    MessageBox.Show(errorMsg);
+                }
+                _parent.UpdateData();
+                OnPropertyChanged("BooksRead");
+                OnPropertyChanged("");
+            };
+
+            IsUpdating = true;
+            worker.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// The command action to add a new book from the email to the database.
+        /// </summary>
+        public void SelectImageForBookCommandAction(object parameter)
+        {
+            BookRead book = parameter as BookRead;
+            if (book != null)
+            {
+                SelectImageForBook(book);
             }
-            _parent.UpdateData();
-            OnPropertyChanged("");
         }
 
         #endregion
 
         #region Utility Functions
+
+        private void UpdateExistingBook()
+        {
+            OnPropertyChanged(() => ExistingBook);
+            OnPropertyChanged(() => ExistingBookDate);
+            OnPropertyChanged(() => ExistingBookDate);
+            OnPropertyChanged(() => ExistingBookAuthor);
+            OnPropertyChanged(() => ExistingBookTitle);
+            OnPropertyChanged(() => ExistingBookPages);
+            OnPropertyChanged(() => ExistingBookNote);
+            OnPropertyChanged(() => ExistingBookNationality);
+            OnPropertyChanged(() => ExistingBookOriginalLanguage);
+            OnPropertyChanged(() => ExistingBookFormat);
+            OnPropertyChanged(() => ExistingBookDateText);
+            OnPropertyChanged(() => ExistingBookAuthorText);
+            OnPropertyChanged(() => ExistingBookNationalityText);
+            OnPropertyChanged(() => ExistingBookOriginalLanguageText);
+            OnPropertyChanged(() => ExistingBookImageSource);
+        }
 
         private string GetBookDateText(bool isNew = true)
         {
@@ -314,30 +403,30 @@ namespace MongoDbBooks.ViewModels
 
         }
 
-        private bool IsBookValid(BookRead _newBook, out string errorMsg)
+        private bool IsBookValid(BookRead newBook, out string errorMsg)
         {
             errorMsg = "";
-            if (string.IsNullOrEmpty(_newBook.Author))
+            if (string.IsNullOrEmpty(newBook.Author))
             {
                 errorMsg = "Must provide an Author";
                 return false;
             }
-            if (string.IsNullOrEmpty(_newBook.Title))
+            if (string.IsNullOrEmpty(newBook.Title))
             {
                 errorMsg = "Must provide the Books's Title";
                 return false;
             }
-            if (string.IsNullOrEmpty(_newBook.Nationality))
+            if (string.IsNullOrEmpty(newBook.Nationality))
             {
                 errorMsg = "Must provide the Author's Home Country";
                 return false;
             }
-            if (string.IsNullOrEmpty(_newBook.OriginalLanguage))
+            if (string.IsNullOrEmpty(newBook.OriginalLanguage))
             {
                 errorMsg = "Must provide the Books's Original Language";
                 return false;
             }
-            if (_newBook.Pages < 1 && _newBook.Format == BookFormat.Book)
+            if (_newBook.Pages < 1 && newBook.Format == BookFormat.Book)
             {
                 errorMsg = "Must provide the number of pages for the books";
                 return false;
@@ -380,6 +469,40 @@ namespace MongoDbBooks.ViewModels
                 _existingBook = _mainModel.BooksRead.Last();
         }
 
+        private void SelectImageForBook(BookRead book)
+        {
+            _log.Debug("Getting Book information for " + book.Title);
+
+            // https://books.google.co.uk/
+            string searchTerm = GetImageSearchTerm(book);
+            ImageSelectionViewModel selectionViewModel = new ImageSelectionViewModel(_log, book.Title, searchTerm);
+
+            ImageSelectionWindow imageSelectDialog = new ImageSelectionWindow { DataContext = selectionViewModel };
+            var success = imageSelectDialog.ShowDialog();
+            if (success.HasValue && success.Value)
+            {
+                _log.Debug("Success Getting image information for " + book.Title +
+                           "\n   Img = " + selectionViewModel.SelectedImageAddress);
+
+                book.ImageUrl = selectionViewModel.SelectedImageAddress;
+
+                // Update in the DB.
+                string errorMsg;
+                if (!_mainModel.UpdateBook(book, out errorMsg))
+                {
+                    MessageBox.Show(errorMsg);
+                    return;
+                }
+
+                OnPropertyChanged(() => ExistingBookImageSource);
+            }
+            else
+            {
+                _log.Debug("Failed Getting Book information for " + book.Title);
+            }
+        }
+
         #endregion
+        
     }
 }

@@ -517,9 +517,17 @@ namespace MongoDbBooks.ViewModels
         /// The update search item in the brower command.
         /// Builds up a google search address for the search term and navigates the browser to there.
         /// </summary>
-        private void UpdateSearchTermCommandAction()
+        /// <param name="webAddress">The web address to use for the image search if not null.</param>
+        private void UpdateSearchTermCommandAction(string webAddress = null)
         {
-            WebAddress = "https://www.google.com/search?q=" + _searchTerm + "&amp;tbm=isch";
+            if (webAddress == null)
+            {
+                WebAddress = "https://www.google.com/search?q=" + _searchTerm + "&amp;tbm=isch";
+            }
+            else
+            {
+                WebAddress = webAddress;
+            }
         }
 
         /// <summary>
@@ -556,12 +564,13 @@ namespace MongoDbBooks.ViewModels
         /// Initializes a new instance of the <see cref="ImageSelectionViewModel"/> class.
         /// </summary>
         /// <param name="log">The log to write debug etc to.</param>
-        /// <param name="searchTerm">The search term to use for th image search.</param>
-        public ImageSelectionViewModel(log4net.ILog log, string searchTerm)
+        /// <param name="searchTerm">The search term to use for the image search.</param>
+        /// <param name="webAddress">The web address to use for the image search if not null.</param>
+        public ImageSelectionViewModel(log4net.ILog log, string searchTerm, string webAddress = null)
         {
             _log = log;
             _searchTerm = searchTerm;
-            UpdateSearchTermCommandAction();
+            UpdateSearchTermCommandAction(webAddress);
             
             _theHtml = "Dummy TextBox";
             _imagesOnPage = new ObservableCollection<ImageDetail>();

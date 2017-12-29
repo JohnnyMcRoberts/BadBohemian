@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Data;
-
-
-using MongoDbBooks.Models;
-using MongoDbBooks.Models.Geography;
-using MongoDbBooks.Models.Database;
-
-namespace MongoDbBooks.ViewModels
+﻿namespace MongoDbBooks.ViewModels
 {
     using System.Windows.Input;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.ComponentModel;
+    using System.Linq.Expressions;
+    using System.Data;
+
+    using MongoDbBooks.Models;
+    using MongoDbBooks.Models.Geography;
+    using MongoDbBooks.Models.Database;
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.Views;
 
@@ -168,6 +166,8 @@ namespace MongoDbBooks.ViewModels
 
 
         public ObservableCollection<BookLocationDelta> BookLocationDeltas { get { return _mainModel.BookLocationDeltas; } }
+
+        public ObservableCollection<TalliedMonth> TalliedMonths { get { return _mainModel.TalliedMonths; } }
 
         #endregion
 
@@ -450,6 +450,30 @@ namespace MongoDbBooks.ViewModels
             return seriesTable;
         }
 
+        private void SelectImageForNation(Nation nation)
+        {
+            _log.Debug("Getting Nation information for " + nation.Name);
+
+            ImageSelectionViewModel selectionViewModel = new ImageSelectionViewModel(_log, nation.Name);
+
+            ImageSelectionWindow imageSelectDialog = new ImageSelectionWindow { DataContext = selectionViewModel };
+            var success = imageSelectDialog.ShowDialog();
+            if (success.HasValue && success.Value)
+            {
+                _log.Debug("Success Getting Nation information for " + nation.Name +
+                           "\n   Img = " + selectionViewModel.SelectedImageAddress);
+
+                nation.ImageUri = selectionViewModel.SelectedImageAddress;
+                _mainModel.NationDatabase.UpdateDatabaseItem(nation);
+
+                OnPropertyChanged(() => Nations);
+            }
+            else
+            {
+                _log.Debug("Failed Getting Nation information for " + nation.Name);
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -480,34 +504,6 @@ namespace MongoDbBooks.ViewModels
             if (authorCountry?.Nation != null)
             {
                 SelectImageForNation(authorCountry.Nation);
-            }
-        }
-
-        #endregion
-
-        #region Utility Methods
-
-        private void SelectImageForNation(Nation nation)
-        {
-            _log.Debug("Getting Nation information for " + nation.Name);
-
-            ImageSelectionViewModel selectionViewModel = new ImageSelectionViewModel(_log, nation.Name);
-
-            ImageSelectionWindow imageSelectDialog = new ImageSelectionWindow {DataContext = selectionViewModel};
-            var success = imageSelectDialog.ShowDialog();
-            if (success.HasValue && success.Value)
-            {
-                _log.Debug("Success Getting Nation information for " + nation.Name +
-                           "\n   Img = " + selectionViewModel.SelectedImageAddress);
-
-                nation.ImageUri = selectionViewModel.SelectedImageAddress;
-                _mainModel.NationDatabase.UpdateDatabaseItem(nation);
-
-                OnPropertyChanged(() => Nations);
-            }
-            else
-            {
-                _log.Debug("Failed Getting Nation information for " + nation.Name);
             }
         }
 

@@ -190,7 +190,7 @@ namespace MongoDbBooks.Models
             }
         }
 
-        private static double GetAsPercentage(UInt32 totalBooks, UInt32 totalInEnglish)
+        public static double GetAsPercentage(UInt32 totalBooks, UInt32 totalInEnglish)
         {
             double percentageInEnglish = 100.0 * ((double)totalInEnglish / (double)totalBooks);
             return percentageInEnglish;

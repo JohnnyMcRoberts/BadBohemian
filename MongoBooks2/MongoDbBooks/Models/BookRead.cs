@@ -12,6 +12,7 @@ namespace MongoDbBooks.Models
     using System;
 
     using MongoDB.Bson.Serialization.Attributes;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The book read.
@@ -50,7 +51,8 @@ namespace MongoDbBooks.Models
         /// </summary>
         public BookRead()
         {
-            this.Format = BookFormat.Book;
+            Format = BookFormat.Book;
+            Tags = new List<string>();
         }
 
         #endregion
@@ -106,6 +108,12 @@ namespace MongoDbBooks.Models
         [BsonElement("originalLanguage")]
         public string OriginalLanguage { get; set; }
 
+        [BsonElement("image_url")]
+        public string ImageUrl { get; set; }
+
+        [BsonElement("tags")]
+        public List<string> Tags { get; set; }
+
         /// <summary>
         /// Gets or sets the book.
         /// </summary>
@@ -113,15 +121,15 @@ namespace MongoDbBooks.Models
         {
             get
             {
-                return this._isBook;
+                return _isBook;
             }
 
             set
             {
-                this._isBook = value;
-                if (!string.IsNullOrEmpty(this._isBook))
+                _isBook = value;
+                if (!string.IsNullOrEmpty(_isBook))
                 {
-                    this.Format = BookFormat.Book;
+                    Format = BookFormat.Book;
                 }
             }
         }
@@ -133,15 +141,15 @@ namespace MongoDbBooks.Models
         {
             get
             {
-                return this._isComic;
+                return _isComic;
             }
 
             set
             {
-                this._isComic = value;
-                if (!string.IsNullOrEmpty(this._isComic))
+                _isComic = value;
+                if (!string.IsNullOrEmpty(_isComic))
                 {
-                    this.Format = BookFormat.Comic;
+                    Format = BookFormat.Comic;
                 }
             }
         }
@@ -153,15 +161,15 @@ namespace MongoDbBooks.Models
         {
             get
             {
-                return this._isAudio;
+                return _isAudio;
             }
 
             set
             {
-                this._isAudio = value;
-                if (!string.IsNullOrEmpty(this._isAudio))
+                _isAudio = value;
+                if (!string.IsNullOrEmpty(_isAudio))
                 {
-                    this.Format = BookFormat.Audio;
+                    Format = BookFormat.Audio;
                 }
             }
         }
@@ -201,6 +209,30 @@ namespace MongoDbBooks.Models
             }
         }
 
+        /// <summary>
+        /// Gets the image address ready to be displayed.
+        /// </summary>
+        public string DisplayImageAddress
+        {
+            get
+            {
+                if (ImageUrl == null)
+                    return "N/A";
+                else
+                    return ImageUrl.Substring(0, Math.Min(ImageUrl.Length, 50)) + " ...";
+            }
+        }
+
+        /// <summary>
+        /// Gets the image URI ready to be displayed.
+        /// </summary>
+        public Uri DisplayImage
+        {
+            get
+            {
+                return string.IsNullOrEmpty(ImageUrl) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(ImageUrl);
+            }
+        }
         #endregion
     }
 }

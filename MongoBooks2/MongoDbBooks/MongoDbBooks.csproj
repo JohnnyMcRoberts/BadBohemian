@@ -133,9 +133,11 @@
       <HintPath>..\packages\Poly2Tri.NetStandard.1.0.2\lib\net45\Poly2Tri.NetStandard.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20505.0\lib\net40\System.Web.Helpers.dll</HintPath>
@@ -208,6 +210,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\StringToVisibilityConverter.cs" />
     <Compile Include="Models\BaseMongoEntity.cs" />
     <Compile Include="Models\BookFormat.cs" />
     <Compile Include="Models\BookLocation.cs" />
@@ -217,6 +220,9 @@
     <Compile Include="Models\Database\IDatabaseConnection.cs" />
     <Compile Include="Models\Database\Nation.cs" />
     <Compile Include="Models\Database\NationDatabase.cs" />
+    <Compile Include="Models\Exporters\BaseFileExporter.cs" />
+    <Compile Include="Models\Exporters\ExportMonthlyReportToToHtml.cs" />
+    <Compile Include="Models\Exporters\IFileExporter.cs" />
     <Compile Include="Models\Geography\CountriesData.cs" />
     <Compile Include="Models\Geography\CountryGeography.cs" />
     <Compile Include="Models\Geography\IGeographicEntity.cs" />
@@ -225,9 +231,12 @@
     <Compile Include="Models\IBookRead.cs" />
     <Compile Include="Models\Mailbox\BookReadFromGmail.cs" />
     <Compile Include="Models\Mailbox\GmailReader.cs" />
+    <Compile Include="Models\Mailbox\GmailSender.cs" />
     <Compile Include="Models\Mailbox\IMailReader.cs" />
+    <Compile Include="Models\TalliedMonth.cs" />
     <Compile Include="Models\WorldCountry.cs" />
     <Compile Include="Utilities\Logger.cs" />
+    <Compile Include="ViewModels\BloggerViewModel.cs" />
     <Compile Include="ViewModels\ChartSelectionViewModel.cs" />
     <Compile Include="ViewModels\ChartsViewModel.cs" />
     <Compile Include="ViewModels\DataGridsViewModel.cs" />
@@ -247,6 +256,8 @@
     <Compile Include="ViewModels\PlotGenerators\CountryLocationsBooksAndPagesPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\CountryLocationsBooksReadPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\CurrentBooksReadByCountryPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\CurrentMonthPagesReadByCountryPlotGenerator.cs" />
+    <Compile Include="ViewModels\PlotGenerators\CurrentMonthPagesReadByLanguagePlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\CurrentPagesReadByCountryPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\DaysPerBookWithTimePlotGenerator.cs" />
@@ -273,6 +284,7 @@
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPagesReadPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapWithBooksReadPlotGenerator.cs" />
+    <Compile Include="ViewModels\ReportsViewModel.cs" />
     <Compile Include="ViewModels\Utilities\CommandHandler.cs" />
     <Compile Include="ViewModels\Utilities\DialogCloserExtension.cs" />
     <Compile Include="ViewModels\Utilities\ICurveFitter.cs" />
@@ -286,6 +298,9 @@
     <Compile Include="ViewModels\Utilities\WaitCursor.cs" />
     <Compile Include="Views\BindableWebBrowser.xaml.cs">
       <DependentUpon>BindableWebBrowser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BookReportsView.xaml.cs">
+      <DependentUpon>BookReportsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BooksChartsView.xaml.cs">
       <DependentUpon>BooksChartsView.xaml</DependentUpon>
@@ -325,6 +340,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\BindableWebBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BookReportsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -436,6 +455,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Send_Email.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Blogger-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Update-Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BlogReadWrite\BlogReadWrite.csproj">
+      <Project>{015218af-0725-4f05-9756-99ec5ef350f2}</Project>
+      <Name>BlogReadWrite</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

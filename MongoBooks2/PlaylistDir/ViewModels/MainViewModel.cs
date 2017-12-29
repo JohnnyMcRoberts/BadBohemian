@@ -11,9 +11,22 @@
     using System.Text;
     using System.Xml;
     using System.Linq;
+    using System.Collections.ObjectModel;
 
     public class MainViewModel : INotifyPropertyChanged
     {
+        public  class PlaylistSong
+        {
+            public int TrackNumber { get; set; }
+
+            public string Artist { get; set; }
+
+            public string Song { get; set; }
+
+            public string Album { get; set; }
+        }
+
+
         #region INotifyPropertyChanged Members
 
         void OnPropertyChanged<T>(Expression<Func<T>> sExpression)
@@ -56,6 +69,11 @@
         /// </summary>
         private ICommand _copyPlaylistCommand;
 
+        /// <summary>
+        /// The show playlist command.
+        /// </summary>
+        private ICommand _showPlaylistCommand;
+
         #endregion
 
         #region Public Properties
@@ -69,6 +87,8 @@
         /// Gets or sets the directory to copy the files to.
         /// </summary>
         public string OutputDirectory { get; private set; }
+
+        public ObservableCollection<PlaylistSong> SongsReadFromPlaylist { get; private set; }
 
         #endregion
 
@@ -101,7 +121,7 @@
         }
 
         /// <summary>
-        /// Select the playlist command.
+        /// Copy the playlist command.
         /// </summary>
         public ICommand CopyPlaylistCommand
         {
@@ -110,6 +130,19 @@
                 return _copyPlaylistCommand ??
                     (_copyPlaylistCommand =
                         new CommandHandler(() => CopyPlaylistCommandAction(), true));
+            }
+        }
+
+        /// <summary>
+        /// Show the playlist command.
+        /// </summary>
+        public ICommand ShowPlaylistCommand
+        {
+            get
+            {
+                return _showPlaylistCommand ??
+                    (_showPlaylistCommand =
+                        new CommandHandler(() => ShowPlaylistCommandAction(), true));
             }
         }
         #endregion
@@ -152,6 +185,34 @@
         }
 
         /// <summary>
+        /// The reads the playlist file and populates the display list.
+        /// </summary>
+        public void ShowPlaylistCommandAction()
+        {
+            List<string> songs = GetPlaylistSongs();
+
+            string sourceDirectory = Path.GetDirectoryName(Playlist);
+
+            SongsReadFromPlaylist.Clear();
+
+            int trackNumber = 1;
+            foreach (var song in songs)
+            {
+                var songPath = Path.Combine(sourceDirectory, song);
+                TagLib.File file = TagLib.File.Create(songPath);
+
+                PlaylistSong songFile = new PlaylistSong() { TrackNumber = trackNumber };
+                songFile.Artist = file.Tag.FirstAlbumArtist;
+                songFile.Song = file.Tag.Title;
+                songFile.Album = file.Tag.Album;
+                SongsReadFromPlaylist.Add(songFile);
+                trackNumber++;
+            }
+
+            OnPropertyChanged(() => SongsReadFromPlaylist);
+        }
+
+        /// <summary>
         /// The reads the playlist file and copies the file to the directory.
         /// </summary>
         public void CopyPlaylistCommandAction()
@@ -167,6 +228,10 @@
                 File.Copy(songPath, outputSong);
             }
         }
+
+        #endregion
+
+        #region Utility Functions
 
         private List<string> GetPlaylistSongs()
         {
@@ -220,5 +285,9 @@
 
         #endregion
 
+        public MainViewModel()
+        {
+            SongsReadFromPlaylist = new ObservableCollection<PlaylistSong>();
+        }
     }
 }

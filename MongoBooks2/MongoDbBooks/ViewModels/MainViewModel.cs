@@ -55,6 +55,8 @@ namespace MongoDbBooks.ViewModels
             _chartSelectionVM = new ChartSelectionViewModel(_mainWindow, log, _mainModel, this);
             _mailboxLoaderVM = new MailboxLoaderViewModel(_mainWindow, log, _mainModel, this);
             _exportersVM = new ExportersViewModel(_mainWindow, log, _mainModel, this);
+            _reportsVM = new ReportsViewModel(_mainWindow, log, _mainModel, this);
+            _bloggerVM = new BloggerViewModel(_mainWindow, log, _mainModel, this);
 
             if (_mainModel.ConnectedToDbSuccessfully)
                 UpdateData();
@@ -77,57 +79,36 @@ namespace MongoDbBooks.ViewModels
         private ChartSelectionViewModel _chartSelectionVM;
         private MailboxLoaderViewModel _mailboxLoaderVM;
         private ExportersViewModel _exportersVM;
+        private ReportsViewModel _reportsVM;
+        private BloggerViewModel _bloggerVM;
 
         #endregion
 
         #region Public Properties
 
-        public log4net.ILog Log { get { return _log; } }
+        public log4net.ILog Log => _log;
 
-        public MainBooksModel MainModel
-        {
-            get { return _mainModel; }
-        }
+        public MainBooksModel MainModel => _mainModel;
 
-        public DataLoaderViewModel DataLoaderVM
-        {
-            get { return _dataLoaderVM; }
-        }
+        public DataLoaderViewModel DataLoaderVM => _dataLoaderVM; 
 
-        public DataUpdaterViewModel DataUpdaterVM
-        {
-            get { return _dataUpdaterVM; }
-        }
+        public DataUpdaterViewModel DataUpdaterVM => _dataUpdaterVM;
 
-        public DataGridsViewModel DataGridsVM
-        {
-            get { return _dataGridsVM; }
-        }
+        public DataGridsViewModel DataGridsVM => _dataGridsVM;
 
-        public ChartsViewModel ChartsVM
-        {
-            get { return _chartsVM; }
-        }
+        public ChartsViewModel ChartsVM => _chartsVM;
 
-        public DiagramsViewModel DiagramsVM
-        {
-            get { return _diagramsVM; }
-        }
+        public DiagramsViewModel DiagramsVM => _diagramsVM;
 
-        public ChartSelectionViewModel ChartSelectionVM
-        {
-            get { return _chartSelectionVM; }
-        }
+        public ChartSelectionViewModel ChartSelectionVM => _chartSelectionVM;
 
-        public MailboxLoaderViewModel MailboxLoaderVM
-        {
-            get { return _mailboxLoaderVM; }
-        }
+        public MailboxLoaderViewModel MailboxLoaderVM => _mailboxLoaderVM;
 
-        public ExportersViewModel ExportersVM
-        {
-            get { return _exportersVM; }
-        }
+        public ExportersViewModel ExportersVM => _exportersVM;
+
+        public ReportsViewModel ReportsVM => _reportsVM;
+
+        public BloggerViewModel BloggerVM => _bloggerVM;
 
         #endregion
 
@@ -140,6 +121,7 @@ namespace MongoDbBooks.ViewModels
             DataGridsVM.UpdateData();
             DataUpdaterVM.UpdateData();
             ChartSelectionVM.UpdateData();
+            ReportsVM.UpdateData();
         }
 
         #endregion

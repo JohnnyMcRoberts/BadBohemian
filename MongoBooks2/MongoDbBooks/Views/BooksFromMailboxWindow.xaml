@@ -10,16 +10,16 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Import Books From Mailbox"
-             d:DesignHeight="800" d:DesignWidth="1000">
+             d:DesignHeight="800" d:DesignWidth="1200">
     <Grid>
         <Grid Margin="10">
             <Grid.Resources>
                 <converters:BooleanToVisibilityConverter x:Key="booleanToVisibility" />
             </Grid.Resources>
             <Grid.RowDefinitions>
-                <RowDefinition Height="140"/>
+                <RowDefinition Height="180"/>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="160"/>
+                <RowDefinition Height="10"/>
                 <RowDefinition Height="30*"/>
             </Grid.RowDefinitions>
             <Grid  Grid.Row="0" IsEnabled="{Binding Path=CanSetEmailParameters}">
@@ -29,13 +29,13 @@
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition  Width="125"/>
-                    <ColumnDefinition  Width="225"/>
-                    <ColumnDefinition  Width="15"/>
-                    <ColumnDefinition  Width="125*"/>
+                    <ColumnDefinition Width="125"/>
+                    <ColumnDefinition Width="350"/>
+                    <ColumnDefinition Width="150*"/>
                 </Grid.ColumnDefinitions>
 
 
@@ -53,14 +53,14 @@
                     </xctk:WatermarkTextBox.Watermark>
                 </xctk:WatermarkTextBox>
 
-                <Button Grid.Row="1" Grid.Column="3" Content="{Binding Path=SetDefaultUserText}" Height="22"
+                <Button Grid.Row="2" Grid.Column="1" Content="{Binding Path=SetDefaultUserText}" Height="22"
                                 Command="{Binding Path=SetDefaultUserCommand}" MinWidth="1" HorizontalAlignment="Left"
                                 IsEnabled="{Binding Path=IsDefaultUser}"/>
 
-                <Label Grid.Row="2" Grid.Column="0"  Content="Password" 
+                <Label Grid.Row="3" Grid.Column="0"  Content="Password" 
                             HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
-                <PasswordBox PasswordChar="*" Grid.Row="2" Grid.Column="1" 
+                <PasswordBox PasswordChar="*" Grid.Row="3" Grid.Column="1" 
                      MinWidth="150"
                      vmu:PasswordHelper.Attach="True" 
                      vmu:PasswordHelper.Password="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -70,9 +70,17 @@
                     </PasswordBox.InputBindings>
                 </PasswordBox>
 
-                <Button Grid.Row="3" Grid.Column="1" Content="Connect To Mailbox" Height="22"
+                <Button Grid.Row="4" Grid.Column="1" Content="Connect To Mailbox" Height="22"
                                 Command="{Binding Path=ReadEmailCommand}" 
                 IsEnabled="{Binding Path=IsValidToConnect}"/>
+
+                <ScrollViewer Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Margin="10,10">
+                    <TextBox Background="Transparent"
+                        BorderThickness="0"
+                        Text="{Binding Path=MailItemsText, Mode=OneWay}"
+                        IsReadOnly="True"
+                        TextWrapping="Wrap" />
+                </ScrollViewer>
 
             </Grid>
 
@@ -91,14 +99,6 @@
                          Height="15" Minimum="0" Maximum="1" Margin="15,2,15,2" IsIndeterminate="True" HorizontalAlignment="Left" Width="345"/>
             </Grid>
 
-            <ScrollViewer Grid.Row="2" >
-
-                <TextBox Background="Transparent"
-                    BorderThickness="0"
-                    Text="{Binding Path=MailItemsText, Mode=OneWay}"
-                    IsReadOnly="True"
-                    TextWrapping="Wrap" />
-            </ScrollViewer>
 
             <ScrollViewer Grid.Row="3" 
                       Visibility="{Binding Path=BooksReadFromEmailToDisplay, Converter={StaticResource booleanToVisibility}}">
@@ -213,6 +213,10 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
+                        <Image Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="4" 
+                               MinHeight="100" MinWidth="100"
+                               HorizontalAlignment="Left" VerticalAlignment="Center" 
+                               Source="{Binding NewBookImageSource}" />
 
 
                         <Label Grid.Row="3" Grid.Column="0" Content="Pages" 
@@ -271,6 +275,10 @@
                                 <RadioButton IsChecked="{Binding Path=NewBookFormatIsAudio}">Audio</RadioButton>
                             </StackPanel>
                         </Grid>
+                        <Button Content="Select Image" Grid.Row="6" Grid.Column="2" 
+                             HorizontalAlignment="Left" Margin="10,10,0,0"
+                             VerticalAlignment="Top" Width="125" Height="22"
+                             Command="{Binding Path=SelectImageForBookCommand}" />
 
 
                         <Label Grid.Row="7" Grid.Column="0" Content="Notes" 
@@ -281,8 +289,7 @@
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              ScrollViewer.CanContentScroll="True"
                              Text="{Binding Path=NewBookNote, Mode=TwoWay}" 
-                                 HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="290"/>
-
+                             HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="290"/>
 
 
                     </Grid>

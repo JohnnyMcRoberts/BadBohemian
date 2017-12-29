@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Converters="clr-namespace:MongoDbBooks.Converters" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
@@ -127,7 +128,6 @@
             </TabItem>
 
             <TabItem Header="Edit Book">
-                <ScrollViewer>
                     <Grid IsEnabled="{Binding Path=IsDataLoaded}">
 
                         <Grid.RowDefinitions>
@@ -139,7 +139,7 @@
                         <DataGrid Grid.Row="0" AutoGenerateColumns="True"
                                     ItemsSource="{Binding Path=BooksRead, Mode=OneWay}"
                                     SelectedItem="{Binding Path=ExistingBook, Mode=TwoWay}"
-                                    MaxHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+                                    MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
                             <DataGrid.Columns>
 
@@ -160,125 +160,166 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
+
+
+                                <DataGridTextColumn Header="Pages" 
+                                                Binding="{Binding Pages}" 
+                                                Width="Auto"/>
+
+                                <DataGridTextColumn Header="Nationality" 
+                                                Binding="{Binding Nationality}" 
+                                                Width="Auto"/>
+
+                                <DataGridTextColumn Header="Original Language" 
+                                                Binding="{Binding OriginalLanguage}" 
+                                                Width="Auto"/>
+
+                                <DataGridTextColumn Header="Format" 
+                                                Binding="{Binding Format}" 
+                                                Width="Auto"/>
+
+                                <DataGridTemplateColumn MinWidth="100" Header="Image Select">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Select Image"
+                                                Command="{Binding DataContext.SelectImageForBookCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" 
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}">
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+
+                                <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding DisplayImage}" MaxHeight="30" MaxWidth="30"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="Note" 
+                                                Binding="{Binding Note}" 
+                                                Width="Auto"/>
+
                             </DataGrid.Columns>
                         </DataGrid>
 
 
+                        <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding IsUpdating}" MinHeight="280">
+
+                            <ScrollViewer>
+                            <Grid>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="350"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="0" Content="Date" 
+                                           HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <DatePicker  Grid.Row="0" Grid.Column="1"
+                                                 HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,5,0"  Width="120" 
+                                                 SelectedDate="{Binding Path=ExistingBookDate, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}"/>
+
+                                <Label Grid.Row="0" Content="Date Text"  Grid.Column="2"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <TextBlock  Grid.Row="0" Grid.Column="3"
+                                                HorizontalAlignment="Left" VerticalAlignment="Center"  Width="120" Text="{Binding Path=ExistingBookDateText}"/>
 
 
-                        <Grid Grid.Row="1">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="40"/>
-                                <RowDefinition Height="40"/>
-                                <RowDefinition Height="40"/>
-                                <RowDefinition Height="40"/>
-                                <RowDefinition Height="40"/>
-                                <RowDefinition Height="40"/>
-                                <RowDefinition Height="60"/>
-                                <RowDefinition Height="40*"/>
-                                <RowDefinition Height="40"/>
-
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="300"/>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="150*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Label Grid.Row="0" Content="Date" 
-                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                            <DatePicker  Grid.Row="0" Grid.Column="1"
-                           HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,5,0"  Width="120" 
-                           SelectedDate="{Binding Path=ExistingBookDate, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}"/>
-                            <Label Grid.Row="0" Content="Date Text"  Grid.Column="2"
-                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                            <TextBlock  Grid.Row="0" Grid.Column="3"
-                            HorizontalAlignment="Left" VerticalAlignment="Center"  Width="120" Text="{Binding Path=ExistingBookDateText}"/>
+                                <Label Grid.Row="1" Content="Author"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <ComboBox IsEditable="True" 
+                                              Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0" 
+                                              ItemsSource="{Binding Path=AuthorNames}" 
+                                              SelectedItem="{Binding Path=ExistingBookAuthor, Mode=TwoWay}"
+                                              HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"
+                                              Text="{Binding Path=ExistingBookAuthorText, Mode=TwoWay}"/>
+                                <Label Grid.Row="1" Content="Selected Image"  Grid.Column="2"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <Label Grid.Row="1" Grid.Column="3" Content="Notes" 
+                                           HorizontalAlignment="Left" VerticalAlignment="Top" />
 
 
-                            <Label Grid.Row="1" Content="Author" 
-                            HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <ComboBox IsEditable="True" 
-                             Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"      
-                             ItemsSource="{Binding Path=AuthorNames}" 
-                             SelectedItem="{Binding Path=ExistingBookAuthor, Mode=TwoWay}" 
-                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290" 
-                             Text="{Binding Path=ExistingBookAuthorText, Mode=TwoWay}"/>
+                                <Label Grid.Row="2" Content="Title"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"
+                                             Height="23" TextWrapping="NoWrap"
+                                             Text="{Binding Path=ExistingBookTitle, Mode=TwoWay}" 
+                                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
+                                <Image Grid.Row="2"  Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="5" MinHeight="100" MinWidth="100"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding ExistingBookImageSource}" />
+
+                                <TextBox Grid.Row="2" Grid.Column="3"  Grid.RowSpan="4" Margin="5,5,5,0" 
+                                             MinHeight="23" TextWrapping="Wrap" 
+                                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                             ScrollViewer.CanContentScroll="True"
+                                             Text="{Binding Path=ExistingBookNote, Mode=TwoWay}" 
+                                             HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="190"/>
 
 
-                            <Label Grid.Row="2" Content="Title" 
-                            HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <TextBox Grid.Row="2" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0" 
-                             Height="23" TextWrapping="NoWrap" 
-                             Text="{Binding Path=ExistingBookTitle, Mode=TwoWay}" 
-                                 HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
+                                <Label Grid.Row="3" Content="Pages" 
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="3" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"
+                                             Height="23" TextWrapping="NoWrap"
+                                             Text="{Binding Path=ExistingBookPages, Mode=TwoWay}" 
+                                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
 
 
-                            <Label Grid.Row="3" Content="Pages" 
-                            HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <TextBox Grid.Row="3" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0" 
-                             Height="23" TextWrapping="NoWrap" 
-                             Text="{Binding Path=ExistingBookPages, Mode=TwoWay}" 
-                                 HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
+                                <Label Grid.Row="4" Content="Author's Home Country"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <ComboBox IsEditable="True"
+                                              Grid.Row="4" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"
+                                              ItemsSource="{Binding Path=AuthorNationalities}"
+                                              SelectedItem="{Binding Path=ExistingBookNationality, Mode=TwoWay}"
+                                              HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"
+                                              Text="{Binding Path=ExistingBookNationalityText, Mode=OneWayToSource}"/>
 
 
-                            <Label Grid.Row="4" Content="Author's Home Country" 
-                            HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <ComboBox IsEditable="True" 
-                             Grid.Row="4" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"      
-                             ItemsSource="{Binding Path=AuthorNationalities}" 
-                             SelectedItem="{Binding Path=ExistingBookNationality, Mode=TwoWay}" 
-                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"
-                             Text="{Binding Path=ExistingBookNationalityText, Mode=OneWayToSource}"/>
-
-
-                            <Label Grid.Row="5" Content="Original Language" 
-                            HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <ComboBox IsEditable="True" 
-                             Grid.Row="5" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"      
-                             ItemsSource="{Binding Path=OriginalLanguages}" 
-                             SelectedItem="{Binding Path=ExistingBookOriginalLanguage, Mode=TwoWay}" 
-                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"
-                             Text="{Binding Path=ExistingBookOriginalLanguageText, Mode=OneWayToSource}"/>
+                                <Label Grid.Row="5" Content="Original Language" 
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <ComboBox IsEditable="True"
+                                              Grid.Row="5" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0" 
+                                              ItemsSource="{Binding Path=OriginalLanguages}" 
+                                              SelectedItem="{Binding Path=ExistingBookOriginalLanguage, Mode=TwoWay}" 
+                                              HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"
+                                              Text="{Binding Path=ExistingBookOriginalLanguageText, Mode=OneWayToSource}"/>
 
 
 
-                            <Label Grid.Row="6" Content="Format" 
-                            HorizontalAlignment="Left"  VerticalAlignment="Top" />
-                            <Grid Grid.Row="6" Grid.Column="1"  Margin="5,5,5,0">
-                                <Grid.Resources>
-                                    <Converters:EnumToRadioButtonConverter x:Key="enumBooleanConverter" />
-                                </Grid.Resources>
-                                <StackPanel >
-                                    <RadioButton IsChecked="{Binding Path=ExistingBookFormat, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Book}">Book</RadioButton>
-                                    <RadioButton IsChecked="{Binding Path=ExistingBookFormat, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Comic}">Comic</RadioButton>
-                                    <RadioButton IsChecked="{Binding Path=ExistingBookFormat, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Audio}">Audio</RadioButton>
-                                </StackPanel>
+                                <Label Grid.Row="6" Content="Format"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <ComboBox Grid.Row="6" Grid.Column="1"  ItemsSource="{Binding Path=BookFormats}" Margin="5,5,5,0" 
+                                              DisplayMemberPath="Value"
+                                              SelectedValuePath="Key"
+                                              SelectedValue="{Binding Path=ExistingBookFormat}"
+                                              HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
+
+
+                                <Button Content="Update Existing Book" Grid.Row="6" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,0"
+                                        VerticalAlignment="Top" Width="125" Height="22"
+                                        Command="{Binding Path=UpdateExistingBookCommand}" />
+
+
                             </Grid>
+                            </ScrollViewer>
+                        </xctk:BusyIndicator>
 
-
-                            <Label Grid.Row="7" Content="Notes" 
-                            HorizontalAlignment="Left" VerticalAlignment="Top" />
-                            <TextBox Grid.Row="7" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0" 
-                             Height="23" TextWrapping="Wrap" 
-                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             ScrollViewer.CanContentScroll="True"
-                             Text="{Binding Path=ExistingBookNote, Mode=TwoWay}" 
-                                 HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="290"/>
-
-
-                            <Button Content="Update Existing Book" Grid.Row="8" HorizontalAlignment="Left" Margin="10,10,0,0"
-                                VerticalAlignment="Top" Width="125" Height="22"
-                                Command="{Binding Path=UpdateExistingBookCommand}" />
-
-
-                        </Grid>
                     </Grid>
-                </ScrollViewer>
             </TabItem>
 
         </TabControl>

@@ -43,6 +43,16 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
+
+                <MenuItem Header="Update From _Text" 
+                          Command="{Binding Path=DataLoaderVM.UpdateBooksFromTextCommand}" >
+                    <MenuItem.Icon>
+                        <Image Source="./Images/Update-Icon.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                
+                <Separator />
+                
                 <MenuItem Header="_Exit">
                     <MenuItem.Icon>
                         <Image Source="./Images/File_Exit_16.png" />
@@ -60,6 +70,12 @@
                           Command="{Binding Path=ExportersVM.ExportViaEmailCommand}" >
                     <MenuItem.Icon>
                         <Image Source="./Images/Send_Email.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Post to _Blog" 
+                          Command="{Binding Path=BloggerVM.AddBlogPostCommand}" >
+                    <MenuItem.Icon>
+                        <Image Source="./Images/Blogger-icon.png" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
@@ -93,6 +109,13 @@
                     <TabItem Header="Update">
                         <Grid Background="#FFE5E5E5" >
                             <Views:BooksDataUpdateView  DataContext="{Binding Path=DataUpdaterVM}" />
+                        </Grid>
+                    </TabItem>
+
+
+                    <TabItem Header="Reports">
+                        <Grid Background="#FFE5E5E5" >
+                            <Views:BookReportsView  DataContext="{Binding Path=ReportsVM}" />
                         </Grid>
                     </TabItem>
 
