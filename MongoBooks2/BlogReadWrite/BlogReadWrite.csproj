@@ -114,7 +114,9 @@
       <DependentUpon>AddBlogPostView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Icons\Blogger-icon.png" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Views\AddBlogPostView.xaml">
       <SubType>Designer</SubType>
