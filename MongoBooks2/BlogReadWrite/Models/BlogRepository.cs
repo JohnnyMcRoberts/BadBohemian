@@ -74,7 +74,9 @@ namespace BlogReadWrite.Models
         public async Task GetBlogPosts(string blogId)
         {
             await AuthenticateAsync();
-            var list = await _service.Posts.List(blogId).ExecuteAsync();
+            var request = _service.Posts.List(blogId);
+            request.MaxResults = 100;
+            var list = await request.ExecuteAsync();
 
             BlogPosts.Clear();
             var posts = from post in list.Items

@@ -9,6 +9,7 @@
 
     using BlogReadWrite.Utilities;
     using BlogReadWrite.Models;
+    using System.Windows;
 
     public class AddBlogPostViewModel : INotifyPropertyChanged
     {
@@ -137,7 +138,12 @@
                 if (_selectedBlog != null)
                 {
                     SelectedPost = null;
-                    _blogRepostory.GetBlogPosts(_selectedBlog.Id);
+                    using (new WaitCursor())
+                    {
+                        System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(
+                            async () => { await _blogRepostory.GetBlogPosts(_selectedBlog.Id); });
+                    }
+
                     OnPropertyChanged(() => BlogPosts);
                     OnPropertyChanged(() => IsDataForNewPost);
                     OnPropertyChanged(() => IsDataForUpdatePost);
@@ -188,6 +194,8 @@
         /// </summary>
         private ICommand _updateBlogPostCommand;
 
+        private ICommand _closeWindowCommand;
+
         private BlogRepository _blogRepostory;
 
         #endregion
@@ -229,11 +237,22 @@
                                             (_updateBlogPostCommand =
                                                     new CommandHandler(UpdateBlogPostCommandAction, true));
 
+
+        /// <summary>
+        /// Gets the select image for nation command.
+        /// </summary>
+        public ICommand CloseWindowCommand => _closeWindowCommand ??
+                                            (_closeWindowCommand =
+                                             new RelayCommandHandler(CloseWindow) { IsEnabled = true });
+
         #endregion
 
         #region Command Actions
 
-        public void SelectSecretFileCommandAction()
+        /// <summary>
+        /// The command action to select the secret file.
+        /// </summary>
+        public async void SelectSecretFileCommandAction()
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Filter = @"All files (*.*)|*.*|JSON Files (*.json)|*.json";
@@ -246,13 +265,29 @@
                 DefaultSecretFileName = fileDialog.FileName;
                 _blogRepostory.SecretFileName = SecretFileName;
                 OnPropertyChanged("");
+
+                using (new WaitCursor())
+                {
+                    await _blogRepostory.GetBlogs();
+                }
+
+                OnPropertyChanged(() => Blogs);
             }
         }
 
-        public void SetDefaultSecretFileNameCommandAction()
+        /// <summary>
+        /// The command action to set the secret file to the preiously selected default.
+        /// </summary>
+        public async void SetDefaultSecretFileNameCommandAction()
         {
             SecretFileName = DefaultSecretFileName;
             _blogRepostory.SecretFileName = SecretFileName;
+            using (new WaitCursor())
+            {
+                await _blogRepostory.GetBlogs();
+            }
+
+            OnPropertyChanged(() => Blogs);
         }
 
         /// <summary>
@@ -260,22 +295,52 @@
         /// </summary>
         public async void GetBlogsCommandAction()
         {
-            await _blogRepostory.GetBlogs();
+            using (new WaitCursor())
+            {
+                await _blogRepostory.GetBlogs();
+            }
+
             OnPropertyChanged(() => Blogs);
         }
 
+        /// <summary>
+        /// The command action to add a new post to the blog.
+        /// </summary>
         public async void NewBlogPostCommandAction()
         {
-            await _blogRepostory.AddBlogPost(BlogPostTitle, BlogPostContent, _selectedBlog.Id);
-            await _blogRepostory.GetBlogs();
-            OnPropertyChanged(() => Blogs);
+            using (new WaitCursor())
+            {
+                await _blogRepostory.AddBlogPost(BlogPostTitle, BlogPostContent, _selectedBlog.Id);
+                await _blogRepostory.GetBlogPosts(_selectedBlog.Id);
+            }
+
+            OnPropertyChanged(() => BlogPosts);
         }
 
+        /// <summary>
+        /// The command action to update a blog post.
+        /// </summary>
         public async void UpdateBlogPostCommandAction()
         {
-            await _blogRepostory.UpdateBlogPost(BlogPostTitle, BlogPostContent, _selectedBlog.Id, _selectedPost.Id);
-            await _blogRepostory.GetBlogPosts(_selectedBlog.Id);
+            using (new WaitCursor())
+            {
+                await _blogRepostory.UpdateBlogPost(BlogPostTitle, BlogPostContent, _selectedBlog.Id, _selectedPost.Id);
+                await _blogRepostory.GetBlogPosts(_selectedBlog.Id);
+            }
+
             OnPropertyChanged(() => BlogPosts);
+        }
+
+        /// <summary>
+        /// The command action to close the dialog window.
+        /// </summary>
+        public void CloseWindow(object parameter)
+        {
+            Window window = parameter as Window;
+            if (window != null)
+            {
+                window.Close();
+            }
         }
 
         #endregion
@@ -289,6 +354,8 @@
         {
             _defaultSecretFileName = Properties.Settings.Default.DefaultSecretFileName;
             _blogRepostory = new BlogRepository();
+            _selectedBlog = null;
+            _selectedPost = null;
         }
 
         #endregion

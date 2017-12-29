@@ -107,6 +107,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Utilities\CommandHandler.cs" />
+    <Compile Include="Utilities\RelayCommandHandler.cs" />
+    <Compile Include="Utilities\WaitCursor.cs" />
     <Compile Include="ViewModels\AddBlogPostViewModel.cs" />
     <Compile Include="Views\AddBlogPostView.xaml.cs">
       <DependentUpon>AddBlogPostView.xaml</DependentUpon>

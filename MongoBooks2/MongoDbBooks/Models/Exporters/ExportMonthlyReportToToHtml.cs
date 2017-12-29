@@ -108,7 +108,7 @@ td {
         {
             title = string.Empty;
             content = string.Empty;
-            if (_selectedMonthTally == null)
+            if (!_forBlog || _selectedMonthTally == null)
                 return false;
 
             StringWriter sw = new StringWriter();
@@ -210,11 +210,11 @@ td {
             writer.WriteLine();
         }
 
-        private static void WriteIndividualBookTable(HtmlTextWriter writer, BookRead book)
+        private void WriteIndividualBookTable(HtmlTextWriter writer, BookRead book)
         {
             writer.WriteLine();
             writer.AddStyleAttribute("font-size", "12pt");
-            writer.AddStyleAttribute("width", "75%");
+            writer.AddStyleAttribute("width", _forBlog ? "90%" : "75%");
             writer.AddAttribute(HtmlTextWriterAttribute.Align, "center");
             writer.RenderBeginTag(HtmlTextWriterTag.Table);
             {
@@ -301,9 +301,9 @@ td {
             writer.WriteLine();
         }
 
-        private static void AddBookImageTableCell(HtmlTextWriter writer, BookRead book)
+        private void AddBookImageTableCell(HtmlTextWriter writer, BookRead book)
         {
-            writer.AddStyleAttribute("width", "20%");
+            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
             writer.AddAttribute(HtmlTextWriterAttribute.Rowspan, "7");
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             {
@@ -316,9 +316,9 @@ td {
             writer.RenderEndTag();
         }
 
-        private static void AddBookValueTableCell(HtmlTextWriter writer, string dataTitle, string dataValue)
+        private void AddBookValueTableCell(HtmlTextWriter writer, string dataTitle, string dataValue)
         {
-            writer.AddStyleAttribute("width", "20%");
+            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
             writer.RenderBeginTag(HtmlTextWriterTag.Th);
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.B);
@@ -345,7 +345,7 @@ td {
             writer.WriteLine();
 
             writer.AddStyleAttribute("font-size", "12pt");
-            writer.AddStyleAttribute("width", "60%");
+            writer.AddStyleAttribute("width", _forBlog ? "90%" : "60%");
             writer.AddStyleAttribute("border", "none");
 
             List<Tuple<string, string, string>> tableRowValues = GetTotalsTableRowValues();
@@ -394,7 +394,7 @@ td {
             writer.WriteLine();
         }
 
-        private static void WriteTotalsTableDataRow(HtmlTextWriter writer, Tuple<string, string, string> tableRow)
+        private void WriteTotalsTableDataRow(HtmlTextWriter writer, Tuple<string, string, string> tableRow)
         {
             string rowHeader = tableRow.Item1;
             string rowOverallValue = tableRow.Item2;
@@ -404,7 +404,7 @@ td {
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
             {
                 // Write the header cell.
-                writer.AddStyleAttribute("width", "20%");
+                writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
                 writer.AddStyleAttribute("text-align", "left");
                 writer.AddStyleAttribute("background-color", "Beige");
                 writer.AddStyleAttribute("border", "none");
@@ -424,9 +424,9 @@ td {
             writer.RenderEndTag();
         }
 
-        private static void WriteTotalsTableDataRowValueCell(HtmlTextWriter writer, string rowDataValue)
+        private void WriteTotalsTableDataRowValueCell(HtmlTextWriter writer, string rowDataValue)
         {
-            writer.AddStyleAttribute("width", "20%");
+            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
             writer.AddStyleAttribute("text-align", "right");
             writer.AddStyleAttribute("background-color", "LightSteelBlue");
             writer.AddStyleAttribute("border", "none");
@@ -438,9 +438,9 @@ td {
             writer.WriteLine();
         }
 
-        private static void WriteTotalsTableHeaderCell(HtmlTextWriter writer, string headerText)
+        private void WriteTotalsTableHeaderCell(HtmlTextWriter writer, string headerText)
         {
-            writer.AddStyleAttribute("width", "20%");
+            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
             writer.AddStyleAttribute("text-align", "center");
             writer.AddStyleAttribute("font-size", "18pt");
             writer.AddStyleAttribute("background-color", string.IsNullOrEmpty(headerText) ? "Beige" : "LightSteelBlue");
