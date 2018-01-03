@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MongoDbBooks.Models
+﻿namespace MongoDbBooks.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class BooksDelta
     {
         #region Public Data
@@ -55,10 +54,10 @@ namespace MongoDbBooks.Models
             public double PercentageInEnglish { get; set; }
             public double PercentageInTranslation { get { return 100.0 - PercentageInEnglish; } }
 
-            public double PageRate { get { return (double)TotalPages / (double)DaysInTally; } }
-            public double DaysPerBook { get { return (double)DaysInTally / (double)TotalBooks; } }
-            public double PagesPerBook { get { return (double)TotalPages / (double)TotalBooks; } }
-            public double BooksPerYear { get { return 365.25 / (double)DaysPerBook; } }
+            public double PageRate { get { return TotalPages / (double)DaysInTally; } }
+            public double DaysPerBook { get { return DaysInTally / (double)TotalBooks; } }
+            public double PagesPerBook { get { return TotalPages / (double)TotalBooks; } }
+            public double BooksPerYear { get { return 365.25 / DaysPerBook; } }
 
             public List<Tuple<string, UInt32, double, UInt32, double>> LanguageTotals { get; set; }
             public List<Tuple<string, UInt32, double, UInt32, double>> CountryTotals { get; set; }
@@ -106,7 +105,7 @@ namespace MongoDbBooks.Models
             UInt32 totalComicFormat = 0;
             UInt32 totalAudioFormat = 0;
             UInt32 totalInEnglish = 0;
-            int daysInTally = 0;
+            int daysInTally;
 
             daysInTally = (books.Last().Date - books.First().Date).Days;
             if (daysInTally < 1) daysInTally = 1;
@@ -127,6 +126,7 @@ namespace MongoDbBooks.Models
                 UpdateLanguageAndCountryCounts(languageCounts, countryCounts, book);
 
             }
+
             double percentageInEnglish = GetAsPercentage(totalBooks, totalInEnglish);
             tally.DaysInTally = daysInTally;
             tally.TotalPages = totalPagesRead;
@@ -166,7 +166,6 @@ namespace MongoDbBooks.Models
             Dictionary<string, Tuple<UInt32, UInt32>> countryCounts,
             BookRead book)
         {
-
             if (!languageCounts.ContainsKey(book.OriginalLanguage))
                 languageCounts.Add(book.OriginalLanguage, new Tuple<UInt32, UInt32>(1, book.Pages));
             else
@@ -192,7 +191,7 @@ namespace MongoDbBooks.Models
 
         public static double GetAsPercentage(UInt32 totalBooks, UInt32 totalInEnglish)
         {
-            double percentageInEnglish = 100.0 * ((double)totalInEnglish / (double)totalBooks);
+            double percentageInEnglish = 100.0 * (totalInEnglish / (double)totalBooks);
             return percentageInEnglish;
         }
 

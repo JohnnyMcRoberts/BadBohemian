@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace MongoDbBooks.Models.Geography
+﻿namespace MongoDbBooks.Models.Geography
 {
+    using System;
+
     public class PolygonPoint
     {
         public double Latitude { get; set; }

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml;
-
-namespace MongoDbBooks.Models.Geography
+﻿namespace MongoDbBooks.Models.Geography
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Xml;
+
     public class CountryGeography : IGeographicEntity
     {
         public string Name { get; set; }
@@ -123,6 +123,5 @@ namespace MongoDbBooks.Models.Geography
             CentroidLongitude /= totalArea;
             CentroidLatitude /= totalArea;
         }
-
     }
 }

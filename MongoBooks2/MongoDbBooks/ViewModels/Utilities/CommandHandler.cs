@@ -1,8 +1,9 @@
-﻿using System;
-using System.Windows.Input;
-
-namespace MongoDbBooks.ViewModels.Utilities
+﻿namespace MongoDbBooks.ViewModels.Utilities
 {
+    using System;
+    using System.Windows.Input;
+
+
     public class CommandHandler : ICommand
     {
         private Action _action;

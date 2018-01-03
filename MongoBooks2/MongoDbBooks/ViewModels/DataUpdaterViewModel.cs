@@ -1,4 +1,11 @@
-﻿
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DataUpdaterViewModel.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The data update view model.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace MongoDbBooks.ViewModels
 {
@@ -7,7 +14,6 @@ namespace MongoDbBooks.ViewModels
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.ComponentModel;
-    using System.Linq.Expressions;
     using System.Windows.Input;
     using System.Windows.Forms;
 
@@ -15,34 +21,8 @@ namespace MongoDbBooks.ViewModels
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.Views;
 
-    public class DataUpdaterViewModel : INotifyPropertyChanged
+    public class DataUpdaterViewModel : BaseViewModel
     {
-        #region INotifyPropertyChanged Members
-
-        void OnPropertyChanged<T>(Expression<Func<T>> sExpression)
-        {
-            if (sExpression == null) throw new ArgumentNullException("sExpression");
-
-            MemberExpression body = sExpression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-            OnPropertyChanged(body.Member.Name);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
-
         #region Private Data
 
         private MainWindow _mainWindow;
@@ -502,7 +482,6 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
-        #endregion
-        
+        #endregion      
     }
 }

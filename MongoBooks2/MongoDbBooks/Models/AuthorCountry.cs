@@ -1,10 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="AuthorCountry.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The author country model.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace MongoDbBooks.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     using MongoDbBooks.Models.Database;
 
     public class AuthorCountry
@@ -51,7 +59,6 @@ namespace MongoDbBooks.Models
                 return 100.0 * (TotalPagesReadFromCountry / (double)TotalPagesWorldWide);
             }
         }
-
 
         /// <summary>
         /// Gets the image URI ready to be displayed.

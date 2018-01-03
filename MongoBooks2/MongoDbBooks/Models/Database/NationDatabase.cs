@@ -1,12 +1,17 @@
-﻿
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Nation.cs" company="N/A">
+//   2017-2086
+// </copyright>
+// <summary>
+//   The nation MongoDb database.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace MongoDbBooks.Models.Database
 {
-    using System.Collections.Generic;
-
     using MongoDB.Driver;
     using MongoDB.Bson;
-    using System;
+
     using System.Collections.ObjectModel;
     using Geography;
 
@@ -15,27 +20,27 @@ namespace MongoDbBooks.Models.Database
         /// <summary>
         /// Gets or sets the connection string for the database.
         /// </summary>
-        public override string DatabaseConnectionString { get; protected set; }
+        public sealed override string DatabaseConnectionString { get; protected set; }
 
         /// <summary>
         /// Gets or sets the name of the database.
         /// </summary>
-        public override string DatabaseName { get; protected set; }
+        public sealed override string DatabaseName { get; protected set; }
 
         /// <summary>
         /// Gets or sets the name of the collection.
         /// </summary>
-        public override string CollectionName { get; protected set; }
+        public sealed override string CollectionName { get; protected set; }
 
         /// <summary>
         /// Gets or sets the database collection filter.
         /// </summary>
-        public override FilterDefinition<Nation> Filter { get; protected set; }
+        public sealed override FilterDefinition<Nation> Filter { get; protected set; }
 
         /// <summary>
         /// Gets or sets the set of items from the database.
         /// </summary>
-        public override ObservableCollection<Nation> LoadedItems { get; set; }
+        public sealed override ObservableCollection<Nation> LoadedItems { get; set; }
 
         /// <summary>
         /// Loads the world countries into the nations data base.
@@ -45,7 +50,7 @@ namespace MongoDbBooks.Models.Database
         {
             // Update the loaded then connect to the database.
             LoadedItems.Clear();
-            foreach(var country in worldCountries)
+            foreach(WorldCountry country in worldCountries)
             {
                 LoadedItems.Add(new Nation()
                 {
@@ -64,7 +69,7 @@ namespace MongoDbBooks.Models.Database
         /// <param name="countriesData">The set of geographical data for the countries.</param>
         public void UpdateNationsDatabase(CountriesData countriesData)
         {
-            foreach(var country in countriesData.Countries)
+            foreach(CountryGeography country in countriesData.Countries)
             {
                 foreach(Nation nation in LoadedItems)
                 {

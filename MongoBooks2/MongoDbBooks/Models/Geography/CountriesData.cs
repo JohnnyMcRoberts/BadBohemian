@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Xml;
-
-namespace MongoDbBooks.Models.Geography
+﻿namespace MongoDbBooks.Models.Geography
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.IO;
+    using System.Xml;
+
     public class CountriesData
     {
         #region Constructor

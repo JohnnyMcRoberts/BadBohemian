@@ -1,47 +1,78 @@
-﻿
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BlogRepository.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The blog repository model.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace BlogReadWrite.Models
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.Collections.ObjectModel;
     using System.IO;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Collections.ObjectModel;
 
     using Google.Apis.Auth.OAuth2;
     using Google.Apis.Blogger.v3;
+    using Google.Apis.Blogger.v3.Data;
     using Google.Apis.Services;
 
-
+    /// <summary>
+    /// The blog repository model class.
+    /// </summary>
     public class BlogRepository
     {
         #region Private data
 
+        /// <summary>
+        /// The user credential.
+        /// </summary>
         private UserCredential _credential;
 
+        /// <summary>
+        /// The blogger service.
+        /// </summary>
         private BloggerService _service;
 
         #endregion
 
         #region Public Data
 
+        /// <summary>
+        /// Gets or sets the name of the application to display.
+        /// </summary>
         public string ApplicationName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the secret file name.
+        /// </summary>
         public string SecretFileName { get; set; }
 
-        public ObservableCollection<Google.Apis.Blogger.v3.Data.Blog> Blogs { get; private set; }
+        /// <summary>
+        /// Gets the list of blogs to display.
+        /// </summary>
+        public ObservableCollection<Blog> Blogs { get; }
 
-        public ObservableCollection<Google.Apis.Blogger.v3.Data.Post> BlogPosts { get; private set; }
+        /// <summary>
+        /// Gets the list of blog posts to display.
+        /// </summary>
+        public ObservableCollection<Post> BlogPosts { get; }
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BlogRepository" /> class.
+        /// </summary>
         public BlogRepository()
         {
-            Blogs = new ObservableCollection<Google.Apis.Blogger.v3.Data.Blog>();
-            BlogPosts = new ObservableCollection<Google.Apis.Blogger.v3.Data.Post>();
+            Blogs = new ObservableCollection<Blog>();
+            BlogPosts = new ObservableCollection<Post>();
         }
 
         #endregion
@@ -61,14 +92,16 @@ namespace BlogReadWrite.Models
             }
 
             var blogs = from blog in list.Items
-                        select new Google.Apis.Blogger.v3.Data.Blog
+                        select new Blog
                         {
                             Id = blog.Id,
                             Name = blog.Name
                         };
 
             foreach (var blog in blogs)
+            {
                 Blogs.Add(blog);
+            }
         }
 
         public async Task GetBlogPosts(string blogId)
@@ -80,7 +113,7 @@ namespace BlogReadWrite.Models
 
             BlogPosts.Clear();
             var posts = from post in list.Items
-                        select new Google.Apis.Blogger.v3.Data.Post
+                        select new Post
                         {
                             Title = post.Title,
                             Content = post.Content,
@@ -88,26 +121,27 @@ namespace BlogReadWrite.Models
                         };
 
             foreach (var post in posts)
+            {
                 BlogPosts.Add(post);
+            }
         }
 
         public async Task AddBlogPost(string title, string content, string blogId)
         {
             await AuthenticateAsync();
 
-            var newPost = new Google.Apis.Blogger.v3.Data.Post()
+            Post newPost = new Post()
             {
                 Kind = "blogger#post",
-                Blog = new Google.Apis.Blogger.v3.Data.Post.BlogData() { Id = blogId },
+                Blog = new Post.BlogData() { Id = blogId },
                 Title = title,
                 Content = content
             };
 
             try
             {
-                var insertRequest = _service.Posts.Insert(newPost, blogId);
+                PostsResource.InsertRequest insertRequest = _service.Posts.Insert(newPost, blogId);
                 await insertRequest.ExecuteAsync();
-
             }
             catch (Exception e)
             {
@@ -119,20 +153,19 @@ namespace BlogReadWrite.Models
         {
             await AuthenticateAsync();
 
-            var newPost = new Google.Apis.Blogger.v3.Data.Post()
+            var newPost = new Post()
             {
                 Kind = "blogger#post",
                 Id = postId,
-                Blog = new Google.Apis.Blogger.v3.Data.Post.BlogData() { Id = blogId },
+                Blog = new Post.BlogData() { Id = blogId },
                 Title = title,
                 Content = content
             };
 
             try
             {
-                var insertRequest = _service.Posts.Update(newPost, blogId, postId);
-                await insertRequest.ExecuteAsync();
-
+                PostsResource.UpdateRequest updateRequest = _service.Posts.Update(newPost, blogId, postId);
+                await updateRequest.ExecuteAsync();
             }
             catch (Exception e)
             {
@@ -147,10 +180,11 @@ namespace BlogReadWrite.Models
         private async Task AuthenticateAsync()
         {
             if (_service != null)
+            {
                 return;
-
-            //UserCredential credential;
-            var stream = new FileStream(SecretFileName, FileMode.Open, FileAccess.Read);
+            }
+            
+            FileStream stream = new FileStream(SecretFileName, FileMode.Open, FileAccess.Read);
 
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(20));
@@ -163,7 +197,7 @@ namespace BlogReadWrite.Models
                 ct
                 );
 
-            var initializer = new BaseClientService.Initializer()
+            BaseClientService.Initializer initializer = new BaseClientService.Initializer()
             {
                 HttpClientInitializer = _credential,
                 ApplicationName = ApplicationName
@@ -173,6 +207,5 @@ namespace BlogReadWrite.Models
         }
 
         #endregion
-
     }
 }

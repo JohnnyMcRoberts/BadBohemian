@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Linq.Expressions;
-
-using OxyPlot;
-using OxyPlot.Series;
-using OxyPlot.Axes;
-
-using MongoDbBooks.Models;
-using MongoDbBooks.ViewModels.Utilities;
-using OxyPlot.Annotations;
-using System.IO;
-using System.Windows.Media.Imaging;
-using System.Net;
-
+﻿
 namespace MongoDbBooks.ViewModels.PlotGenerators
 {
+    using System.IO;
+    using System.Windows.Media.Imaging;
+    using System.Net;
+
+    using MongoDbBooks.ViewModels.Utilities;
+
+    using OxyPlot;
+    using OxyPlot.Axes;
+    using OxyPlot.Annotations;
+
     public class WorldCountriesMapPlotGenerator : IPlotGenerator
     {
         public OxyPlot.PlotModel SetupPlot(Models.MainBooksModel mainModel)

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Poly2Tri;
-using Poly2Tri.Triangulation.Polygon;
-
-namespace MongoDbBooks.ViewModels.Utilities
+﻿namespace MongoDbBooks.ViewModels.Utilities
 {
+    using System.Collections.Generic;
+    using Poly2Tri;
+    using Poly2Tri.Triangulation.Polygon;
+
+
     public class PolygonSimplifier
     {
         public static List<List<OxyPlot.DataPoint>> TriangulatePolygon(List<OxyPlot.DataPoint> xyPoints)

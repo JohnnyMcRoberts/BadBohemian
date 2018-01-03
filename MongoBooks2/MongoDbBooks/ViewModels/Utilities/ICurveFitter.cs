@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MongoDbBooks.ViewModels.Utilities
+﻿namespace MongoDbBooks.ViewModels.Utilities
 {
     public interface ICurveFitter
     {

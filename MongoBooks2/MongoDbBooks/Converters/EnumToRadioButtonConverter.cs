@@ -1,10 +1,18 @@
-﻿
-using System;
-using System.Windows;
-using System.Windows.Data;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="EnumToRadioButtonConverter.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The enum radio button converter model.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace MongoDbBooks.Converters
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Data;
+
     public class EnumToRadioButtonConverter : IValueConverter
     {
         #region IValueConverter Members

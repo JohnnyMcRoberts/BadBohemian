@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace MongoDbBooks.Models
+﻿namespace MongoDbBooks.Models
 {
+    using System;
+
     public class TalliedBook
     {
         public BookRead Book { get; private set; }

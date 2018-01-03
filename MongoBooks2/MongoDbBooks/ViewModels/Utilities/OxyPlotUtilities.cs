@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using OxyPlot;
-using OxyPlot.Series;
-
-namespace MongoDbBooks.ViewModels.Utilities
+﻿namespace MongoDbBooks.ViewModels.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using OxyPlot;
+    using OxyPlot.Series;
+
+
     public class OxyPlotUtilities
     {
         #region Constants

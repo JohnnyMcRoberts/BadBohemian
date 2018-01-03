@@ -33,13 +33,13 @@
                 <MenuItem Header="_Connect To Database" 
                           Command="{Binding Path=DataLoaderVM.ConnectToDatabaseCommand}" >
                     <MenuItem.Icon>
-                        <Image Source="./Images/database-medium.png" />
+                        <Image Source="./Images/database-medium.png" Width="16" Height="16"  />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Connect To _Mailbox" 
                           Command="{Binding Path=MailboxLoaderVM.ConnectToMailboxCommand}" >
                     <MenuItem.Icon>
-                        <Image Source="./Images/Mail-icon.png" />
+                        <Image Source="./Images/Mail-icon.png" Width="16" Height="16"  />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
@@ -47,7 +47,7 @@
                 <MenuItem Header="Update From _Text" 
                           Command="{Binding Path=DataLoaderVM.UpdateBooksFromTextCommand}" >
                     <MenuItem.Icon>
-                        <Image Source="./Images/Update-Icon.png" />
+                        <Image Source="./Images/Update-Icon.png"  Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
                 
@@ -55,12 +55,13 @@
                 
                 <MenuItem Header="_Exit">
                     <MenuItem.Icon>
-                        <Image Source="./Images/File_Exit_16.png" />
+                        <Image Source="./Images/File_Exit_16.png" Width="16" Height="16"  />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Tools">
-                <MenuItem Header="_Manage users">
+                <MenuItem Header="_Manage users" 
+                          Command ="{Binding Path=UsersVM.ManageUsersCommand}">
                     <MenuItem.Icon>
                         <Image Source="./Images/Credentials.png" />
                     </MenuItem.Icon>
@@ -69,13 +70,13 @@
                 <MenuItem Header="Export via _E-Mail" 
                           Command="{Binding Path=ExportersVM.ExportViaEmailCommand}" >
                     <MenuItem.Icon>
-                        <Image Source="./Images/Send_Email.png" />
+                        <Image Source="./Images/Send_Email.png"  Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Post to _Blog" 
                           Command="{Binding Path=BloggerVM.AddBlogPostCommand}" >
                     <MenuItem.Icon>
-                        <Image Source="./Images/Blogger-icon.png" />
+                        <Image Source="./Images/Blogger-icon.png" Width="16" Height="16"  />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>

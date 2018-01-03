@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="StringToVisibilityConverter.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The string to visibility converter model.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace MongoDbBooks.Converters
 {

@@ -9,11 +9,9 @@
 
 namespace MongoDbBooks.ViewModels
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
-    using System.Linq.Expressions;
     using System.Windows.Forms;
     using System.Windows.Input;
 
@@ -25,52 +23,8 @@ namespace MongoDbBooks.ViewModels
     /// <summary>
     /// The exporters view model.
     /// </summary>
-    public class ExportersViewModel : INotifyPropertyChanged
+    public class ExportersViewModel : BaseViewModel
     {
-        #region INotifyPropertyChanged Members
-
-        /// <summary>
-        /// The property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// The on property changed.
-        /// </summary>
-        /// <param name="expression">
-        /// The string from the function expression.
-        /// </param>
-        /// <typeparam name="T">The type that has changed</typeparam>
-        protected void OnPropertyChanged<T>(Expression<Func<T>> expression)
-        {
-            if (expression == null)
-            {
-                throw new ArgumentNullException(@"expression");
-            }
-
-            MemberExpression body = expression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-
-            this.OnPropertyChanged(body.Member.Name);
-        }
-
-        /// <summary>
-        /// The on property changed.
-        /// </summary>
-        /// <param name="propertyName">
-        /// The property name.
-        /// </param>
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
-
         #region Private Data
 
         /// <summary>
@@ -758,6 +712,5 @@ namespace MongoDbBooks.ViewModels
         }
 
         #endregion
-
     }
 }

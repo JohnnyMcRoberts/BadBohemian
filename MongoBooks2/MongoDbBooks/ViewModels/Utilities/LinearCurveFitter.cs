@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-
-namespace MongoDbBooks.ViewModels.Utilities
+﻿namespace MongoDbBooks.ViewModels.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+
     public class LinearCurveFitter : ICurveFitter
     {
         public LinearCurveFitter(List<double> xVals, List<double> yVals)

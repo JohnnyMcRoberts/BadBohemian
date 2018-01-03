@@ -1,10 +1,10 @@
-﻿using System;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace MongoDbBooks.ViewModels.Utilities
+﻿namespace MongoDbBooks.ViewModels.Utilities
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
+
     public class QuadraticCurveFitter : ICurveFitter
     {
         #region Constructor

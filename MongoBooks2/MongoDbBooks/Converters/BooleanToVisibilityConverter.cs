@@ -30,7 +30,7 @@ namespace MongoDbBooks.Converters
         {
             Visibility visibility = Visibility.Collapsed;
             bool show;
-            if (!bool.TryParse(value.ToString(), out show))
+            if (value== null || !bool.TryParse(value.ToString(), out show))
             {
                 return visibility;
             }

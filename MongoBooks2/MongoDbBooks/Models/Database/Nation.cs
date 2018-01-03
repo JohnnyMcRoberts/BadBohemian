@@ -6,6 +6,7 @@
 //   The nation MongoDb entity.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+
 namespace MongoDbBooks.Models.Database
 {
     using MongoDB.Bson.Serialization.Attributes;

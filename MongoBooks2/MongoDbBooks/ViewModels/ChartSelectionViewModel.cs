@@ -1,47 +1,28 @@
-﻿namespace MongoDbBooks.ViewModels
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ChartSelectionViewModel.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The chart selection view model.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace MongoDbBooks.ViewModels
 {
-    using System;
-    using System.ComponentModel;
-    using System.Linq.Expressions;
     using System.Collections.Generic;
     using System.Linq;
 
     using MongoDbBooks.Models;
     using MongoDbBooks.ViewModels.PlotGenerators;
 
-    public class ChartSelectionViewModel : INotifyPropertyChanged
+    public class ChartSelectionViewModel : BaseViewModel
     {
         public class ChartPair
         {
             public string Name { get; set; }
             public OxyPlotPair Plot { get; set; }
         }
-
-        #region INotifyPropertyChanged Members
-
-        void OnPropertyChanged<T>(Expression<Func<T>> sExpression)
-        {
-            if (sExpression == null) throw new ArgumentNullException("sExpression");
-
-            MemberExpression body = sExpression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-            OnPropertyChanged(body.Member.Name);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
-
+        
         #region Private Data
 
         private MainWindow _mainWindow;

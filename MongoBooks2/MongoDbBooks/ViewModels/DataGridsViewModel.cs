@@ -1,13 +1,20 @@
-﻿namespace MongoDbBooks.ViewModels
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DataGridsViewModel.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The data grids view model.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace MongoDbBooks.ViewModels
 {
-    using System.Windows.Input;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.ComponentModel;
-    using System.Linq.Expressions;
     using System.Data;
+    using System.Linq;
+    using System.Windows.Input;
 
     using MongoDbBooks.Models;
     using MongoDbBooks.Models.Geography;
@@ -15,33 +22,8 @@
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.Views;
 
-    public class DataGridsViewModel : INotifyPropertyChanged
+    public class DataGridsViewModel : BaseViewModel
     {
-        #region INotifyPropertyChanged Members
-
-        void OnPropertyChanged<T>(Expression<Func<T>> sExpression)
-        {
-            if (sExpression == null) throw new ArgumentNullException("sExpression");
-
-            MemberExpression body = sExpression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-            OnPropertyChanged(body.Member.Name);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
-
         #region Private Data
 
         private MainWindow _mainWindow;

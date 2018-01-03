@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Linq.Expressions;
-
-using OxyPlot;
-using OxyPlot.Series;
-using OxyPlot.Axes;
-
-using MongoDbBooks.Models;
-using MongoDbBooks.ViewModels.Utilities;
-
-namespace MongoDbBooks.ViewModels.PlotGenerators
+﻿namespace MongoDbBooks.ViewModels.PlotGenerators
 {
+    using System.Collections.Generic;
+
+    using OxyPlot;
+    using OxyPlot.Series;
+    using OxyPlot.Axes;
+
+    using MongoDbBooks.ViewModels.Utilities;
+
     public class LongitudeWithTimePlotGenerator : IPlotGenerator
     {
-        public OxyPlot.PlotModel SetupPlot(Models.MainBooksModel mainModel)
+        public PlotModel SetupPlot(Models.MainBooksModel mainModel)
         {
             _mainModel = mainModel;
             return SetupLongitudeWithTimePlot();
@@ -56,9 +50,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             }
 
 
-            OxyPlotUtilities.AddLineSeriesToModel(newPlot,
-                new LineSeries[] { overallSeries, lastTenSeries, overallTrendlineSeries }
-                );
+            OxyPlotUtilities.AddLineSeriesToModel(newPlot, new[] { overallSeries, lastTenSeries, overallTrendlineSeries } );
 
 
             // finally update the model with the new plot
