@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using MongoDbBooks.Models.Geography;
-
-namespace MongoDbBooks.ViewModels.Utilities
+﻿namespace MongoDbBooks.ViewModels.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using MongoDbBooks.Models.Geography;
+
+
     public class PolygonReducer
     {
 

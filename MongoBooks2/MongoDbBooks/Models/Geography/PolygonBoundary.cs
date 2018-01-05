@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MongoDbBooks.Models.Geography
+﻿namespace MongoDbBooks.Models.Geography
 {
+    using System;
+    using System.Collections.Generic;
+
     public class PolygonBoundary
     {
         public List<PolygonPoint> Points { get; set; }
-
 
         public double MinLongitude { get; private set; }
         public double MinLatitude { get; private set; }

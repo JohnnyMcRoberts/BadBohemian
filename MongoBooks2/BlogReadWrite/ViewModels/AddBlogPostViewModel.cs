@@ -1,16 +1,28 @@
-﻿namespace BlogReadWrite.ViewModels
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="AddBlogPostViewModel.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The add blog post view model.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace BlogReadWrite.ViewModels
 {
     using System;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq.Expressions;
+    using System.Windows;
     using System.Windows.Forms;
     using System.Windows.Input;
-    using System.Collections.ObjectModel;
 
-    using BlogReadWrite.Utilities;
     using BlogReadWrite.Models;
-    using System.Windows;
+    using BlogReadWrite.Utilities;
 
+    /// <summary>
+    /// The add blog post view model class.
+    /// </summary>
     public class AddBlogPostViewModel : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged Members
@@ -59,16 +71,28 @@
 
         #region Public Data
 
+        /// <summary>
+        /// Gets or sets the title for the blog post.
+        /// </summary>
         public string BlogPostTitle { get; set; }
 
+        /// <summary>
+        /// Gets or sets the content for the blog post.
+        /// </summary>
         public string BlogPostContent { get; set; }
 
+        /// <summary>
+        /// Gets or sets the title for the window.
+        /// </summary>
         public string WindowTitle { get; set; }
 
+        /// <summary>
+        /// Gets or sets the calling application name.
+        /// </summary>
         public string ApplictionName { get; set; }
 
         /// <summary>
-        /// Gets or sets the client secret to use for the blogger.
+        /// Gets the client secret to use for the blogger.
         /// </summary>
         public string SecretFileName
         {
@@ -76,6 +100,7 @@
             {
                 return _secretFileName;
             }
+
             private set
             {
                 _secretFileName = value;
@@ -84,12 +109,16 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the default secret file name.
+        /// </summary>
         public string DefaultSecretFileName
         {
             get
             {
                 return _defaultSecretFileName;
             }
+
             private set
             {
                 if (_defaultSecretFileName != value)
@@ -101,25 +130,49 @@
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether there is a default secret file name already set up.
+        /// </summary>
         public bool IsDefaultSecretFileName => !string.IsNullOrEmpty(DefaultSecretFileName);
 
+        /// <summary>
+        /// Gets a value indicating whether the secret file has been set up.
+        /// </summary>
         public bool HaveSecretFile => !string.IsNullOrEmpty(SecretFileName);
 
+        /// <summary>
+        /// Gets a value indicating whether enough data is provided to add a new blog post.
+        /// </summary>
         public bool IsDataForNewPost => !string.IsNullOrEmpty(SecretFileName) &&
              !string.IsNullOrEmpty(BlogPostTitle) &&
              !string.IsNullOrEmpty(BlogPostContent) &&
              SelectedBlog != null;
 
+        /// <summary>
+        /// Gets a value indicating whether enough data is provided to update an existing blog post.
+        /// </summary>
         public bool IsDataForUpdatePost => IsDataForNewPost && SelectedPost != null;
 
+        /// <summary>
+        /// Gets the blogs.
+        /// </summary>
         public ObservableCollection<Google.Apis.Blogger.v3.Data.Blog> Blogs => _blogRepostory.Blogs;
 
+        /// <summary>
+        /// Gets the selected blog posts.
+        /// </summary>
         public ObservableCollection<Google.Apis.Blogger.v3.Data.Post> BlogPosts => _blogRepostory.BlogPosts;
 
-        /// <summary>Gets or sets the selected blog.</summary>
+        /// <summary>
+        /// Gets or sets the selected blog.
+        /// </summary>
         public Google.Apis.Blogger.v3.Data.Post SelectedPost
         {
-            get { return _selectedPost; }
+            get
+            {
+                return _selectedPost;
+            }
+
             set
             {
                 _selectedPost = value;
@@ -131,7 +184,11 @@
         /// <summary>Gets or sets the selected blog.</summary>
         public Google.Apis.Blogger.v3.Data.Blog SelectedBlog
         {
-            get { return _selectedBlog; }
+            get
+            {
+                return _selectedBlog;
+            }
+
             set
             {
                 _selectedBlog = value;
@@ -164,9 +221,15 @@
         /// The client secret file.
         /// </summary>
         private string _secretFileName;
-       
+
+        /// <summary>
+        /// The selected blog.
+        /// </summary>
         private Google.Apis.Blogger.v3.Data.Blog _selectedBlog;
 
+        /// <summary>
+        /// The selected blog post.
+        /// </summary>
         private Google.Apis.Blogger.v3.Data.Post _selectedPost;
 
         /// <summary>
@@ -194,9 +257,15 @@
         /// </summary>
         private ICommand _updateBlogPostCommand;
 
+        /// <summary>
+        /// The close window command.
+        /// </summary>
         private ICommand _closeWindowCommand;
 
-        private BlogRepository _blogRepostory;
+        /// <summary>
+        /// The blog repository.
+        /// </summary>
+        private readonly BlogRepository _blogRepostory;
 
         #endregion
 
@@ -237,7 +306,6 @@
                                             (_updateBlogPostCommand =
                                                     new CommandHandler(UpdateBlogPostCommandAction, true));
 
-
         /// <summary>
         /// Gets the select image for nation command.
         /// </summary>
@@ -264,7 +332,7 @@
                 SecretFileName = fileDialog.FileName;
                 DefaultSecretFileName = fileDialog.FileName;
                 _blogRepostory.SecretFileName = SecretFileName;
-                OnPropertyChanged("");
+                OnPropertyChanged(string.Empty);
 
                 using (new WaitCursor())
                 {
@@ -276,7 +344,7 @@
         }
 
         /// <summary>
-        /// The command action to set the secret file to the preiously selected default.
+        /// The command action to set the secret file to the previously selected default.
         /// </summary>
         public async void SetDefaultSecretFileNameCommandAction()
         {
@@ -334,13 +402,11 @@
         /// <summary>
         /// The command action to close the dialog window.
         /// </summary>
+        /// <param name="parameter">The parameter for the window.</param>
         public void CloseWindow(object parameter)
         {
             Window window = parameter as Window;
-            if (window != null)
-            {
-                window.Close();
-            }
+            window?.Close();
         }
 
         #endregion
@@ -359,6 +425,5 @@
         }
 
         #endregion
-
     }
 }

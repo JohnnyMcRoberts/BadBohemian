@@ -1,18 +1,30 @@
-﻿namespace BlogReadWrite.Utilities
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CommandHandler.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The command handler utility.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace BlogReadWrite.Utilities
 {
     using System;
     using System.Windows.Input;
 
+    /// <summary>
+    /// The command handler class.
+    /// </summary>
     public class CommandHandler : ICommand
     {
-        private Action _action;
         private readonly bool _canExecute;
+
+        private readonly Action _action;
+
         public CommandHandler(Action action, bool canExecute)
         {
             _action = action;
             _canExecute = canExecute;
-
-            var a = CanExecuteChanged;
         }
 
         public bool CanExecute(object parameter)

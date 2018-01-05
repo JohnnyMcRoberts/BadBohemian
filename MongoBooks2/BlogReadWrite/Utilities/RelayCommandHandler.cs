@@ -1,4 +1,13 @@
-﻿namespace BlogReadWrite.Utilities
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="RelayCommandHandler.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The relay command handler utility.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace BlogReadWrite.Utilities
 {
     using System;
     using System.Windows.Input;
@@ -28,7 +37,11 @@
         /// </summary>
         public bool IsEnabled
         {
-            get { return _isEnabled; }
+            get
+            {
+                return _isEnabled;
+            }
+
             set
             {
                 if (value == _isEnabled)
@@ -47,6 +60,7 @@
         /// <param name="parameter">
         /// The parameter (ignored).
         /// </param>
+        /// <returns>True if can execute the command, otherwise false.</returns>
         public bool CanExecute(object parameter)
         {
             return IsEnabled;

@@ -37,6 +37,8 @@
 
         private NationDatabase _nationsDatabase;
 
+        private UserDatabase _usersDatabase;
+
         #endregion
 
         #region Constructor
@@ -75,6 +77,8 @@
                 _log.Debug("error connecting to db : " + errorMsg);
 
             _mailReader = new GmailReader();
+
+            _usersDatabase = new UserDatabase(DatabaseConnectionString);
 
             _nationsDatabase = new NationDatabase(DatabaseConnectionString);
 
@@ -197,14 +201,26 @@
         {
             get
             {
-                if (_nationsDatabase != null && _nationsDatabase.LoadedItems != null)
+                if (_nationsDatabase?.LoadedItems != null)
                     return new ObservableCollection<Nation>(_nationsDatabase.LoadedItems);
                 return null;
             }
         }
 
         public NationDatabase NationDatabase => _nationsDatabase;
-        
+
+        public ObservableCollection<User> Users
+        {
+            get
+            {
+                if (_usersDatabase?.LoadedItems != null)
+                    return new ObservableCollection<User>(_usersDatabase.LoadedItems);
+                return null;
+            }
+        }
+
+        public UserDatabase UserDatabase => _usersDatabase;
+
         #endregion
 
         #region Public Methods
@@ -230,9 +246,10 @@
             foreach (var readItem in readItems.OrderBy(x => x.Date))
             {
                 BookRead existingReadBook = FindExistingBookRead(readItem);
+                string error;
                 if (existingReadBook == null)
                 {
-                    if (!AddNewBook(readItem, out string error))
+                    if (!AddNewBook(readItem, out error))
                     {
                         _log.Debug("Add new book failed:" + error + "\n Title: " + readItem.Title +
                             "\n Author " + readItem.Audio +
@@ -242,7 +259,7 @@
                 else
                 {
                     MergeBookData(existingReadBook, readItem);
-                    if (!UpdateBook(existingReadBook, out string error, false))
+                    if (!UpdateBook(existingReadBook, out error, false))
                     {
                         _log.Debug("Update existing book failed:" + error);
                     }
@@ -984,8 +1001,7 @@
 
             IMongoCollection<BookRead> booksRead = _booksDatabase.GetCollection<BookRead>("books");
 
-            // this is a dummy query to get everything to date...
-
+            // This is a query to get everything to date. 
             var filter = Builders<BookRead>.Filter.Lte(
                 new StringFieldDefinition<BookRead, BsonDateTime>("date"), new BsonDateTime(DateTime.Now.AddDays(1000)));
 

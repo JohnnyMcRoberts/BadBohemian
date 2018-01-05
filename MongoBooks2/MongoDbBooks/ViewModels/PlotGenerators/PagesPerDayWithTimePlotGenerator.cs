@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Linq.Expressions;
-
-using OxyPlot;
-using OxyPlot.Series;
-using OxyPlot.Axes;
-
-using MongoDbBooks.Models;
-using MongoDbBooks.ViewModels.Utilities;
-
-namespace MongoDbBooks.ViewModels.PlotGenerators
+﻿namespace MongoDbBooks.ViewModels.PlotGenerators
 {
+    using System.Collections.Generic;
+
+    using OxyPlot;
+    using OxyPlot.Series;
+    using OxyPlot.Axes;
+
+    using MongoDbBooks.ViewModels.Utilities;
+
     public class PagesPerDayWithTimePlotGenerator : IPlotGenerator
     {
-        public OxyPlot.PlotModel SetupPlot(Models.MainBooksModel mainModel)
+        public PlotModel SetupPlot(Models.MainBooksModel mainModel)
         {
             _mainModel = mainModel;
             return SetupPagesPerDayWithTimePlot();
@@ -49,9 +43,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                     new DataPoint(DateTimeAxis.ToDouble(delta.Date), trendPageRate));
             }
 
-            OxyPlotUtilities.AddLineSeriesToModel(newPlot,
-                new LineSeries[] { overallSeries, overallTrendlineSeries }
-                );
+            OxyPlotUtilities.AddLineSeriesToModel(newPlot, new[] { overallSeries, overallTrendlineSeries } );
 
             // finally update the model with the new plot
             return newPlot;

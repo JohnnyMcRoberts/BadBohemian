@@ -14,8 +14,8 @@ namespace MongoDbBooks.Models.Exporters
     using System.IO;
     using System.Text;
     using System.Web.UI;
+
     using MongoDbBooks.ViewModels;
-    using MongoDbBooks.ViewModels.PlotGenerators;
 
     public class ExportMonthlyReportToToHtml : BaseFileExporter
     {
@@ -172,7 +172,6 @@ td {
             writer.RenderEndTag();
             writer.WriteLine();
 
-
             writer.AddAttribute(HtmlTextWriterAttribute.Src,
                 "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js");
             writer.RenderBeginTag(HtmlTextWriterTag.Script);
@@ -273,6 +272,7 @@ td {
                 }
 
             }
+
             writer.RenderEndTag();
 
             writer.WriteLine();
@@ -289,6 +289,7 @@ td {
                 writer.Write("Notes: ");
                 writer.RenderEndTag();
             }
+
             writer.RenderEndTag();
             writer.WriteLine();
 
@@ -297,6 +298,7 @@ td {
             {
                 writer.Write(book.Note);
             }
+
             writer.RenderEndTag();
             writer.WriteLine();
         }

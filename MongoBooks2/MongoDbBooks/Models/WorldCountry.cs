@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
+﻿
 namespace MongoDbBooks.Models
 {
+
+    using MongoDB.Bson.Serialization.Attributes;
 
     [BsonIgnoreExtraElements]
     public class WorldCountry : BaseMongoEntity
@@ -39,7 +34,7 @@ namespace MongoDbBooks.Models
                     inDegrees *= -1.0;
                 }
                 uint degrees = (uint)inDegrees;
-                uint seconds = (uint)((inDegrees - (double)degrees) * 60.0);
+                uint seconds = (uint)((inDegrees - degrees) * 60.0);
 
                 return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + northSouth;
             }
@@ -56,7 +51,7 @@ namespace MongoDbBooks.Models
                     inDegrees *= -1.0;
                 }
                 uint degrees = (uint)inDegrees;
-                uint seconds = (uint)((inDegrees - (double)degrees) * 60.0);
+                uint seconds = (uint)((inDegrees - degrees) * 60.0);
 
                 return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + eastWest;
             }

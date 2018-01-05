@@ -69,4 +69,3 @@ namespace MongoDbBooks.Models.Database
         void UpdateDatabaseItem(T existingItem);
     }
 }
-

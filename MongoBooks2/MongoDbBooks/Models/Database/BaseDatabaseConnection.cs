@@ -8,9 +8,10 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace MongoDbBooks.Models.Database
 {
+    using MongoDB.Driver;
+
     using System.Collections.Generic;
     using System.Linq;
-    using MongoDB.Driver;
     using System.Collections.ObjectModel;
 
     /// <summary>

@@ -220,6 +220,8 @@
     <Compile Include="Models\Database\IDatabaseConnection.cs" />
     <Compile Include="Models\Database\Nation.cs" />
     <Compile Include="Models\Database\NationDatabase.cs" />
+    <Compile Include="Models\Database\User.cs" />
+    <Compile Include="Models\Database\UserDatabase.cs" />
     <Compile Include="Models\Exporters\BaseFileExporter.cs" />
     <Compile Include="Models\Exporters\ExportMonthlyReportToToHtml.cs" />
     <Compile Include="Models\Exporters\IFileExporter.cs" />
@@ -236,6 +238,7 @@
     <Compile Include="Models\TalliedMonth.cs" />
     <Compile Include="Models\WorldCountry.cs" />
     <Compile Include="Utilities\Logger.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\BloggerViewModel.cs" />
     <Compile Include="ViewModels\ChartSelectionViewModel.cs" />
     <Compile Include="ViewModels\ChartsViewModel.cs" />
@@ -285,6 +288,7 @@
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapPlotGenerator.cs" />
     <Compile Include="ViewModels\PlotGenerators\WorldCountriesMapWithBooksReadPlotGenerator.cs" />
     <Compile Include="ViewModels\ReportsViewModel.cs" />
+    <Compile Include="ViewModels\UsersViewModel.cs" />
     <Compile Include="ViewModels\Utilities\CommandHandler.cs" />
     <Compile Include="ViewModels\Utilities\DialogCloserExtension.cs" />
     <Compile Include="ViewModels\Utilities\ICurveFitter.cs" />
@@ -325,6 +329,9 @@
     </Compile>
     <Compile Include="Views\ImageSelectionWindow.xaml.cs">
       <DependentUpon>ImageSelectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UsersWindow.xaml.cs">
+      <DependentUpon>UsersWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -376,6 +383,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ImageSelectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UsersWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

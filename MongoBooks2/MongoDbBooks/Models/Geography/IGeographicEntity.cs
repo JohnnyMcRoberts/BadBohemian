@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MongoDbBooks.Models.Geography
+﻿namespace MongoDbBooks.Models.Geography
 {
+    using System.Collections.Generic;
+
     public interface IGeographicEntity
     {
         string Name { get; }

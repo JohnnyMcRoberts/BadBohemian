@@ -14,7 +14,6 @@ namespace MongoDbBooks.ViewModels
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Windows;
     using System.Windows.Input;
 
@@ -25,52 +24,8 @@ namespace MongoDbBooks.ViewModels
     /// <summary>
     /// The mailbox loader view model.
     /// </summary>
-    public class MailboxLoaderViewModel : INotifyPropertyChanged
+    public class MailboxLoaderViewModel : BaseViewModel
     {
-        #region INotifyPropertyChanged Members
-
-        /// <summary>
-        /// The property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// The on property changed.
-        /// </summary>
-        /// <param name="expression">
-        /// The string from the function expression.
-        /// </param>
-        /// <typeparam name="T">The type that has changed</typeparam>
-        protected void OnPropertyChanged<T>(Expression<Func<T>> expression)
-        {
-            if (expression == null)
-            {
-                throw new ArgumentNullException(@"expression");
-            }
-
-            MemberExpression body = expression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-
-            this.OnPropertyChanged(body.Member.Name);
-        }
-
-        /// <summary>
-        /// The on property changed.
-        /// </summary>
-        /// <param name="propertyName">
-        /// The property name.
-        /// </param>
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
-
         #region Private Data
 
         /// <summary>
@@ -106,7 +61,7 @@ namespace MongoDbBooks.ViewModels
         /// <summary>
         /// The _connected to database successfully.
         /// </summary>
-        private bool _connectedToDatabaseSuccessfully = false;
+        private bool _connectedToDatabaseSuccessfully;
 
         /// <summary>
         /// The _email address.
@@ -787,7 +742,7 @@ namespace MongoDbBooks.ViewModels
         /// </summary>
         public void SelectImageForBookCommandAction(object parameter)
         {
-            BookRead book = _newBook as BookRead;
+            BookRead book = _newBook;
             if (book != null)
             {
                 _log.Debug("Getting Book information for " + book.Title);

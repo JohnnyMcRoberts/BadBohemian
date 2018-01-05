@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MailboxLoaderViewModel.cs" company="N/A">
+// <copyright file="ImageSelectionViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The mailbox loader view model.
+//   The image selection view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -13,8 +13,6 @@ namespace MongoDbBooks.ViewModels
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.ComponentModel;
-    using System.Linq.Expressions;
     using System.Windows.Input;
 
     using HtmlBuilders;
@@ -26,52 +24,8 @@ namespace MongoDbBooks.ViewModels
     /// <summary>
     /// The image selection view model.
     /// </summary>
-    public class ImageSelectionViewModel : INotifyPropertyChanged
+    public class ImageSelectionViewModel : BaseViewModel
     {
-        #region INotifyPropertyChanged Members
-
-        /// <summary>
-        /// The property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// The on property changed.
-        /// </summary>
-        /// <param name="expression">
-        /// The string from the function expression.
-        /// </param>
-        /// <typeparam name="T">The type that has changed</typeparam>
-        protected void OnPropertyChanged<T>(Expression<Func<T>> expression)
-        {
-            if (expression == null)
-            {
-                throw new ArgumentNullException(@"expression");
-            }
-
-            MemberExpression body = expression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-
-            this.OnPropertyChanged(body.Member.Name);
-        }
-
-        /// <summary>
-        /// The on property changed.
-        /// </summary>
-        /// <param name="propertyName">
-        /// The property name.
-        /// </param>
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
-
         #region Nested classes
 
         /// <summary>

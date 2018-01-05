@@ -1,42 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Linq.Expressions;
-
-using MongoDbBooks.Models;
-using MongoDbBooks.ViewModels.Utilities;
-
-namespace MongoDbBooks.ViewModels
+﻿namespace MongoDbBooks.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    using MongoDbBooks.Models;
+
+    public class MainViewModel : BaseViewModel
     {
-        #region INotifyPropertyChanged Members
-
-        void OnPropertyChanged<T>(Expression<Func<T>> sExpression)
-        {
-            if (sExpression == null) throw new ArgumentNullException("sExpression");
-
-            MemberExpression body = sExpression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-            OnPropertyChanged(body.Member.Name);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
-
         #region Constructor
 
         public MainViewModel(MainWindow mainWindow, log4net.ILog log)
@@ -57,6 +24,7 @@ namespace MongoDbBooks.ViewModels
             _exportersVM = new ExportersViewModel(_mainWindow, log, _mainModel, this);
             _reportsVM = new ReportsViewModel(_mainWindow, log, _mainModel, this);
             _bloggerVM = new BloggerViewModel(_mainWindow, log, _mainModel, this);
+            _usersVM = new UsersViewModel(_mainWindow, log, _mainModel, this);
 
             if (_mainModel.ConnectedToDbSuccessfully)
                 UpdateData();
@@ -66,21 +34,22 @@ namespace MongoDbBooks.ViewModels
 
         #region Private data
 
-        private MainWindow _mainWindow;
+        private readonly MainWindow _mainWindow;
         private log4net.ILog _log;
 
-        private MainBooksModel _mainModel;
+        private readonly MainBooksModel _mainModel;
 
-        private DataLoaderViewModel _dataLoaderVM;
-        private DataUpdaterViewModel _dataUpdaterVM;
-        private DataGridsViewModel _dataGridsVM;
-        private ChartsViewModel _chartsVM;
-        private DiagramsViewModel _diagramsVM;
-        private ChartSelectionViewModel _chartSelectionVM;
-        private MailboxLoaderViewModel _mailboxLoaderVM;
-        private ExportersViewModel _exportersVM;
-        private ReportsViewModel _reportsVM;
-        private BloggerViewModel _bloggerVM;
+        private readonly DataLoaderViewModel _dataLoaderVM;
+        private readonly DataUpdaterViewModel _dataUpdaterVM;
+        private readonly DataGridsViewModel _dataGridsVM;
+        private readonly ChartsViewModel _chartsVM;
+        private readonly DiagramsViewModel _diagramsVM;
+        private readonly ChartSelectionViewModel _chartSelectionVM;
+        private readonly MailboxLoaderViewModel _mailboxLoaderVM;
+        private readonly ExportersViewModel _exportersVM;
+        private readonly ReportsViewModel _reportsVM;
+        private readonly BloggerViewModel _bloggerVM;
+        private readonly UsersViewModel _usersVM;
 
         #endregion
 
@@ -109,6 +78,8 @@ namespace MongoDbBooks.ViewModels
         public ReportsViewModel ReportsVM => _reportsVM;
 
         public BloggerViewModel BloggerVM => _bloggerVM;
+
+        public UsersViewModel UsersVM => _usersVM;
 
         #endregion
 

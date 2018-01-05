@@ -16,16 +16,16 @@ namespace MongoDbBooks.Models.Database
     /// </summary>
     public class BaseEntity
     {
-        [BsonId]
         /// <summary>
         /// Gets or sets the unique entity identifier.
         /// </summary>
+        [BsonId]
         public ObjectId Id { get; set; }
 
-        [BsonElement("name")]
         /// <summary>
         /// Gets or sets the entity name.
         /// </summary>
+        [BsonElement("name")]
         public string Name { get; set; }
     }
 }

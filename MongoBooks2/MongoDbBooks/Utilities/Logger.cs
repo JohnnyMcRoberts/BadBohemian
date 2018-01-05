@@ -1,11 +1,13 @@
-﻿using System.IO;
-using log4net;
-using log4net.Appender;
-using log4net.Core;
-using log4net.Layout;
-using log4net.Repository.Hierarchy;
-namespace MongoDbBooks.Utilities
+﻿namespace MongoDbBooks.Utilities
 {
+    using System.IO;
+
+    using log4net;
+    using log4net.Appender;
+    using log4net.Core;
+    using log4net.Layout;
+    using log4net.Repository.Hierarchy;
+
     public class Logger
     {
         #region Private data

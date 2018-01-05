@@ -1,8 +1,15 @@
-﻿namespace MongoDbBooks.ViewModels
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DataLoaderViewModel.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The data load view model.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace MongoDbBooks.ViewModels
 {
     using System;
-    using System.ComponentModel;
-    using System.Linq.Expressions;
     using System.Windows.Input;
     using System.Windows.Forms;
 
@@ -11,33 +18,8 @@
     using MongoDbBooks.Models;
     using MongoDbBooks.ViewModels.Utilities;
 
-    public class DataLoaderViewModel : INotifyPropertyChanged
+    public class DataLoaderViewModel : BaseViewModel
     {
-        #region INotifyPropertyChanged Members
-
-        void OnPropertyChanged<T>(Expression<Func<T>> sExpression)
-        {
-            if (sExpression == null) throw new ArgumentNullException("sExpression");
-
-            MemberExpression body = sExpression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-            OnPropertyChanged(body.Member.Name);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
-
         #region Private Data
 
         private MainWindow _mainWindow;
@@ -277,6 +259,5 @@
         }
 
         #endregion
-
     }
 }

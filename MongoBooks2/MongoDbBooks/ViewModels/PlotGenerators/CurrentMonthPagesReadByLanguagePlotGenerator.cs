@@ -14,7 +14,7 @@
             return SetupCurrentPagesReadByCountryPlot();
         }
 
-        private Models.MainBooksModel _mainModel;
+        private MainBooksModel _mainModel;
         
         private PlotModel SetupCurrentPagesReadByCountryPlot()
         {

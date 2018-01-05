@@ -70,22 +70,22 @@ namespace MongoDbBooks.Models
         /// <summary>
         /// Gets the page rate for the month.
         /// </summary>
-        public double PageRate => (double)TotalPagesRead / (double)DaysInTheMonth;
+        public double PageRate => TotalPagesRead / (double)DaysInTheMonth;
 
         /// <summary>
         /// Gets the average days per book for the month.
         /// </summary>
-        public double DaysPerBook => (double)DaysInTheMonth / (double)TotalBooks;
+        public double DaysPerBook => DaysInTheMonth / (double)TotalBooks;
 
         /// <summary>
         /// Gets the average pages per book for the month.
         /// </summary>
-        public double PagesPerBook => (double)TotalPagesRead / (double)TotalBooks;
+        public double PagesPerBook => TotalPagesRead / (double)TotalBooks;
 
         /// <summary>
         /// Gets the expected books per year for the month.
         /// </summary>
-        public double BooksPerYear => 365.25 / (double)DaysPerBook;
+        public double BooksPerYear => 365.25 / DaysPerBook;
 
         /// <summary>
         /// Gets or sets the list of books read in this month.

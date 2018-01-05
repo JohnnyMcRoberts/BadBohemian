@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿
 namespace MongoDbBooks.Models
 {
+    using System;
+    using System.Collections.Generic;
+
     public class AuthorLanguage
     {
         public string Language { get; set; }

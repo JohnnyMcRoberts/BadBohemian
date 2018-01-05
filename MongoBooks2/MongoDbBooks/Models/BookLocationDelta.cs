@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections.ObjectModel;
-
-namespace MongoDbBooks.Models
+﻿namespace MongoDbBooks.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class BookLocationDelta
     {
         public BookLocationDelta(DateTime date, DateTime startDate)

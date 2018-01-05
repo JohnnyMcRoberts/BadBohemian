@@ -3,10 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
     using System.IO;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -23,37 +21,10 @@
     using MongoDbBooks.ViewModels.Utilities;
     using MongoDbBooks.ViewModels.PlotGenerators;
 
-    using BlogReadWrite;
-
     using OxyPlot.Wpf;
 
-    public class ReportsViewModel : INotifyPropertyChanged
+    public class ReportsViewModel : BaseViewModel
     {
-        #region INotifyPropertyChanged Members
-
-        void OnPropertyChanged<T>(Expression<Func<T>> sExpression)
-        {
-            if (sExpression == null) throw new ArgumentNullException("sExpression");
-
-            MemberExpression body = sExpression.Body as MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("Body must be a member expression");
-            }
-            OnPropertyChanged(body.Member.Name);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion // INotifyPropertyChanged Members
-
         #region Private Data
 
         private MainWindow _mainWindow;
@@ -499,7 +470,7 @@
         {
             // Set some global formatting properties for the table.
             table.CellSpacing = 10;
-            table.Background = System.Windows.Media.Brushes.White;
+            table.Background = Brushes.White;
         }
 
         private static void CreateTableColumns(Table table)
@@ -511,7 +482,7 @@
 
                 // Set alternating background colors for the middle colums.
                 table.Columns[i].Background =
-                    i != 0 ? System.Windows.Media.Brushes.Beige : System.Windows.Media.Brushes.LightSteelBlue;
+                    i != 0 ? Brushes.Beige : Brushes.LightSteelBlue;
             }
         }
 
@@ -527,7 +498,7 @@
             TableRow currentRow = table.RowGroups[0].Rows[0];
 
             // Global formatting for the title row.
-            currentRow.Background = System.Windows.Media.Brushes.Silver;
+            currentRow.Background = Brushes.Silver;
             currentRow.FontSize = 40;
             currentRow.FontWeight = FontWeights.Bold;
 
@@ -849,7 +820,10 @@
                 };
 
                 BlogReadWrite.Views.AddBlogPostView bloggerDialog = new BlogReadWrite.Views.AddBlogPostView
-                { DataContext = addPostVM };
+                {
+                    DataContext = addPostVM
+                };
+
                 bloggerDialog.ShowDialog();
             }
         }
