@@ -209,6 +209,9 @@ namespace MongoDbBooks.Models
             }
         }
 
+        [BsonElement("user")]
+        public string User { get; set; }
+
         /// <summary>
         /// Gets the image address ready to be displayed.
         /// </summary>

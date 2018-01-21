@@ -20,6 +20,7 @@ namespace MongoDbBooks.ViewModels
     using MongoDbBooks.Views;
     using System.Linq;
     using System.Windows;
+    using MongoDbBooks.Models.Database;
 
     /// <summary>
     /// The users view model.
@@ -56,7 +57,6 @@ namespace MongoDbBooks.ViewModels
         /// The _parent.
         /// </summary>
         private MainViewModel _parent;
-
 
         #region Add User
 
@@ -97,96 +97,74 @@ namespace MongoDbBooks.ViewModels
 
         #endregion
 
+        #region Update User
+
+        /// <summary>
+        /// The name of the new user to add.
+        /// </summary>
+        private string _updateUserName;
+
+        /// <summary>
+        /// The e-mail of the new user to add.
+        /// </summary>
+        private string _updateUserEmail;
+
+        /// <summary>
+        /// The password of the new user to add.
+        /// </summary>
+        private string _updateUserPassword;
+
+        /// <summary>
+        /// The description of the new user to add.
+        /// </summary>
+        private string _updateUserDescription;
+
+        /// <summary>
+        /// The image of the new user to add.
+        /// </summary>
+        private string _updateUserImage;
+
+        /// <summary>
+        /// The image of the new user to add.
+        /// </summary>
+        private Models.Database.User _updateUser;
+
+        /// <summary>
+        /// The add user command.
+        /// </summary>
+        private ICommand _updateUserCommand;
+
+        /// <summary>
+        /// The select image for add user command.
+        /// </summary>
+        private ICommand _updateUserSelectUserCommand;
+
+        /// <summary>
+        /// The update user name is set command.
+        /// </summary>
+        private ICommand _updateUserNameInputCommand;
+
+        #endregion
+
+        #region Current Users
+
+        #endregion
+
         /// <summary>
         /// The _user name.
         /// </summary>
         private string _userName;
-
-        /// <summary>
-        /// The _data loaded.
-        /// </summary>
-        private bool _dataLoaded;
-
-        /// <summary>
-        /// The _connected to database successfully.
-        /// </summary>
-        private bool _connectedToDatabaseSuccessfully;
-
-        /// <summary>
-        /// The _email address.
-        /// </summary>
-        private string _emailAddress;
-
-        /// <summary>
-        /// The _password.
-        /// </summary>
-        private string _password;
-
-        /// <summary>
-        /// The _is valid to connect.
-        /// </summary>
-        private bool _isValidToConnect;
-
-        /// <summary>
-        /// True if currently reading e-mails from mailbox, false otherwise.
-        /// </summary>
-        private bool _readingEmails;
-
-        /// <summary>
-        /// The _mail items text.
-        /// </summary>
-        private string _mailItemsText;
-
+        
         /// <summary>
         /// The books read from email.
         /// </summary>
         private ObservableCollection<IBookRead> _booksReadFromEmail;
-
-        /// <summary>
-        /// The error message from the mailbox reader.
-        /// </summary>
-        private string _mailboxErrorMessage;
-
-        /// <summary>
-        /// The books read from email.
-        /// </summary>
-        private bool _readBooksFromMailOk;
-
-        /// <summary>
-        /// The selected book read from email.
-        /// </summary>
-        private IBookRead _selectedBook;
-
-        /// <summary>
-        /// The selected book read from email ready to be added new.
-        /// </summary>
-        private BookRead _newBook;
-
+        
         /// <summary>
         /// The connect to mailbox command.
         /// </summary>
         private ICommand _manageUsersCommand;
-
-        /// <summary>
-        /// The read email command.
-        /// </summary>
-        private ICommand _readEmailCommand;
-
-        /// <summary>
-        /// The set default user command.
-        /// </summary>
-        private ICommand _setDefaultUserCommand;
-
-        /// <summary>
-        /// The new book data input control has lost focus command.
-        /// </summary>
-        private ICommand _lostFocusCommand;
-
-        /// <summary>
-        /// The select image for nation command.
-        /// </summary>
-        private ICommand _selectImageForBookCommand;
-
+        
         #endregion
 
         #region Public data
@@ -275,9 +253,110 @@ namespace MongoDbBooks.ViewModels
         /// <summary>
         /// Gets the add user image URI ready to be displayed.
         /// </summary>
-        //"http://www.ucl.ac.uk/pals/research/linguistics/people/images/blank-300px"
-        //public Uri AddUserImageSource => !string.IsNullOrEmpty(_addUserImage) ? new Uri(_addUserImage) : new Uri("pack://application:,,,/Images/camera_image_cancel-32.png");
         public Uri AddUserImageSource => !string.IsNullOrEmpty(_addUserImage) ? new Uri(_addUserImage) : new Uri("http://www.ucl.ac.uk/pals/research/linguistics/people/images/blank-300px");
+
+        #endregion
+
+        #region Update User
+
+        /// <summary>
+        /// Gets the user name.
+        /// </summary>
+        public string UpdateUserName
+        {
+            get
+            {
+                return _updateUserName;
+            }
+
+            private set
+            {
+                _updateUserName = value;
+                OnPropertyChanged(() => UpdateUserName);
+                OnPropertyChanged(() => CanUpdateUser);
+                UpdateUserNameInputCommandAction();
+            }
+        }
+
+        /// <summary>
+        /// Gets the user password.
+        /// </summary>
+        public string UpdateUserPassword
+        {
+            get
+            {
+                return _updateUserPassword;
+            }
+
+            private set
+            {
+                _updateUserPassword = value;
+                OnPropertyChanged(() => UpdateUserPassword);
+                OnPropertyChanged(() => CanUpdateUser);
+            }
+        }
+
+        /// <summary>
+        /// Gets the user email.
+        /// </summary>
+        public string UpdateUserEmail
+        {
+            get
+            {
+                return _updateUserEmail;
+            }
+
+            private set
+            {
+                _updateUserEmail = value;
+                OnPropertyChanged(() => UpdateUserEmail);
+                OnPropertyChanged(() => CanUpdateUser);
+            }
+        }
+
+        /// <summary>
+        /// Gets the user description.
+        /// </summary>
+        public string UpdateUserDescription
+        {
+            get
+            {
+                return _updateUserDescription;
+            }
+
+            private set
+            {
+                _updateUserDescription = value;
+                OnPropertyChanged(() => UpdateUserDescription);
+            }
+        }
+
+        /// <summary>
+        /// Gets if can have enough data entered to update a new user.
+        /// </summary>
+        public bool UpdateUserIsSet => _updateUser != null;
+
+        /// <summary>
+        /// Gets if can have enough data entered to update a new user.
+        /// </summary>
+        public bool CanUpdateUser =>
+            IsValidName(_updateUserName) &&
+            IsValidPassword(_updateUserPassword) &&
+            IsValidEmail(_updateUserEmail);
+
+        /// <summary>
+        /// Gets the add user image URI ready to be displayed.
+        /// </summary>
+        public Uri UpdateUserImageSource => !string.IsNullOrEmpty(_updateUserImage) ? new Uri(_updateUserImage) : new Uri("http://www.ucl.ac.uk/pals/research/linguistics/people/images/blank-300px");
+
+        #endregion
+
+        #region Current Users
+
+        /// <summary>
+        /// Gets the add user image URI ready to be displayed.
+        /// </summary>
+        public ObservableCollection<Models.Database.User> Users => _mainModel.Users;
 
         #endregion
 
@@ -310,6 +389,31 @@ namespace MongoDbBooks.ViewModels
 
         #endregion
 
+        #region Update User
+
+        public ICommand UpdateUserNameInputCommand => _updateUserNameInputCommand ??
+                                              (_updateUserNameInputCommand =
+                                                  new CommandHandler(UpdateUserNameInputCommandAction, true));
+
+
+        /// <summary>
+        /// Gets the add user select image command.
+        /// </summary>
+        public ICommand UpdateUserSelectImageCommand => _updateUserSelectUserCommand ??
+                                              (_updateUserSelectUserCommand =
+                                                  new CommandHandler(UpdateUserSelectImageCommandAction, true));
+
+        /// <summary>
+        /// Gets the add user command.
+        /// </summary>
+        public ICommand UpdateUserCommand => _updateUserCommand ??
+                                              (_updateUserCommand =
+                                                  new CommandHandler(UpdateUserCommandAction, true));
+        #endregion
+
+        #region Current Users
+
+        #endregion
 
         #endregion
 
@@ -320,6 +424,7 @@ namespace MongoDbBooks.ViewModels
         /// </summary>
         public void ManageUsersCommandAction()
         {
+            ResetParameters();
             UsersWindow usersDialog = new UsersWindow { DataContext = this };
             usersDialog.ShowDialog();
         }
@@ -371,16 +476,82 @@ namespace MongoDbBooks.ViewModels
             ClearAddUser();
         }
 
-        private void ClearAddUser()
+        #endregion
+
+        #region Update User
+
+        /// <summary>
+        /// The update user name input command action.
+        /// </summary>
+        public void UpdateUserNameInputCommandAction()
         {
-            AddUserName = string.Empty;
-            AddUserEmail = string.Empty;
-            AddUserPassword = string.Empty;
-            AddUserDescription = string.Empty;
-            _addUserPassword = string.Empty;            
-            OnPropertyChanged(() => AddUserImageSource);
-            OnPropertyChanged(() => CanAddUser);
+            _updateUser = null;
+            foreach (var user in _mainModel.Users)
+            {
+                if (_updateUserName == user.Name)
+                {
+                    _updateUser = user;
+                    break;
+                }
+            }
+
+            SetUpdateUser(_updateUser);
         }
+
+        private void SetUpdateUser(User updateUser)
+        {
+            UpdateUserEmail = updateUser == null ? string.Empty : updateUser.Email;
+            UpdateUserDescription = updateUser == null ? string.Empty : updateUser.Description;
+            _updateUserImage = updateUser == null ? string.Empty : updateUser.ImageUri;
+            OnPropertyChanged(() => UpdateUserImageSource);
+            OnPropertyChanged(() => UpdateUserIsSet);
+        }
+
+        /// <summary>
+        /// The add user select image command action.
+        /// </summary>
+        public void UpdateUserSelectImageCommandAction()
+        {
+            string searchTerm = GetImageSearchTerm(_updateUserName);
+            ImageSelectionViewModel selectionViewModel =
+                new ImageSelectionViewModel(_log, _updateUserName, searchTerm);
+
+            ImageSelectionWindow imageSelectDialog =
+                new ImageSelectionWindow { DataContext = selectionViewModel };
+            bool? success = imageSelectDialog.ShowDialog();
+            if (success.HasValue && success.Value)
+            {
+                _updateUserImage = selectionViewModel.SelectedImageAddress;
+                OnPropertyChanged(() => UpdateUserImageSource);
+            }
+        }
+
+        /// <summary>
+        /// The add user command action.
+        /// </summary>
+        public void UpdateUserCommandAction()
+        {
+            User updateUser = new User
+            {
+                Id = _updateUser.Id,
+                Name = _updateUserName,
+                Description = _updateUserDescription,
+                Email = _updateUserEmail,
+                ImageUri = _updateUserImage,
+                DateAdded = _updateUser.DateAdded,
+                PasswordHash =
+                    string.IsNullOrEmpty(_addUserPassword) ? _updateUser.PasswordHash : MD5Hash(_addUserPassword)
+            };
+
+            _mainModel.UserDatabase.UpdateDatabaseItem(updateUser);
+            _mainModel.UserDatabase.ConnectToDatabase();
+
+            MessageBox.Show("User Updated ok ");            
+        }
+
+        #endregion
+
+        #region Current Users
 
         #endregion
 
@@ -490,6 +661,39 @@ namespace MongoDbBooks.ViewModels
             return term;
         }
 
+        private void ClearAddUser()
+        {
+            AddUserName = string.Empty;
+            AddUserEmail = string.Empty;
+            AddUserPassword = string.Empty;
+            AddUserDescription = string.Empty;
+            _addUserPassword = string.Empty;
+            OnPropertyChanged(() => AddUserImageSource);
+            OnPropertyChanged(() => CanAddUser);
+        }
+
+
+        private void ResetParameters()
+        {
+            AddUserName = string.Empty;
+            AddUserEmail = string.Empty;
+            AddUserPassword = string.Empty;
+            AddUserDescription = string.Empty;
+            _addUserPassword = string.Empty;
+
+            UpdateUserName = string.Empty;
+            UpdateUserDescription = string.Empty;
+            UpdateUserPassword = string.Empty;
+            UpdateUserEmail = string.Empty;
+            _updateUserImage = string.Empty;
+
+            _updateUser = null;
+            OnPropertyChanged(() => CanAddUser);
+            OnPropertyChanged(() => CanUpdateUser);
+            OnPropertyChanged(() => Users);
+            
+        }
+
         #endregion
 
         #region Constructor
@@ -523,51 +727,6 @@ namespace MongoDbBooks.ViewModels
         }
 
         #endregion
-
-
-#if not_this
         
-        /// <summary>
-        /// Gets the add user select image command.
-        /// </summary>
-        public ICommand AddUserSelectImageCommand => _addUserSelectUserCommand ??
-                                              (_addUserSelectUserCommand =
-                                                  new CommandHandler(AddUserSelectImageCommandAction, true));
-
-        /// <summary>
-        /// Gets the add user command.
-        /// </summary>
-        public ICommand AddUserCommand => _addUserCommand ??
-                                              (_addUserCommand =
-                                                  new CommandHandler(AddUserCommandAction, true));
-        
-                    <Label Grid.Row="0" Grid.Column="0" Content="Name"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=AddUserName}" 
-                             IsReadOnly="True" Height="22"/>
-                    <Image Grid.Row="0" Grid.Column="2" Grid.RowSpan="4" 
-                             MinHeight="100" MinWidth="100"
-                             HorizontalAlignment="Left" VerticalAlignment="Center" 
-                             Source="{Binding ChangeDetailsImageSource}" />
-
-                    <Label Grid.Row="1" Grid.Column="0" Content="E-Mail"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=AddUserEmail}" Height="22"/>
-
-                    <Label Grid.Row="2" Grid.Column="0" Content="Password"/>
-                    <PasswordBox PasswordChar="*" Grid.Row="2" Grid.Column="1"  Height="22"
-                            MinWidth="150"
-                            vmu:PasswordHelper.Attach="True" 
-                            vmu:PasswordHelper.Password="{Binding Path=AddUserPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            HorizontalAlignment="Stretch"  VerticalAlignment="Center">
-                    </PasswordBox>
-
-                    <Label Grid.Row="3" Grid.Column="0" Content="Note"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=AddUserNote}" Height="22"/>
-
-                    <Button Grid.Row="4" Grid.Column="2" Height="22" Margin="2"
-                            Content="Select Image" Command="{Binding Path=AddUserImageCommand}" />
-
-                    <Button Grid.Row="6" Grid.Column="0" Height="22" Margin="2"
-                            Content="Add User" Command="{Binding Path=AddUserCommand}" />
-#endif
     }
 }

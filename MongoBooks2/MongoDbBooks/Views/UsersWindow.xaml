@@ -10,7 +10,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Manage Users"
-        d:DesignHeight="600" d:DesignWidth="800">
+        Width="800" Height="400">
     <Grid>
 
         <TabControl>
@@ -57,50 +57,62 @@
                 </Grid>
 
             </TabItem>
-            <TabItem Header="Change Details">
+            <TabItem Header="Update User Details">
+
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150"/>
                         <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
-                        <RowDefinition Height="10" />
                         <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="10" />
                         <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0" Content="Name"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=ChangeDetailsName}" 
-                             IsReadOnly="True" Height="22"/>
-                    <Image Grid.Row="0" Grid.Column="2" Grid.RowSpan="4" 
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=UpdateUserName}" 
+                             Height="22">
+
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding Path=UpdateUserNameInputCommand}" Key="Enter"></KeyBinding>
+                        </TextBox.InputBindings>
+                        
+                    </TextBox>
+                    <Image Grid.Row="0" Grid.Column="3" Grid.RowSpan="4" 
                              MinHeight="100" MinWidth="100"
                              HorizontalAlignment="Left" VerticalAlignment="Center" 
-                             Source="{Binding ChangeDetailsImageSource}" />
+                             Source="{Binding UpdateUserImageSource}" />
 
                     <Label Grid.Row="1" Grid.Column="0" Content="E-Mail"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=ChangeDetailsEmail}" Height="22"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" IsEnabled="{Binding Path=UpdateUserIsSet}"
+                             Text="{Binding Path=UpdateUserEmail}" Height="22"/>
 
-
-                    <Label Grid.Row="2" Grid.Column="0" Content="New Password"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="Password"/>
                     <PasswordBox PasswordChar="*" Grid.Row="2" Grid.Column="1"  Height="22"
-                            MinWidth="150"
+                            MinWidth="150" IsEnabled="{Binding Path=UpdateUserIsSet}"
                             vmu:PasswordHelper.Attach="True" 
-                            vmu:PasswordHelper.Password="{Binding Path=ChangeDetailsNewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            vmu:PasswordHelper.Password="{Binding Path=UpdateUserPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             HorizontalAlignment="Stretch"  VerticalAlignment="Center">
                     </PasswordBox>
 
+                    <Label Grid.Row="3" Grid.Column="0" Content="Description"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" IsEnabled="{Binding Path=UpdateUserIsSet}" 
+                             Text="{Binding Path=UpdateUserDescription}" Height="22"/>
 
+                    <Button Grid.Row="4" Grid.Column="3" Height="22" Margin="2" IsEnabled="{Binding Path=UpdateUserIsSet}"
+                            Content="Select Image" Command="{Binding Path=UpdateUserSelectImageCommand}" />
 
-                    <Button Grid.Row="4" Grid.Column="2" Height="22" Margin="2"
-                            Content="Select Image" Command="{Binding Path=ChangeUserImageCommand}" />
-
-                    <Button Grid.Row="5" Grid.Column="0" Height="22" Margin="2"
-                            Content="Change Details" Command="{Binding Path=ChangeUserDetailsCommand}" />                </Grid>
-
+                    <Button Grid.Row="6" Grid.Column="0" Height="22" Margin="2"
+                            Content="Update User" Command="{Binding Path=UpdateUserCommand}" 
+                            IsEnabled="{Binding Path=CanChangeUser}"/>
+                </Grid>
             </TabItem>
             <TabItem Header="Add User">
                 <Grid Margin="10">
@@ -157,17 +169,70 @@
             </TabItem>
             <TabItem Header="Admin">
 
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Set User Name" 
-                    HorizontalAlignment="Left" Margin="10,10,0,0"
-                    VerticalAlignment="Top" Width="125" Height="22"
-                    Command="{Binding Path=AddNewUserCommand}"/>
-                    <Label Content="Here is some text:"></Label>
-                    <TextBlock Width="420" Text="{Binding Path=UserName}"/>
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="100*" />
+                    </Grid.RowDefinitions>
 
-                    <Label Content="And Here it ends:"></Label>
-                </StackPanel>
-                
+                    <Label Grid.Row="0" Content="Current Users"/>
+                    
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="False"
+                                    ItemsSource="{Binding Path=Users, Mode=OneWay}"
+                                    SelectedItem="{Binding Path=SelectedUser, Mode=TwoWay}"
+                                    MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+                        <DataGrid.Columns>
+
+                            <DataGridTextColumn Header="Name" 
+                                                Binding="{Binding Name}" 
+                                                Width="Auto"/>
+
+                            <DataGridTextColumn Header="Email" 
+                                                Binding="{Binding Email}" 
+                                                Width="Auto"/>
+
+
+                            <DataGridTemplateColumn Header="Date" CanUserSort="true" SortMemberPath="DateAdded">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DateAdded, StringFormat=dd/MM/yyyy}"	/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
+
+                            <DataGridTextColumn Header="Description" 
+                                                Binding="{Binding Description}" 
+                                                Width="Auto"/>
+
+                            <DataGridTemplateColumn MinWidth="100" Header="Image Select">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Select Image"
+                                                Command="{Binding DataContext.SelectImageForBookCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" 
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}">
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
+                            <DataGridTemplateColumn Header="Image" Width="SizeToCells" MinWidth="60" IsReadOnly="True">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding DisplayImage}" MaxHeight="30" MaxWidth="30"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+
+
             </TabItem>
 
         </TabControl>
