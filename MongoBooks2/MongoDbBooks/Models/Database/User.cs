@@ -31,6 +31,12 @@ namespace MongoDbBooks.Models.Database
         public string Email { get; set; }
 
         /// <summary>
+        /// Gets or sets the description of the user.
+        /// </summary>
+        [BsonElement("description")]
+        public string Description { get; set; }
+
+        /// <summary>
         /// Gets or sets the date added.
         /// </summary>
         [BsonElement("date_added")]
