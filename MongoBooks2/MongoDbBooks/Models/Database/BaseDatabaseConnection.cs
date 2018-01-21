@@ -124,7 +124,7 @@ namespace MongoDbBooks.Models.Database
             {
                 AddNewItemsToExistingDatabase(itemsRead);
             }
-            else if (totalCount != 0 && LoadedItems.Count == totalCount)
+            else if (totalCount != 0 && LoadedItems.Count <= totalCount)
             {
                 LoadAllItemsFromDatabase(itemsRead);
                 ReadFromDatabase = true;

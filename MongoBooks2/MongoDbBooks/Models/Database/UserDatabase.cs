@@ -40,7 +40,7 @@ namespace MongoDbBooks.Models.Database
         /// <summary>
         /// Gets or sets the set of items from the database.
         /// </summary>
-        public sealed override ObservableCollection<User> LoadedItems { get; set; }
+        public sealed override ObservableCollection<User> LoadedItems { get; set; }        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDatabase"/> class.
@@ -58,6 +58,7 @@ namespace MongoDbBooks.Models.Database
 
             DatabaseName = "books_read";
             CollectionName = "users";
+            ConnectToDatabase();
         }
     }
 }

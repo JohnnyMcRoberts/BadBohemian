@@ -31,6 +31,12 @@ namespace MongoDbBooks.Models.Database
         public string Email { get; set; }
 
         /// <summary>
+        /// Gets or sets the description of the user.
+        /// </summary>
+        [BsonElement("description")]
+        public string Description { get; set; }
+
+        /// <summary>
         /// Gets or sets the date added.
         /// </summary>
         [BsonElement("date_added")]
@@ -41,5 +47,16 @@ namespace MongoDbBooks.Models.Database
         /// </summary>
         [BsonElement("image_uri")]
         public string ImageUri { get; set; }
+
+        /// <summary>
+        /// Gets the image URI ready to be displayed.
+        /// </summary>
+        public Uri DisplayImage
+        {
+            get
+            {
+                return string.IsNullOrEmpty(ImageUri) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(ImageUri);
+            }
+        }
     }
 }
