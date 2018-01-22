@@ -440,8 +440,10 @@
             // add 20% tolerance to the range
             range *= 12;
             range /= 10;
+            if (range < 15)
+                range = 5;
 
-            // set up the coulours
+            // set up the colours
             colors = new List<OxyColor>();
             foreach (var color in OxyPalettes.Jet(range).Colors)
             {

@@ -111,7 +111,7 @@ namespace MongoDbBooks.ViewModels
 
         public ObservableCollection<BooksDelta> BookPerYearDeltas { get { return _mainModel.BookPerYearDeltas; } }
 
-        public ObservableCollection<BookTag> BookTags { get { return _mainModel.BookTags; } }
+        public ObservableCollection<BookTag> BookTags { get { return new ObservableCollection<BookTag>(_mainModel.BookTags.OrderBy(x => x.Tag)); } }
 
         public DataTable RawDataTable
         {

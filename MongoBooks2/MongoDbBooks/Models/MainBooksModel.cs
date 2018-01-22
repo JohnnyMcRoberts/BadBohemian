@@ -343,7 +343,7 @@
             errorMsg = "";
 
             // for the moment insist only that the date is after the last of the existing items
-            if (BooksRead.Last().Date > newBook.Date)
+            if (BooksRead.Any() && BooksRead.Last().Date > newBook.Date)
             {
                 errorMsg = "Date must be after last date : " + BooksRead.Last().DateString;
                 return false;
@@ -421,6 +421,10 @@
 
                         WorldCountries.Add(country);
                     }
+                    else
+                    {
+                        _log.Debug("missing country");
+                    }
                 }
             }
 
@@ -497,7 +501,7 @@
 
         private double GetLatLongFromString(string stringField, bool isLat)
         {
-            if (stringField == null || stringField.Length < 7) return -360.0;
+            if (stringField == null || stringField.Length < 5) return -360.0;
 
             char lastChar = stringField.ToUpper()[stringField.Length - 1];
             bool isPositive;
@@ -523,13 +527,24 @@
                     return -360.0;
             }
 
-            string degreesStr = stringField.Substring(0, stringField.Length - 5);
+            string degreesStr = string.Empty;
+            foreach (char c in stringField)
+            {
+                if (char.IsDigit(c))
+                    degreesStr += c;
+                else
+                    break;
+            }
+                        
             ushort degrees;
             if (!UInt16.TryParse(degreesStr, out degrees)) return -360;
 
-
             string minsStr = stringField.Substring(degreesStr.Length + 1, 2);
             ushort mins;
+            if (minsStr[1] == '\'')
+            {
+                minsStr = string.Empty + minsStr[0];
+            }
             if (!UInt16.TryParse(minsStr, out mins)) return -360;
 
             double angle = degrees + (mins / 60.0);
@@ -824,20 +839,21 @@
 
                 foreach (string tag in book.Tags)
                 {
-                    if (bookTagSet.ContainsKey(tag))
+                    string trimmedTag = tag.Trim();
+                    if (bookTagSet.ContainsKey(trimmedTag))
                     {
-                        bookTagSet[tag].BooksWithTag.Add(book);
+                        bookTagSet[trimmedTag].BooksWithTag.Add(book);
                     }
                     else
                     {
-                        BookTag bookTag = new BookTag { Tag = tag };
+                        BookTag bookTag = new BookTag { Tag = trimmedTag };
                         bookTag.BooksWithTag.Add(book);
-                        bookTagSet.Add(tag, bookTag);
+                        bookTagSet.Add(trimmedTag, bookTag);
                     }
                 }
             }
 
-            foreach (BookTag bookTag in bookTagSet.Values.OrderBy(x => x.Tag).ToList())
+            foreach (BookTag bookTag in bookTagSet.Values.ToList())
             {
                 BookTags.Add(bookTag);
             }
@@ -1278,6 +1294,9 @@
                 else if (string.IsNullOrEmpty(existingReadBook.Note))
                     existingReadBook.Note = readItem.Note;
             }
+
+            if (existingReadBook.DisplayTags != readItem.DisplayTags)
+                existingReadBook.Tags = readItem.Tags;
         }
 
         private static ObservableCollection<BookRead> GetBooksFromFile(string filename)

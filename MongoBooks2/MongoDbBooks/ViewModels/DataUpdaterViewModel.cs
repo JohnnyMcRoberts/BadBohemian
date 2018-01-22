@@ -191,7 +191,7 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
-        public List<string> BookTags => _mainModel.BookTags.Select(tag => tag.Tag).OrderBy(x => x).ToList();
+        public List<string> BookTags => _mainModel.BookTags.Select(tag => tag.Tag.Trim()).OrderBy(x => x).ToList();
 
         public string ExistingBookNewTag { get; set; }
 
