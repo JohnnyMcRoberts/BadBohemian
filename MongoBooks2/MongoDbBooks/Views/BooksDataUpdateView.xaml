@@ -7,7 +7,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Converters="clr-namespace:MongoDbBooks.Converters" 
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="900">
+             d:DesignHeight="700" d:DesignWidth="1050">
     <Grid>
         <TabControl>
             
@@ -230,7 +230,7 @@
                                     <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="300"/>
                                     <ColumnDefinition Width="150"/>
-                                    <ColumnDefinition Width="350"/>
+                                    <ColumnDefinition Width="350*"/>
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Row="0" Content="Date" 
@@ -314,7 +314,17 @@
                                               SelectedValue="{Binding Path=ExistingBookFormat}"
                                               HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
 
-                                <StackPanel Grid.Row="5" Grid.Column="3" Orientation="Horizontal" >
+                                <Label Grid.Row="4" Grid.Column="3"  Content="Tags" 
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                
+
+
+                                <TextBox Grid.Row="5" Grid.Column="3"  Grid.ColumnSpan="2" Margin="5,5,5,0"
+                                             Height="23" TextWrapping="NoWrap"
+                                             Text="{Binding Path=ExistingBookDisplayTags, Mode=OneWay}" 
+                                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
+
+                                <StackPanel Grid.Row="6" Grid.Column="3" Orientation="Horizontal" >
                                     <ComboBox IsEditable="True" Margin="5,5,5,0" 
                                               ItemsSource="{Binding Path=BookTags}" 
                                               SelectedItem="{Binding Path=ExistingBookNewTag, Mode=TwoWay}" 
@@ -324,20 +334,12 @@
                                         HorizontalAlignment="Left" Margin="10,10,0,0"
                                         VerticalAlignment="Top" Width="75" Height="22"
                                         Command="{Binding Path=AddExistingBookTagCommand}" />
-                                </StackPanel>
-                                <Button Content="Clear Tags" Grid.Row="6" Grid.Column="3" 
+
+                                    <Button Content="Clear Tags"
                                         HorizontalAlignment="Left" Margin="10,10,0,0"
-                                        VerticalAlignment="Top" Width="125" Height="22"
+                                        VerticalAlignment="Top" Width="100" Height="22"
                                         Command="{Binding Path=ClearExistingBookTagsCommand}"  />
-
-
-                                <Label Grid.Row="7" Content="Tags" 
-                                           HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                <TextBox Grid.Row="7" Grid.Column="1"  Grid.ColumnSpan="2" Margin="5,5,5,0"
-                                             Height="23" TextWrapping="NoWrap"
-                                             Text="{Binding Path=ExistingBookDisplayTags, Mode=OneWay}" 
-                                             HorizontalAlignment="Left" VerticalAlignment="Center"  MinWidth="290"/>
-
+                                </StackPanel>
                                 <Button Content="Update Existing Book" Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,0"
                                         VerticalAlignment="Top" Width="125" Height="22"
                                         Command="{Binding Path=UpdateExistingBookCommand}" />
