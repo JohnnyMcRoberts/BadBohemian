@@ -8,6 +8,7 @@
         public string Author { get; set; }
 
         public string Nationality { get; set; }
+
         public string Language { get; set; }
 
         public UInt16 TotalPages
@@ -19,6 +20,7 @@
                 return total;
             }
         }
+
         public int TotalBooksReadBy { get { return BooksReadBy.Count; } }
 
         public List<BookRead> BooksReadBy { get; set; }

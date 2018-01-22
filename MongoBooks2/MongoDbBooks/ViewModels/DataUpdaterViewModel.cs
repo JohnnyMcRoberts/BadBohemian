@@ -118,6 +118,7 @@ namespace MongoDbBooks.ViewModels
         }
 
 
+
         public BookRead ExistingBook
         {
             get { return _existingBook; }
@@ -189,7 +190,7 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
-        public List<string> BookTags => _mainModel.BookTags.Keys.ToList();
+        public List<string> BookTags => _mainModel.BookTags.Select(tag => tag.Tag).OrderBy(x => x).ToList();
 
         public string ExistingBookNewTag { get; set; }
 
@@ -223,9 +224,6 @@ namespace MongoDbBooks.ViewModels
                 }
             }
         }
-
-
-
 
         #endregion
 
@@ -395,8 +393,8 @@ namespace MongoDbBooks.ViewModels
                     MessageBox.Show(errorMsg);
                 }
                 _parent.UpdateData();
-                OnPropertyChanged("BooksRead");
-                OnPropertyChanged("");
+                _mainModel.UpdateCollections();
+                OnPropertyChanged(string.Empty);
                 OnPropertyChanged(() => BookTags);
             };
 
@@ -439,6 +437,8 @@ namespace MongoDbBooks.ViewModels
             OnPropertyChanged(() => ExistingBookImageSource);
             OnPropertyChanged(() => ExistingBookTags);
             OnPropertyChanged(() => ExistingBookDisplayTags);
+            OnPropertyChanged(() => ExistingBookNewTag);
+            OnPropertyChanged(() => ExistingBookNewTagText);
         }
 
         private string GetBookDateText(bool isNew = true)

@@ -39,8 +39,6 @@
 
         private UserDatabase _usersDatabase;
 
-        private Dictionary<string, int> _bookTags;
-
         #endregion
 
         #region Constructor
@@ -59,6 +57,7 @@
             WorldCountries = new ObservableCollection<WorldCountry>();
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             TalliedMonths = new ObservableCollection<TalliedMonth>();
+            BookTags = new ObservableCollection<BookTag>();
 
             InputFilePath = Properties.Settings.Default.InputFile;
             OutputFilePath = Properties.Settings.Default.OutputFile;
@@ -86,8 +85,6 @@
 
             if (ConnectedToDbSuccessfully)
                 _nationsDatabase.UpdateNationsDatabase(WorldCountries);
-
-            _bookTags = new Dictionary<string, int>();
         }
 
         #endregion
@@ -117,6 +114,8 @@
         public ObservableCollection<BookLocationDelta> BookLocationDeltas { get; }
 
         public ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
+
+        public ObservableCollection<BookTag> BookTags { get; }
 
         public string InputFilePath { get; set; }
 
@@ -223,9 +222,7 @@
             }
         }
 
-        public UserDatabase UserDatabase => _usersDatabase;
-
-        public Dictionary<string, int> BookTags => _bookTags; 
+        public UserDatabase UserDatabase => _usersDatabase; 
 
         #endregion
 
@@ -463,6 +460,24 @@
             return true;
         }
 
+
+        public void UpdateCollections()
+        {
+            UpdateAuthors();
+            int booksReadWorldwide;
+            UInt32 pagesReadWorldwide;
+            UpdateCountries(out booksReadWorldwide, out pagesReadWorldwide);
+            UpdateLanguages(booksReadWorldwide, pagesReadWorldwide);
+            UpdateTalliedBooks();
+            UpdateBookDeltas();
+            UpdateBookPerYearDeltas();
+            UpdateWorldCountryLookup();
+            UpdateBookLocationDeltas();
+            UpdateBooksPerMonth();
+            UpdateBookTags();
+        }
+
+
         #endregion
 
         #region Private Methods
@@ -508,40 +523,6 @@
             if (!isPositive)
                 angle *= -1.0;
             return angle;
-        }
-
-        private void UpdateCollections()
-        {
-            UpdateAuthors();
-            int booksReadWorldwide;
-            UInt32 pagesReadWorldwide;
-            UpdateCountries(out booksReadWorldwide, out pagesReadWorldwide);
-            UpdateLanguages(booksReadWorldwide, pagesReadWorldwide);
-            UpdateTalliedBooks();
-            UpdateBookDeltas();
-            UpdateBookPerYearDeltas();
-            UpdateWorldCountryLookup();
-            UpdateBookLocationDeltas();
-            UpdateBooksPerMonth();
-            UpdateBookTags();
-        }
-
-        private void UpdateBookTags()
-        {
-            _bookTags = new Dictionary<string, int>();
-            foreach (var book in BooksRead)
-            {
-                if (book.Tags == null || book.Tags.Count == 0)
-                    continue;
-
-                foreach(var tag in book.Tags)
-                {
-                    if (_bookTags.ContainsKey(tag))
-                        _bookTags[tag]++;
-                    else
-                        _bookTags.Add(tag, 1);
-                }
-            }
         }
 
         private void UpdateBooksPerMonth()
@@ -818,6 +799,37 @@
             }
         }
 
+        private void UpdateBookTags()
+        {
+            BookTags.Clear();
+
+            Dictionary<string, BookTag> bookTagSet = new Dictionary<string, BookTag>();
+            foreach (BookRead book in BooksRead)
+            {
+                if (book.Tags == null || book.Tags.Count == 0)
+                    continue;
+
+                foreach (string tag in book.Tags)
+                {
+                    if (bookTagSet.ContainsKey(tag))
+                    {
+                        bookTagSet[tag].BooksWithTag.Add(book);
+                    }
+                    else
+                    {
+                        BookTag bookTag = new BookTag { Tag = tag };
+                        bookTag.BooksWithTag.Add(book);
+                        bookTagSet.Add(tag, bookTag);
+                    }
+                }
+            }
+
+            foreach (BookTag bookTag in bookTagSet.Values.ToList())
+            {
+                BookTags.Add(bookTag);
+            }
+        }
+
         private void UpdateAuthors()
         {
             AuthorsRead.Clear();
@@ -835,6 +847,7 @@
                     authorsSet.Add(book.Author, author);
                 }
             }
+
             foreach (var author in authorsSet.Values.ToList())
                 AuthorsRead.Add(author);
         }

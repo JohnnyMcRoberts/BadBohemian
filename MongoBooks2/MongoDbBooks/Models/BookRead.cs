@@ -220,9 +220,11 @@ namespace MongoDbBooks.Models
             get
             {
                 if (ImageUrl == null)
+                {
                     return "N/A";
-                else
-                    return ImageUrl.Substring(0, Math.Min(ImageUrl.Length, 50)) + " ...";
+                }
+
+                return ImageUrl.Substring(0, Math.Min(ImageUrl.Length, 50)) + " ...";
             }
         }
 
@@ -245,18 +247,22 @@ namespace MongoDbBooks.Models
             get
             {
                 if (Tags == null || Tags.Count == 0)
-                    return string.Empty;
-                else if (Tags.Count == 0)
-                    return Tags[0];
-                else
                 {
-                    string listOfTags = Tags[0];
-                    for (int i = 1; i < Tags.Count; i++)
-                    {
-                        listOfTags += ", " + Tags[i];
-                    }
-                    return listOfTags;
+                    return string.Empty;
                 }
+
+                if (Tags.Count == 0)
+                {
+                    return Tags[0];
+                }
+
+                string listOfTags = Tags[0];
+                for (int i = 1; i < Tags.Count; i++)
+                {
+                    listOfTags += ", " + Tags[i];
+                }
+
+                return listOfTags;
             }
         }
 
