@@ -33,13 +33,16 @@ namespace MongoDbBooks.ViewModels
         private ICommand _submitNewBookCommand;
         private ICommand _updateExistingBookCommand;
 
-        private BookRead _newBook;
-        private BookRead _existingBook;
+        private ICommand _addExistingBookTagCommand;
+        private ICommand _clearExistingBookTagsCommand;
 
         /// <summary>
         /// The select image for nation command.
         /// </summary>
         private ICommand _selectImageForBookCommand;
+
+        private BookRead _newBook;
+        private BookRead _existingBook;
 
         private readonly Dictionary<BookFormat, string> _bookFormats = new Dictionary<BookFormat, string>()
         {
@@ -172,6 +175,7 @@ namespace MongoDbBooks.ViewModels
         public Dictionary<BookFormat, string> BookFormats => _bookFormats;
 
         private bool _isUpdating;
+
         public bool IsUpdating
         {
             get { return _isUpdating; }
@@ -183,7 +187,45 @@ namespace MongoDbBooks.ViewModels
                     OnPropertyChanged(() => IsUpdating);
                 }
             }
-        }            
+        }
+
+        public List<string> BookTags => _mainModel.BookTags.Keys.ToList();
+
+        public string ExistingBookNewTag { get; set; }
+
+        public string ExistingBookNewTagText { get; set; }
+
+        public List<string> ExistingBookTags
+        {
+            get { if (_existingBook != null) return _existingBook.Tags; return null; }
+            set { if (value != null) _existingBook.Tags = value; }
+        }
+
+        /// <summary>
+        /// Gets the tags list ready to be displayed.
+        /// </summary>
+        public string ExistingBookDisplayTags
+        {
+            get
+            {
+                if (ExistingBookTags == null || ExistingBookTags.Count == 0)
+                    return string.Empty;
+                else if (ExistingBookTags.Count == 0)
+                    return ExistingBookTags[0];
+                else
+                {
+                    string listOfTags = ExistingBookTags[0];
+                    for (int i = 1; i < ExistingBookTags.Count; i++)
+                    {
+                        listOfTags += ", " + ExistingBookTags[i];
+                    }
+                    return listOfTags;
+                }
+            }
+        }
+
+
+
 
         #endregion
 
@@ -243,9 +285,49 @@ namespace MongoDbBooks.ViewModels
                                                      (_selectImageForBookCommand =
                                                          new RelayCommandHandler(SelectImageForBookCommandAction) { IsEnabled = true });
 
+        public ICommand AddExistingBookTagCommand
+        {
+            get
+            {
+                return _addExistingBookTagCommand ??
+                    (_addExistingBookTagCommand =
+                        new CommandHandler(() => AddExistingBookTagCommandAction(), true));
+            }
+        }
+
+        public ICommand ClearExistingBookTagsCommand
+        {
+            get
+            {
+                return _clearExistingBookTagsCommand ??
+                    (_clearExistingBookTagsCommand =
+                        new CommandHandler(() => ClearExistingBookTagsCommandAction(), true));
+            }
+        }
+
         #endregion
 
         #region Command Handlers
+
+        public void AddExistingBookTagCommandAction()
+        {
+            if (!string.IsNullOrEmpty(ExistingBookNewTagText))
+            {
+                if (!ExistingBookTags.Contains(ExistingBookNewTagText))
+                {
+                    ExistingBookTags.Add(ExistingBookNewTagText);
+                    OnPropertyChanged(() => ExistingBookDisplayTags);
+                    ExistingBookNewTagText = string.Empty;
+                }
+            }
+        }
+
+        public void ClearExistingBookTagsCommandAction()
+        {
+            ExistingBookTags.Clear();
+            OnPropertyChanged(() => ExistingBookDisplayTags);
+            ExistingBookNewTagText = string.Empty;
+        }
 
         public void SubmitNewBookCommandAction()
         {
@@ -284,6 +366,8 @@ namespace MongoDbBooks.ViewModels
                 ExistingBookNationality = ExistingBookNationalityText;
             if (_existingBook.OriginalLanguage == null && !string.IsNullOrEmpty(ExistingBookOriginalLanguageText))
                 ExistingBookOriginalLanguage = ExistingBookOriginalLanguageText;
+            if (_existingBook.DisplayTags != ExistingBookDisplayTags)
+                _existingBook.Tags = ExistingBookTags;
 
             // Update in the DB.
             string errorMsg = string.Empty;
@@ -313,6 +397,7 @@ namespace MongoDbBooks.ViewModels
                 _parent.UpdateData();
                 OnPropertyChanged("BooksRead");
                 OnPropertyChanged("");
+                OnPropertyChanged(() => BookTags);
             };
 
             IsUpdating = true;
@@ -352,6 +437,8 @@ namespace MongoDbBooks.ViewModels
             OnPropertyChanged(() => ExistingBookNationalityText);
             OnPropertyChanged(() => ExistingBookOriginalLanguageText);
             OnPropertyChanged(() => ExistingBookImageSource);
+            OnPropertyChanged(() => ExistingBookTags);
+            OnPropertyChanged(() => ExistingBookDisplayTags);
         }
 
         private string GetBookDateText(bool isNew = true)
@@ -482,6 +569,6 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
-        #endregion      
+        #endregion
     }
 }
