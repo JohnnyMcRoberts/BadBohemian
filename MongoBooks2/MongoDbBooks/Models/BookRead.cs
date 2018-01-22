@@ -236,6 +236,30 @@ namespace MongoDbBooks.Models
                 return string.IsNullOrEmpty(ImageUrl) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(ImageUrl);
             }
         }
+
+        /// <summary>
+        /// Gets the tags list ready to be displayed.
+        /// </summary>
+        public string DisplayTags
+        {
+            get
+            {
+                if (Tags == null || Tags.Count == 0)
+                    return string.Empty;
+                else if (Tags.Count == 0)
+                    return Tags[0];
+                else
+                {
+                    string listOfTags = Tags[0];
+                    for (int i = 1; i < Tags.Count; i++)
+                    {
+                        listOfTags += ", " + Tags[i];
+                    }
+                    return listOfTags;
+                }
+            }
+        }
+
         #endregion
     }
 }

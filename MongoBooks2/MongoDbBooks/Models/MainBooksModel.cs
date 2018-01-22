@@ -39,6 +39,8 @@
 
         private UserDatabase _usersDatabase;
 
+        private Dictionary<string, int> _bookTags;
+
         #endregion
 
         #region Constructor
@@ -84,6 +86,8 @@
 
             if (ConnectedToDbSuccessfully)
                 _nationsDatabase.UpdateNationsDatabase(WorldCountries);
+
+            _bookTags = new Dictionary<string, int>();
         }
 
         #endregion
@@ -220,6 +224,8 @@
         }
 
         public UserDatabase UserDatabase => _usersDatabase;
+
+        public Dictionary<string, int> BookTags => _bookTags; 
 
         #endregion
 
@@ -517,6 +523,25 @@
             UpdateWorldCountryLookup();
             UpdateBookLocationDeltas();
             UpdateBooksPerMonth();
+            UpdateBookTags();
+        }
+
+        private void UpdateBookTags()
+        {
+            _bookTags = new Dictionary<string, int>();
+            foreach (var book in BooksRead)
+            {
+                if (book.Tags == null || book.Tags.Count == 0)
+                    continue;
+
+                foreach(var tag in book.Tags)
+                {
+                    if (_bookTags.ContainsKey(tag))
+                        _bookTags[tag]++;
+                    else
+                        _bookTags.Add(tag, 1);
+                }
+            }
         }
 
         private void UpdateBooksPerMonth()
@@ -836,7 +861,6 @@
             long totalCount = booksRead.Count(filterOnId);
 
             var result = booksRead.ReplaceOne(filterOnId, editBook);
-
         }
 
         private void ConnectToCountriesDatabase()
