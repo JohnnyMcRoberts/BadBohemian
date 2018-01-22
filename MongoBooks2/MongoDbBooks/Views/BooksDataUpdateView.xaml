@@ -178,7 +178,11 @@
                                                 Binding="{Binding Format}" 
                                                 Width="Auto"/>
 
-                                <DataGridTemplateColumn MinWidth="100" Header="Image Select">
+                                <DataGridTextColumn Header="Tags" 
+                                                    Binding="{Binding DisplayTags}" 
+                                                    Width="Auto"/>
+
+                            <DataGridTemplateColumn MinWidth="100" Header="Image Select">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button Content="Select Image"

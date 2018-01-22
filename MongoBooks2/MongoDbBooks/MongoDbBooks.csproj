@@ -215,6 +215,7 @@
     <Compile Include="Models\BookFormat.cs" />
     <Compile Include="Models\BookLocation.cs" />
     <Compile Include="Models\BookLocationDelta.cs" />
+    <Compile Include="Models\BookTag.cs" />
     <Compile Include="Models\Database\BaseDatabaseConnection.cs" />
     <Compile Include="Models\Database\BaseEntity.cs" />
     <Compile Include="Models\Database\IDatabaseConnection.cs" />
