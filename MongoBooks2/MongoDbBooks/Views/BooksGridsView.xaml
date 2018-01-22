@@ -730,7 +730,48 @@
 
                 </DataGrid>
             </TabItem>
-            
+
+            <TabItem Header="Tags">
+                <DataGrid AutoGenerateColumns="False" 
+                                ItemsSource="{Binding Path=BookTags, Mode=OneWay}"
+                                MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+
+                    <DataGrid.Columns>
+
+
+                        <DataGridTextColumn Header="Tag" 
+                                            Binding="{Binding Tag}" 
+                                            Width="Auto"/>
+
+                        <DataGridTextColumn Header="Total Pages" 
+                                            Binding="{Binding TotalPages}" 
+                                            Width="Auto"/>
+
+                        <DataGridTextColumn Header="Total Books Read With" 
+                                            Binding="{Binding TotalBooks}" 
+                                            Width="Auto"/>
+
+
+                        <DataGridTemplateColumn Header="Books">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ListBox ItemsSource="{Binding BooksWithTag }">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=Title}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            </TabItem>
+
         </TabControl>
     </Grid>
 </UserControl>

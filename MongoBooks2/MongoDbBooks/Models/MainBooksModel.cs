@@ -824,7 +824,7 @@
                 }
             }
 
-            foreach (BookTag bookTag in bookTagSet.Values.ToList())
+            foreach (BookTag bookTag in bookTagSet.Values.OrderBy(x => x.Tag).ToList())
             {
                 BookTags.Add(bookTag);
             }

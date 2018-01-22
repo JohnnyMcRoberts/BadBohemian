@@ -34,8 +34,7 @@ namespace MongoDbBooks.Models
         /// <summary>
         /// Gets the total number of books this tag applies to.
         /// </summary>
-        public int TotalBooksReadBy => BooksWithTag.Count;
-
+        public int TotalBooks => BooksWithTag.Count;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BookTag"/> class.
