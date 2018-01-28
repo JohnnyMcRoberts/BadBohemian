@@ -51,6 +51,10 @@
                         <DataGridTextColumn Header="Format" 
                                             Binding="{Binding Format}" 
                                             Width="Auto"/>
+
+                        <DataGridTextColumn Header="Tags" 
+                                            Binding="{Binding DisplayTags}" 
+                                            Width="Auto"/>
                             
                         <DataGridTextColumn Header="Note" 
                                             Binding="{Binding Note}" 

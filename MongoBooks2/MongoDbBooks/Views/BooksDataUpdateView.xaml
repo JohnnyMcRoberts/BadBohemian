@@ -340,9 +340,17 @@
                                         VerticalAlignment="Top" Width="100" Height="22"
                                         Command="{Binding Path=ClearExistingBookTagsCommand}"  />
                                 </StackPanel>
-                                <Button Content="Update Existing Book" Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,0"
+                                
+                                <StackPanel Grid.Row="7" Grid.Column="3" Orientation="Horizontal" >
+
+                                    <Button Content="Update Existing Book" HorizontalAlignment="Left" Margin="10,10,0,0"
                                         VerticalAlignment="Top" Width="125" Height="22"
                                         Command="{Binding Path=UpdateExistingBookCommand}" />
+                                    <Button Content="Update All Books" HorizontalAlignment="Left" Margin="10,10,0,0"
+                                        VerticalAlignment="Top" Width="125" Height="22"
+                                        Command="{Binding Path=UpdateAllBooksCommand}" />
+
+                                </StackPanel>
 
 
                             </Grid>

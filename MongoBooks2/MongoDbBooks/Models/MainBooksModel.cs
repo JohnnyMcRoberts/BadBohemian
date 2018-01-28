@@ -289,7 +289,7 @@
 
             // write the header
             sw.WriteLine(
-                "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image"
+                "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image,Tags"
                 );
 
             // write the records
@@ -308,6 +308,7 @@
                 csv.WriteField(book.Format == BookFormat.Comic ? "x" : "");
                 csv.WriteField(book.Format == BookFormat.Audio ? "x" : "");
                 csv.WriteField(book.ImageUrl);
+                csv.WriteField(book.DisplayTags);
                 csv.NextRecord();
             }
 
@@ -364,6 +365,19 @@
 
             if (DataFromDb)
                 UpdateBookInDatabase(editBook);
+
+            if (updateCollections)
+                UpdateCollections();
+
+            return true;
+        }
+
+        public bool UpdateAllBooks(out string errorMsg, bool updateCollections = true)
+        {
+            errorMsg = "";
+
+            if (DataFromDb)
+                UpdateBooksInDatabase();
 
             if (updateCollections)
                 UpdateCollections();
@@ -459,7 +473,6 @@
             DefaultExportDirectory = outputDirectory;
             return true;
         }
-
 
         public void UpdateCollections()
         {
@@ -876,6 +889,25 @@
             var result = booksRead.ReplaceOne(filterOnId, editBook);
         }
 
+        private void UpdateBooksInDatabase()
+        {
+            _client = new MongoClient(DatabaseConnectionString);
+            _booksDatabase = _client.GetDatabase("books_read");
+
+            IMongoCollection<BookRead> booksRead = _booksDatabase.GetCollection<BookRead>("books");
+
+            foreach(var editBook in this.BooksRead)
+            {
+                var filterOnId = Builders<BookRead>.Filter.Eq(s => s.Id, editBook.Id);
+
+                long totalCount = booksRead.Count(filterOnId);
+                if (totalCount > 0)
+                {
+                    var result = booksRead.ReplaceOne(filterOnId, editBook);
+                }
+            }
+        }
+
         private void ConnectToCountriesDatabase()
         {
             _countriesDatabase = _client.GetDatabase("world_countries");
@@ -1257,7 +1289,7 @@
 
                 readItems.Clear();
 
-                // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio
+                // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image,Tags
                 while (csv.Read())
                 {
                     var stringFieldDate = csv.GetField<string>(0);
@@ -1272,6 +1304,7 @@
                     var stringFieldComic = csv.GetField<string>(9);
                     var stringFieldAudio = csv.GetField<string>(10);
                     var stringFieldImage = csv.GetField<string>(11);
+                    var stringFieldTags = csv.GetField<string>(12);
 
                     DateTime dateForBook;
                     if (DateTime.TryParseExact(stringFieldDDMMYYYY, "d/M/yyyy",
@@ -1279,6 +1312,12 @@
                     {
                         UInt16 pages;
                         UInt16.TryParse(stringFieldPages, out pages);
+                        List<string> tags = new List<string>();
+                        if (stringFieldTags.Length > 0)
+                        {
+                            tags = stringFieldTags.Split(',').ToList<string>();
+                        }
+
                         BookRead book = new BookRead()
                         {
                             DateString = stringFieldDate,
@@ -1292,7 +1331,8 @@
                             Audio = stringFieldAudio,
                             Book = stringFieldBook,
                             Comic = stringFieldComic,
-                            ImageUrl = stringFieldImage
+                            ImageUrl = stringFieldImage,
+                            Tags = tags
                         };
 
                         readItems.Add(book);

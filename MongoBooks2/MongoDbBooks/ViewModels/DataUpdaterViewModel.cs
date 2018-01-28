@@ -32,6 +32,7 @@ namespace MongoDbBooks.ViewModels
 
         private ICommand _submitNewBookCommand;
         private ICommand _updateExistingBookCommand;
+        private ICommand _updateAllBooksCommand;
 
         private ICommand _addExistingBookTagCommand;
         private ICommand _clearExistingBookTagsCommand;
@@ -276,6 +277,16 @@ namespace MongoDbBooks.ViewModels
             }
         }
 
+        public ICommand UpdateAllBooksCommand
+        {
+            get
+            {
+                return _updateAllBooksCommand ??
+                    (_updateAllBooksCommand =
+                        new CommandHandler(() => UpdateAllBooksCommandAction(), true));
+            }
+        }
+
         /// <summary>
         /// Gets the select image for nation command.
         /// </summary>
@@ -357,7 +368,7 @@ namespace MongoDbBooks.ViewModels
         public void UpdateExistingBookCommandAction()
         {
             // update the book with what has been typed in
-            if (!string.IsNullOrEmpty(ExistingBookAuthorText) && 
+            if (!string.IsNullOrEmpty(ExistingBookAuthorText) &&
                 (_existingBook.Author == null || _existingBook.Author != ExistingBookAuthorText))
                 ExistingBookAuthor = ExistingBookAuthorText;
             if (_existingBook.Nationality == null && !string.IsNullOrEmpty(ExistingBookNationalityText))
@@ -387,7 +398,55 @@ namespace MongoDbBooks.ViewModels
 
             worker.RunWorkerCompleted += (o, ea) =>
             {
-                IsUpdating  = false;
+                IsUpdating = false;
+                if (isError)
+                {
+                    MessageBox.Show(errorMsg);
+                }
+                _parent.UpdateData();
+                _mainModel.UpdateCollections();
+                OnPropertyChanged(string.Empty);
+                OnPropertyChanged(() => BookTags);
+            };
+
+            IsUpdating = true;
+            worker.RunWorkerAsync();
+        }
+
+        public void UpdateAllBooksCommandAction()
+        {
+            // update the book with what has been typed in
+            if (!string.IsNullOrEmpty(ExistingBookAuthorText) &&
+                (_existingBook.Author == null || _existingBook.Author != ExistingBookAuthorText))
+                ExistingBookAuthor = ExistingBookAuthorText;
+            if (_existingBook.Nationality == null && !string.IsNullOrEmpty(ExistingBookNationalityText))
+                ExistingBookNationality = ExistingBookNationalityText;
+            if (_existingBook.OriginalLanguage == null && !string.IsNullOrEmpty(ExistingBookOriginalLanguageText))
+                ExistingBookOriginalLanguage = ExistingBookOriginalLanguageText;
+            if (_existingBook.DisplayTags != ExistingBookDisplayTags)
+                _existingBook.Tags = ExistingBookTags;
+
+            // Update in the DB.
+            string errorMsg = string.Empty;
+            bool isError = false;
+
+            BackgroundWorker worker = new BackgroundWorker();
+
+            worker.DoWork += (o, ea) =>
+            {
+                if (!_mainModel.UpdateAllBooks(out errorMsg, false))
+                {
+                    isError = true;
+                }
+                else
+                {
+                    InitialiseEditBook();
+                }
+            };
+
+            worker.RunWorkerCompleted += (o, ea) =>
+            {
+                IsUpdating = false;
                 if (isError)
                 {
                     MessageBox.Show(errorMsg);
