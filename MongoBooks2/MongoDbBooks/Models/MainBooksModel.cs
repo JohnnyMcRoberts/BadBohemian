@@ -289,7 +289,7 @@
 
             // write the header
             sw.WriteLine(
-                "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image"
+                "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image,Tags"
                 );
 
             // write the records
@@ -308,6 +308,7 @@
                 csv.WriteField(book.Format == BookFormat.Comic ? "x" : "");
                 csv.WriteField(book.Format == BookFormat.Audio ? "x" : "");
                 csv.WriteField(book.ImageUrl);
+                csv.WriteField(book.DisplayTags);
                 csv.NextRecord();
             }
 
@@ -472,7 +473,6 @@
             DefaultExportDirectory = outputDirectory;
             return true;
         }
-
 
         public void UpdateCollections()
         {
@@ -1289,7 +1289,7 @@
 
                 readItems.Clear();
 
-                // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio
+                // Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image,Tags
                 while (csv.Read())
                 {
                     var stringFieldDate = csv.GetField<string>(0);
@@ -1304,6 +1304,7 @@
                     var stringFieldComic = csv.GetField<string>(9);
                     var stringFieldAudio = csv.GetField<string>(10);
                     var stringFieldImage = csv.GetField<string>(11);
+                    var stringFieldTags = csv.GetField<string>(12);
 
                     DateTime dateForBook;
                     if (DateTime.TryParseExact(stringFieldDDMMYYYY, "d/M/yyyy",
@@ -1311,6 +1312,12 @@
                     {
                         UInt16 pages;
                         UInt16.TryParse(stringFieldPages, out pages);
+                        List<string> tags = new List<string>();
+                        if (stringFieldTags.Length > 0)
+                        {
+                            tags = stringFieldTags.Split(',').ToList<string>();
+                        }
+
                         BookRead book = new BookRead()
                         {
                             DateString = stringFieldDate,
@@ -1324,7 +1331,8 @@
                             Audio = stringFieldAudio,
                             Book = stringFieldBook,
                             Comic = stringFieldComic,
-                            ImageUrl = stringFieldImage
+                            ImageUrl = stringFieldImage,
+                            Tags = tags
                         };
 
                         readItems.Add(book);
