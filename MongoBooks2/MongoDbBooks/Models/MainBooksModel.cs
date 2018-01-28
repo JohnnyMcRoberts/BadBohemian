@@ -371,6 +371,19 @@
             return true;
         }
 
+        public bool UpdateAllBooks(out string errorMsg, bool updateCollections = true)
+        {
+            errorMsg = "";
+
+            if (DataFromDb)
+                UpdateBooksInDatabase();
+
+            if (updateCollections)
+                UpdateCollections();
+
+            return true;
+        }
+
         public void ReadCountriesFromFile(string filename)
         {
             using (StreamReader sr = new StreamReader(filename, Encoding.Default))
@@ -874,6 +887,25 @@
             long totalCount = booksRead.Count(filterOnId);
 
             var result = booksRead.ReplaceOne(filterOnId, editBook);
+        }
+
+        private void UpdateBooksInDatabase()
+        {
+            _client = new MongoClient(DatabaseConnectionString);
+            _booksDatabase = _client.GetDatabase("books_read");
+
+            IMongoCollection<BookRead> booksRead = _booksDatabase.GetCollection<BookRead>("books");
+
+            foreach(var editBook in this.BooksRead)
+            {
+                var filterOnId = Builders<BookRead>.Filter.Eq(s => s.Id, editBook.Id);
+
+                long totalCount = booksRead.Count(filterOnId);
+                if (totalCount > 0)
+                {
+                    var result = booksRead.ReplaceOne(filterOnId, editBook);
+                }
+            }
         }
 
         private void ConnectToCountriesDatabase()
