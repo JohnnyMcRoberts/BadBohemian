@@ -230,9 +230,9 @@
             }
         }
 
-        public TalliedMonth SelectedMonthTally => _mainModel.SelectedMonthTally;
+        public TalliedMonth SelectedMonthTally => _mainModel?.SelectedMonthTally;
 
-        public List<BookRead> SelectedMonthBooksRead => _mainModel.SelectedMonthTally.BooksRead;
+        public List<BookRead> SelectedMonthBooksRead => _mainModel?.SelectedMonthTally?.BooksRead;
 
         public OxyPlotPair PlotCurrentMonthPagesReadByLanguage { get; private set; }
 
@@ -277,8 +277,13 @@
             _mainModel = mainModel;
             _parent = parent;
 
+            if (!_mainModel.TalliedMonths.Any())
+            {
+                return;
+            }
+
+            DateTime lastMonth = FirstMonth = _mainModel.TalliedMonths.Last().MonthDate;
             FirstMonth = _mainModel.TalliedMonths.First().MonthDate;
-            var lastMonth = _mainModel.TalliedMonths.Last().MonthDate;
             lastMonth = lastMonth.AddMonths(1);
             lastMonth = lastMonth.AddDays(-1);
             LastMonth = lastMonth;
@@ -319,14 +324,14 @@
             if (_mainModel?.BooksRead == null || _mainModel.BooksRead.Count == 0)
                 return;
 
-            PlotCurrentMonthPagesReadByLanguage.UpdateData(_mainModel);
-            PlotCurrentMonthPagesReadByCountry.UpdateData(_mainModel);
+            PlotCurrentMonthPagesReadByLanguage?.UpdateData(_mainModel);
+            PlotCurrentMonthPagesReadByCountry?.UpdateData(_mainModel);
 
-            PlotCurrentMonthDocumentPagesReadByLanguage.UpdateData(_mainModel);
-            PlotCurrentMonthDocumentPagesReadByCountry.UpdateData(_mainModel);
+            PlotCurrentMonthDocumentPagesReadByLanguage?.UpdateData(_mainModel);
+            PlotCurrentMonthDocumentPagesReadByCountry?.UpdateData(_mainModel);
 
-            PlotCurrentMonthPrintPagesReadByLanguage.UpdateData(_mainModel);
-            PlotCurrentMonthPrintPagesReadByCountry.UpdateData(_mainModel);
+            PlotCurrentMonthPrintPagesReadByLanguage?.UpdateData(_mainModel);
+            PlotCurrentMonthPrintPagesReadByCountry?.UpdateData(_mainModel);
 
             UpdateReportsTallies();
 
@@ -339,9 +344,9 @@
 
         private void UpdateReportsTallies()
         {
-            ReportsTallies.Clear();
-            ReportsTallies.Add(new MonthlyReportsTally(_mainModel.SelectedMonthTally));
-            ReportsTallies.Add(new MonthlyReportsTally(_mainModel.BookDeltas.Last().OverallTally));
+            ReportsTallies?.Clear();
+            ReportsTallies?.Add(new MonthlyReportsTally(_mainModel.SelectedMonthTally));
+            ReportsTallies?.Add(new MonthlyReportsTally(_mainModel.BookDeltas.Last().OverallTally));
             OnPropertyChanged(() => ReportsTallies);
         }
 
