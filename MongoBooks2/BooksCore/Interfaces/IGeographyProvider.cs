@@ -17,5 +17,7 @@ namespace BooksCore.Interfaces
         ObservableCollection<WorldCountry> WorldCountries { get; }
 
         ObservableCollection<Nation> Nations { get; }
+
+        ObservableCollection<CountryGeography> CountryGeographies { get; }
     }
 }
