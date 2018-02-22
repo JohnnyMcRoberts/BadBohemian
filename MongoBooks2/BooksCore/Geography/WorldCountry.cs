@@ -66,5 +66,10 @@ namespace BooksCore.Geography
                 return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + eastWest;
             }
         }
+        
+        /// <summary>
+        /// Gets the name to use for equivalence checks.
+        /// </summary>
+        public override string EquivalenceName => Country;
     }
 }

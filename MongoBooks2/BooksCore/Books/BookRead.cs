@@ -271,6 +271,11 @@ namespace BooksCore.Books
             }
         }
 
+        /// <summary>
+        /// Gets the name to use for equivalence checks.
+        /// </summary>
+        public override string EquivalenceName => Author + " " + Title;
+
         #endregion
     }
 }
