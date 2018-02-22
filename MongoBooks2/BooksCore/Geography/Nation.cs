@@ -9,10 +9,11 @@
 
 namespace BooksCore.Geography
 {
-    using MongoDB.Bson.Serialization.Attributes;
     using System;
+
+    using MongoDB.Bson.Serialization.Attributes;
+
     using BooksCore.Base;
-    using Geography;
 
     /// <summary>
     /// The MongoDb entity for a nation.
@@ -70,6 +71,7 @@ namespace BooksCore.Geography
                     northSouth = "S";
                     inDegrees *= -1.0;
                 }
+
                 uint degrees = (uint)inDegrees;
                 uint seconds = (uint)((inDegrees - degrees) * 60.0);
 
@@ -91,6 +93,7 @@ namespace BooksCore.Geography
                     eastWest = "W";
                     inDegrees *= -1.0;
                 }
+
                 uint degrees = (uint)inDegrees;
                 uint seconds = (uint)((inDegrees - degrees) * 60.0);
 

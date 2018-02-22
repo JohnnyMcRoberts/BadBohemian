@@ -1,6 +1,13 @@
-﻿namespace BooksCore.Books
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BookAuthor.cs" company="N/A">
+//   2017-2086
+// </copyright>
+// <summary>
+//   The book authour class.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+namespace BooksCore.Books
 {
-    using System;
     using System.Collections.Generic;
 
     public class BookAuthor
@@ -11,25 +18,29 @@
 
         public string Language { get; set; }
 
-        public UInt16 TotalPages
+        public ushort TotalPages
         {
             get
             {
-                UInt16 total = 0;
-                foreach (var book in BooksReadBy) total += book.Pages;
+                ushort total = 0;
+                foreach (BookRead book in BooksReadBy)
+                {
+                    total += book.Pages;
+                }
+
                 return total;
             }
         }
 
-        public int TotalBooksReadBy { get { return BooksReadBy.Count; } }
+        public int TotalBooksReadBy => BooksReadBy.Count;
 
         public List<BookRead> BooksReadBy { get; set; }
 
         public BookAuthor()
         {
-            Author = "";
-            Nationality = "";
-            Language = "";
+            Author = string.Empty;
+            Nationality = string.Empty;
+            Language = string.Empty;
             BooksReadBy = new List<BookRead>();
         }
     }

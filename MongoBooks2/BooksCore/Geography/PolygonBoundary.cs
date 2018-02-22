@@ -1,4 +1,12 @@
-﻿namespace BooksCore.Geography
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PolygonBoundary.cs" company="N/A">
+//   2017-2086
+// </copyright>
+// <summary>
+//   The polygon boundary class.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+namespace BooksCore.Geography
 {
     using System;
     using System.Collections.Generic;
@@ -7,24 +15,26 @@
     {
         public List<PolygonPoint> Points { get; set; }
 
-        public double MinLongitude { get; private set; }
-        public double MinLatitude { get; private set; }
+        public double MinLongitude { get; }
 
-        public double MaxLongitude { get; private set; }
-        public double MaxLatitude { get; private set; }
+        public double MinLatitude { get; }
+
+        public double MaxLongitude { get; }
+
+        public double MaxLatitude { get; }
 
         public PolygonBoundary()
         {
-            MinLongitude = MinLatitude = Double.MaxValue;
-            MaxLongitude = MaxLatitude = Double.MinValue;
+            MinLongitude = MinLatitude = double.MaxValue;
+            MaxLongitude = MaxLatitude = double.MinValue;
             Points = new List<PolygonPoint>();
         }
 
         public PolygonBoundary(string coordinates)
         {
             Points = new List<PolygonPoint>();
-            MinLongitude = MinLatitude = Double.MaxValue;
-            MaxLongitude = MaxLatitude = Double.MinValue;
+            MinLongitude = MinLatitude = double.MaxValue;
+            MaxLongitude = MaxLatitude = double.MinValue;
 
             string[] latLongPairs = coordinates.Split(' ');
             foreach (var latLongPair in latLongPairs)
@@ -47,13 +57,14 @@
                 MinLatitude = Math.Min(MinLatitude, point.Latitude);
                 MaxLatitude = Math.Max(MaxLatitude, point.Latitude);
             }
+
             SetupSignedArea();
             SetupCentroid();
         }
 
         public double SignedArea { get; private set; }
 
-        public double TotalArea { get { return Math.Abs(SignedArea); } }
+        public double TotalArea => Math.Abs(SignedArea);
 
         public double CentroidLatitude { get; private set; }
 
@@ -71,6 +82,7 @@
                     ((Points[i].Longitude * Points[iplusOne].Latitude) -
                     (Points[iplusOne].Longitude * Points[i].Latitude));
             }
+
             SignedArea = area / 2;
         }
 
@@ -78,15 +90,15 @@
         {
             double cx = 0;
             double cy = 0;
-            double multiplier = 0;
             for (int i = 0; i < Points.Count; ++i)
             {
                 int iplusOne = (1 + i) % Points.Count;
-                multiplier = ((Points[i].Longitude * Points[iplusOne].Latitude) -
-                    (Points[iplusOne].Longitude * Points[i].Latitude));
+                double multiplier = ((Points[i].Longitude * Points[iplusOne].Latitude) -
+                                     (Points[iplusOne].Longitude * Points[i].Latitude));
                 cx += (Points[i].Longitude + Points[iplusOne].Longitude) * multiplier;
                 cy += (Points[i].Latitude + Points[iplusOne].Latitude) * multiplier;
             }
+
             CentroidLongitude = cx / (6 * SignedArea);
             CentroidLatitude = cy / (6 * SignedArea);
         }

@@ -1,4 +1,12 @@
-﻿namespace BooksCore.Books
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BookLocationDelta.cs" company="N/A">
+//   2017-2086
+// </copyright>
+// <summary>
+//   The difference between books locations.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+namespace BooksCore.Books
 {
     using System;
     using System.Collections.Generic;
@@ -29,16 +37,17 @@
             {
                 if (BooksLocationsToDate == null || BooksLocationsToDate.Count == 0) return 0.0;
                 double totalLatitude = BooksLocationsToDate.Select(l => l.Latitude).Sum();
-                return (totalLatitude / (double)(BooksLocationsToDate.Count));
+                return (totalLatitude / BooksLocationsToDate.Count);
             }
         }
+
         public double AverageLongitude
         {
             get
             {
                 if (BooksLocationsToDate == null || BooksLocationsToDate.Count == 0) return 0.0;
                 double totalLongitude = BooksLocationsToDate.Select(l => l.Longitude).Sum();
-                return (totalLongitude / (double)(BooksLocationsToDate.Count));
+                return (totalLongitude / BooksLocationsToDate.Count);
             }
         }
 
@@ -51,9 +60,10 @@
                 var totalPages =
                     BooksLocationsToDate.Select(l => (long)l.Book.Pages).Sum();
 
-                return (totalLatitude / (double)(totalPages));
+                return (totalLatitude / totalPages);
             }
         }
+
         public double WeightedLongitude
         {
             get
@@ -63,7 +73,7 @@
                 var totalPages =
                     BooksLocationsToDate.Select(l => (long)l.Book.Pages).Sum();
 
-                return (totalLongitude / (double)(totalPages));
+                return (totalLongitude / totalPages);
             }
         }
 
@@ -77,6 +87,7 @@
                 return (totalLatitude / 10.0);
             }
         }
+
         public double AverageLongitudeLastTen
         {
             get
@@ -94,30 +105,31 @@
             {
                 if (BooksLocationsToDate == null || BooksLocationsToDate.Count < 10) return WeightedLatitude;
 
-                var lastTen = BooksLocationsToDate.OrderByDescending(c => c.Book.Date).Take(10);
+                IEnumerable<BookLocation> lastTen = BooksLocationsToDate.OrderByDescending(c => c.Book.Date).Take(10);
+                IEnumerable<BookLocation> bookLocations = lastTen as BookLocation[] ?? lastTen.ToArray();
 
                 double totalLatitude =
-                    lastTen.Select(l => (l.Latitude * l.Book.Pages)).Sum();
-                var totalPages =
-                    lastTen.Select(l => (long)l.Book.Pages).Sum();
+                    bookLocations.Select(l => (l.Latitude * l.Book.Pages)).Sum();
+                long totalPages =
+                    bookLocations.Select(l => (long)l.Book.Pages).Sum();
 
-                return (totalLatitude / (double)(totalPages));
+                return (totalLatitude / totalPages);
             }
         }
+
         public double WeightedLongitudeLastTen
         {
             get
             {
                 if (BooksLocationsToDate == null || BooksLocationsToDate.Count < 10) return WeightedLongitude;
 
-                var lastTen = BooksLocationsToDate.OrderByDescending(c => c.Book.Date).Take(10);
+                IEnumerable<BookLocation> lastTen = BooksLocationsToDate.OrderByDescending(c => c.Book.Date).Take(10);
 
-                double totalLongitude =
-                    lastTen.Select(l => (l.Longitude * l.Book.Pages)).Sum();
-                var totalPages =
-                    lastTen.Select(l => (long)l.Book.Pages).Sum();
+                IEnumerable<BookLocation> bookLocations = lastTen as BookLocation[] ?? lastTen.ToArray();
+                double totalLongitude = bookLocations.Select(l => (l.Longitude * l.Book.Pages)).Sum();
+                long totalPages = bookLocations.Select(l => (long)l.Book.Pages).Sum();
 
-                return (totalLongitude / (double)(totalPages));
+                return (totalLongitude / totalPages);
             }
         }
     }

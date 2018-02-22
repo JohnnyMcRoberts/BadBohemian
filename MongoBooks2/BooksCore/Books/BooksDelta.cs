@@ -1,4 +1,12 @@
-﻿namespace BooksCore.Books
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BooksDelta.cs" company="N/A">
+//   2017-2086
+// </copyright>
+// <summary>
+//   The delta between books class.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+namespace BooksCore.Books
 {
     using System;
     using System.Collections.Generic;
@@ -8,13 +16,13 @@
     {
         #region Public Data
 
-        public DateTime Date { get; private set; }
+        public DateTime Date { get; }
 
-        public DateTime StartDate { get; private set; }
+        public DateTime StartDate { get; }
 
         public List<BookRead> BooksReadToDate { get; set; }
 
-        public int DaysSinceStart { get; private set; }
+        public int DaysSinceStart { get; }
 
         public DeltaTally OverallTally { get; private set; }
 
@@ -44,28 +52,36 @@
         {
             public int DaysInTally { get; set; }
 
-            public UInt32 TotalPages { get; set; }
-            public UInt32 TotalBooks { get; set; }
+            public uint TotalPages { get; set; }
 
-            public UInt32 TotalBookFormat { get; set; }
-            public UInt32 TotalComicFormat { get; set; }
-            public UInt32 TotalAudioFormat { get; set; }
+            public uint TotalBooks { get; set; }
+
+            public uint TotalBookFormat { get; set; }
+
+            public uint TotalComicFormat { get; set; }
+
+            public uint TotalAudioFormat { get; set; }
 
             public double PercentageInEnglish { get; set; }
-            public double PercentageInTranslation { get { return 100.0 - PercentageInEnglish; } }
 
-            public double PageRate { get { return TotalPages / (double)DaysInTally; } }
-            public double DaysPerBook { get { return DaysInTally / (double)TotalBooks; } }
-            public double PagesPerBook { get { return TotalPages / (double)TotalBooks; } }
-            public double BooksPerYear { get { return 365.25 / DaysPerBook; } }
+            public double PercentageInTranslation => 100.0 - PercentageInEnglish;
 
-            public List<Tuple<string, UInt32, double, UInt32, double>> LanguageTotals { get; set; }
-            public List<Tuple<string, UInt32, double, UInt32, double>> CountryTotals { get; set; }
+            public double PageRate => TotalPages / (double)DaysInTally;
+
+            public double DaysPerBook => DaysInTally / (double)TotalBooks;
+
+            public double PagesPerBook => TotalPages / (double)TotalBooks;
+
+            public double BooksPerYear => 365.25 / DaysPerBook;
+
+            public List<Tuple<string, uint, double, uint, double>> LanguageTotals { get; set; }
+
+            public List<Tuple<string, uint, double, uint, double>> CountryTotals { get; set; }
 
             public DeltaTally()
             {
-                LanguageTotals = new List<Tuple<string, UInt32, double, UInt32, double>>();
-                CountryTotals = new List<Tuple<string, UInt32, double, UInt32, double>>();
+                LanguageTotals = new List<Tuple<string, uint, double, uint, double>>();
+                CountryTotals = new List<Tuple<string, uint, double, uint, double>>();
             }
         }
 
@@ -85,7 +101,9 @@
             else
             {
                 for (int i = BooksReadToDate.Count - 10; i < BooksReadToDate.Count; i++)
+                {
                     lastTenBooks.Add(BooksReadToDate[i]);
+                }
             }
 
             // then update the tally based on that list
@@ -99,21 +117,20 @@
         private DeltaTally GetDeltaTallyValues(List<BookRead> books)
         {
             DeltaTally tally = new DeltaTally();
-            UInt32 totalBooks = 0;
-            UInt32 totalPagesRead = 0;
-            UInt32 totalBookFormat = 0;
-            UInt32 totalComicFormat = 0;
-            UInt32 totalAudioFormat = 0;
-            UInt32 totalInEnglish = 0;
-            int daysInTally;
+            uint totalBooks = 0;
+            uint totalPagesRead = 0;
+            uint totalBookFormat = 0;
+            uint totalComicFormat = 0;
+            uint totalAudioFormat = 0;
+            uint totalInEnglish = 0;
 
-            daysInTally = (books.Last().Date - books.First().Date).Days;
+            int daysInTally = (books.Last().Date - books.First().Date).Days;
             if (daysInTally < 1) daysInTally = 1;
 
-            Dictionary<string, Tuple<UInt32, UInt32>> languageCounts =
-                new Dictionary<string, Tuple<UInt32, UInt32>>();
-            Dictionary<string, Tuple<UInt32, UInt32>> countryCounts =
-                new Dictionary<string, Tuple<UInt32, UInt32>>();
+            Dictionary<string, Tuple<uint, uint>> languageCounts =
+                new Dictionary<string, Tuple<uint, uint>>();
+            Dictionary<string, Tuple<uint, uint>> countryCounts =
+                new Dictionary<string, Tuple<uint, uint>>();
 
             foreach (var book in books)
             {
@@ -124,7 +141,6 @@
                 if (book.Format == BookFormat.Audio) totalAudioFormat++;
                 if (book.OriginalLanguage == "English") totalInEnglish++;
                 UpdateLanguageAndCountryCounts(languageCounts, countryCounts, book);
-
             }
 
             double percentageInEnglish = GetAsPercentage(totalBooks, totalInEnglish);
@@ -139,7 +155,7 @@
             foreach (string language in languageCounts.Keys)
             {
                 tally.LanguageTotals.Add(
-                    new Tuple<string, UInt32, double, UInt32, double>(
+                    new Tuple<string, uint, double, uint, double>(
                         language, languageCounts[language].Item1,
                         GetAsPercentage(totalBooks, languageCounts[language].Item1),
                         languageCounts[language].Item2,
@@ -150,7 +166,7 @@
             foreach (string country in countryCounts.Keys)
             {
                 tally.CountryTotals.Add(
-                    new Tuple<string, UInt32, double, UInt32, double>(
+                    new Tuple<string, uint, double, uint, double>(
                         country, countryCounts[country].Item1,
                         GetAsPercentage(totalBooks, countryCounts[country].Item1),
                         countryCounts[country].Item2,
@@ -162,34 +178,34 @@
         }
 
         private static void UpdateLanguageAndCountryCounts(
-            Dictionary<string, Tuple<UInt32, UInt32>> languageCounts,
-            Dictionary<string, Tuple<UInt32, UInt32>> countryCounts,
+            Dictionary<string, Tuple<uint, uint>> languageCounts,
+            Dictionary<string, Tuple<uint, uint>> countryCounts,
             BookRead book)
         {
             if (!languageCounts.ContainsKey(book.OriginalLanguage))
-                languageCounts.Add(book.OriginalLanguage, new Tuple<UInt32, UInt32>(1, book.Pages));
+                languageCounts.Add(book.OriginalLanguage, new Tuple<uint, uint>(1, book.Pages));
             else
             {
                 var updatedCounts =
-                    new Tuple<UInt32, UInt32>(
+                    new Tuple<uint, uint>(
                             languageCounts[book.OriginalLanguage].Item1 + 1,
                             languageCounts[book.OriginalLanguage].Item2 + book.Pages);
                 languageCounts[book.OriginalLanguage] = updatedCounts;
             }
 
             if (!countryCounts.ContainsKey(book.Nationality))
-                countryCounts.Add(book.Nationality, new Tuple<UInt32, UInt32>(1, book.Pages));
+                countryCounts.Add(book.Nationality, new Tuple<uint, uint>(1, book.Pages));
             else
             {
                 var updatedCounts =
-                    new Tuple<UInt32, UInt32>(
+                    new Tuple<uint, uint>(
                             countryCounts[book.Nationality].Item1 + 1,
                             countryCounts[book.Nationality].Item2 + book.Pages);
                 countryCounts[book.Nationality] = updatedCounts;
             }
         }
 
-        public static double GetAsPercentage(UInt32 totalBooks, UInt32 totalInEnglish)
+        public static double GetAsPercentage(uint totalBooks, uint totalInEnglish)
         {
             double percentageInEnglish = 100.0 * (totalInEnglish / (double)totalBooks);
             return percentageInEnglish;

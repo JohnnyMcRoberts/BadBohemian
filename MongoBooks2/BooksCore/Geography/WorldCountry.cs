@@ -1,4 +1,11 @@
-﻿
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="WorldCountry.cs" company="N/A">
+//   2017-2086
+// </copyright>
+// <summary>
+//   The world country MongoDb entity.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace BooksCore.Geography
 {
     using BooksCore.Base;
@@ -33,12 +40,14 @@ namespace BooksCore.Geography
                     northSouth = "S";
                     inDegrees *= -1.0;
                 }
+
                 uint degrees = (uint)inDegrees;
                 uint seconds = (uint)((inDegrees - degrees) * 60.0);
 
                 return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + northSouth;
             }
         }
+
         public string LongitudeText
         { 
             get
@@ -50,6 +59,7 @@ namespace BooksCore.Geography
                     eastWest = "W";
                     inDegrees *= -1.0;
                 }
+
                 uint degrees = (uint)inDegrees;
                 uint seconds = (uint)((inDegrees - degrees) * 60.0);
 

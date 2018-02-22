@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Nation.cs" company="N/A">
+// <copyright file="BookTag.cs" company="N/A">
 //   2017-2086
 // </copyright>
 // <summary>
-//   The user MongoDb entity.
+//   The book tag class.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksCore.Books
@@ -35,8 +35,7 @@ namespace BooksCore.Books
         /// Gets the total number of books this tag applies to.
         /// </summary>
         public int TotalBooksReadBy => BooksWithTag.Count;
-
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="BookTag"/> class.
         /// </summary>

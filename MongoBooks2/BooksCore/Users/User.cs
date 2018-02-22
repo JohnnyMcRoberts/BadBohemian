@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Nation.cs" company="N/A">
+// <copyright file="User.cs" company="N/A">
 //   2017-2086
 // </copyright>
 // <summary>
@@ -9,8 +9,10 @@
 namespace BooksCore.Users
 {
     using System;
-    using BooksCore.Base;
+
     using MongoDB.Bson.Serialization.Attributes;
+
+    using BooksCore.Base;
 
     /// <summary>
     /// The MongoDb entity for a user.

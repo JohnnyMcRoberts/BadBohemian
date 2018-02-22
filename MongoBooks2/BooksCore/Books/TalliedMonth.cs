@@ -6,7 +6,6 @@
 //   The tallied books read in a month.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace BooksCore.Books
 {
     using System;
@@ -35,27 +34,27 @@ namespace BooksCore.Books
         /// <summary>
         /// Gets the total books read in the month.
         /// </summary>
-        public UInt32 TotalBooks { get; }
+        public uint TotalBooks { get; }
 
         /// <summary>
         /// Gets the total pages read in the month.
         /// </summary>
-        public UInt32 TotalPagesRead { get; }
+        public uint TotalPagesRead { get; }
 
         /// <summary>
         /// Gets the total number of physical books for the month.
         /// </summary>
-        public UInt32 TotalBookFormat { get; }
+        public uint TotalBookFormat { get; }
 
         /// <summary>
         /// Gets the total number of comics for the month.
         /// </summary>
-        public UInt32 TotalComicFormat { get; }
+        public uint TotalComicFormat { get; }
 
         /// <summary>
         /// Gets the total number of audiobooks for the month.
         /// </summary>
-        public UInt32 TotalAudioFormat { get; }
+        public uint TotalAudioFormat { get; }
 
         /// <summary>
         /// Gets the percentage of books read in English for the month.
@@ -103,14 +102,13 @@ namespace BooksCore.Books
             MonthDate = date;
             BooksRead = booksRead;
             DaysInTheMonth = DateTime.DaysInMonth(date.Year, date.Month);
-
-
+            
             TotalBooks = 0;
             TotalPagesRead = 0;
             TotalBookFormat = 0;
             TotalComicFormat = 0;
             TotalAudioFormat = 0;
-            UInt32 totalInEnglish = 0;
+            uint totalInEnglish = 0;
 
             // Loop through the books updating the counts as we go.
             foreach (BookRead book in BooksRead)
@@ -135,5 +133,4 @@ namespace BooksCore.Books
             PercentageInEnglish = BooksDelta.GetAsPercentage(TotalBooks, totalInEnglish);
         }
     }
-
 }

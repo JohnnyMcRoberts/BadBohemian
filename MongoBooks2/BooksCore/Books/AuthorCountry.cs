@@ -3,7 +3,7 @@
 //   2016
 // </copyright>
 // <summary>
-//   The author country model.
+//   The author country.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -12,8 +12,9 @@ namespace BooksCore.Books
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using BooksCore.Geography;
-    using Interfaces;
+    using BooksCore.Interfaces;
 
     public class AuthorCountry
     {
@@ -21,7 +22,7 @@ namespace BooksCore.Books
 
         public string Country { get; set; }
 
-        public UInt32 TotalPagesReadFromCountry
+        public uint TotalPagesReadFromCountry
         {
             get
             {
@@ -39,7 +40,8 @@ namespace BooksCore.Books
 
         public List<BookAuthor> AuthorsFromCountry { get; set; }
 
-        public UInt32 TotalPagesWorldWide { get; set; }
+        public uint TotalPagesWorldWide { get; set; }
+
         public int TotalBooksWorldWide { get; set; }
 
         public double PercentageOfBooksRead
@@ -95,7 +97,7 @@ namespace BooksCore.Books
         public AuthorCountry(IGeographyProvider mainModel)
         {
             _mainModel = mainModel;
-            Country = "";
+            Country = string.Empty;
             AuthorsFromCountry = new List<BookAuthor>();
             TotalPagesWorldWide = 1;
             TotalBooksWorldWide = 1;

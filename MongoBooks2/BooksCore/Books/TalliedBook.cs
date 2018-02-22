@@ -1,26 +1,38 @@
-﻿namespace BooksCore.Books
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TalliedBook.cs" company="N/A">
+//   2017-2086
+// </copyright>
+// <summary>
+//   The tallied book class.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+namespace BooksCore.Books
 {
     using System;
 
     public class TalliedBook
     {
-        public BookRead Book { get; private set; }
+        public BookRead Book { get; }
 
-        public string DateString { get { return Book.DateString; } }
+        public string DateString => Book.DateString;
 
-        public DateTime Date { get { return Book.Date; } }
+        public DateTime Date => Book.Date;
 
-        public string Author { get { return Book.Author; } }
-        public string Title { get { return Book.Title; } }
-        public UInt32 Pages { get { return Book.Pages; } }
+        public string Author => Book.Author; 
 
-        public UInt32 TotalBooks { get; set; }
+        public string Title => Book.Title; 
 
-        public UInt32 TotalBookFormat { get; set; }
-        public UInt32 TotalComicFormat { get; set; }
-        public UInt32 TotalAudioFormat { get; set; }
+        public uint Pages => Book.Pages; 
 
-        public UInt32 TotalPagesRead { get; set; }
+        public uint TotalBooks { get; set; }
+
+        public uint TotalBookFormat { get; set; }
+
+        public uint TotalComicFormat { get; set; }
+
+        public uint TotalAudioFormat { get; set; }
+
+        public uint TotalPagesRead { get; set; }
 
         public TalliedBook(BookRead book)
         {

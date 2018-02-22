@@ -7,12 +7,21 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BookRead.cs" company="N/A">
+//   2017-2086
+// </copyright>
+// <summary>
+//   The book read MongoDb entity.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace BooksCore.Books
 {
-    using MongoDB.Bson.Serialization.Attributes;
-
     using System;
     using System.Collections.Generic;
+
+    using MongoDB.Bson.Serialization.Attributes;
+
     using BooksCore.Base;
     using BooksCore.Interfaces;
 
@@ -233,13 +242,7 @@ namespace BooksCore.Books
         /// <summary>
         /// Gets the image URI ready to be displayed.
         /// </summary>
-        public Uri DisplayImage
-        {
-            get
-            {
-                return string.IsNullOrEmpty(ImageUrl) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(ImageUrl);
-            }
-        }
+        public Uri DisplayImage => string.IsNullOrEmpty(ImageUrl) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(ImageUrl);
 
         /// <summary>
         /// Gets the tags list ready to be displayed.
