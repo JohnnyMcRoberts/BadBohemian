@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BooksCore</RootNamespace>
     <AssemblyName>BooksCore</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -87,6 +88,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Books\TalliedBook.cs" />
     <Compile Include="Books\TalliedMonth.cs" />
+    <Compile Include="Provider\BooksReadProvider.cs" />
+    <Compile Include="Provider\GeographyProvider.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="Geography\WorldCountry.cs" />
   </ItemGroup>

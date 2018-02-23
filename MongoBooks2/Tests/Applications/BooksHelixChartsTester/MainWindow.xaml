@@ -1,11 +1,12 @@
-﻿<Window x:Class="BooksDatabaseTester.MainWindow"
+﻿<Window x:Class="BooksHelixChartsTester.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BooksDatabaseTester"
+        xmlns:local="clr-namespace:BooksHelixChartsTester"
+        xmlns:helixCharts="clr-namespace:BooksHelixCharts.Views;assembly=BooksHelixCharts"
         mc:Ignorable="d"
-        Title="Books Database Tester" Height="350" Width="525">
+        Title="Books Helix Charts Tester" Height="350" Width="525">
     <Grid>
         <TabControl>
             <TabItem Header="Books">
@@ -33,21 +34,43 @@
                               ItemsSource="{Binding Path=Nations, Mode=OneWay}"
                               MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"/>
 
-                </Grid>            
+                </Grid>
             </TabItem>
-            <TabItem Header="Users">
+            <TabItem Header="Books Read By Country">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Button Width="150" Content="Get Users" Height="22" Command="{Binding Path=GetUsersCommand}"></Button>
+                    <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdateBooksReadByCountryCommand}"></Button>
 
-                    <DataGrid Grid.Row="1" AutoGenerateColumns="True"
-                              ItemsSource="{Binding Path=Users, Mode=OneWay}"
-                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"/>
+                    <helixCharts:BooksReadByCountryDiagramView  Grid.Row="1" DataContext="{Binding Path=BooksReadByCountry}"/>
 
-                </Grid>            
+                </Grid>
+            </TabItem>
+            <TabItem Header="Pages By Country">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdatePagesByCountryCommand}"></Button>
+
+                    <helixCharts:PagesByCountryDiagramView  Grid.Row="1" DataContext="{Binding Path=PagesByCountry}"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Pages Read By Country">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdatePagesReadByCountryCommand}"></Button>
+
+                    <helixCharts:PagesReadByCountryDiagramView Grid.Row="1" DataContext="{Binding Path=PagesReadByCountry}"/>
+
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

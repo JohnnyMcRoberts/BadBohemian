@@ -17,18 +17,30 @@ namespace BooksCore.Geography
         [BsonElement("country")]
         public string Country { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the capital city.
+        /// </summary>
         [BsonElement("capital")]
         public string Capital { get; set; }
 
+        /// <summary>
+        /// Gets or sets the latitude of the capital city.
+        /// </summary>
         [BsonElement("latitude")]
         public double Latitude { get; set; }
 
+        /// <summary>
+        /// Gets or sets the longitude of the capital city.
+        /// </summary>
         [BsonElement("longitude")]
         public double Longitude { get; set; }
 
         [BsonElement("flag_url")]
         public string FlagUrl { get; set; }
 
+        /// <summary>
+        /// Gets the latitude in a degree, minutes and seconds.
+        /// </summary>
         public string LatitudeText
         {
             get
@@ -48,8 +60,11 @@ namespace BooksCore.Geography
             }
         }
 
+        /// <summary>
+        /// Gets the latitude in a degree, minutes and seconds.
+        /// </summary>
         public string LongitudeText
-        { 
+        {
             get
             {
                 double inDegrees = Longitude;
@@ -66,7 +81,7 @@ namespace BooksCore.Geography
                 return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + eastWest;
             }
         }
-        
+
         /// <summary>
         /// Gets the name to use for equivalence checks.
         /// </summary>
