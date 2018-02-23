@@ -1,4 +1,13 @@
-﻿namespace BooksUtilities.Geography
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PolygonSimplifier.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The Polygon simplifier utility which reduces a complex polygon to a set of triangles.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace BooksUtilities.Geography
 {
     using System.Collections.Generic;
     using System.Windows.Media.Media3D;

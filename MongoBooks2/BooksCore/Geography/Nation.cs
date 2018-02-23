@@ -19,25 +19,13 @@ namespace BooksCore.Geography
     /// The MongoDb entity for a nation.
     /// </summary>
     [BsonIgnoreExtraElements]
-    public class Nation : BaseEntity
+    public class Nation : WorldCountry
     {
         /// <summary>
-        /// Gets or sets the name of the capital city.
+        /// Gets or sets the entity name.
         /// </summary>
-        [BsonElement("capital")]
-        public string Capital { get; set; }
-
-        /// <summary>
-        /// Gets or sets the latitude of the capital city.
-        /// </summary>
-        [BsonElement("latitude")]
-        public double Latitude { get; set; }
-
-        /// <summary>
-        /// Gets or sets the longitude of the capital city.
-        /// </summary>
-        [BsonElement("longitude")]
-        public double Longitude { get; set; }
+        [BsonElement("name")]
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the URI string for a .jpg/.png imafe for the nation.
@@ -57,50 +45,6 @@ namespace BooksCore.Geography
         [BsonElement("image_uri")]
         public string ImageUri { get; set; }
 
-        /// <summary>
-        /// Gets the latitude in a degree, minutes and seconds.
-        /// </summary>
-        public string LatitudeText
-        {
-            get
-            {
-                double inDegrees = Latitude;
-                string northSouth = "N";
-                if (Latitude < 0)
-                {
-                    northSouth = "S";
-                    inDegrees *= -1.0;
-                }
-
-                uint degrees = (uint)inDegrees;
-                uint seconds = (uint)((inDegrees - degrees) * 60.0);
-
-                return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + northSouth;
-            }
-        }
-
-        /// <summary>
-        /// Gets the latitude in a degree, minutes and seconds.
-        /// </summary>
-        public string LongitudeText
-        {
-            get
-            {
-                double inDegrees = Longitude;
-                string eastWest = "E";
-                if (Longitude < 0)
-                {
-                    eastWest = "W";
-                    inDegrees *= -1.0;
-                }
-
-                uint degrees = (uint)inDegrees;
-                uint seconds = (uint)((inDegrees - degrees) * 60.0);
-
-                return degrees.ToString() + "\u00b0 " + seconds.ToString() + "' " + eastWest;
-            }
-        }
-        
         /// <summary>
         /// Gets the XML ready to be displayed.
         /// </summary>
@@ -156,6 +100,11 @@ namespace BooksCore.Geography
                 return _countryGeography;
             }
         }
+
+        /// <summary>
+        /// Gets the name to use for equivalence checks.
+        /// </summary>
+        public override string EquivalenceName => Name;
 
         private CountryGeography _countryGeography;
     }
