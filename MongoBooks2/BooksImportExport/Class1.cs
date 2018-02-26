@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BooksOxyCharts
+namespace BooksImportExport
 {
     public class Class1
     {

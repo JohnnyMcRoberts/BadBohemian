@@ -18,9 +18,24 @@ namespace BooksCore.Interfaces
     public interface IBooksReadProvider
     {
         /// <summary>
+        /// Gets the book deltas.
+        /// </summary>
+        ObservableCollection<BooksDelta> BookDeltas { get; }
+
+        /// <summary>
+        /// Gets the changes per year between books.
+        /// </summary>
+        ObservableCollection<BooksDelta> BookPerYearDeltas { get; }
+
+        /// <summary>
         /// Gets the book location deltas.
         /// </summary>
         ObservableCollection<BookLocationDelta> BookLocationDeltas { get; }
+
+        /// <summary>
+        /// Gets the authors.
+        /// </summary>
+        ObservableCollection<BookAuthor> AuthorsRead { get; }
 
         /// <summary>
         /// Gets the author countries.
