@@ -13,6 +13,8 @@ namespace BooksOxyCharts.ViewModels
     using BooksUtilities.ViewModels;
     using OxyPlot;
     using PlotGenerators;
+    using System;
+
     public class OxyPlotViewModel : BaseViewModel
     {
         private readonly OxyPlotPair _plotPair;
@@ -28,36 +30,14 @@ namespace BooksOxyCharts.ViewModels
             OnPropertyChanged(() => Model);
         }
 
-        public OxyPlotViewModel(PlotTypes plotType)
+        public OxyPlotViewModel(Utilities.PlotType plotType)
         {
-            // get the type.
+            // Get the plot generator type etc and create theplot pair.
             string title = plotType.GetTitle();
             bool? canHover = plotType.GetCanHover();
-
-            BasePlotGenerator plotGenerator = null;
-            switch (plotType)
-            {
-                case PlotTypes.AverageDaysPerBook:
-                    plotGenerator = new AverageDaysPerBookPlotGenerator();
-                    break;
-
-                case PlotTypes.BooksAndPagesLastTen:
-                    plotGenerator = new BooksAndPagesLastTenPlotGenerator();
-                    break;
-
-                case PlotTypes.BooksAndPagesLastTenTranslation:
-                    plotGenerator = new BooksAndPagesLastTenTranslationPlotGenerator();
-                    break;
-
-                case PlotTypes.BooksAndPagesThisYear:
-                    plotGenerator = new BooksAndPagesThisYearPlotGenerator();
-                    break;
-
-                case PlotTypes.BooksInTranslation:
-                    plotGenerator = new BooksInTranslationPlotGenerator();
-                    break;
-            }
-
+            Type plotGeneratorType = plotType.GetGeneratorClass();
+            var instance = Activator.CreateInstance(plotGeneratorType);
+            BasePlotGenerator plotGenerator =  (BasePlotGenerator)instance;
             _plotPair = new OxyPlotPair(plotGenerator, title, canHover.HasValue && canHover.Value);
         }
     }

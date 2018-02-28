@@ -236,7 +236,7 @@ namespace BooksCore.Provider
             _geographyProvider = geographyProvider;
 
             BooksRead.Clear();
-            foreach (var book in books)
+            foreach (BookRead book in books.OrderBy(x => x.Date))
                 BooksRead.Add(book);
 
             UpdateBookDeltas();
