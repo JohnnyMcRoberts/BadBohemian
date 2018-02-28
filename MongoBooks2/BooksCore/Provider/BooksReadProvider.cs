@@ -21,19 +21,29 @@ namespace BooksCore.Provider
         public ObservableCollection<BookRead> BooksRead { get; private set; }
 
         /// <summary>
-        /// Gets the books.
+        /// Gets the changes between books.
         /// </summary>
-        public ObservableCollection<BookAuthor> AuthorsRead { get; private set; }
+        public ObservableCollection<BooksDelta> BookDeltas { get; }
 
         /// <summary>
-        /// Gets the books.
+        /// Gets the changes per year between books.
+        /// </summary>
+        public ObservableCollection<BooksDelta> BookPerYearDeltas { get; }
+
+        /// <summary>
+        /// Gets the authors.
+        /// </summary>
+        public ObservableCollection<BookAuthor> AuthorsRead { get; }
+
+        /// <summary>
+        /// Gets the book location deltas.
         /// </summary>
         public ObservableCollection<BookLocationDelta> BookLocationDeltas { get; private set; }
 
         /// <summary>
-        /// Gets the books.
+        /// Gets the author countries.
         /// </summary>
-        public ObservableCollection<AuthorCountry> AuthorCountries { get; private set; }
+        public ObservableCollection<AuthorCountry> AuthorCountries { get; }
 
         private void UpdateCountries(out int booksReadWorldwide, out uint pagesReadWorldwide)
         {
@@ -65,6 +75,32 @@ namespace BooksCore.Provider
                 country.TotalBooksWorldWide = booksReadWorldwide;
                 country.TotalPagesWorldWide = pagesReadWorldwide;
                 AuthorCountries.Add(country);
+            }
+        }
+
+        private void UpdateBookDeltas()
+        {
+            // clear the list and the counts
+            BookDeltas.Clear();
+            if (BooksRead.Count < 1) return;
+            DateTime startDate = BooksRead[0].Date;
+
+            // get all the dates a book has been read (after the first quarter)
+            Dictionary<DateTime, DateTime> bookReadDates = GetBookReadDates(startDate);
+
+            // then add the delta made up of the books up to that date
+            foreach (var date in bookReadDates.Keys.ToList())
+            {
+                BooksDelta delta = new BooksDelta(date, startDate);
+                foreach (var book in BooksRead)
+                {
+                    if (book.Date <= date)
+                        delta.BooksReadToDate.Add(book);
+                    else
+                        break;
+                }
+                delta.UpdateTallies();
+                BookDeltas.Add(delta);
             }
         }
 
@@ -102,6 +138,7 @@ namespace BooksCore.Provider
                 BookLocationDeltas.Add(delta);
             }
         }
+
         private WorldCountry GetCountryForBook(BookRead book)
         {
             if (_worldCountryLookup == null || _worldCountryLookup.Count == 0 ||
@@ -154,6 +191,46 @@ namespace BooksCore.Provider
                     _worldCountryLookup.Add(country.Country, country);
         }
 
+        private void UpdateBookPerYearDeltas()
+        {
+            // clear the list and the counts
+            BookPerYearDeltas.Clear();
+            if (BooksRead.Count < 1) return;
+            DateTime startDate = BooksRead[0].Date;
+            startDate = startDate.AddYears(1);
+
+            // get all the dates a book has been read that are at least a year since the start
+            Dictionary<DateTime, DateTime> bookReadDates = new Dictionary<DateTime, DateTime>();
+            foreach (var book in BooksRead)
+            {
+                if (startDate > book.Date) continue;
+                if (!bookReadDates.ContainsKey(book.Date))
+                {
+                    bookReadDates.Add(book.Date, book.Date);
+                }
+            }
+
+            // then add the delta made up of the books up to that date
+            foreach (var date in bookReadDates.Keys.ToList())
+            {
+                DateTime startYearDate = date;
+                startYearDate = startYearDate.AddYears(-1);
+                BooksDelta delta = new BooksDelta(date, startYearDate);
+                foreach (var book in BooksRead)
+                {
+                    if (book.Date < startYearDate)
+                        continue;
+
+                    if (book.Date <= date)
+                        delta.BooksReadToDate.Add(book);
+                    else
+                        break;
+                }
+                delta.UpdateTallies();
+                BookPerYearDeltas.Add(delta);
+            }
+        }
+
         public void Setup(IList<BookRead> books, IGeographyProvider geographyProvider)
         {
             _geographyProvider = geographyProvider;
@@ -162,6 +239,8 @@ namespace BooksCore.Provider
             foreach (var book in books)
                 BooksRead.Add(book);
 
+            UpdateBookDeltas();
+            UpdateBookPerYearDeltas();
             UpdateAuthors();
             UpdateWorldCountryLookup();
             int booksReadWorldwide;
@@ -174,6 +253,8 @@ namespace BooksCore.Provider
         public BooksReadProvider()
         {
             BooksRead = new ObservableCollection<BookRead>();
+            BookDeltas = new ObservableCollection<BooksDelta>();
+            BookPerYearDeltas = new ObservableCollection<BooksDelta>();
             AuthorsRead = new ObservableCollection<BookAuthor>();
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             AuthorCountries = new ObservableCollection<AuthorCountry>();
