@@ -64,7 +64,7 @@ namespace BooksOxyChartsTester.ViewModels
         /// <summary>
         /// The selected plot type.
         /// </summary>
-        private PlotTypes _selectedPlot;
+        private PlotType _selectedPlot;
 
         /// <summary>
         /// The get books command.
@@ -103,9 +103,9 @@ namespace BooksOxyChartsTester.ViewModels
         /// <summary>
         /// Gets the plot types and titles.
         /// </summary>
-        public Dictionary<PlotTypes, string> PlotTypesByTitle { get; private set; }
+        public Dictionary<PlotType, string> PlotTypesByTitle { get; private set; }
 
-        public PlotTypes SelectedPlot
+        public PlotType SelectedPlot
         {
             get { return _selectedPlot; }
             set
@@ -169,8 +169,8 @@ namespace BooksOxyChartsTester.ViewModels
         /// </summary>
         private void SetupPlotTypesByTitle()
         {
-            PlotTypesByTitle = new Dictionary<PlotTypes, string>();
-            foreach (PlotTypes selection in Enum.GetValues(typeof(PlotTypes)))
+            PlotTypesByTitle = new Dictionary<PlotType, string>();
+            foreach (PlotType selection in Enum.GetValues(typeof(PlotType)))
             {
                 string title = selection.GetTitle();
                 PlotTypesByTitle.Add(selection, title);
@@ -239,7 +239,7 @@ namespace BooksOxyChartsTester.ViewModels
             _booksReadDatabase = new BooksReadDatabase(DatabaseConnectionString);
             _nationsReadDatabase = new NationDatabase(DatabaseConnectionString);
 
-            _selectedPlot = PlotTypes.AverageDaysPerBook;
+            _selectedPlot = PlotType.AverageDaysPerBook;
 
             _oxyPlotChart = new OxyPlotViewModel(_selectedPlot);
 

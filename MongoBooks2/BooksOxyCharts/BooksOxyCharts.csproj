@@ -59,6 +59,7 @@
     <Compile Include="PlotGenerators\BooksAndPagesLastTenTranslationPlotGenerator.cs" />
     <Compile Include="PlotGenerators\BooksAndPagesThisYearPlotGenerator.cs" />
     <Compile Include="PlotGenerators\BooksInTranslationPlotGenerator.cs" />
+    <Compile Include="PlotGenerators\CountryLocationsBooksAndPagesPlotGenerator.cs" />
     <Compile Include="Utilities\ChartAxisKeys.cs" />
     <Compile Include="Interfaces\IPlotGenerator.cs" />
     <Compile Include="Interfaces\ICurveFitter.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\OxyPlotUtilities.cs" />
     <Compile Include="Utilities\PlotTypeAttribute.cs" />
-    <Compile Include="Utilities\PlotTypes.cs" />
+    <Compile Include="Utilities\PlotType.cs" />
     <Compile Include="Utilities\PolygonReducer.cs" />
     <Compile Include="Utilities\QuadraticCurveFitter.cs" />
     <Compile Include="ViewModels\OxyPlotViewModel.cs" />

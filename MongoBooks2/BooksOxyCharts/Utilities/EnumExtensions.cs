@@ -16,6 +16,17 @@
             return attr?.Title;
         }
 
+        public static Type GetGeneratorClass(this Enum value)
+        {
+            FieldInfo field;
+            if (GetFieldInfo(value, out field))
+                return null;
+
+            PlotTypeAttribute attr = Attribute.GetCustomAttribute(field, typeof(PlotTypeAttribute)) as PlotTypeAttribute;
+
+            return attr?.GeneratorClass;
+        }
+
         public static bool? GetCanHover(this Enum value)
         {
             FieldInfo field;

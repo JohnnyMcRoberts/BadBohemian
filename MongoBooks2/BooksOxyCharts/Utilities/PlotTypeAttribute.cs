@@ -9,6 +9,8 @@
 
         public bool CanHover { get; set; }
 
+        public Type GeneratorClass { get; set; }
+
         public PlotTypeAttribute()
         {
             Title = string.Empty;

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainViewModel.cs" company="N/A">
+// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
@@ -9,8 +9,6 @@
 namespace BooksOxyCharts.PlotGenerators
 {
     using System.Collections.Generic;
-    using BooksCore.Interfaces;
-    using BooksOxyCharts.Interfaces;
     using BooksOxyCharts.Utilities;
     using OxyPlot;
     using OxyPlot.Axes;
