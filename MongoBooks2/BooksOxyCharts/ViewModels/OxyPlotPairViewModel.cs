@@ -6,14 +6,14 @@
 //   The main view model for books helix chart test application.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-namespace BooksOxyCharts.Utilities
+namespace BooksOxyCharts.ViewModels
 {
     using BooksCore.Interfaces;
     using BooksOxyCharts.Interfaces;
     using BooksUtilities.ViewModels;
     using OxyPlot;
 
-    public class OxyPlotPair : BaseViewModel
+    public class OxyPlotPairViewModel : BaseViewModel
     {
         #region Public Properties
 
@@ -84,7 +84,7 @@ namespace BooksOxyCharts.Utilities
 
         #region Constructor
 
-        public OxyPlotPair(IPlotGenerator plotGenerator, string title, bool hoverOver = false)
+        public OxyPlotPairViewModel(IPlotGenerator plotGenerator, string title, bool hoverOver = false)
         {
             _plotGenerator = plotGenerator;
 

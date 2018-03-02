@@ -32,6 +32,21 @@
         [PlotType(Title = "Countries in Location with Books and Pages Plot",
             CanHover = true,
             GeneratorClass = typeof(CountryLocationsBooksAndPagesPlotGenerator))]
-        CountryLocationsBooksAndPages
+        CountryLocationsBooksAndPages,
+
+        [PlotType(Title = "Current Books Read by Country",
+            CanHover = false,
+            GeneratorClass = typeof(CurrentBooksReadByCountryPlotGenerator))]
+        CurrentBooksReadByCountry,
+
+        [PlotType(Title = "Current Pages Read by Country",
+            CanHover = false,
+            GeneratorClass = typeof(CurrentPagesReadByCountryPlotGenerator))]
+        CurrentPagesReadByCountry,
+
+        [PlotType(Title = "Days Per Book Plot",
+            CanHover = false,
+            GeneratorClass = typeof(DaysPerBookPlotGenerator))]
+        DaysPerBook
     }
 }
