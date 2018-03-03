@@ -66,6 +66,11 @@
     <Compile Include="PlotGenerators\CurrentMonthPagesReadByLanguagePlotGenerator.cs" />
     <Compile Include="PlotGenerators\CurrentPagesReadByCountryPlotGenerator.cs" />
     <Compile Include="PlotGenerators\DaysPerBookPlotGenerator.cs" />
+    <Compile Include="PlotGenerators\DaysPerBookWithTimePlotGenerator.cs" />
+    <Compile Include="PlotGenerators\LatitudeWithTimePlotGenerator.cs" />
+    <Compile Include="PlotGenerators\LongitudeWithTimePlotGenerator.cs" />
+    <Compile Include="PlotGenerators\MonthlyBookTalliesByCalendarYearPlotGenerator.cs" />
+    <Compile Include="PlotGenerators\OverallBookAndPageTalliesPlotGenerator.cs" />
     <Compile Include="Utilities\ChartAxisKeys.cs" />
     <Compile Include="Interfaces\IPlotGenerator.cs" />
     <Compile Include="Interfaces\ICurveFitter.cs" />

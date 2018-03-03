@@ -4,32 +4,32 @@
 
     public enum PlotType
     {
-        [PlotType(Title = "Average Days Per Book Plot", 
+        [PlotType(Title = "Average Days Per Book", 
             CanHover = false, 
             GeneratorClass = typeof(AverageDaysPerBookPlotGenerator))]
         AverageDaysPerBook,
 
-        [PlotType(Title = "Last 10 Books Time vs Pages Plot", 
+        [PlotType(Title = "Last 10 Books Time vs Pages", 
             CanHover = false, 
             GeneratorClass = typeof(BooksAndPagesLastTenPlotGenerator))]
         BooksAndPagesLastTen,
 
-        [PlotType(Title = "Last 10 Books Time vs Pages in Translation Plot",
+        [PlotType(Title = "Last 10 Books Time vs Pages in Translation",
             CanHover = false, 
             GeneratorClass = typeof(BooksAndPagesLastTenTranslationPlotGenerator))]
         BooksAndPagesLastTenTranslation,
 
-        [PlotType(Title = "Books and Pages per Year Plot", 
+        [PlotType(Title = "Books and Pages per Year", 
             CanHover = false,
             GeneratorClass = typeof(BooksAndPagesThisYearPlotGenerator))]
         BooksAndPagesThisYear,
 
-        [PlotType(Title = "% Books In Translation Plot", 
+        [PlotType(Title = "% Books In Translation", 
             CanHover = false,
             GeneratorClass = typeof(BooksInTranslationPlotGenerator))]
         BooksInTranslation,
 
-        [PlotType(Title = "Countries in Location with Books and Pages Plot",
+        [PlotType(Title = "Countries in Location with Books and Pages",
             CanHover = true,
             GeneratorClass = typeof(CountryLocationsBooksAndPagesPlotGenerator))]
         CountryLocationsBooksAndPages,
@@ -44,9 +44,44 @@
             GeneratorClass = typeof(CurrentPagesReadByCountryPlotGenerator))]
         CurrentPagesReadByCountry,
 
-        [PlotType(Title = "Days Per Book Plot",
+        [PlotType(Title = "Days Per Book",
             CanHover = false,
             GeneratorClass = typeof(DaysPerBookPlotGenerator))]
-        DaysPerBook
+        DaysPerBook,
+
+        [PlotType(Title = "Days Per Book With Time",
+            CanHover = false,
+            GeneratorClass = typeof(DaysPerBookWithTimePlotGenerator))]
+        DaysPerBookWithTime,
+
+        [PlotType(Title = "Latitude With Time",
+            CanHover = false,
+            GeneratorClass = typeof(LatitudeWithTimePlotGenerator))]
+        LatitudeWithTime,
+
+        [PlotType(Title = "Longitude With Time",
+            CanHover = false,
+            GeneratorClass = typeof(LongitudeWithTimePlotGenerator))]
+        LongitudeWithTime,
+
+        [PlotType(Title = "Overall Book And Page Tallies",
+            CanHover = false,
+            GeneratorClass = typeof(OverallBookAndPageTalliesPlotGenerator))]
+        OverallBookAndPageTallies,
+
+        [PlotType(Title = "Monthly Pages As Columns Tallies By Calendar Year",
+            CanHover = false,
+            GeneratorClass = typeof(MonthlyPagesAsColumnsTalliesByCalendarYearPlotGenerator))]
+        MonthlyPagesAsColumnsTalliesByCalendarYear,
+
+        [PlotType(Title = "Monthly Books As Columns Tallies By Calendar Year",
+            CanHover = false,
+            GeneratorClass = typeof(MonthlyBooksAsColumnsTalliesByCalendarYearPlotGenerator))]
+        MonthlyBooksAsColumnsTalliesByCalendarYear,
+
+        [PlotType(Title = "Monthly Books And Pages Lines Tallies By Calendar Year",
+            CanHover = false,
+            GeneratorClass = typeof(MonthlyBooksAndPagesLinesTalliesByCalendarYearPlotGenerator))]
+        MonthlyBooksAndPagesLinesTalliesByCalendarYearPlotGenerator
     }
 }
