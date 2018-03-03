@@ -18,6 +18,11 @@ namespace BooksCore.Interfaces
     public interface IBooksReadProvider
     {
         /// <summary>
+        /// Gets the books.
+        /// </summary>
+        ObservableCollection<BookRead> BooksRead { get; }
+
+        /// <summary>
         /// Gets the book deltas.
         /// </summary>
         ObservableCollection<BooksDelta> BookDeltas { get; }
