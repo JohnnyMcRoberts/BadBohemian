@@ -41,5 +41,9 @@ namespace BooksCore.Interfaces
         /// Gets the author countries.
         /// </summary>
         ObservableCollection<AuthorCountry> AuthorCountries { get; }
+
+        ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
+
+        TalliedMonth SelectedMonthTally { get; set; }
     }
 }

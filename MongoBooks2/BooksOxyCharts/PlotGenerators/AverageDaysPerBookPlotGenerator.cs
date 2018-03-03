@@ -97,6 +97,7 @@ namespace BooksOxyCharts.PlotGenerators
                 overallDays.Add(delta.DaysSinceStart);
                 overallDaysPerBook.Add(delta.OverallTally.DaysPerBook);
             }
+
             OxyPlotUtilities.LinearRegression(overallDays, overallDaysPerBook, out  rsquared, out  yintercept, out  slope);
         }
 

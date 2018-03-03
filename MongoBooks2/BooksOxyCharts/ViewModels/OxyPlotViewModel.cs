@@ -17,15 +17,15 @@ namespace BooksOxyCharts.ViewModels
 
     public class OxyPlotViewModel : BaseViewModel
     {
-        private readonly OxyPlotPair _plotPair;
+        private readonly OxyPlotPairViewModel _plotPairViewModel;
 
-        public IPlotController ViewController => _plotPair.ViewController;
+        public IPlotController ViewController => _plotPairViewModel.ViewController;
 
-        public PlotModel Model => _plotPair.Model;
+        public PlotModel Model => _plotPairViewModel.Model;
 
         public void Update(IGeographyProvider geographyProvider, IBooksReadProvider booksReadProvider)
         {
-            _plotPair.UpdateData(geographyProvider, booksReadProvider);
+            _plotPairViewModel.UpdateData(geographyProvider, booksReadProvider);
             OnPropertyChanged(() => ViewController);
             OnPropertyChanged(() => Model);
         }
@@ -38,7 +38,7 @@ namespace BooksOxyCharts.ViewModels
             Type plotGeneratorType = plotType.GetGeneratorClass();
             var instance = Activator.CreateInstance(plotGeneratorType);
             BasePlotGenerator plotGenerator =  (BasePlotGenerator)instance;
-            _plotPair = new OxyPlotPair(plotGenerator, title, canHover.HasValue && canHover.Value);
+            _plotPairViewModel = new OxyPlotPairViewModel(plotGenerator, title, canHover.HasValue && canHover.Value);
         }
     }
 }

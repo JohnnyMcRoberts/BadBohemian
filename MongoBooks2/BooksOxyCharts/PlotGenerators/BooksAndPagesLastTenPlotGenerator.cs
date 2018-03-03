@@ -59,7 +59,7 @@ namespace BooksOxyCharts.PlotGenerators
             }
             pointsSeries.TrackerFormatString = "{Tag}\n{1}: {2:0.###}\n{3}: {4:0.###}";
             newPlot.Series.Add(pointsSeries);
-            newPlot.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Jet(200) , Title = "Page Rate"});
+            newPlot.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Jet(200), Title = "Page Rate" });
 
             // finally update the model with the new plot
             return newPlot;

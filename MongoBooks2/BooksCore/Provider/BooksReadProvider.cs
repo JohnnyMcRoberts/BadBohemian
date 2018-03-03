@@ -44,6 +44,10 @@ namespace BooksCore.Provider
         /// Gets the author countries.
         /// </summary>
         public ObservableCollection<AuthorCountry> AuthorCountries { get; }
+        
+        public ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
+
+        public TalliedMonth SelectedMonthTally { get; set; }
 
         private void UpdateCountries(out int booksReadWorldwide, out uint pagesReadWorldwide)
         {
@@ -231,6 +235,48 @@ namespace BooksCore.Provider
             }
         }
 
+
+        private void UpdateBooksPerMonth()
+        {
+            // clear the list and the counts
+            Dictionary<DateTime, List<BookRead>> bookMonths = new Dictionary<DateTime, List<BookRead>>();
+            if (BooksRead.Count < 1) return;
+            DateTime startDate = BooksRead[0].Date;
+            DateTime endDate = BooksRead.Last().Date;
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            DateTime monthStart = new DateTime(startDate.Year, startDate.Month, 1);
+            DateTime monthEnd = monthStart.AddMonths(1).AddSeconds(-1);
+
+            // get all the months a book has been read
+            while (monthStart <= endDate)
+            {
+                List<BookRead> monthList = new List<BookRead>();
+
+                foreach (BookRead book in BooksRead)
+                {
+                    if (book.Date >= monthStart && book.Date <= monthEnd)
+                    {
+                        monthList.Add(book);
+                    }
+                }
+
+                if (monthList.Count > 0)
+                {
+                    bookMonths.Add(monthStart, monthList);
+                }
+
+                monthStart = monthStart.AddMonths(1);
+                monthEnd = monthStart.AddMonths(1).AddSeconds(-1);
+            }
+
+            TalliedMonths.Clear();
+            foreach (DateTime date in bookMonths.Keys.OrderBy(x => x))
+            {
+                TalliedMonths.Add(new TalliedMonth(date, bookMonths[date]));
+            }
+        }
+
         public void Setup(IList<BookRead> books, IGeographyProvider geographyProvider)
         {
             _geographyProvider = geographyProvider;
@@ -248,6 +294,8 @@ namespace BooksCore.Provider
             UpdateCountries(out booksReadWorldwide, out pagesReadWorldwide);
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             UpdateBookLocationDeltas();
+            UpdateBooksPerMonth();
+            SelectedMonthTally = TalliedMonths.FirstOrDefault();
         }
 
         public BooksReadProvider()
@@ -258,6 +306,7 @@ namespace BooksCore.Provider
             AuthorsRead = new ObservableCollection<BookAuthor>();
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             AuthorCountries = new ObservableCollection<AuthorCountry>();
+            TalliedMonths = new ObservableCollection<TalliedMonth>();
         }
     }
 }
