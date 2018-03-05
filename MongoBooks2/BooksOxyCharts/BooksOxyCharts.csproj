@@ -43,6 +43,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -83,6 +84,11 @@
     <Compile Include="PlotGenerators\TotalBooksReadByLanguagePlotGenerator.cs" />
     <Compile Include="PlotGenerators\TotalPagesReadByCountryPlotGenerator.cs" />
     <Compile Include="PlotGenerators\TotalPagesReadByLanguagePlotGenerator.cs" />
+    <Compile Include="PlotGenerators\WorldCountriesMapBooksReadPlotGenerator.cs" />
+    <Compile Include="PlotGenerators\WorldCountriesMapLastTenLatLongPlotGenerator.cs" />
+    <Compile Include="PlotGenerators\WorldCountriesMapPagesReadPlotGenerator.cs" />
+    <Compile Include="PlotGenerators\WorldCountriesMapPlotGenerator.cs" />
+    <Compile Include="PlotGenerators\WorldCountriesMapWithBooksReadPlotGenerator.cs" />
     <Compile Include="Utilities\ChartAxisKeys.cs" />
     <Compile Include="Interfaces\IPlotGenerator.cs" />
     <Compile Include="Interfaces\ICurveFitter.cs" />
