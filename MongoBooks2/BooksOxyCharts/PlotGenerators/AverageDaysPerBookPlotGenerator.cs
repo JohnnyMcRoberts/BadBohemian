@@ -3,7 +3,7 @@
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The average days per book oxy-plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
@@ -16,6 +16,10 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class AverageDaysPerBookPlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -58,7 +62,7 @@ namespace BooksOxyCharts.PlotGenerators
 
 
             OxyPlotUtilities.AddLineSeriesToModel(newPlot,
-                new LineSeries[] { overallSeries, lastTenSeries, overallTrendlineSeries, lastTenTrendlineSeries }
+                new[] { overallSeries, lastTenSeries, overallTrendlineSeries, lastTenTrendlineSeries }
                 );
 
 

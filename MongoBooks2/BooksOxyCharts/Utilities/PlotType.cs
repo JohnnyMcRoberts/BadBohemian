@@ -97,32 +97,32 @@
         [PlotType(Title = "Pages Per Day With Time",
             CanHover = false,
             GeneratorClass = typeof(PagesPerDayWithTimePlotGenerator))]
-        PagesPerDayWithTimePlotGenerator,
+        PagesPerDayWithTime,
 
         [PlotType(Title = "Percentage Books Read By Country",
             CanHover = false,
             GeneratorClass = typeof(PercentageBooksReadByCountryPlotGenerator))]
-        PercentageBooksReadByCountryPlotGenerator,
+        PercentageBooksReadByCountry,
 
         [PlotType(Title = "Percentage Books Read By Language",
             CanHover = false,
             GeneratorClass = typeof(PercentageBooksReadByLanguagePlotGenerator))]
-        PercentageBooksReadByLanguagePlotGenerator,
+        PercentageBooksReadByLanguage,
 
         [PlotType(Title = "Percentage Pages Read By Country",
             CanHover = false,
             GeneratorClass = typeof(PercentagePagesReadByCountryPlotGenerator))]
-        PercentagePagesReadByCountryPlotGenerator,
+        PercentagePagesReadByCountry,
 
         [PlotType(Title = "Percentage Pages Read By Language",
             CanHover = false,
             GeneratorClass = typeof(PercentagePagesReadByLanguagePlotGenerator))]
-        PercentagePagesReadByLanguagePlotGenerator,
+        PercentagePagesReadByLanguage,
 
         [PlotType(Title = "Tallies Per Calendar Year",
             CanHover = false,
             GeneratorClass = typeof(TalliesPerCalendarYearPlotGenerator))]
-        TalliesPerCalendarYearPlotGenerator,
+        TalliesPerCalendarYear,
 
         [PlotType(Title = "Total Books Read By Country",
             CanHover = false,
@@ -132,7 +132,7 @@
         [PlotType(Title = "Total Books Read By Language",
             CanHover = false,
             GeneratorClass = typeof(TotalBooksReadByLanguagePlotGenerator))]
-        TotalBooksReadByLanguagePlotGenerator,
+        TotalBooksReadByLanguage,
 
         [PlotType(Title = "Total Pages Read By Country",
             CanHover = false,
@@ -142,6 +142,31 @@
         [PlotType(Title = "Total Pages Read By Language",
             CanHover = false,
             GeneratorClass = typeof(TotalPagesReadByLanguagePlotGenerator))]
-        TotalPagesReadByLanguagePlotGenerator
+        TotalPagesReadByLanguage,
+
+        [PlotType(Title = "World Countries Map Books Read",
+            CanHover = false,
+            GeneratorClass = typeof(WorldCountriesMapBooksReadPlotGenerator))]
+        WorldCountriesMapBooksReadPlotGenerator,
+
+        [PlotType(Title = "World Countries Map Last Ten Lat Long",
+            CanHover = false,
+            GeneratorClass = typeof(WorldCountriesMapLastTenLatLongPlotGenerator))]
+        WorldCountriesMapLastTenLatLongPlotGenerator,
+
+        [PlotType(Title = "World Countries Map Pages Read",
+            CanHover = false,
+            GeneratorClass = typeof(WorldCountriesMapPagesReadPlotGenerator))]
+        WorldCountriesMapPagesReadPlotGenerator,
+
+        [PlotType(Title = "World Countries Map",
+            CanHover = false,
+            GeneratorClass = typeof(WorldCountriesMapPlotGenerator))]
+        WorldCountriesMapPlotGenerator,
+
+        [PlotType(Title = "World Countries Map With Books",
+            CanHover = false,
+            GeneratorClass = typeof(WorldCountriesMapWithBooksReadPlotGenerator))]
+        WorldCountriesMapWithBooksReadPlotGenerator
     }
 }

@@ -12,9 +12,9 @@
         #region Constants
 
         // taken from http://dmcritchie.mvps.org/excel/colors.htm
-        static readonly List<Tuple<byte, byte, byte>> _standardColours =
-            new List<Tuple<byte, byte, byte>>()
-        {
+        private static readonly List<Tuple<byte, byte, byte>> StandardColours =
+            new List<Tuple<byte, byte, byte>>
+            {
                                     // R    G    B
             new Tuple<byte,byte,byte>(255,	0   ,0),
             new Tuple<byte,byte,byte>(0,	255 ,0),
@@ -85,8 +85,10 @@
 
         public static void AddLineSeriesToModel(PlotModel newPlot, LineSeries[] lineSeries)
         {
-            foreach (var series in lineSeries)
+            foreach (LineSeries series in lineSeries)
+            {
                 newPlot.Series.Add(series);
+            }
         }
 
         public static void PopulateVerticalLineSeries(LineSeries series, double xValue, double yMin, double yMax)
@@ -112,6 +114,7 @@
                 LineStyle = LineStyle.Solid,
                 StrokeThickness = 2
             };
+
             seriesEspMax = new LineSeries
             {
                 Title = "ESP Max Flow",
@@ -122,6 +125,7 @@
                 LineStyle = LineStyle.Solid,
                 StrokeThickness = 2
             };
+
             seriesOperatingPoint = new LineSeries
             {
                 Title = "Operating Point",
@@ -132,6 +136,7 @@
                 LineStyle = LineStyle.LongDash,
                 StrokeThickness = 2
             };
+
             seriesBestEfficiencyPoint = new LineSeries
             {
                 Title = "Best Efficiency Point",
@@ -142,6 +147,7 @@
                 LineStyle = LineStyle.Dash,
                 StrokeThickness = 2
             };
+
             seriesMaxProductionPoint = new LineSeries
             {
                 Title = "Max Production Point",
@@ -152,6 +158,7 @@
                 LineStyle = LineStyle.Solid,
                 StrokeThickness = 2
             };
+
             seriesCatalogueCurveOperatingPoint = new LineSeries
             {
                 Title = "Catalogue Operating Point",
@@ -162,6 +169,7 @@
                 LineStyle = LineStyle.DashDotDot,
                 StrokeThickness = 2
             };
+
             seriesCatalogueCurveBestEfficiencyPoint = new LineSeries
             {
                 Title = "Catalogue Best Efficiency Point",
@@ -173,7 +181,6 @@
                 StrokeThickness = 2
             };
         }
-
 
         public static void CreateVerticalLineSeries(out LineSeries seriesEspMin, out LineSeries seriesEspMax,
             out LineSeries seriesOperatingPoint, out LineSeries seriesBestEfficiencyPoint,
@@ -189,6 +196,7 @@
                 LineStyle = LineStyle.Solid,
                 StrokeThickness = 2
             };
+
             seriesEspMax = new LineSeries
             {
                 Title = "ESP Max Flow",
@@ -199,6 +207,7 @@
                 LineStyle = LineStyle.Solid,
                 StrokeThickness = 2
             };
+
             seriesOperatingPoint = new LineSeries
             {
                 Title = "Operating Point",
@@ -209,6 +218,7 @@
                 LineStyle = LineStyle.LongDash,
                 StrokeThickness = 2
             };
+
             seriesBestEfficiencyPoint = new LineSeries
             {
                 Title = "Best Efficiency Point",
@@ -249,7 +259,7 @@
             };
 
             int index = colourIndex % coloursArray.Count;
-            var colour = coloursArray[index];
+            OxyColor colour = coloursArray[index];
 
             series = new LineSeries
             {
@@ -268,10 +278,7 @@
             double sumOfY = 0;
             double sumOfXSq = 0;
             double sumOfYSq = 0;
-            double ssX = 0;
-            double ssY = 0;
             double sumCodeviates = 0;
-            double sCo = 0;
             double count = xVals.Count;
             rsquared = yintercept = slope = 0.0;
             if (xVals.Count != yVals.Count || xVals.Count < 1) return;
@@ -286,16 +293,14 @@
                 sumOfXSq += x * x;
                 sumOfYSq += y * y;
             }
-            ssX = sumOfXSq - ((sumOfX * sumOfX) / count);
-            ssY = sumOfYSq - ((sumOfY * sumOfY) / count);
-            double RNumerator = (count * sumCodeviates) - (sumOfX * sumOfY);
-            double RDenom = (count * sumOfXSq - (sumOfX * sumOfX))
-             * (count * sumOfYSq - (sumOfY * sumOfY));
-            sCo = sumCodeviates - ((sumOfX * sumOfY) / count);
+            double ssX = sumOfXSq - ((sumOfX * sumOfX) / count);
+            double residualNumerator = (count * sumCodeviates) - (sumOfX * sumOfY);
+            double residualDenominator = (count * sumOfXSq - (sumOfX * sumOfX)) * (count * sumOfYSq - (sumOfY * sumOfY));
+            double sCo = sumCodeviates - ((sumOfX * sumOfY) / count);
 
             double meanX = sumOfX / count;
             double meanY = sumOfY / count;
-            double dblR = RNumerator / Math.Sqrt(RDenom);
+            double dblR = residualNumerator / Math.Sqrt(residualDenominator);
             rsquared = dblR * dblR;
             yintercept = meanY - ((sCo / ssX) * meanX);
             slope = sCo / ssX;
@@ -305,8 +310,11 @@
         {
             List<OxyColor> standardColours = new List<OxyColor>();
 
-            foreach (var colour in _standardColours)
+            foreach (Tuple<byte, byte, byte> colour in StandardColours)
+            {
                 standardColours.Add(OxyColor.FromArgb(aValue, colour.Item1, colour.Item2, colour.Item3));
+            }
+
             return standardColours;
         }
 
@@ -316,7 +324,7 @@
             List<OxyColor> coloursArray = SetupStandardColourSet(aValue);
 
             int index = colourIndex % coloursArray.Count;
-            var colour = coloursArray[index];
+            OxyColor colour = coloursArray[index];
 
             series = new LineSeries
             {
@@ -333,7 +341,7 @@
             List<OxyColor> coloursArray = SetupStandardColourSet(aValue);
 
             int index = colourIndex % coloursArray.Count;
-            var colour = coloursArray[index];
+            OxyColor colour = coloursArray[index];
 
             series = new AreaSeries
             {
@@ -349,13 +357,10 @@
         {
             double[] total = new double[series[0].Points.Count];
 
-            LineSeries lineSeries;
-            AreaSeries areaSeries;
-
             for (int s = 0; s < series.Count; s++)
             {
-                lineSeries = series[s];
-                areaSeries = new AreaSeries()
+                LineSeries lineSeries = series[s];
+                AreaSeries areaSeries = new AreaSeries()
                 {
                     Title = lineSeries.Title,
                     Color = lineSeries.Color,
@@ -402,7 +407,7 @@
 
             List<OxyColor> coloursArray = SetupStandardColourSet(aValue);
 
-            foreach (var total in totals)
+            foreach (KeyValuePair<string, int> total in totals)
             {
                 string name = total.Key;
                 int count = total.Value;
@@ -444,9 +449,9 @@
 
             // set up the colours
             colors = new List<OxyColor>();
-            foreach (var color in OxyPalettes.Jet(range).Colors)
+            foreach (OxyColor color in OxyPalettes.Jet(range).Colors)
             {
-                var faintColor = OxyColor.FromArgb(aValue, color.R, color.G, color.B);
+                OxyColor faintColor = OxyColor.FromArgb(aValue, color.R, color.G, color.B);
                 colors.Add(faintColor);
             }
 
@@ -460,25 +465,26 @@
             PlotModel newPlot, CountryGeography country, OxyColor colour, string title, string tag, string trackerFormat)
         {
             int i = 0;
-            var landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
+            IOrderedEnumerable<PolygonBoundary> landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
 
             foreach (var boundary in landBlocks)
             {
-                var areaSeries = new AreaSeries
+                AreaSeries areaSeries = new AreaSeries
                 {
                     Color = colour,
                     Title = title,
                     RenderInLegend = false,
                     Tag = tag
                 };
-                var points = boundary.Points;
+
+                List<PolygonPoint> points = boundary.Points;
                 if (points.Count > PolygonReducer.MaxPolygonPoints)
                     points = PolygonReducer.AdaptativePolygonReduce(points, PolygonReducer.MaxPolygonPoints);
 
-                foreach (var point in points)
+                foreach (PolygonPoint point in points)
                 {
-                    double ptX = 0;
-                    double ptY = 0;
+                    double ptX;
+                    double ptY;
                     point.GetCoordinates(out ptX, out ptY);
 
                     DataPoint dataPoint = new DataPoint(ptX, ptY);
