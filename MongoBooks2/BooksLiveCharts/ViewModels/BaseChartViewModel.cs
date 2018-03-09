@@ -9,6 +9,7 @@
 namespace BooksLiveCharts.ViewModels
 {
     using System;
+    using BooksCore.Interfaces;
     using BooksUtilities.ViewModels;
     using LiveCharts;
 
@@ -21,6 +22,21 @@ namespace BooksLiveCharts.ViewModels
         /// Gets the location for the legend shown in the chart.
         /// </summary>
         private LegendLocation _legendLocation;
+
+        /// <summary>
+        /// Gets the geography data for the plots.
+        /// </summary>
+        public IGeographyProvider GeographyProvider { get; private set; }
+
+        /// <summary>
+        /// Gets the books read data for the plots.
+        /// </summary>
+        public IBooksReadProvider BooksReadProvider { get; private set; }
+
+        /// <summary>
+        /// Gets the chart title.
+        /// </summary>
+        public string Title { get; protected set; }
 
         /// <summary>
         /// Gets the series shown in the chart.
@@ -73,5 +89,18 @@ namespace BooksLiveCharts.ViewModels
         /// Sets up the pie chart series.
         /// </summary>
         protected abstract void SetupSeries();
+
+        /// <summary>
+        /// Sets up the providers then gets plot model to be displayed.
+        /// </summary>
+        /// <param name="geographyProvider">The geography data source.</param>
+        /// <param name="booksReadProvider">The books data source.</param>
+        /// <returns>The user view item model.</returns>
+        public void SetupPlot(IGeographyProvider geographyProvider, IBooksReadProvider booksReadProvider)
+        {
+            GeographyProvider = geographyProvider;
+            BooksReadProvider = booksReadProvider;
+            SetupSeries();
+        }
     }
 }

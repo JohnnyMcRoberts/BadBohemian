@@ -92,6 +92,7 @@
     <Compile Include="Provider\GeographyProvider.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="Geography\WorldCountry.cs" />
+    <Compile Include="Utilities\BookTotalsUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

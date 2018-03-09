@@ -6,10 +6,9 @@
 //   The base pie-chart view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-namespace BooksLiveCharts.ViewModels
+namespace BooksLiveCharts.ViewModels.PieCharts
 {
-    using System;
-    using BooksUtilities.ViewModels;
+    using System.Windows.Media;
     using LiveCharts;
     using LiveCharts.Defaults;
     using LiveCharts.Wpf;
@@ -39,6 +38,28 @@ namespace BooksLiveCharts.ViewModels
         /// </summary>
         /// <param name="title">The pie series title.</param>
         /// <param name="doubleValue">The value for the series.</param>
+        /// <param name="color">The color for the series.</param>
+        /// <returns>The newly created pie series.</returns>
+        public PieSeries CreatePieSeries(string title, double doubleValue, Color color)
+        {
+            return new PieSeries
+            {
+                Title = title,
+                Values = new ChartValues<ObservableValue>
+                {
+                    new ObservableValue(doubleValue)
+                },
+                DataLabels = true,
+                LabelPoint = PointLabel,
+                Fill = new SolidColorBrush(color)
+            };
+        }
+
+        /// <summary>
+        /// Creates a new pie series with a given name and value.
+        /// </summary>
+        /// <param name="title">The pie series title.</param>
+        /// <param name="doubleValue">The value for the series.</param>
         /// <returns>The newly created pie series.</returns>
         public PieSeries CreatePieSeries(string title, double doubleValue)
         {
@@ -59,6 +80,7 @@ namespace BooksLiveCharts.ViewModels
         /// </summary>
         public BasePieChartViewModel()
         {
+            Title = "Base Pie Chart";
             PointLabel = chartPoint => $"{chartPoint.Y:G3}";
             LegendLocation = LegendLocation.Bottom;
             SetupSeries();
