@@ -17,6 +17,10 @@ namespace BooksLiveChartsTester.ViewModels
     using BooksLiveCharts.ViewModels;
     using BooksLiveCharts.ViewModels.PieCharts;
     using BooksUtilities.ViewModels;
+    using System.Collections.Generic;
+    using System;
+    using BooksLiveCharts.Utilities;
+    using System.Reflection;
 
     /// <summary>
     /// The viewvmodel for a books helix chart test application.
@@ -53,6 +57,11 @@ namespace BooksLiveChartsTester.ViewModels
         /// The nations read from database.
         /// </summary>
         private ObservableCollection<Nation> _nationsReadFromDatabase;
+
+        /// <summary>
+        /// The selected pie chart type.
+        /// </summary>
+        private PieChartType _selectedPieChart;
 
         /// <summary>
         /// The pie chart view model.
@@ -114,23 +123,23 @@ namespace BooksLiveChartsTester.ViewModels
         public BaseScatterChartViewModel BaseScatterChart => _baseScatterChart;
 
         /// <summary>
-        /// Gets the plot types and titles.
+        /// Gets the pie chart types and titles.
         /// </summary>
-        //public Dictionary<PlotType, string> PlotTypesByTitle { get; private set; }
+        public Dictionary<PieChartType, string> PieChartTypesByTitle { get; private set; }
 
-        //public PlotType SelectedPlot
-        //{
-        //    get { return _selectedPlot; }
-        //    set
-        //    {
-        //        if (value != _selectedPlot)
-        //        {
-        //            _selectedPlot = value;
-        //            _oxyPlotChart = new OxyPlotViewModel(_selectedPlot);
-        //            UpdateOxyPlotChartCommandAction();
-        //        }
-        //    }
-        //}
+        public PieChartType SelectedPieChartType
+        {
+            get { return _selectedPieChart; }
+            set
+            {
+                if (value != _selectedPieChart)
+                {
+                    _selectedPieChart = value;
+                    //_oxyPlotChart = new OxyPlotViewModel(_selectedPieChart);
+                    UpdatePieChartCommandAction();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the get books from database command.
@@ -185,15 +194,15 @@ namespace BooksLiveChartsTester.ViewModels
         /// <summary>
         /// Sets up the chart selection types.
         /// </summary>
-        //private void SetupPlotTypesByTitle()
-        //{
-        //    PlotTypesByTitle = new Dictionary<PlotType, string>();
-        //    foreach (PlotType selection in Enum.GetValues(typeof(PlotType)))
-        //    {
-        //        string title = selection.GetTitle();
-        //        PlotTypesByTitle.Add(selection, title);
-        //    }
-        //}
+        private void SetupPieChartTypesByTitle()
+        {
+            PieChartTypesByTitle = new Dictionary<PieChartType, string>();
+            foreach (PieChartType selection in Enum.GetValues(typeof(PieChartType)))
+            {
+                string title = selection.GetTitle();
+                PieChartTypesByTitle.Add(selection, title);
+            }
+        }
 
 
         #endregion
@@ -227,7 +236,7 @@ namespace BooksLiveChartsTester.ViewModels
         }
 
         /// <summary>
-        /// The update average days per book plot command action.
+        /// The update the pie chart command action.
         /// </summary>
         private void UpdatePieChartCommandAction()
         {
@@ -236,10 +245,29 @@ namespace BooksLiveChartsTester.ViewModels
 
             if (GetProviders(out geographyProvider, out booksReadProvider))
             {
-                //_oxyPlotChart.Update(geographyProvider, booksReadProvider);
-                CurrentBooksReadByCountryPieChartViewModel countries = new CurrentBooksReadByCountryPieChartViewModel();
-                countries.SetupPlot(geographyProvider, booksReadProvider);
-                _basePieChart = countries;
+                //OnPropertyChanged(() => BasePieChart);
+                //Type pieChartType = _selectedPieChart.GetGeneratorClass();
+                //var instance = Activator.CreateInstance(pieChartType);
+                //BasePieChartViewModel _basePieChart = (BasePieChartViewModel)instance;                
+                //_basePieChart.SetupPlot(geographyProvider, booksReadProvider);
+                //OnPropertyChanged(() => BasePieChart);
+
+                if (_selectedPieChart == PieChartType.CurrentBooksReadByCountry)
+                {
+                    CurrentBooksReadByCountryPieChartViewModel countries = new CurrentBooksReadByCountryPieChartViewModel();
+                    countries.SetupPlot(geographyProvider, booksReadProvider);
+                    _basePieChart = countries;
+                    OnPropertyChanged(() => BasePieChart);
+                }
+
+                if (_selectedPieChart == PieChartType.CurrentPagesReadByCountry)
+                {
+                    CurrentPagesReadByCountryPieChartViewModel countries = new CurrentPagesReadByCountryPieChartViewModel();
+                    countries.SetupPlot(geographyProvider, booksReadProvider);
+                    _basePieChart = countries;
+                    OnPropertyChanged(() => BasePieChart);
+                }
+
 
                 OnPropertyChanged(() => BasePieChart);
             }
@@ -281,6 +309,7 @@ namespace BooksLiveChartsTester.ViewModels
 
             //_oxyPlotChart = new OxyPlotViewModel(_selectedPlot);
 
+            SetupPieChartTypesByTitle();
             //SetupPlotTypesByTitle();
         }
 

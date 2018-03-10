@@ -13,6 +13,7 @@ namespace BooksOxyCharts.PlotGenerators
     using OxyPlot;
     using System.Linq;
     using BooksCore.Books;
+    using BooksCore.Utilities;
 
     public class CurrentPagesReadByCountryPlotGenerator : BasePlotGenerator
     {
@@ -21,7 +22,7 @@ namespace BooksOxyCharts.PlotGenerators
             // Create the plot model
             PlotModel newPlot = new PlotModel { Title = "Current Pages Read by Country" };
             OxyPlotUtilities.SetupPlotLegend(newPlot, "Current Pages Read by Country");
-
+#if ddfff
             BooksDelta currentResults = BooksReadProvider.BookDeltas.Last();
 
             List<KeyValuePair<string, int>> countryTotals = new List<KeyValuePair<string, int>>();
@@ -51,6 +52,11 @@ namespace BooksOxyCharts.PlotGenerators
 
             if (ttlOtherPercentage > 1.0)
                 sortedCountryTotals.Add(new KeyValuePair<string, int>("Other", ttlOtherPages));
+#endif
+
+
+            List<KeyValuePair<string, int>> sortedCountryTotals =
+                BookTotalsUtilities.SortedSortedPagesReadByCountryTotals(BooksReadProvider);
 
             return OxyPlotUtilities.CreatePieSeriesModelForResultsSet(
                 sortedCountryTotals, "Current Pages Read by Country", 128);

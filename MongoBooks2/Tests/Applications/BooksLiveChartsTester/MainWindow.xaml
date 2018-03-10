@@ -45,16 +45,16 @@
                     <StackPanel Orientation="Horizontal">
 
                         <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdatePieChartCommand}"></Button>
-                        <!--
+                        
                         <ComboBox
-                            ItemsSource="{Binding PlotTypesByTitle}"
-                            SelectedValue="{Binding SelectedPlot}"
+                            ItemsSource="{Binding PieChartTypesByTitle}"
+                            SelectedValue="{Binding SelectedPieChartType}"
                             SelectedValuePath="Key"
                             DisplayMemberPath="Value"
                             Height="22"
                             Margin="2"
                             />
-                        -->
+                        
                     </StackPanel>
 
                     <liveCharts:PieChartView  Grid.Row="1" DataContext="{Binding Path=BasePieChart}"/>
