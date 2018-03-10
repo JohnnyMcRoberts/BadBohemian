@@ -56,10 +56,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ChartTypeAttribute.cs" />
+    <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ViewModels\BaseChartViewModel.cs" />
     <Compile Include="ViewModels\PieCharts\BasePieChartViewModel.cs" />
     <Compile Include="ViewModels\BaseScatterChartViewModel.cs" />
     <Compile Include="ViewModels\PieCharts\CurrentBooksReadByCountryPieChartViewModel.cs" />
+    <Compile Include="ViewModels\PieCharts\CurrentPagesReadByCountryPieChartViewModel.cs" />
+    <Compile Include="ViewModels\PieCharts\PieChartType.cs" />
     <Compile Include="Views\PieChartView.xaml.cs">
       <DependentUpon>PieChartView.xaml</DependentUpon>
     </Compile>
@@ -67,9 +71,7 @@
       <DependentUpon>ScatterChartView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilities\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="Views\PieChartView.xaml">
       <SubType>Designer</SubType>
