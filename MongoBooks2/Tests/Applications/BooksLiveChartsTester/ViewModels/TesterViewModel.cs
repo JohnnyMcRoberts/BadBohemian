@@ -8,8 +8,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksLiveChartsTester.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows.Input;
     using BooksCore.Books;
@@ -17,6 +15,7 @@ namespace BooksLiveChartsTester.ViewModels
     using BooksCore.Provider;
     using BooksDatabase.Implementations;
     using BooksLiveCharts.ViewModels;
+    using BooksLiveCharts.ViewModels.PieCharts;
     using BooksUtilities.ViewModels;
 
     /// <summary>
@@ -107,7 +106,7 @@ namespace BooksLiveChartsTester.ViewModels
         /// <summary>
         /// Gets the pie chart.
         /// </summary>
-        public BasePieChartViewModel BasePieChart => _basePieChart;
+        public BasePieChartViewModel BasePieChart =>_basePieChart;
 
         /// <summary>
         /// Gets the scatter chart.
@@ -238,6 +237,9 @@ namespace BooksLiveChartsTester.ViewModels
             if (GetProviders(out geographyProvider, out booksReadProvider))
             {
                 //_oxyPlotChart.Update(geographyProvider, booksReadProvider);
+                CurrentBooksReadByCountryPieChartViewModel countries = new CurrentBooksReadByCountryPieChartViewModel();
+                countries.SetupPlot(geographyProvider, booksReadProvider);
+                _basePieChart = countries;
 
                 OnPropertyChanged(() => BasePieChart);
             }
