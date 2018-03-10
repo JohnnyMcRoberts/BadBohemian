@@ -245,30 +245,10 @@ namespace BooksLiveChartsTester.ViewModels
 
             if (GetProviders(out geographyProvider, out booksReadProvider))
             {
-                //OnPropertyChanged(() => BasePieChart);
-                //Type pieChartType = _selectedPieChart.GetGeneratorClass();
-                //var instance = Activator.CreateInstance(pieChartType);
-                //BasePieChartViewModel _basePieChart = (BasePieChartViewModel)instance;                
-                //_basePieChart.SetupPlot(geographyProvider, booksReadProvider);
-                //OnPropertyChanged(() => BasePieChart);
-
-                if (_selectedPieChart == PieChartType.CurrentBooksReadByCountry)
-                {
-                    CurrentBooksReadByCountryPieChartViewModel countries = new CurrentBooksReadByCountryPieChartViewModel();
-                    countries.SetupPlot(geographyProvider, booksReadProvider);
-                    _basePieChart = countries;
-                    OnPropertyChanged(() => BasePieChart);
-                }
-
-                if (_selectedPieChart == PieChartType.CurrentPagesReadByCountry)
-                {
-                    CurrentPagesReadByCountryPieChartViewModel countries = new CurrentPagesReadByCountryPieChartViewModel();
-                    countries.SetupPlot(geographyProvider, booksReadProvider);
-                    _basePieChart = countries;
-                    OnPropertyChanged(() => BasePieChart);
-                }
-
-
+                Type pieChartType = _selectedPieChart.GetGeneratorClass();
+                object instance = Activator.CreateInstance(pieChartType);
+                _basePieChart = (BasePieChartViewModel)instance;                
+                _basePieChart.SetupPlot(geographyProvider, booksReadProvider);
                 OnPropertyChanged(() => BasePieChart);
             }
         }
