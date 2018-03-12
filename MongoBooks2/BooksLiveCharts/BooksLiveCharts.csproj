@@ -59,11 +59,20 @@
     <Compile Include="Utilities\ChartTypeAttribute.cs" />
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ViewModels\BaseChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\BaseLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\LineChartType.cs" />
+    <Compile Include="ViewModels\LineCharts\PagesPerDayWithTimeLineChartModel.cs" />
     <Compile Include="ViewModels\PieCharts\BasePieChartViewModel.cs" />
-    <Compile Include="ViewModels\BaseScatterChartViewModel.cs" />
+    <Compile Include="ViewModels\ScatterCharts\BaseScatterChartViewModel.cs" />
     <Compile Include="ViewModels\PieCharts\CurrentBooksReadByCountryPieChartViewModel.cs" />
     <Compile Include="ViewModels\PieCharts\CurrentPagesReadByCountryPieChartViewModel.cs" />
     <Compile Include="ViewModels\PieCharts\PieChartType.cs" />
+    <Compile Include="ViewModels\ScatterCharts\LastTenBooksAndPagesInTranslationScatterChartViewModel.cs" />
+    <Compile Include="ViewModels\ScatterCharts\LastTenBooksAndPagesScatterChartViewModel.cs" />
+    <Compile Include="ViewModels\ScatterCharts\ScatterChartType.cs" />
+    <Compile Include="Views\LineChartView.xaml.cs">
+      <DependentUpon>LineChartView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PieChartView.xaml.cs">
       <DependentUpon>PieChartView.xaml</DependentUpon>
     </Compile>
@@ -73,6 +82,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Page Include="Views\LineChartView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PieChartView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

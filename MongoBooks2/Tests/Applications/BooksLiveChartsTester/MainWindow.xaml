@@ -70,19 +70,49 @@
                     <StackPanel Orientation="Horizontal">
 
                         <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdateScatterChartCommand}"></Button>
-                        <!--
+
                         <ComboBox
-                            ItemsSource="{Binding PlotTypesByTitle}"
-                            SelectedValue="{Binding SelectedPlot}"
+                            ItemsSource="{Binding ScatterChartTypesByTitle}"
+                            SelectedValue="{Binding SelectedScatterChartType}"
                             SelectedValuePath="Key"
                             DisplayMemberPath="Value"
                             Height="22"
                             Margin="2"
-                            />
-                        -->
+                        />
+
                     </StackPanel>
 
                     <liveCharts:ScatterChartView  Grid.Row="1" DataContext="{Binding Path=BaseScatterChart}"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Line Charts">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+
+                        <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdateLineChartCommand}"></Button>
+
+                        <!--
+                        <ComboBox
+                            ItemsSource="{Binding ScatterChartTypesByTitle}"
+                            SelectedValue="{Binding SelectedScatterChartType}"
+                            SelectedValuePath="Key"
+                            DisplayMemberPath="Value"
+                            Height="22"
+                            Margin="2"
+                        />
+
+                        -->
+                    </StackPanel>
+                    <!--
+
+                    <liveCharts:LineChartView  Grid.Row="1" DataContext="{Binding Path=BaseLineChart}"/>
+                        -->
+                    <liveCharts:LineChartView  Grid.Row="1" DataContext="{Binding Path=BaseLineChart}"/>
 
                 </Grid>
             </TabItem>

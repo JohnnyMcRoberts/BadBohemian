@@ -7,7 +7,7 @@
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <lvc:PieChart Series="{Binding Path=Series}" LegendLocation="{Binding Path=LegendLocation}" Margin="20">
+    <lvc:PieChart Series="{Binding Path=Series}" LegendLocation="{Binding Path=LegendLocation}" Margin="20" Background="{Binding Path=Background}">
         <lvc:PieChart.DataTooltip>
             <lvc:DefaultTooltip SelectionMode="OnlySender" BulletSize="20"/>
         </lvc:PieChart.DataTooltip>

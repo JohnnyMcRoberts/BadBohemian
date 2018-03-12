@@ -19,6 +19,18 @@ namespace BooksLiveCharts.ViewModels.PieCharts
     public class BasePieChartViewModel : BaseChartViewModel
     {
         /// <summary>
+        /// Initialises the pie chart title, series etc.
+        /// </summary>
+        private void Initialise()
+        {
+            Title = "Base Pie Chart";
+            PointLabel = chartPoint => $"{chartPoint.Y:G3}";
+            LegendLocation = LegendLocation.Bottom;
+            Background = new SolidColorBrush(Colors.WhiteSmoke);
+            SetupSeries();
+        }
+
+        /// <summary>
         /// Sets up the pie chart series.
         /// </summary>
         protected override void SetupSeries()
@@ -80,10 +92,7 @@ namespace BooksLiveCharts.ViewModels.PieCharts
         /// </summary>
         public BasePieChartViewModel()
         {
-            Title = "Base Pie Chart";
-            PointLabel = chartPoint => $"{chartPoint.Y:G3}";
-            LegendLocation = LegendLocation.Bottom;
-            SetupSeries();
+            Initialise();
         }
     }
 }

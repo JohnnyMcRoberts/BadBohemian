@@ -9,6 +9,7 @@
 namespace BooksLiveCharts.ViewModels
 {
     using System;
+    using System.Windows.Media;
     using BooksCore.Interfaces;
     using BooksUtilities.ViewModels;
     using LiveCharts;
@@ -19,9 +20,15 @@ namespace BooksLiveCharts.ViewModels
     public abstract class BaseChartViewModel : BaseViewModel
     {
         /// <summary>
-        /// Gets the location for the legend shown in the chart.
+        /// The location for the legend shown in the chart.
         /// </summary>
         private LegendLocation _legendLocation;
+
+
+        /// <summary>
+        /// The location for the legend shown in the chart.
+        /// </summary>
+        private Brush _background;
 
         /// <summary>
         /// Gets the geography data for the plots.
@@ -49,7 +56,7 @@ namespace BooksLiveCharts.ViewModels
         public Func<ChartPoint, string> PointLabel { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the collection of series shown in the chart.
+        /// Gets or sets the location of the legend or if off.
         /// </summary>
         public LegendLocation LegendLocation
         {
@@ -67,6 +74,25 @@ namespace BooksLiveCharts.ViewModels
                 }
             }
         }
+
+        public Brush Background
+        {
+            get
+            {
+                return _background;
+            }
+
+            protected set
+            {
+                _background = value;
+                OnPropertyChanged(() => Background);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the series data formatter.
+        /// </summary>
+        public Func<double, string> Formatter { get; protected set; }
 
         /// <summary>
         /// Gets or sets the collection of series for the chart.

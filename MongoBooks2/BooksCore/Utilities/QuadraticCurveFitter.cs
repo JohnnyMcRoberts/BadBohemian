@@ -6,12 +6,12 @@
 //   The quadratic curve fitter class.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-namespace BooksOxyCharts.Utilities
+namespace BooksCore.Utilities
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-
+    using BooksOxyCharts.Utilities;
 
     public class QuadraticCurveFitter : ICurveFitter
     {
@@ -19,8 +19,8 @@ namespace BooksOxyCharts.Utilities
 
         public QuadraticCurveFitter(List<double> xVals, List<double> yVals)
         {
-            numOfEntries = 0;
-            pointpair = new double[2];
+            _numOfEntries = 0;
+            _pointPair = new double[2];
             _a = _b = _c = 0.0;
 
             for (int i = 0; i < xVals.Count && i < yVals.Count; i++)
@@ -40,9 +40,9 @@ namespace BooksOxyCharts.Utilities
         private double _c;
 
         /* instance variables */
-        ArrayList pointArray = new ArrayList();
-        private int numOfEntries;
-        private double[] pointpair;
+        readonly ArrayList _pointArray = new ArrayList();
+        private int _numOfEntries;
+        private double[] _pointPair;
 
         #endregion
 
@@ -56,11 +56,11 @@ namespace BooksOxyCharts.Utilities
         /// <param name="y">y value</param>
         private void AddPoints(double x, double y)
         {
-            pointpair = new double[2];
-            numOfEntries += 1;
-            pointpair[0] = x;
-            pointpair[1] = y;
-            pointArray.Add(pointpair);
+            _pointPair = new double[2];
+            _numOfEntries += 1;
+            _pointPair[0] = x;
+            _pointPair[1] = y;
+            _pointArray.Add(_pointPair);
         }
 
         /// <summary>
@@ -69,22 +69,22 @@ namespace BooksOxyCharts.Utilities
         /// <returns>a term</returns>
         private double aTerm()
         {
-            if (numOfEntries < 3)
+            if (_numOfEntries < 3)
             {
                 throw new InvalidOperationException(
                    "Insufficient pairs of co-ordinates");
             }
             //notation sjk to mean the sum of x_i^j*y_i^k. 
-            double s40 = getSx4(); //sum of x^4
-            double s30 = getSx3(); //sum of x^3
-            double s20 = getSx2(); //sum of x^2
-            double s10 = getSx();  //sum of x
-            double s00 = numOfEntries;
+            double s40 = GetSx4(); //sum of x^4
+            double s30 = GetSx3(); //sum of x^3
+            double s20 = GetSx2(); //sum of x^2
+            double s10 = GetSx();  //sum of x
+            double s00 = _numOfEntries;
             //sum of x^0 * y^0  ie 1 * number of entries
 
-            double s21 = getSx2y(); //sum of x^2*y
-            double s11 = getSxy();  //sum of x*y
-            double s01 = getSy();   //sum of y
+            double s21 = GetSx2y(); //sum of x^2*y
+            double s11 = GetSxy();  //sum of x*y
+            double s01 = GetSy();   //sum of y
 
             //a = Da/D
             return (s21 * (s20 * s00 - s10 * s10) -
@@ -102,22 +102,22 @@ namespace BooksOxyCharts.Utilities
         /// <returns>b term</returns>
         private double bTerm()
         {
-            if (numOfEntries < 3)
+            if (_numOfEntries < 3)
             {
                 throw new InvalidOperationException(
                    "Insufficient pairs of co-ordinates");
             }
             //notation sjk to mean the sum of x_i^j*y_i^k.
-            double s40 = getSx4(); //sum of x^4
-            double s30 = getSx3(); //sum of x^3
-            double s20 = getSx2(); //sum of x^2
-            double s10 = getSx();  //sum of x
-            double s00 = numOfEntries;
+            double s40 = GetSx4(); //sum of x^4
+            double s30 = GetSx3(); //sum of x^3
+            double s20 = GetSx2(); //sum of x^2
+            double s10 = GetSx();  //sum of x
+            double s00 = _numOfEntries;
             //sum of x^0 * y^0  ie 1 * number of entries
 
-            double s21 = getSx2y(); //sum of x^2*y
-            double s11 = getSxy();  //sum of x*y
-            double s01 = getSy();   //sum of y
+            double s21 = GetSx2y(); //sum of x^2*y
+            double s11 = GetSxy();  //sum of x*y
+            double s01 = GetSy();   //sum of y
 
             //b = Db/D
             return (s40 * (s11 * s00 - s01 * s10) -
@@ -135,22 +135,22 @@ namespace BooksOxyCharts.Utilities
         /// <returns>c term</returns>
         private double cTerm()
         {
-            if (numOfEntries < 3)
+            if (_numOfEntries < 3)
             {
                 throw new InvalidOperationException(
                            "Insufficient pairs of co-ordinates");
             }
             //notation sjk to mean the sum of x_i^j*y_i^k.
-            double s40 = getSx4(); //sum of x^4
-            double s30 = getSx3(); //sum of x^3
-            double s20 = getSx2(); //sum of x^2
-            double s10 = getSx();  //sum of x
-            double s00 = numOfEntries;
+            double s40 = GetSx4(); //sum of x^4
+            double s30 = GetSx3(); //sum of x^3
+            double s20 = GetSx2(); //sum of x^2
+            double s10 = GetSx();  //sum of x
+            double s00 = _numOfEntries;
             //sum of x^0 * y^0  ie 1 * number of entries
 
-            double s21 = getSx2y(); //sum of x^2*y
-            double s11 = getSxy();  //sum of x*y
-            double s01 = getSy();   //sum of y
+            double s21 = GetSx2y(); //sum of x^2*y
+            double s11 = GetSxy();  //sum of x*y
+            double s01 = GetSy();   //sum of y
 
             //c = Dc/D
             return (s40 * (s20 * s01 - s10 * s11) -
@@ -164,122 +164,122 @@ namespace BooksOxyCharts.Utilities
 
         private double rSquare() // get r-squared
         {
-            if (numOfEntries < 3)
+            if (_numOfEntries < 3)
             {
                 throw new InvalidOperationException(
                    "Insufficient pairs of co-ordinates");
             }
             // 1 - (residual sum of squares / total sum of squares)
-            return 1 - getSSerr() / getSStot();
+            return 1 - GetSSerr() / GetSStot();
         }
 
 
         /*helper methods*/
-        private double getSx() // get sum of x
+        private double GetSx() // get sum of x
         {
             double Sx = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
                 Sx += ppair[0];
             }
             return Sx;
         }
 
-        private double getSy() // get sum of y
+        private double GetSy() // get sum of y
         {
             double Sy = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
                 Sy += ppair[1];
             }
             return Sy;
         }
 
-        private double getSx2() // get sum of x^2
+        private double GetSx2() // get sum of x^2
         {
             double Sx2 = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
                 Sx2 += Math.Pow(ppair[0], 2); // sum of x^2
             }
             return Sx2;
         }
 
-        private double getSx3() // get sum of x^3
+        private double GetSx3() // get sum of x^3
         {
             double Sx3 = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
                 Sx3 += Math.Pow(ppair[0], 3); // sum of x^3
             }
             return Sx3;
         }
 
-        private double getSx4() // get sum of x^4
+        private double GetSx4() // get sum of x^4
         {
             double Sx4 = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
                 Sx4 += Math.Pow(ppair[0], 4); // sum of x^4
             }
             return Sx4;
         }
 
-        private double getSxy() // get sum of x*y
+        private double GetSxy() // get sum of x*y
         {
             double Sxy = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
                 Sxy += ppair[0] * ppair[1]; // sum of x*y
             }
             return Sxy;
         }
 
-        private double getSx2y() // get sum of x^2*y
+        private double GetSx2y() // get sum of x^2*y
         {
             double Sx2y = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
                 Sx2y += Math.Pow(ppair[0], 2) * ppair[1]; // sum of x^2*y
             }
             return Sx2y;
         }
 
-        private double getYMean() // mean value of y
+        private double GetYMean() // mean value of y
         {
             double y_tot = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
                 y_tot += ppair[1];
             }
-            return y_tot / numOfEntries;
+            return y_tot / _numOfEntries;
         }
 
-        private double getSStot() // total sum of squares
+        private double GetSStot() // total sum of squares
         {
             //the sum of the squares of the differences between 
             //the measured y values and the mean y value
             double ss_tot = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
-                ss_tot += Math.Pow(ppair[1] - getYMean(), 2);
+                ss_tot += Math.Pow(ppair[1] - GetYMean(), 2);
             }
             return ss_tot;
         }
 
-        private double getSSerr() // residual sum of squares
+        private double GetSSerr() // residual sum of squares
         {
             //the sum of the squares of te difference between 
             //the measured y values and the values of y predicted by the equation
             double ss_err = 0;
-            foreach (double[] ppair in pointArray)
+            foreach (double[] ppair in _pointArray)
             {
-                ss_err += Math.Pow(ppair[1] - getPredictedY(ppair[0]), 2);
+                ss_err += Math.Pow(ppair[1] - GetPredictedY(ppair[0]), 2);
             }
             return ss_err;
         }
 
-        private double getPredictedY(double x)
+        private double GetPredictedY(double x)
         {
             //returns value of y predicted by the equation for a given value of x
             return aTerm() * Math.Pow(x, 2) + bTerm() * x + cTerm();

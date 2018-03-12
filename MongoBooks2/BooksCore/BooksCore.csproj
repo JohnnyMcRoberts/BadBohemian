@@ -93,6 +93,9 @@
     <Compile Include="Users\User.cs" />
     <Compile Include="Geography\WorldCountry.cs" />
     <Compile Include="Utilities\BookTotalsUtilities.cs" />
+    <Compile Include="Utilities\ICurveFitter.cs" />
+    <Compile Include="Utilities\LinearCurveFitter.cs" />
+    <Compile Include="Utilities\QuadraticCurveFitter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
