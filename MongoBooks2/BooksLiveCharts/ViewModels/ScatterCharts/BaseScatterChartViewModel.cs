@@ -1,12 +1,12 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BasePieChartViewModel.cs" company="N/A">
+// <copyright file="BaseScatterChartViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The base pie-chart view model.
+//   The base scatter chart view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-namespace BooksLiveCharts.ViewModels
+namespace BooksLiveCharts.ViewModels.ScatterCharts
 {
     using System;
     using System.Collections.Generic;
@@ -22,19 +22,39 @@ namespace BooksLiveCharts.ViewModels
     /// </summary>
     public class BaseScatterChartViewModel : BaseChartViewModel
     {
+        /// <summary>
+        /// The minimum X Axis Value.
+        /// </summary>
         private double _minX;
 
+        /// <summary>
+        ///The maximum X Axis Value.
+        /// </summary>
         private double _maxX;
 
+        /// <summary>
+        /// The minimum Y Axis Value.
+        /// </summary>
         private double _minY;
 
+        /// <summary>
+        /// The maximum Y Axis Value.
+        /// </summary>
         private double _maxY;
 
+        /// <summary>
+        /// Gets or sets X Axis Title.
+        /// </summary>
         private string _xAxisString;
 
+        /// <summary>
+        /// Gets or sets Y Axis Title.
+        /// </summary>
         private string _yAxisString;
 
-
+        /// <summary>
+        /// Gets or sets the minimum X Axis Value.
+        /// </summary>
         public double MinX
         {
             get
@@ -49,6 +69,9 @@ namespace BooksLiveCharts.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the maximum X Axis Value.
+        /// </summary>
         public double MaxX
         {
             get
@@ -63,6 +86,9 @@ namespace BooksLiveCharts.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the minimum Y Axis Value.
+        /// </summary>
         public double MinY
         {
             get
@@ -77,6 +103,9 @@ namespace BooksLiveCharts.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the maximum Y Axis Value.
+        /// </summary>
         public double MaxY
         {
             get
@@ -91,6 +120,9 @@ namespace BooksLiveCharts.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets X Axis Title.
+        /// </summary>
         public string XAxisTitle
         {
             get
@@ -108,6 +140,9 @@ namespace BooksLiveCharts.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets Y Axis Title.
+        /// </summary>
         public string YAxisTitle
         {
             get
@@ -125,9 +160,24 @@ namespace BooksLiveCharts.ViewModels
             }
         }
 
+        /// <summary>
+        /// Initialises scatter chart title, series etc.
+        /// </summary>
+        private void Initialise()
+        {
+            XAxisTitle = "X";
+            YAxisTitle = "Y";
+            MinX = MinY = 0;
+            MaxX = MaxY = 1;
+            PointLabel = chartPoint => $"({XAxisTitle} {chartPoint.X:G} , {YAxisTitle} {chartPoint.Y:G})";
+            Formatter = value => value.ToString("G3");
+
+            LegendLocation = LegendLocation.None;
+            SetupSeries();
+        }
 
         /// <summary>
-        /// Sets up the pie chart series.
+        /// Sets up the scatter chart series.
         /// </summary>
         protected override void SetupSeries()
         {
@@ -153,8 +203,9 @@ namespace BooksLiveCharts.ViewModels
         /// <param name="xValue">The x value for the series.</param>
         /// <param name="yValue">The y value for the series.</param>
         /// <param name="color">The color for the series.</param>
+        /// <param name="pointSize">The size of the points in pixels.</param>
         /// <returns>The newly created scatter series.</returns>
-        public ScatterSeries CreateScatterSeries(string title, double xValue, double yValue, Color color)
+        public ScatterSeries CreateScatterSeries(string title, double xValue, double yValue, Color color, double pointSize = 15d)
         {
             MinX = Math.Min(MinX, xValue);
             MinY = Math.Min(MinY, yValue);
@@ -169,8 +220,8 @@ namespace BooksLiveCharts.ViewModels
                 },
                 DataLabels = false,
                 LabelPoint = PointLabel,
-                MaxPointShapeDiameter = 15,
-                MinPointShapeDiameter = 15,
+                MaxPointShapeDiameter = pointSize,
+                MinPointShapeDiameter = pointSize,
                 Fill = new SolidColorBrush(color)
             };
 
@@ -178,18 +229,11 @@ namespace BooksLiveCharts.ViewModels
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BasePieChartViewModel"/> class.
+        /// Initializes a new instance of the <see cref="BaseScatterChartViewModel"/> class.
         /// </summary>
         public BaseScatterChartViewModel()
         {
-            XAxisTitle = "X";
-            YAxisTitle = "Y";
-            MinX = MinY = 0;
-            MaxX = MaxY = 1;
-            PointLabel = chartPoint => $"({XAxisTitle} {chartPoint.X:G} , {YAxisTitle} {chartPoint.Y:G})";
-
-            LegendLocation = LegendLocation.None;
-            SetupSeries();
+            Initialise();
         }
     }
 }

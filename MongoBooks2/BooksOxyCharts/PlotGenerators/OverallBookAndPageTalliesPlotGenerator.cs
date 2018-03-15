@@ -9,6 +9,7 @@
 namespace BooksOxyCharts.PlotGenerators
 {
     using System.Collections.Generic;
+    using BooksCore.Books;
     using BooksOxyCharts.Utilities;
     using OxyPlot;
     using OxyPlot.Axes;
@@ -19,7 +20,7 @@ namespace BooksOxyCharts.PlotGenerators
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
-            var newPlot = new PlotModel { Title = "Overall Book And Pages Plot" };
+            PlotModel newPlot = new PlotModel { Title = "Overall Book And Pages Plot" };
             OxyPlotUtilities.SetupPlotLegend(newPlot, "Overall Book And Pages Plot");
             SetupOverallBookAndPagesVsTimeAxes(newPlot);
 
@@ -62,7 +63,7 @@ namespace BooksOxyCharts.PlotGenerators
 
 
             OxyPlotUtilities.AddLineSeriesToModel(newPlot,
-                new LineSeries[] { booksReadSeries, booksReadTrendlineSeries, 
+                new[] { booksReadSeries, booksReadTrendlineSeries, 
                     pagesReadSeries, pagesReadTrendlineSeries }
                 );
 
@@ -78,11 +79,12 @@ namespace BooksOxyCharts.PlotGenerators
             List<double> overallDays = new List<double>();
             List<double> overallDaysPerBook = new List<double>();
 
-            foreach (var delta in BooksReadProvider.BookDeltas)
+            foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
                 overallDays.Add(delta.DaysSinceStart);
                 overallDaysPerBook.Add(delta.OverallTally.TotalBooks);
             }
+
             OxyPlotUtilities.LinearRegression(overallDays, overallDaysPerBook, out  rsquared, out  yintercept, out  slope);
         }
 
@@ -93,17 +95,18 @@ namespace BooksOxyCharts.PlotGenerators
             List<double> overallDays = new List<double>();
             List<double> overallDaysPerBook = new List<double>();
 
-            foreach (var delta in BooksReadProvider.BookDeltas)
+            foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
                 overallDays.Add(delta.DaysSinceStart);
                 overallDaysPerBook.Add(delta.OverallTally.TotalPages);
             }
+
             OxyPlotUtilities.LinearRegression(overallDays, overallDaysPerBook, out  rsquared, out  yintercept, out  slope);
         }
 
         private void SetupOverallBookAndPagesVsTimeAxes(PlotModel newPlot)
         {
-            var xAxis = new DateTimeAxis
+            DateTimeAxis xAxis = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
                 Title = "Date",
@@ -114,7 +117,7 @@ namespace BooksOxyCharts.PlotGenerators
             };
             newPlot.Axes.Add(xAxis);
 
-            var lhsAxis = new LinearAxis
+            LinearAxis lhsAxis = new LinearAxis
             {
                 Position = AxisPosition.Left,
                 Title = "Books Read",
@@ -125,7 +128,7 @@ namespace BooksOxyCharts.PlotGenerators
             };
             newPlot.Axes.Add(lhsAxis);
 
-            var rhsAxis = new LinearAxis
+            LinearAxis rhsAxis = new LinearAxis
             {
                 Position = AxisPosition.Right,
                 Title = "Pages Read",

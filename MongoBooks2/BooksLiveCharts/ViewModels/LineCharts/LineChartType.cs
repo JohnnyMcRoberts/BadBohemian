@@ -6,18 +6,18 @@
 //   The pie-chart types enum.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-namespace BooksLiveCharts.ViewModels.PieCharts
+namespace BooksLiveCharts.ViewModels.LineCharts
 {
     using BooksLiveCharts.Utilities;
 
-    public enum PieChartType
+    public enum LineChartType
     {
-        [ChartType(Title = "Current Books Read By Country",
-            GeneratorClass = typeof(CurrentBooksReadByCountryPieChartViewModel))]
-        CurrentBooksReadByCountry,
+        [ChartType(Title = "Pages per Day With Time",
+            GeneratorClass = typeof(PagesPerDayWithTimeLineChartModel))]
+        PagesPerDayWithTime,
 
-        [ChartType(Title = "Current Pages Read By Country",
-            GeneratorClass = typeof(CurrentPagesReadByCountryPieChartViewModel))]
-        CurrentPagesReadByCountry
+        //[ChartType(Title = "Current Pages Read By Country",
+        //    GeneratorClass = typeof(CurrentPagesReadByCountryPieChartViewModel))]
+        //CurrentPagesReadByCountry
     }
 }

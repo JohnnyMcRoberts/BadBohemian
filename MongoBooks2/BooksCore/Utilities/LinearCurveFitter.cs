@@ -6,10 +6,11 @@
 //   The main view model for books helix chart test application.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-namespace BooksOxyCharts.Utilities
+namespace BooksCore.Utilities
 {
     using System;
     using System.Collections.Generic;
+    using BooksOxyCharts.Utilities;
 
     public class LinearCurveFitter : ICurveFitter
     {

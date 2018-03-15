@@ -14,13 +14,13 @@ namespace BooksLiveChartsTester.ViewModels
     using BooksCore.Geography;
     using BooksCore.Provider;
     using BooksDatabase.Implementations;
-    using BooksLiveCharts.ViewModels;
     using BooksLiveCharts.ViewModels.PieCharts;
     using BooksUtilities.ViewModels;
     using System.Collections.Generic;
     using System;
     using BooksLiveCharts.Utilities;
-    using System.Reflection;
+    using BooksLiveCharts.ViewModels.LineCharts;
+    using BooksLiveCharts.ViewModels.ScatterCharts;
 
     /// <summary>
     /// The viewvmodel for a books helix chart test application.
@@ -69,14 +69,24 @@ namespace BooksLiveChartsTester.ViewModels
         private BasePieChartViewModel _basePieChart;
 
         /// <summary>
+        /// The selected scatter chart type.
+        /// </summary>
+        private ScatterChartType _selectedScatterChart;
+
+        /// <summary>
         /// The scatter chart view model.
         /// </summary>
         private BaseScatterChartViewModel _baseScatterChart;
 
         /// <summary>
-        /// The selected plot type.
+        /// The selected line chart type.
         /// </summary>
-        //private PlotType _selectedPlot;
+        private LineChartType _selectedLineChart;
+
+        /// <summary>
+        /// The line chart view model.
+        /// </summary>
+        private BaseLineChartViewModel _baseLineChart;
 
         /// <summary>
         /// The get books command.
@@ -98,6 +108,11 @@ namespace BooksLiveChartsTester.ViewModels
         /// </summary>
         private ICommand _updateScatterChartCommand;
 
+        /// <summary>
+        /// The update the selected line chart command.
+        /// </summary>
+        private ICommand _updateLineChartCommand;
+
         #endregion
 
         #region Public data
@@ -113,20 +128,8 @@ namespace BooksLiveChartsTester.ViewModels
         public ObservableCollection<Nation> Nations => _nationsReadFromDatabase;
 
         /// <summary>
-        /// Gets the pie chart.
+        /// Gets or sets the selected pie chart type.
         /// </summary>
-        public BasePieChartViewModel BasePieChart =>_basePieChart;
-
-        /// <summary>
-        /// Gets the scatter chart.
-        /// </summary>
-        public BaseScatterChartViewModel BaseScatterChart => _baseScatterChart;
-
-        /// <summary>
-        /// Gets the pie chart types and titles.
-        /// </summary>
-        public Dictionary<PieChartType, string> PieChartTypesByTitle { get; private set; }
-
         public PieChartType SelectedPieChartType
         {
             get { return _selectedPieChart; }
@@ -140,6 +143,68 @@ namespace BooksLiveChartsTester.ViewModels
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the pie chart types and titles.
+        /// </summary>
+        public Dictionary<PieChartType, string> PieChartTypesByTitle { get; private set; }
+
+        /// <summary>
+        /// Gets the pie chart.
+        /// </summary>
+        public BasePieChartViewModel BasePieChart =>_basePieChart;
+
+        /// <summary>
+        /// Gets or sets the selected scatter chart type.
+        /// </summary>
+        public ScatterChartType SelectedScatterChartType
+        {
+            get { return _selectedScatterChart; }
+            set
+            {
+                if (value != _selectedScatterChart)
+                {
+                    _selectedScatterChart = value;
+                    UpdateScatterChartCommandAction();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the scatter chart types and titles.
+        /// </summary>
+        public Dictionary<ScatterChartType, string> ScatterChartTypesByTitle { get; private set; }
+
+        /// <summary>
+        /// Gets the scatter chart.
+        /// </summary>
+        public BaseScatterChartViewModel BaseScatterChart => _baseScatterChart;
+
+        /// <summary>
+        /// Gets or sets the selected scatter chart type.
+        /// </summary>
+        public LineChartType SelectedLineChartType
+        {
+            get { return _selectedLineChart; }
+            set
+            {
+                if (value != _selectedLineChart)
+                {
+                    _selectedLineChart = value;
+                    UpdateLineChartCommandAction();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the Line chart types and titles.
+        /// </summary>
+        public Dictionary<LineChartType, string> LineChartTypesByTitle { get; private set; }
+
+        /// <summary>
+        /// Gets the line chart.
+        /// </summary>
+        public BaseLineChartViewModel BaseLineChart => _baseLineChart;
 
         /// <summary>
         /// Gets the get books from database command.
@@ -160,6 +225,11 @@ namespace BooksLiveChartsTester.ViewModels
         /// Gets the update scatter chart command.
         /// </summary>
         public ICommand UpdateScatterChartCommand => _updateScatterChartCommand ?? (_updateScatterChartCommand = new CommandHandler(UpdateScatterChartCommandAction, true));
+
+        /// <summary>
+        /// Gets the update line chart command.
+        /// </summary>
+        public ICommand UpdateLineChartCommand => _updateLineChartCommand ?? (_updateLineChartCommand = new CommandHandler(UpdateLineChartCommandAction, true));
 
         #endregion
 
@@ -192,7 +262,7 @@ namespace BooksLiveChartsTester.ViewModels
         }
 
         /// <summary>
-        /// Sets up the chart selection types.
+        /// Sets up the Pie chart selection types.
         /// </summary>
         private void SetupPieChartTypesByTitle()
         {
@@ -204,6 +274,31 @@ namespace BooksLiveChartsTester.ViewModels
             }
         }
 
+        /// <summary>
+        /// Sets up the Scatter chart selection types.
+        /// </summary>
+        private void SetupScatterChartTypesByTitle()
+        {
+            ScatterChartTypesByTitle = new Dictionary<ScatterChartType, string>();
+            foreach (ScatterChartType selection in Enum.GetValues(typeof(ScatterChartType)))
+            {
+                string title = selection.GetTitle();
+                ScatterChartTypesByTitle.Add(selection, title);
+            }
+        }
+
+        /// <summary>
+        /// Sets up the Scatter chart selection types.
+        /// </summary>
+        private void SetupLineChartTypesByTitle()
+        {
+            LineChartTypesByTitle = new Dictionary<LineChartType, string>();
+            foreach (LineChartType selection in Enum.GetValues(typeof(LineChartType)))
+            {
+                string title = selection.GetTitle();
+                LineChartTypesByTitle.Add(selection, title);
+            }
+        }
 
         #endregion
 
@@ -263,17 +358,41 @@ namespace BooksLiveChartsTester.ViewModels
 
             if (GetProviders(out geographyProvider, out booksReadProvider))
             {
-                //_oxyPlotChart.Update(geographyProvider, booksReadProvider);
+                Type scatterChartType = _selectedScatterChart.GetGeneratorClass();
+                object instance = Activator.CreateInstance(scatterChartType);
+                _baseScatterChart = (BaseScatterChartViewModel)instance;
+                _baseScatterChart.SetupPlot(geographyProvider, booksReadProvider);
+
 
                 OnPropertyChanged(() => BaseScatterChart);
             }
         }
+
+        /// <summary>
+        /// The update average days per book plot command action.
+        /// </summary>
+        private void UpdateLineChartCommandAction()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                Type lineChartType = _selectedLineChart.GetGeneratorClass();
+                object instance = Activator.CreateInstance(lineChartType);
+                _baseLineChart = (BaseLineChartViewModel)instance;
+                _baseLineChart.SetupPlot(geographyProvider, booksReadProvider);
+
+                OnPropertyChanged(() => BaseLineChart);
+            }
+        }
+
         #endregion
 
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainViewModel"/> class. 
+        /// Initializes a new instance of the <see cref="TesterViewModel"/> class. 
         /// </summary>
         public TesterViewModel()
         {
@@ -282,15 +401,15 @@ namespace BooksLiveChartsTester.ViewModels
 
             _booksReadDatabase = new BooksReadDatabase(DatabaseConnectionString);
             _nationsReadDatabase = new NationDatabase(DatabaseConnectionString);
-
-            //_selectedPlot = PlotType.AverageDaysPerBook;
+            
             _basePieChart = new BasePieChartViewModel();
-            _baseScatterChart = new BaseScatterChartViewModel();
-
-            //_oxyPlotChart = new OxyPlotViewModel(_selectedPlot);
-
             SetupPieChartTypesByTitle();
-            //SetupPlotTypesByTitle();
+
+            _baseScatterChart = new BaseScatterChartViewModel();
+            SetupScatterChartTypesByTitle();
+
+            _baseLineChart = new BaseLineChartViewModel();
+            SetupLineChartTypesByTitle();
         }
 
         #endregion

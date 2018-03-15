@@ -10,6 +10,7 @@ namespace BooksOxyCharts.PlotGenerators
 {
     using System;
     using System.Collections.Generic;
+    using BooksCore.Utilities;
     using BooksOxyCharts.Utilities;
     using OxyPlot;
     using OxyPlot.Axes;
