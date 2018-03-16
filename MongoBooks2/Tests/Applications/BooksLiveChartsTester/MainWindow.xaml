@@ -96,17 +96,15 @@
 
                         <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdateLineChartCommand}"></Button>
 
-                        <!--
                         <ComboBox
-                            ItemsSource="{Binding ScatterChartTypesByTitle}"
-                            SelectedValue="{Binding SelectedScatterChartType}"
+                            ItemsSource="{Binding LineChartTypesByTitle}"
+                            SelectedValue="{Binding SelectedLineChartType}"
                             SelectedValuePath="Key"
                             DisplayMemberPath="Value"
                             Height="22"
                             Margin="2"
                         />
 
-                        -->
                     </StackPanel>
                     <!--
 

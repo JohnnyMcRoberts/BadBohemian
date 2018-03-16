@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CurrentBooksReadByCountryPieChartViewModel.cs" company="N/A">
+// <copyright file="PagesPerDayWithTimeLineChartViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The base pie-chart view model.
+//   The pages per day with time line chart view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksLiveCharts.ViewModels.LineCharts
@@ -20,12 +20,12 @@ namespace BooksLiveCharts.ViewModels.LineCharts
     using LiveCharts.Definitions.Series;
 
     /// <summary>
-    /// The books by country pie chart view model class.
+    /// The pages per day with time line chart view model class.
     /// </summary>
-    public sealed class PagesPerDayWithTimeLineChartModel : BaseLineChartViewModel
+    public sealed class PagesPerDayWithTimeLineChartViewModel : BaseLineChartViewModel
     {
         /// <summary>
-        /// Sets up the pie chart series.
+        /// Sets up the line chart series.
         /// </summary>
         protected override void SetupSeries()
         {
@@ -50,7 +50,6 @@ namespace BooksLiveCharts.ViewModels.LineCharts
             List<DateTime> dates = new List<DateTime>();
             List<double> overallSeriesValues = new List<double>();
             List<double> overallTrendlineValues = new List<double>();
-            List<Color> colors = ColorUtilities.SetupStandardColourSet();
 
             // Get the values.
             foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
@@ -62,23 +61,22 @@ namespace BooksLiveCharts.ViewModels.LineCharts
                 overallTrendlineValues.Add(trendPageRate);
             }
 
-            seriesViews.Add(CreateLineSeries("Overall", dates, overallSeriesValues, colors[0], 5d));
-            seriesViews.Add(CreateLineSeries("Overall trendline", dates, overallTrendlineValues, colors[1], 0d));
+            seriesViews.Add(CreateLineSeries("Overall", dates, overallSeriesValues, Colors.Blue, 5d));
+            seriesViews.Add(CreateLineSeries("Overall trendline", dates, overallTrendlineValues, ColorUtilities.GetFaintColor(Colors.Red), 0d));
 
             Series.AddRange(seriesViews);
             SeriesCollection = Series;
 
-            MinY = Math.Min(overallSeriesValues.Min(), overallTrendlineValues.Min());
-            MaxY = Math.Min(overallSeriesValues.Max(), overallTrendlineValues.Max());
+            MinY = Math.Floor(Math.Min(overallSeriesValues.Min(), overallTrendlineValues.Min()));
+            MaxY = Math.Ceiling(Math.Max(overallSeriesValues.Max(), overallTrendlineValues.Max()));
         }
-
 
         private void GetPagesPerDayWithTimeCurveFitter(out ICurveFitter curveFitter)
         {
             List<double> xVals = new List<double>();
             List<double> yVals = new List<double>();
 
-            foreach (var delta in BooksReadProvider.BookDeltas)
+            foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
                 xVals.Add(delta.DaysSinceStart);
                 yVals.Add(delta.OverallTally.PageRate);
@@ -88,11 +86,11 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagesPerDayWithTimeLineChartModel"/> class.
+        /// Initializes a new instance of the <see cref="PagesPerDayWithTimeLineChartViewModel"/> class.
         /// </summary>
-        public PagesPerDayWithTimeLineChartModel()
+        public PagesPerDayWithTimeLineChartViewModel()
         {
-            Title = "Current Books Read by Country";
+            Title = "Pages per day with time";
             PointLabel = chartPoint => $"({XAxisTitle} {new DateTime((long)chartPoint.X):d}, {YAxisTitle} {chartPoint.Y:G5})";
             LegendLocation = LegendLocation.Bottom;
             SetupSeries();

@@ -13,11 +13,15 @@ namespace BooksLiveCharts.ViewModels.LineCharts
     public enum LineChartType
     {
         [ChartType(Title = "Pages per Day With Time",
-            GeneratorClass = typeof(PagesPerDayWithTimeLineChartModel))]
+            GeneratorClass = typeof(PagesPerDayWithTimeLineChartViewModel))]
         PagesPerDayWithTime,
 
-        //[ChartType(Title = "Current Pages Read By Country",
-        //    GeneratorClass = typeof(CurrentPagesReadByCountryPieChartViewModel))]
-        //CurrentPagesReadByCountry
+        [ChartType(Title = "Average Days Per Book",
+            GeneratorClass = typeof(AverageDaysPerBookLineChartViewModel))]
+        AverageDaysPerBook,
+
+        [ChartType(Title = "% Books In Translation",
+            GeneratorClass = typeof(BooksInTranslationLineChartViewModel))]
+        BooksInTranslation
     }
 }
