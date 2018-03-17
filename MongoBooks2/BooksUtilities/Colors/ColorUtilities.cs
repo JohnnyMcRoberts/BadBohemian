@@ -196,5 +196,10 @@ namespace BooksUtilities.Colors
                 standardColours.Add(Color.FromArgb(aValue, colour.Item1, colour.Item2, colour.Item3));
             return standardColours;
         }
+
+        public static Color GetFaintColor(Color color)
+        {
+            return Color.FromArgb(128, color.R, color.G, color.B);
+        }
     }
 }

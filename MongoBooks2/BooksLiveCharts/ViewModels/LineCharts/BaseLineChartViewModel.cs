@@ -215,7 +215,7 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         /// <summary>
         /// Gets or sets the series numeric values formatter.
         /// </summary>
-        public Func<object, string> YValueFormatter { get; set; }
+        public Func<double, string> YValueFormatter { get; set; }
 
         /// <summary>
         /// Initialises line chart title, series etc.
@@ -234,10 +234,38 @@ namespace BooksLiveCharts.ViewModels.LineCharts
             PointLabel = chartPoint => $"Pt ({XAxisTitle} {new DateTime((long)chartPoint.X):d} , {YAxisTitle} {chartPoint.Y:G})";
 
             XValueFormatter = value => $"{new DateTime((long)value):d}";
-            YValueFormatter = value => $"{((DateTime)(value)).Ticks:G}";
+            YValueFormatter = value => $"{value:G}";
 
             LegendLocation = LegendLocation.None;
             SetupSeries();
+        }
+
+        private LineSeries GetBasicLineSeries(string title, Color color, double pointSize)
+        {
+            // Set up the gradient brush.
+            LinearGradientBrush gradientBrush = new LinearGradientBrush
+            {
+                StartPoint = new System.Windows.Point(0, 0),
+                EndPoint = new System.Windows.Point(0, 1)
+            };
+
+            gradientBrush.GradientStops.Add(pointSize > 0.1 ? new GradientStop(color, 0) : new GradientStop(Colors.Transparent, 1));
+            gradientBrush.GradientStops.Add(new GradientStop(Colors.Transparent, 1));
+
+            LineSeries lineSeries = new LineSeries
+            {
+                Title = title,
+                DataLabels = false,
+                LabelPoint = PointLabel,
+                LineSmoothness = 0.2,
+                PointGeometrySize = pointSize,
+                Foreground = new SolidColorBrush(color),
+                PointForeground = new SolidColorBrush(color),
+                Stroke = new SolidColorBrush(color),
+                Fill = gradientBrush
+            };
+
+            return lineSeries;
         }
 
         /// <summary>
@@ -324,27 +352,9 @@ namespace BooksLiveCharts.ViewModels.LineCharts
                 values.Add(new ObservablePoint(xValues[i], yValues[i]));
             }
 
-            // Set up the gradient brush.
-            LinearGradientBrush gradientBrush = new LinearGradientBrush
-            {
-                StartPoint = new System.Windows.Point(0, 0),
-                EndPoint = new System.Windows.Point(0, 1)
-            };
-
-            gradientBrush.GradientStops.Add(new GradientStop(color, 0));
-            gradientBrush.GradientStops.Add(new GradientStop(Colors.Transparent, 1));
-
-            // Finally create the line series itself.
-            LineSeries lineSeries = new LineSeries
-            {
-                Title = title,
-                Values = values,
-                DataLabels = false,
-                LabelPoint = PointLabel,
-                Fill = gradientBrush,
-                LineSmoothness = 0.2,
-                PointGeometrySize = pointSize
-            };
+            // Finally create the line series and set the values.
+            LineSeries lineSeries = GetBasicLineSeries(title, color, pointSize);
+            lineSeries.Values = values;
 
             return lineSeries;
         }
@@ -370,27 +380,9 @@ namespace BooksLiveCharts.ViewModels.LineCharts
                 values.Add(new DateTimePoint(xValues[i], yValues[i]));
             }
 
-            // Set up the gradient brush.
-            LinearGradientBrush gradientBrush = new LinearGradientBrush
-            {
-                StartPoint = new System.Windows.Point(0, 0),
-                EndPoint = new System.Windows.Point(0, 1)
-            };
-
-            gradientBrush.GradientStops.Add(new GradientStop(color, 0));
-            gradientBrush.GradientStops.Add(new GradientStop(Colors.Transparent, 1));
-
-            // Finally create the line series itself.
-            LineSeries lineSeries = new LineSeries
-            {
-                Title = title,
-                Values = values,
-                DataLabels = false,
-                LabelPoint = PointLabel,
-                Fill = gradientBrush,
-                LineSmoothness = 0.2,
-                PointGeometrySize = pointSize
-            };
+            // Finally create the line series and set the values.
+            LineSeries lineSeries = GetBasicLineSeries(title, color, pointSize);
+            lineSeries.Values = values;
 
             return lineSeries;
         }

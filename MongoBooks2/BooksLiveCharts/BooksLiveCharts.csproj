@@ -59,9 +59,11 @@
     <Compile Include="Utilities\ChartTypeAttribute.cs" />
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ViewModels\BaseChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\AverageDaysPerBookLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BaseLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\BooksInTranslationLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\LineChartType.cs" />
-    <Compile Include="ViewModels\LineCharts\PagesPerDayWithTimeLineChartModel.cs" />
+    <Compile Include="ViewModels\LineCharts\PagesPerDayWithTimeLineChartViewModel.cs" />
     <Compile Include="ViewModels\PieCharts\BasePieChartViewModel.cs" />
     <Compile Include="ViewModels\ScatterCharts\BaseScatterChartViewModel.cs" />
     <Compile Include="ViewModels\PieCharts\CurrentBooksReadByCountryPieChartViewModel.cs" />
