@@ -247,6 +247,11 @@ namespace BooksLiveChartsTester.ViewModels
         /// </summary>
         public ICommand UpdateLineChartCommand => _updateLineChartCommand ?? (_updateLineChartCommand = new CommandHandler(UpdateLineChartCommandAction, true));
 
+        /// <summary>
+        /// Gets the update geo map chart command.
+        /// </summary>
+        public ICommand UpdateGeoMapChartCommand => _updateGeoMapChartCommand ?? (_updateGeoMapChartCommand = new CommandHandler(UpdateGeoMapChartCommandAction, true));
+
         #endregion
 
         #region Utility Functions
@@ -403,6 +408,31 @@ namespace BooksLiveChartsTester.ViewModels
             }
         }
 
+
+        /// <summary>
+        /// The update the geo map chart command action.
+        /// </summary>
+        private void UpdateGeoMapChartCommandAction()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                if (_baseGeoMapChart is PagesPerCountryMapChartViewModel)
+                {
+                    _baseGeoMapChart = new BooksPerCountryMapChartViewModel();
+                }
+                else
+                {
+                    _baseGeoMapChart = new PagesPerCountryMapChartViewModel();
+                }
+
+                _baseGeoMapChart.SetupPlot(geographyProvider, booksReadProvider);
+
+                OnPropertyChanged(() => BaseGeoMapChart);
+            }
+        }
         #endregion
 
         #region Constructor

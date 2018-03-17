@@ -65,6 +65,8 @@
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ViewModels\BaseChartViewModel.cs" />
     <Compile Include="ViewModels\GeoMapCharts\BaseGeoMapChartViewModel.cs" />
+    <Compile Include="ViewModels\GeoMapCharts\BooksPerCountryMapChartViewModel.cs" />
+    <Compile Include="ViewModels\GeoMapCharts\PagesPerCountryMapChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\AverageDaysPerBookLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BaseLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BooksInTranslationLineChartViewModel.cs" />

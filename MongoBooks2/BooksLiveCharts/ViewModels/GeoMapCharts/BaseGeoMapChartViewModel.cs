@@ -30,10 +30,25 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
     {
         private string _mapPath;
 
+        private GradientStopCollection _colorGradients;
+
         public string MapPath
         {
             get { return _mapPath; }
             protected set { _mapPath = value; OnPropertyChanged(() => MapPath); }
+        }
+
+        public GradientStopCollection ColorGradients
+        {
+            get
+            {
+                return _colorGradients;
+            }
+            protected set
+            {
+                _colorGradients = value;
+                OnPropertyChanged(() => ColorGradients);
+            }
         }
 
         public Dictionary<string, double> Values { get; set; }
@@ -45,6 +60,7 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
         {
             LegendLocation = LegendLocation.None;
             SetupWorldMapFile();
+            SetupColorGradient();
             SetupSeries();
         }
 
@@ -68,6 +84,31 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             _mapPath = tempFilePath;
         }
 
+        protected void SetupColorGradient()
+        {
+
+
+            List<Color> colors = ColorUtilities.Jet(100);
+
+            ColorGradients = new GradientStopCollection();
+            for (int i = 0; i < colors.Count - 1; i++)
+            {
+                ColorGradients.Add(new GradientStop(colors[i], (double)i / (double)colors.Count));
+            }
+
+            ColorGradients.Add(new GradientStop(colors.Last(), 1.0));
+            //_colorGradients = new GradientStopCollection
+            //{
+            //    new GradientStop(Colors.YellowGreen, 0),
+            //    new GradientStop(Colors.Green, 0.2),
+            //    new GradientStop(Colors.Purple, 0.4),
+            //    new GradientStop(Colors.Blue, 0.6),
+            //    new GradientStop(Colors.Yellow, 0.8),
+            //    new GradientStop(Colors.Red, 1)
+            //};
+
+        }
+
         /// <summary>
         /// Sets up the geo map chart series.
         /// </summary>
@@ -88,6 +129,7 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             Values["DE"] = r.Next(0, 100);
             Values["FR"] = r.Next(0, 100);
             Values["GB"] = r.Next(0, 100);
+
         }
 
         /// <summary>
