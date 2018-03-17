@@ -8,19 +8,20 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksLiveChartsTester.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows.Input;
     using BooksCore.Books;
     using BooksCore.Geography;
     using BooksCore.Provider;
     using BooksDatabase.Implementations;
-    using BooksLiveCharts.ViewModels.PieCharts;
     using BooksUtilities.ViewModels;
-    using System.Collections.Generic;
-    using System;
     using BooksLiveCharts.Utilities;
+    using BooksLiveCharts.ViewModels.PieCharts;
     using BooksLiveCharts.ViewModels.LineCharts;
     using BooksLiveCharts.ViewModels.ScatterCharts;
+    using BooksLiveCharts.ViewModels.GeoMapCharts;
 
     /// <summary>
     /// The viewvmodel for a books helix chart test application.
@@ -89,6 +90,11 @@ namespace BooksLiveChartsTester.ViewModels
         private BaseLineChartViewModel _baseLineChart;
 
         /// <summary>
+        /// The geo map chart view model.
+        /// </summary>
+        private BaseGeoMapChartViewModel _baseGeoMapChart;
+
+        /// <summary>
         /// The get books command.
         /// </summary>
         private ICommand _getBooksCommand;
@@ -112,6 +118,11 @@ namespace BooksLiveChartsTester.ViewModels
         /// The update the selected line chart command.
         /// </summary>
         private ICommand _updateLineChartCommand;
+
+        /// <summary>
+        /// The update the selected geo map chart command.
+        /// </summary>
+        private ICommand _updateGeoMapChartCommand;
 
         #endregion
 
@@ -207,6 +218,11 @@ namespace BooksLiveChartsTester.ViewModels
         public BaseLineChartViewModel BaseLineChart => _baseLineChart;
 
         /// <summary>
+        /// Gets the geo map chart.
+        /// </summary>
+        public BaseGeoMapChartViewModel BaseGeoMapChart => _baseGeoMapChart;
+
+        /// <summary>
         /// Gets the get books from database command.
         /// </summary>
         public ICommand GetBooksCommand => _getBooksCommand ?? (_getBooksCommand = new CommandHandler(GetBooksCommandAction, true));
@@ -230,6 +246,11 @@ namespace BooksLiveChartsTester.ViewModels
         /// Gets the update line chart command.
         /// </summary>
         public ICommand UpdateLineChartCommand => _updateLineChartCommand ?? (_updateLineChartCommand = new CommandHandler(UpdateLineChartCommandAction, true));
+
+        /// <summary>
+        /// Gets the update geo map chart command.
+        /// </summary>
+        public ICommand UpdateGeoMapChartCommand => _updateGeoMapChartCommand ?? (_updateGeoMapChartCommand = new CommandHandler(UpdateGeoMapChartCommandAction, true));
 
         #endregion
 
@@ -387,6 +408,31 @@ namespace BooksLiveChartsTester.ViewModels
             }
         }
 
+
+        /// <summary>
+        /// The update the geo map chart command action.
+        /// </summary>
+        private void UpdateGeoMapChartCommandAction()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                if (_baseGeoMapChart is PagesPerCountryMapChartViewModel)
+                {
+                    _baseGeoMapChart = new BooksPerCountryMapChartViewModel();
+                }
+                else
+                {
+                    _baseGeoMapChart = new PagesPerCountryMapChartViewModel();
+                }
+
+                _baseGeoMapChart.SetupPlot(geographyProvider, booksReadProvider);
+
+                OnPropertyChanged(() => BaseGeoMapChart);
+            }
+        }
         #endregion
 
         #region Constructor
@@ -410,6 +456,8 @@ namespace BooksLiveChartsTester.ViewModels
 
             _baseLineChart = new BaseLineChartViewModel();
             SetupLineChartTypesByTitle();
+
+            _baseGeoMapChart = new BaseGeoMapChartViewModel();
         }
 
         #endregion

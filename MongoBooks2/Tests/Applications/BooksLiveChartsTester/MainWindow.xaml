@@ -106,14 +106,41 @@
                         />
 
                     </StackPanel>
-                    <!--
-
-                    <liveCharts:LineChartView  Grid.Row="1" DataContext="{Binding Path=BaseLineChart}"/>
-                        -->
+                    
                     <liveCharts:LineChartView  Grid.Row="1" DataContext="{Binding Path=BaseLineChart}"/>
 
                 </Grid>
             </TabItem>
+
+
+            <TabItem Header="Geo Maps Charts">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+
+                        <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdateGeoMapChartCommand}"></Button>
+
+                        <!--
+                        <ComboBox
+                            ItemsSource="{Binding LineChartTypesByTitle}"
+                            SelectedValue="{Binding SelectedLineChartType}"
+                            SelectedValuePath="Key"
+                            DisplayMemberPath="Value"
+                            Height="22"
+                            Margin="2"
+                        />
+                        -->
+
+                    </StackPanel>
+
+                    <liveCharts:GeoMapChartView  Grid.Row="1" DataContext="{Binding Path=BaseGeoMapChart}"/>
+
+                </Grid>
+            </TabItem>
+
         </TabControl>
     </Grid>
 </Window>
