@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="CountryLocationsBooksAndPagesPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The percentage books read by country with time plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
@@ -14,9 +14,14 @@ namespace BooksOxyCharts.PlotGenerators
     using OxyPlot.Axes;
     using OxyPlot.Series;
     using System.Linq;
+    using BooksCore.Geography;
 
     public class CountryLocationsBooksAndPagesPlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -34,16 +39,19 @@ namespace BooksOxyCharts.PlotGenerators
         {
             ScatterSeries pointsSeries;
 
-            OxyPlotUtilities.CreateScatterPointSeries(out pointsSeries,
-                ChartAxisKeys.LongitudeKey, ChartAxisKeys.LatitudeKey, "Countries");
+            OxyPlotUtilities.CreateScatterPointSeries(
+                out pointsSeries,
+                ChartAxisKeys.LongitudeKey,
+                ChartAxisKeys.LatitudeKey,
+                "Countries");
 
             foreach (var authorCountry in BooksReadProvider.AuthorCountries)
             {
-                var name = authorCountry.Country;
-                var country = GeographyProvider.WorldCountries.Where(w => w.Country == name).FirstOrDefault();
+                string name = authorCountry.Country;
+                WorldCountry country = GeographyProvider.WorldCountries.FirstOrDefault(w => w.Country == name);
                 if (country != null)
                 {
-                    var pointSize = authorCountry.TotalBooksReadFromCountry;
+                    int pointSize = authorCountry.TotalBooksReadFromCountry;
                     if (pointSize < 5) pointSize = 5;
 
                     ScatterPoint point =
@@ -68,6 +76,10 @@ namespace BooksOxyCharts.PlotGenerators
             newPlot.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = faintPalette, Title = "Total Pages" });
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupLatitudeAndLongitudeAxes(PlotModel newPlot)
         {
             var xAxis = new LinearAxis

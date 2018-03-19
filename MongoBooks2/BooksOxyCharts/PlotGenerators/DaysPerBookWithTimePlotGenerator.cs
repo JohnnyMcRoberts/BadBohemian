@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="DaysPerBookWithTimePlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The percentage books read by country with time plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
@@ -17,10 +17,14 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class DaysPerBookWithTimePlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
-            var newPlot = new PlotModel { Title = "Days Per Book With Time Plot" };
+            PlotModel newPlot = new PlotModel { Title = "Days Per Book With Time Plot" };
             OxyPlotUtilities.SetupPlotLegend(newPlot, "Days Per Book With Time Plot");
             SetupDaysPerBookWithTimeVsTimeAxes(newPlot);
 
@@ -65,9 +69,13 @@ namespace BooksOxyCharts.PlotGenerators
             curveFitter = new QuadraticCurveFitter(xVals, yVals);
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupDaysPerBookWithTimeVsTimeAxes(PlotModel newPlot)
         {
-            var xAxis = new DateTimeAxis
+            DateTimeAxis xAxis = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
                 Title = "Date",
@@ -76,9 +84,10 @@ namespace BooksOxyCharts.PlotGenerators
                 MinorGridlineStyle = LineStyle.None,
                 StringFormat = "yyyy-MM-dd"
             };
+
             newPlot.Axes.Add(xAxis);
 
-            var lhsAxis = new LinearAxis
+            LinearAxis lhsAxis = new LinearAxis
             {
                 Position = AxisPosition.Left,
                 Title = "Days Per Book",
@@ -86,8 +95,8 @@ namespace BooksOxyCharts.PlotGenerators
                 MajorGridlineStyle = LineStyle.Solid,
                 MinorGridlineStyle = LineStyle.None
             };
+
             newPlot.Axes.Add(lhsAxis);
         }
-
     }
 }

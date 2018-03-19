@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="WorldCountriesMapPagesReadPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
@@ -20,11 +20,14 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class WorldCountriesMapPagesReadPlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
             PlotModel newPlot = new PlotModel { Title = "Countries of the World with Pages read" };
-            //OxyPlotUtilities.SetupPlotLegend(newPlot, "Total Pages Read by Language With Time Plot");
             SetupLatitudeAndLongitudeAxes(newPlot);
 
             // make up a lit of the countries with books read
@@ -71,9 +74,8 @@ namespace BooksOxyCharts.PlotGenerators
                 }
 
                 int i = 0;
-                // just do the 5 biggest bits per country (looks enough)
-                //IOrderedEnumerable<PolygonBoundary> landBlocks = country.LandBlocks.OrderByDescending(b => b.TotalArea);
 
+                // just do the 5 biggest bits per country (looks enough)
                 foreach (PolygonBoundary boundary in country.LandBlocks.OrderByDescending(b => b.TotalArea))
                 {
                     AreaSeries areaSeries = new AreaSeries
@@ -116,6 +118,10 @@ namespace BooksOxyCharts.PlotGenerators
             return newPlot;
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupLatitudeAndLongitudeAxes(PlotModel newPlot)
         {
             LinearAxis xAxis = new LinearAxis

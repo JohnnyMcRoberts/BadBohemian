@@ -21,7 +21,7 @@ namespace BooksLiveCharts.ViewModels.ScatterCharts
     /// <summary>
     /// The books and pages scatter chart view model class.
     /// </summary>
-    public sealed class LastTenBooksAndPagesScatterChartViewModel : BaseScatterChartViewModel
+    public sealed class LastTenBooksAndPagesWithTimeScatterChartViewModel : BaseScatterChartViewModel
     {
         /// <summary>
         /// The rounding error epsilon for the rates.
@@ -34,21 +34,21 @@ namespace BooksLiveCharts.ViewModels.ScatterCharts
         private const int NumberOfColors = 200;
 
         /// <summary>
-        /// Gets the scatter point color for a given rate in a range.
+        /// Gets the scatter point color for a given number of days from the start in a range.
         /// </summary>
-        /// <param name="rate">The page rate.</param>
-        /// <param name="minRate">The lowest page rate for a set of 10 books.</param>
-        /// <param name="maxRate">The highesr page rate for a set of 10 books.</param>
+        /// <param name="days">The number of days since the start.</param>
+        /// <param name="minDays">The lowest number of days since the start.</param>
+        /// <param name="maxDays">The highest number of days since the start.</param>
         /// <param name="colors">The colors set.</param>
         /// <returns>The interpolated color for the point.</returns>
-        private static Color GetPointColorForRate(double rate, double minRate, double maxRate, List<Color> colors)
+        private static Color GetPointColorForDaysSinceStart(double days, double minDays, double maxDays, List<Color> colors)
         {
-            int colorIndex = (int)(NumberOfColors * (rate - minRate) / (maxRate - minRate));
-            if (Math.Abs(rate - minRate) < RateEpsilon)
+            int colorIndex = (int)(NumberOfColors * (days - minDays) / (maxDays - minDays));
+            if (Math.Abs(days - minDays) < RateEpsilon)
             {
                 colorIndex = 0;
             }
-            else if (Math.Abs(rate - maxRate) < RateEpsilon)
+            else if (Math.Abs(days - maxDays) < RateEpsilon)
             {
                 colorIndex = NumberOfColors - 1;
             }
@@ -73,13 +73,13 @@ namespace BooksLiveCharts.ViewModels.ScatterCharts
             List<ISeriesView> seriesViews = new List<ISeriesView>();
             List<Color> colors = ColorUtilities.Jet(NumberOfColors);
 
-            //       End date, daysTaken, pagesRead, rate
+            //       End date, daysTaken, pagesRead, days
             List<Tuple<DateTime, double, double, double>> points = new List<Tuple<DateTime, double, double, double>>();
 
             // Set up the list of deltas with to add points for and the range they lie between.
             List<BooksDelta> deltasSet = new List<BooksDelta>();
-            double minRate = 1e16;
-            double maxRate = 0.0;
+            double minDays = 1e16;
+            double maxDays = 0.0;
             foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
                 deltasSet.Add(delta);
@@ -97,12 +97,12 @@ namespace BooksLiveCharts.ViewModels.ScatterCharts
                     daysTaken = 1.0;
                 }
 
-                double rate = pagesRead / daysTaken;
+                double days = end.DaysSinceStart;
 
-                points.Add(new Tuple<DateTime, double, double, double>(end.Date, daysTaken, pagesRead, rate));
+                points.Add(new Tuple<DateTime, double, double, double>(end.Date, daysTaken, pagesRead, days));
 
-                if (minRate > rate) minRate = rate;
-                if (maxRate < rate) maxRate = rate;
+                if (minDays > days) minDays = days;
+                if (maxDays < days) maxDays = days;
 
                 deltasSet.RemoveAt(0);
             }
@@ -110,27 +110,27 @@ namespace BooksLiveCharts.ViewModels.ScatterCharts
             // Add a series per point.
             foreach (Tuple<DateTime, double, double, double> point in points)
             {
-                Color color = GetPointColorForRate(point.Item4, minRate, maxRate, colors);
+                Color color = GetPointColorForDaysSinceStart(point.Item4, minDays, maxDays, colors);
                 ScatterSeries pointSeries =
                     CreateScatterSeries(
-                        point.Item1.ToString("ddd d MMM yyy") + " Page Rate = " + point.Item4.ToString("G3"),
+                        point.Item1.ToString("ddd d MMM yyy") + " Days since start = " + ((int)(point.Item4)),
                         point.Item2,
                         point.Item3,
                         color,
                         9);
                 seriesViews.Add(pointSeries);
             }
-            
+
             Series.AddRange(seriesViews);
             SeriesCollection = Series;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LastTenBooksAndPagesScatterChartViewModel"/> class.
+        /// Initializes a new instance of the <see cref="LastTenBooksAndPagesWithTimeScatterChartViewModel"/> class.
         /// </summary>
-        public LastTenBooksAndPagesScatterChartViewModel()
+        public LastTenBooksAndPagesWithTimeScatterChartViewModel()
         {
-            Title = "Last 10 Books in Translation: Time Taken vs Pages";
+            Title = "Last 10 Books: Time Taken vs Pages by time";
 
             XAxisTitle = "Days Taken";
             YAxisTitle = "Pages Read";

@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="LatitudeWithTimePlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The percentage books read by country with time plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
@@ -16,6 +16,10 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class LatitudeWithTimePlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -46,12 +50,8 @@ namespace BooksOxyCharts.PlotGenerators
                 overallTrendlineSeries.Points.Add(
                     new DataPoint(DateTimeAxis.ToDouble(delta.Date), trendPageRate));
             }
-
-
-            OxyPlotUtilities.AddLineSeriesToModel(newPlot,
-                new LineSeries[] { overallSeries, lastTenSeries, overallTrendlineSeries }
-                );
-
+            
+            OxyPlotUtilities.AddLineSeriesToModel(newPlot, new[] { overallSeries, lastTenSeries, overallTrendlineSeries } );
 
             // finally update the model with the new plot
             return newPlot;
@@ -72,6 +72,10 @@ namespace BooksOxyCharts.PlotGenerators
             OxyPlotUtilities.LinearRegression(overallDays, overallLatitude, out  rsquared, out  yintercept, out  slope);
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupLatitudeVsTimeAxes(PlotModel newPlot)
         {
             var xAxis = new DateTimeAxis
@@ -95,6 +99,5 @@ namespace BooksOxyCharts.PlotGenerators
             };
             newPlot.Axes.Add(lhsAxis);
         }
-
     }
 }

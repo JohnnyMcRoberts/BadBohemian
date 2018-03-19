@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="TotalPagesReadByCountryPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
@@ -18,6 +18,10 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class TotalPagesReadByCountryPlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -42,8 +46,6 @@ namespace BooksOxyCharts.PlotGenerators
                     ChartAxisKeys.DateKey, ChartAxisKeys.TotalPagesReadKey, countries[i], i, 128);
                 countriesLineSeries.Add(
                     new KeyValuePair<string, LineSeries>(countries[i], lineSeries));
-
-                //if (i > 1) break;
             }
 
             // loop through the deltas adding points for each of the items to the lines
@@ -72,6 +74,10 @@ namespace BooksOxyCharts.PlotGenerators
             return newPlot;
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupTotalPagesReadKeyVsTimeAxes(PlotModel newPlot)
         {
             var xAxis = new DateTimeAxis

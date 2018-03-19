@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="WorldCountriesMapBooksReadPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
@@ -18,6 +18,10 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class WorldCountriesMapBooksReadPlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -27,7 +31,7 @@ namespace BooksOxyCharts.PlotGenerators
             // make up a lit of the countries with books read
             int maxBooksRead = -1;
             Dictionary<string, int> countryToReadLookUp = new Dictionary<string, int>();
-            foreach(AuthorCountry authorCountry in BooksReadProvider.AuthorCountries)
+            foreach (AuthorCountry authorCountry in BooksReadProvider.AuthorCountries)
             {
                 maxBooksRead = Math.Max(authorCountry.TotalBooksReadFromCountry, maxBooksRead);
                 countryToReadLookUp.Add(authorCountry.Country, authorCountry.TotalBooksReadFromCountry);
@@ -73,6 +77,10 @@ namespace BooksOxyCharts.PlotGenerators
             OxyPlotUtilities.AddCountryGeographyAreaSeriesToPlot(newPlot, country, color, country.Name, tagString, trackerFormat);
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupLatitudeAndLongitudeAxes(PlotModel newPlot)
         {
             LinearAxis xAxis = new LinearAxis

@@ -1,21 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PagesPerDayWithTimeLineChartViewModel.cs" company="N/A">
+// <copyright file="PagesPerCountryMapChartViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The pages per day with time line chart view model.
+//   The pages per country geo map chart view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksLiveCharts.ViewModels.GeoMapCharts
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows.Media;
     using BooksCore.Books;
-    using BooksUtilities.Colors;
+    using BooksCore.Geography;
     using LiveCharts;
-    using LiveCharts.Definitions.Series;
 
     /// <summary>
     /// The pages per country map chart view model class.
@@ -23,7 +20,7 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
     public sealed class PagesPerCountryMapChartViewModel : BaseGeoMapChartViewModel
     {
         /// <summary>
-        /// Sets up the map chart series.
+        /// Sets up the map chart series values.
         /// </summary>
         protected override void SetupSeries()
         {
@@ -35,21 +32,29 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             }
 
             Values = new Dictionary<string, double>();
-
+            double minValue = 1;
+            double maxValue = 2;
             foreach (AuthorCountry authorCountry in BooksReadProvider.AuthorCountries)
             {
-                var nation = authorCountry.Nation;
-                var count = authorCountry.TotalPagesReadFromCountry;
-                if (!string.IsNullOrEmpty(nation.Geography.ISO_A2) && count > 0)
+                Nation nation = authorCountry.Nation;
+                uint total = authorCountry.TotalPagesReadFromCountry;
+                if (!string.IsNullOrEmpty(nation.Geography.ISO_A2) && total > 0)
                 {
-                    Values.Add(nation.Geography.ISO_A2, Math.Log10(count));
+                    Values.Add(nation.Geography.ISO_A2, Math.Log10(total));
+                    minValue = Math.Min(minValue, total);
+                    maxValue = Math.Max(maxValue, total);
                 }
             }
 
+            // If no countries set up use the defaults.
             if (Values.Count == 0)
             {
-                Values["MX"] = 50;
-                Values["US"] = 100;
+                base.SetupSeries();
+            }
+            else
+            {
+                MaxValue = maxValue;
+                MinValue = minValue;
             }
         }
 
@@ -61,7 +66,6 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             Title = "pages Per Country";
             LegendLocation = LegendLocation.None;
             SetupWorldMapFile();
-            //SetupColorGradient();
 
             SetupSeries();
         }

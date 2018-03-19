@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PieChartType.cs" company="N/A">
+// <copyright file="LineChartType.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The pie-chart types enum.
+//   The line chart types enum.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksLiveCharts.ViewModels.LineCharts

@@ -1,19 +1,19 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="MonthlyBookTalliesByCalendarYearPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The percentage books read by country with time plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
 {
     using System.Collections.Generic;
+    using System.Linq;
     using BooksOxyCharts.Utilities;
     using OxyPlot;
     using OxyPlot.Axes;
     using OxyPlot.Series;
-    using System.Linq;
     using BooksCore.Books;
 
     public class MonthlyBookTalliesByCalendarYearPlotGenerator : BasePlotGenerator
@@ -31,7 +31,7 @@ namespace BooksOxyCharts.PlotGenerators
 
         #region Constructor
 
-        public MonthlyBookTalliesByCalendarYearPlotGenerator(ChartType type) : base()
+        public MonthlyBookTalliesByCalendarYearPlotGenerator(ChartType type)
         {
             _chartType = type;
         }
@@ -42,7 +42,7 @@ namespace BooksOxyCharts.PlotGenerators
 
         private readonly ChartType _chartType;
 
-        private readonly string[] _monthNames = new string[]
+        private readonly string[] _monthNames = 
         {
             "January",
             "February",
@@ -74,6 +74,10 @@ namespace BooksOxyCharts.PlotGenerators
 
         #region Local helper functions
 
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -343,6 +347,6 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class MonthlyBooksAndPagesLinesTalliesByCalendarYearPlotGenerator : MonthlyBookTalliesByCalendarYearPlotGenerator
     {
-        public MonthlyBooksAndPagesLinesTalliesByCalendarYearPlotGenerator() : base(ChartType.BothAsLines) {}
+        public MonthlyBooksAndPagesLinesTalliesByCalendarYearPlotGenerator() : base(ChartType.BothAsLines) { }
     }
 }

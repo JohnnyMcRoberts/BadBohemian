@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainViewModel.cs" company="N/A">
+// <copyright file="BooksAndPagesLastTenPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The percentage books read by country with time plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
@@ -18,6 +18,10 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class BooksAndPagesLastTenPlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -28,8 +32,11 @@ namespace BooksOxyCharts.PlotGenerators
             // create series and add them to the plot
             ScatterSeries pointsSeries;
 
-            OxyPlotUtilities.CreateScatterPointSeries(out pointsSeries, 
-                ChartAxisKeys.DaysTakenKey, ChartAxisKeys.TotalPagesReadKey, "Time Taken Vs Pages");
+            OxyPlotUtilities.CreateScatterPointSeries(
+                out pointsSeries,
+                ChartAxisKeys.DaysTakenKey,
+                ChartAxisKeys.TotalPagesReadKey,
+                "Time Taken Vs Pages");
 
             List<BooksDelta> deltasSet = new List<BooksDelta>();
 
@@ -64,7 +71,11 @@ namespace BooksOxyCharts.PlotGenerators
             // finally update the model with the new plot
             return newPlot;
         }
-        
+
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupPagesPerDayWithTimeVsTimeAxes(PlotModel newPlot)
         {
             var xAxis = new LinearAxis

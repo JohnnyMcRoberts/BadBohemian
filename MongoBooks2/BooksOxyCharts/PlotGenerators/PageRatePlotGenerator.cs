@@ -1,10 +1,9 @@
-﻿
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PageRatePlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The percentage books read by country with time plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
@@ -17,10 +16,14 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class PageRatePlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
-            var newPlot = new PlotModel { Title = "Pages Rate Plot" };
+            PlotModel newPlot = new PlotModel { Title = "Pages Rate Plot" };
             OxyPlotUtilities.SetupPlotLegend(newPlot, "Pages Rate Plot");
             SetupPageRateVsTimeAxes(newPlot);
 
@@ -71,6 +74,10 @@ namespace BooksOxyCharts.PlotGenerators
             OxyPlotUtilities.LinearRegression(overallDays, overallPageRate, out  rsquared, out  yintercept, out  slope);
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupPageRateVsTimeAxes(PlotModel newPlot)
         {
             var xAxis = new DateTimeAxis

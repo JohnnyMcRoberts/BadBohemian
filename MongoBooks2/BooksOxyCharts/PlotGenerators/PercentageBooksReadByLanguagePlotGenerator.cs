@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="PercentageBooksReadByLanguagePlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The percentage books read by language with time plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
@@ -16,8 +16,15 @@ namespace BooksOxyCharts.PlotGenerators
     using System.Linq;
     using BooksCore.Books;
 
+    /// <summary>
+    /// The percentage books read by language with time plot generator.
+    /// </summary>
     public class PercentageBooksReadByLanguagePlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -66,6 +73,10 @@ namespace BooksOxyCharts.PlotGenerators
             return newPlot;
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupPercentageBooksReadKeyVsTimeAxes(PlotModel newPlot)
         {
             var xAxis = new DateTimeAxis
