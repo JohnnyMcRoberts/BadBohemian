@@ -72,8 +72,14 @@
     <Compile Include="ViewModels\LineCharts\AverageDaysPerBookLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BaseLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BooksInTranslationLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\DaysPerBookLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\LineChartType.cs" />
+    <Compile Include="ViewModels\LineCharts\PageRateLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\PagesPerDayWithTimeLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\PercentageBooksReadByCountryLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\PercentageBooksReadByLanguageLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\PercentagePagesReadByCountryLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\PercentagePagesReadByLanguageLineChartViewModel.cs" />
     <Compile Include="ViewModels\PieCharts\BasePieChartViewModel.cs" />
     <Compile Include="ViewModels\ScatterCharts\BaseScatterChartViewModel.cs" />
     <Compile Include="ViewModels\PieCharts\CurrentBooksReadByCountryPieChartViewModel.cs" />

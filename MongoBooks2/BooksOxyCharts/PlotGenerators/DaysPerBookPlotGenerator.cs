@@ -9,6 +9,7 @@
 namespace BooksOxyCharts.PlotGenerators
 {
     using System.Collections.Generic;
+    using BooksCore.Books;
     using BooksOxyCharts.Utilities;
     using OxyPlot;
     using OxyPlot.Axes;
@@ -38,7 +39,7 @@ namespace BooksOxyCharts.PlotGenerators
             double slope;
             GetDaysPerBookLinearTrendlineParameters(out yintercept, out slope);
 
-            foreach (var delta in BooksReadProvider.BookDeltas)
+            foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
                 double trendDaysPerBook = yintercept + (slope * delta.DaysSinceStart);
 
