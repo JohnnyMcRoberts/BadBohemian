@@ -64,8 +64,10 @@
     <Compile Include="Utilities\ChartTypeAttribute.cs" />
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ViewModels\BaseChartViewModel.cs" />
+    <Compile Include="ViewModels\GeoMapCharts\AuthorsPerCountryMapChartViewModel.cs" />
     <Compile Include="ViewModels\GeoMapCharts\BaseGeoMapChartViewModel.cs" />
     <Compile Include="ViewModels\GeoMapCharts\BooksPerCountryMapChartViewModel.cs" />
+    <Compile Include="ViewModels\GeoMapCharts\GeoMapChartType.cs" />
     <Compile Include="ViewModels\GeoMapCharts\PagesPerCountryMapChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\AverageDaysPerBookLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BaseLineChartViewModel.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="ViewModels\PieCharts\PieChartType.cs" />
     <Compile Include="ViewModels\ScatterCharts\LastTenBooksAndPagesInTranslationScatterChartViewModel.cs" />
     <Compile Include="ViewModels\ScatterCharts\LastTenBooksAndPagesScatterChartViewModel.cs" />
+    <Compile Include="ViewModels\ScatterCharts\LastTenBooksAndPagesWithTimeScatterChartViewModel.cs" />
     <Compile Include="ViewModels\ScatterCharts\ScatterChartType.cs" />
     <Compile Include="Views\GeoMapChartView.xaml.cs">
       <DependentUpon>GeoMapChartView.xaml</DependentUpon>

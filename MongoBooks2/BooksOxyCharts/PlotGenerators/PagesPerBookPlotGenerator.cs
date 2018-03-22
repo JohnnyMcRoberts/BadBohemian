@@ -1,21 +1,29 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="PagesPerBookPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The pages per book plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
 {
     using System.Collections.Generic;
+    using BooksCore.Books;
     using BooksOxyCharts.Utilities;
     using OxyPlot;
     using OxyPlot.Axes;
     using OxyPlot.Series;
 
+    /// <summary>
+    /// The pages per book plot generator.
+    /// </summary>
     public class PagesPerBookPlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -35,7 +43,7 @@ namespace BooksOxyCharts.PlotGenerators
             double slope;
             GetPagesPerBookLinearTrendlineParameters(out yintercept, out slope);
 
-            foreach (var delta in BooksReadProvider.BookDeltas)
+            foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
                 double trendPageRate = yintercept + (slope * delta.DaysSinceStart);
 
@@ -47,11 +55,7 @@ namespace BooksOxyCharts.PlotGenerators
                     new DataPoint(DateTimeAxis.ToDouble(delta.Date), trendPageRate));
             }
 
-
-            OxyPlotUtilities.AddLineSeriesToModel(newPlot,
-                new LineSeries[] { overallSeries, lastTenSeries, overallTrendlineSeries }
-                );
-
+            OxyPlotUtilities.AddLineSeriesToModel(newPlot, new[] { overallSeries, lastTenSeries, overallTrendlineSeries } );
 
             // finally update the model with the new plot
             return newPlot;
@@ -64,17 +68,22 @@ namespace BooksOxyCharts.PlotGenerators
             List<double> overallDays = new List<double>();
             List<double> overallPageRate = new List<double>();
 
-            foreach (var delta in BooksReadProvider.BookDeltas)
+            foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
                 overallDays.Add(delta.DaysSinceStart);
                 overallPageRate.Add(delta.OverallTally.PagesPerBook);
             }
+
             OxyPlotUtilities.LinearRegression(overallDays, overallPageRate, out  rsquared, out  yintercept, out  slope);
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupPagesPerBookVsTimeAxes(PlotModel newPlot)
         {
-            var xAxis = new DateTimeAxis
+            DateTimeAxis xAxis = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
                 Title = "Date",
@@ -83,9 +92,10 @@ namespace BooksOxyCharts.PlotGenerators
                 MinorGridlineStyle = LineStyle.None,
                 StringFormat = "yyyy-MM-dd"
             };
+
             newPlot.Axes.Add(xAxis);
 
-            var lhsAxis = new LinearAxis
+            LinearAxis lhsAxis = new LinearAxis
             {
                 Position = AxisPosition.Left,
                 Title = "Pages Per Book",
@@ -94,6 +104,7 @@ namespace BooksOxyCharts.PlotGenerators
                 MinorGridlineStyle = LineStyle.None,
                 Minimum = 0
             };
+
             newPlot.Axes.Add(lhsAxis);
         }
 

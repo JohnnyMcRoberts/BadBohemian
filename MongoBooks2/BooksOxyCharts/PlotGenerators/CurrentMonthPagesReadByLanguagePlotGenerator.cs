@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="CurrentMonthPagesReadByLanguagePlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The percentage books read by country with time plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
@@ -16,6 +16,10 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class CurrentMonthPagesReadByLanguagePlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model

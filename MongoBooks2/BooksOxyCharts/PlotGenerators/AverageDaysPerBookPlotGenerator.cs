@@ -9,12 +9,16 @@
 namespace BooksOxyCharts.PlotGenerators
 {
     using System.Collections.Generic;
+    using BooksCore.Books;
     using BooksCore.Utilities;
     using BooksOxyCharts.Utilities;
     using OxyPlot;
     using OxyPlot.Axes;
     using OxyPlot.Series;
 
+    /// <summary>
+    /// The average days per book plot generator.
+    /// </summary>
     public class AverageDaysPerBookPlotGenerator : BasePlotGenerator
     {
         /// <summary>
@@ -24,7 +28,7 @@ namespace BooksOxyCharts.PlotGenerators
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
-            var newPlot = new PlotModel { Title = "Average Days Per Book Plot" };
+            PlotModel newPlot = new PlotModel { Title = "Average Days Per Book Plot" };
             OxyPlotUtilities.SetupPlotLegend(newPlot, "Average Days Per Book Plot");
             SetupDaysPerBookVsTimeAxes(newPlot);
 
@@ -42,8 +46,7 @@ namespace BooksOxyCharts.PlotGenerators
             ICurveFitter overallCurveFitter;
             GetAverageDaysPerBookCurveFitters(out lastTenCurveFitter, out overallCurveFitter);
 
-
-            foreach (var delta in BooksReadProvider.BookDeltas)
+            foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
                 double trendOverallDaysPerBook =
                     overallCurveFitter.EvaluateYValueAtPoint(delta.DaysSinceStart);
@@ -61,54 +64,43 @@ namespace BooksOxyCharts.PlotGenerators
                     new DataPoint(DateTimeAxis.ToDouble(delta.Date), trendLastTenDaysPerBook));
             }
 
-
-            OxyPlotUtilities.AddLineSeriesToModel(newPlot,
-                new[] { overallSeries, lastTenSeries, overallTrendlineSeries, lastTenTrendlineSeries }
-                );
-
+            OxyPlotUtilities.AddLineSeriesToModel(
+                newPlot,
+                new[] { overallSeries, lastTenSeries, overallTrendlineSeries, lastTenTrendlineSeries });
 
             // finally update the model with the new plot
             return newPlot;
         }
 
-        private void GetAverageDaysPerBookCurveFitters(
-            out ICurveFitter lastTenCurveFitter, out ICurveFitter overallCurveFitter)
+        /// <summary>
+        /// Gets the curve fitters for the two trend lines.
+        /// </summary>
+        /// <param name="lastTenCurveFitter">The last ten curve fitter.</param>
+        /// <param name="overallCurveFitter">The overall curve fitter.</param>
+        private void GetAverageDaysPerBookCurveFitters(out ICurveFitter lastTenCurveFitter, out ICurveFitter overallCurveFitter)
         {
             List<double> xVals = new List<double>();
             List<double> yValsLastTen = new List<double>();
             List<double> yValsOverall = new List<double>();
 
-            foreach (var delta in BooksReadProvider.BookDeltas)
+            foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
                 xVals.Add(delta.DaysSinceStart);
                 yValsLastTen.Add(delta.LastTenTally.DaysPerBook);
                 yValsOverall.Add(delta.OverallTally.DaysPerBook);
             }
-
-            //lastTenCurveFitter = new LinearCurveFitter(xVals, yValsLastTen);
+            
             lastTenCurveFitter = new QuadraticCurveFitter(xVals, yValsLastTen);
             overallCurveFitter = new QuadraticCurveFitter(xVals, yValsOverall);
         }
 
-        private void GetAverageDaysPerBookLinearTrendlineParameters(out double yintercept, out double slope)
-        {
-            double rsquared;
-
-            List<double> overallDays = new List<double>();
-            List<double> overallDaysPerBook = new List<double>();
-
-            foreach (var delta in BooksReadProvider.BookDeltas)
-            {
-                overallDays.Add(delta.DaysSinceStart);
-                overallDaysPerBook.Add(delta.OverallTally.DaysPerBook);
-            }
-
-            OxyPlotUtilities.LinearRegression(overallDays, overallDaysPerBook, out  rsquared, out  yintercept, out  slope);
-        }
-
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupDaysPerBookVsTimeAxes(PlotModel newPlot)
         {
-            var xAxis = new DateTimeAxis
+            DateTimeAxis xAxis = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
                 Title = "Date",
@@ -117,9 +109,10 @@ namespace BooksOxyCharts.PlotGenerators
                 MinorGridlineStyle = LineStyle.None,
                 StringFormat = "yyyy-MM-dd"
             };
+
             newPlot.Axes.Add(xAxis);
 
-            var lhsAxis = new LinearAxis
+            LinearAxis lhsAxis = new LinearAxis
             {
                 Position = AxisPosition.Left,
                 Title = "Days per Book",
@@ -128,6 +121,7 @@ namespace BooksOxyCharts.PlotGenerators
                 MinorGridlineStyle = LineStyle.None,
                 Minimum = 0
             };
+
             newPlot.Axes.Add(lhsAxis);
         }
     }

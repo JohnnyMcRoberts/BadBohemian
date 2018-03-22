@@ -24,7 +24,7 @@ namespace BooksLiveChartsTester.ViewModels
     using BooksLiveCharts.ViewModels.GeoMapCharts;
 
     /// <summary>
-    /// The viewvmodel for a books helix chart test application.
+    /// The view model for a books live chart test application.
     /// </summary>
     public class TesterViewModel : BaseViewModel
     {
@@ -90,6 +90,11 @@ namespace BooksLiveChartsTester.ViewModels
         private BaseLineChartViewModel _baseLineChart;
 
         /// <summary>
+        /// The selected geo map chart type.
+        /// </summary>
+        private GeoMapChartType _selectedGeoMapChart;
+
+        /// <summary>
         /// The geo map chart view model.
         /// </summary>
         private BaseGeoMapChartViewModel _baseGeoMapChart;
@@ -143,13 +148,16 @@ namespace BooksLiveChartsTester.ViewModels
         /// </summary>
         public PieChartType SelectedPieChartType
         {
-            get { return _selectedPieChart; }
+            get
+            {
+                return _selectedPieChart;
+            }
+
             set
             {
                 if (value != _selectedPieChart)
                 {
                     _selectedPieChart = value;
-                    //_oxyPlotChart = new OxyPlotViewModel(_selectedPieChart);
                     UpdatePieChartCommandAction();
                 }
             }
@@ -163,14 +171,18 @@ namespace BooksLiveChartsTester.ViewModels
         /// <summary>
         /// Gets the pie chart.
         /// </summary>
-        public BasePieChartViewModel BasePieChart =>_basePieChart;
+        public BasePieChartViewModel BasePieChart => _basePieChart;
 
         /// <summary>
         /// Gets or sets the selected scatter chart type.
         /// </summary>
         public ScatterChartType SelectedScatterChartType
         {
-            get { return _selectedScatterChart; }
+            get
+            {
+                return _selectedScatterChart;
+            }
+
             set
             {
                 if (value != _selectedScatterChart)
@@ -196,7 +208,11 @@ namespace BooksLiveChartsTester.ViewModels
         /// </summary>
         public LineChartType SelectedLineChartType
         {
-            get { return _selectedLineChart; }
+            get
+            {
+                return _selectedLineChart;
+            }
+
             set
             {
                 if (value != _selectedLineChart)
@@ -208,7 +224,7 @@ namespace BooksLiveChartsTester.ViewModels
         }
 
         /// <summary>
-        /// Gets the Line chart types and titles.
+        /// Gets the line chart types and titles.
         /// </summary>
         public Dictionary<LineChartType, string> LineChartTypesByTitle { get; private set; }
 
@@ -216,6 +232,31 @@ namespace BooksLiveChartsTester.ViewModels
         /// Gets the line chart.
         /// </summary>
         public BaseLineChartViewModel BaseLineChart => _baseLineChart;
+
+        /// <summary>
+        /// Gets or sets the selected scatter chart type.
+        /// </summary>
+        public GeoMapChartType SelectedGeoMapChartType
+        {
+            get
+            {
+                return _selectedGeoMapChart;
+            }
+
+            set
+            {
+                if (value != _selectedGeoMapChart)
+                {
+                    _selectedGeoMapChart = value;
+                    UpdateGeoMapChartCommandAction();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the geo map chart types and titles.
+        /// </summary>
+        public Dictionary<GeoMapChartType, string> GeoMapChartTypesByTitle { get; private set; }
 
         /// <summary>
         /// Gets the geo map chart.
@@ -256,16 +297,26 @@ namespace BooksLiveChartsTester.ViewModels
 
         #region Utility Functions
 
+        /// <summary>
+        /// Gets the providers for the books and geography data.
+        /// </summary>
+        /// <param name="geographyProvider">The geography data provider on exit.</param>
+        /// <param name="booksReadProvider">The books data provider on exit.</param>
+        /// <returns>True if successful, false otherwise.</returns>
         private bool GetProviders(out GeographyProvider geographyProvider, out BooksReadProvider booksReadProvider)
         {
             geographyProvider = null;
             booksReadProvider = null;
 
             if (!_booksReadDatabase.ReadFromDatabase)
+            {
                 _booksReadDatabase.ConnectToDatabase();
+            }
 
             if (!_nationsReadDatabase.ReadFromDatabase)
+            {
                 _nationsReadDatabase.ConnectToDatabase();
+            }
 
             if (_booksReadDatabase.ReadFromDatabase && _nationsReadDatabase.ReadFromDatabase)
             {
@@ -309,7 +360,7 @@ namespace BooksLiveChartsTester.ViewModels
         }
 
         /// <summary>
-        /// Sets up the Scatter chart selection types.
+        /// Sets up the Line chart selection types.
         /// </summary>
         private void SetupLineChartTypesByTitle()
         {
@@ -318,6 +369,19 @@ namespace BooksLiveChartsTester.ViewModels
             {
                 string title = selection.GetTitle();
                 LineChartTypesByTitle.Add(selection, title);
+            }
+        }
+
+        /// <summary>
+        /// Sets up the Geo Map chart selection types.
+        /// </summary>
+        private void SetupGeoMapChartTypesByTitle()
+        {
+            GeoMapChartTypesByTitle = new Dictionary<GeoMapChartType, string>();
+            foreach (GeoMapChartType selection in Enum.GetValues(typeof(GeoMapChartType)))
+            {
+                string title = selection.GetTitle();
+                GeoMapChartTypesByTitle.Add(selection, title);
             }
         }
 
@@ -384,7 +448,6 @@ namespace BooksLiveChartsTester.ViewModels
                 _baseScatterChart = (BaseScatterChartViewModel)instance;
                 _baseScatterChart.SetupPlot(geographyProvider, booksReadProvider);
 
-
                 OnPropertyChanged(() => BaseScatterChart);
             }
         }
@@ -407,8 +470,7 @@ namespace BooksLiveChartsTester.ViewModels
                 OnPropertyChanged(() => BaseLineChart);
             }
         }
-
-
+        
         /// <summary>
         /// The update the geo map chart command action.
         /// </summary>
@@ -419,15 +481,9 @@ namespace BooksLiveChartsTester.ViewModels
 
             if (GetProviders(out geographyProvider, out booksReadProvider))
             {
-                if (_baseGeoMapChart is PagesPerCountryMapChartViewModel)
-                {
-                    _baseGeoMapChart = new BooksPerCountryMapChartViewModel();
-                }
-                else
-                {
-                    _baseGeoMapChart = new PagesPerCountryMapChartViewModel();
-                }
-
+                Type geoMapChartType = _selectedGeoMapChart.GetGeneratorClass();
+                object instance = Activator.CreateInstance(geoMapChartType);
+                _baseGeoMapChart = (BaseGeoMapChartViewModel)instance;
                 _baseGeoMapChart.SetupPlot(geographyProvider, booksReadProvider);
 
                 OnPropertyChanged(() => BaseGeoMapChart);
@@ -458,6 +514,7 @@ namespace BooksLiveChartsTester.ViewModels
             SetupLineChartTypesByTitle();
 
             _baseGeoMapChart = new BaseGeoMapChartViewModel();
+            SetupGeoMapChartTypesByTitle();
         }
 
         #endregion

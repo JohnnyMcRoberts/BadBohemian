@@ -18,7 +18,10 @@ namespace BooksLiveCharts.ViewModels.ScatterCharts
 
         [ChartType(Title = "Last 10 Books in Translation: Time Taken vs Pages",
             GeneratorClass = typeof(LastTenBooksAndPagesInTranslationScatterChartViewModel))]
-        LastTenBooksAndPagesInTranslation
+        LastTenBooksAndPagesInTranslation,
 
+        [ChartType(Title = "Last 10 Books: Time Taken vs Pages by time",
+            GeneratorClass = typeof(LastTenBooksAndPagesWithTimeScatterChartViewModel))]
+        LastTenBooksAndPagesWithTime
     }
 }

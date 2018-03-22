@@ -1,27 +1,35 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="PercentageBooksReadByCountryPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The main view model for books helix chart test application.
+//   The percentage books read by country with time plot generator.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksOxyCharts.PlotGenerators
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using BooksCore.Books;
     using BooksOxyCharts.Utilities;
     using OxyPlot;
     using OxyPlot.Axes;
     using OxyPlot.Series;
-    using System.Linq;
-    using BooksCore.Books;
 
+    /// <summary>
+    /// The percentage books read by country with time plot generator.
+    /// </summary>
     public class PercentageBooksReadByCountryPlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
-            var newPlot = new PlotModel { Title = "Percentage Books Read by Country With Time Plot" };
+            PlotModel newPlot = new PlotModel { Title = "Percentage Books Read by Country With Time Plot" };
             OxyPlotUtilities.SetupPlotLegend(newPlot, "Percentage Books Read by Country With Time Plot");
             SetupPercentageBooksReadKeyVsTimeAxes(newPlot);
 
@@ -38,37 +46,51 @@ namespace BooksOxyCharts.PlotGenerators
             for (int i = 0; i < countries.Count; i++)
             {
                 LineSeries countrySeries;
-                OxyPlotUtilities.CreateLongLineSeries(out countrySeries,
-                    ChartAxisKeys.DateKey, ChartAxisKeys.PercentageBooksReadKey, countries[i], i);
-                countriesSeries.Add(
-                    new KeyValuePair<string, LineSeries>(countries[i], countrySeries));
+                OxyPlotUtilities.CreateLongLineSeries(
+                    out countrySeries,
+                    ChartAxisKeys.DateKey,
+                    ChartAxisKeys.PercentageBooksReadKey,
+                    countries[i],
+                    i);
+                countriesSeries.Add(new KeyValuePair<string, LineSeries>(countries[i], countrySeries));
             }
 
             // loop through the deltas adding points for each of the items
-            foreach (var delta in BooksReadProvider.BookDeltas)
+            foreach (BooksDelta delta in BooksReadProvider.BookDeltas)
             {
-                var date = DateTimeAxis.ToDouble(delta.Date);
-                foreach (var countryLine in countriesSeries)
+                double date = DateTimeAxis.ToDouble(delta.Date);
+                foreach (KeyValuePair<string, LineSeries> countryLine in countriesSeries)
                 {
                     double percentage = 0.0;
-                    foreach (var countryTotal in delta.OverallTally.CountryTotals)
+                    foreach (Tuple<string, uint, double, uint, double> countryTotal in delta.OverallTally.CountryTotals)
+                    {
                         if (countryTotal.Item1 == countryLine.Key)
+                        {
                             percentage = countryTotal.Item3;
+                        }
+                    }
+
                     countryLine.Value.Points.Add(new DataPoint(date, percentage));
                 }
             }
 
             // add them to the plot
-            foreach (var countryItems in countriesSeries)
+            foreach (KeyValuePair<string, LineSeries> countryItems in countriesSeries)
+            {
                 newPlot.Series.Add(countryItems.Value);
+            }
 
             // finally update the model with the new plot
             return newPlot;
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupPercentageBooksReadKeyVsTimeAxes(PlotModel newPlot)
         {
-            var xAxis = new DateTimeAxis
+            DateTimeAxis xAxis = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
                 Title = "Date",
@@ -77,9 +99,10 @@ namespace BooksOxyCharts.PlotGenerators
                 MinorGridlineStyle = LineStyle.None,
                 StringFormat = "yyyy-MM-dd"
             };
+
             newPlot.Axes.Add(xAxis);
 
-            var lhsAxis = new LinearAxis
+            LinearAxis lhsAxis = new LinearAxis
             {
                 Position = AxisPosition.Left,
                 Title = "% of Books Read",
@@ -87,6 +110,7 @@ namespace BooksOxyCharts.PlotGenerators
                 MajorGridlineStyle = LineStyle.Solid,
                 MinorGridlineStyle = LineStyle.None
             };
+
             newPlot.Axes.Add(lhsAxis);
         }
     }

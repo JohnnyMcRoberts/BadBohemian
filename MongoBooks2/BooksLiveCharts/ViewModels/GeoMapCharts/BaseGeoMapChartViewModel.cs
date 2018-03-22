@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BaseLineChartViewModel.cs" company="N/A">
+// <copyright file="BaseGeoMapChartViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
@@ -14,13 +14,7 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
     using System.Windows.Media;
     using BooksUtilities.Colors;
     using LiveCharts;
-    using LiveCharts.Defaults;
-    using LiveCharts.Definitions.Series;
-    using LiveCharts.Wpf;
     using System.IO;
-    using System.Reflection;
-    using System.Resources;
-    using System.Collections;
     using System.Text;
 
     /// <summary>
@@ -28,30 +22,98 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
     /// </summary>
     public class BaseGeoMapChartViewModel : BaseChartViewModel
     {
+        /// <summary>
+        /// The minimum map block value.
+        /// </summary>
+        private double _minValue;
+
+        /// <summary>
+        /// The maximum map block value.
+        /// </summary>
+        private double _maxValue;
+
+        /// <summary>
+        /// The full path to the map file.
+        /// </summary>
         private string _mapPath;
 
-        private GradientStopCollection _colorGradients;
+        /// <summary>
+        /// The set of colors and value elements that make up the colour gradient.
+        /// </summary>
+        private GradientStopCollection _colorGradientElements;
 
+        /// <summary>
+        /// Gets the full path to the map file.
+        /// </summary>
         public string MapPath
-        {
-            get { return _mapPath; }
-            protected set { _mapPath = value; OnPropertyChanged(() => MapPath); }
-        }
-
-        public GradientStopCollection ColorGradients
         {
             get
             {
-                return _colorGradients;
+                return _mapPath;
             }
+
             protected set
             {
-                _colorGradients = value;
-                OnPropertyChanged(() => ColorGradients);
+                _mapPath = value;
+                OnPropertyChanged(() => MapPath);
             }
         }
 
-        public Dictionary<string, double> Values { get; set; }
+        /// <summary>
+        /// Gets the set of colors and value elements that make up the colour gradient.
+        /// </summary>
+        public GradientStopCollection ColorGradientElements
+        {
+            get
+            {
+                return _colorGradientElements;
+            }
+
+            protected set
+            {
+                _colorGradientElements = value;
+                OnPropertyChanged(() => ColorGradientElements);
+            }
+        }
+
+        /// <summary>
+        /// Gets the values for each of the county codes.
+        /// </summary>
+        public Dictionary<string, double> Values { get; protected set; }
+
+        /// <summary>
+        /// Gets the largest value of the county codes.
+        /// </summary>
+        public double MaxValue
+        {
+            get
+            {
+                return _maxValue;
+            }
+
+            protected set
+            {
+                _maxValue = value;
+                OnPropertyChanged(() => MaxValue);
+            }
+        }
+
+        /// <summary>
+        /// Gets the smallest value of the county codes.
+        /// </summary>
+        public double MinValue
+        {
+            get
+            {
+                return _minValue;
+            }
+
+            protected set
+            {
+                _minValue = value;
+                OnPropertyChanged(() => MinValue);
+            }
+        }
 
         /// <summary>
         /// Initialises geo map chart title, series etc.
@@ -64,6 +126,9 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             SetupSeries();
         }
 
+        /// <summary>
+        /// Gets the full path for a temporary file with a given extension.
+        /// </summary>
         public static string GetTempFilePathWithExtension(string extension)
         {
             var path = Path.GetTempPath();
@@ -71,12 +136,15 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             return Path.Combine(path, fileName);
         }
 
+        /// <summary>
+        /// Sets up the temporary file for the world map to be bound to.
+        /// </summary>
         protected void SetupWorldMapFile()
         {
-            Stream worldStream = new MemoryStream(Encoding.UTF8.GetBytes(Properties.Resources.World ?? ""));
+            Stream worldStream = new MemoryStream(Encoding.UTF8.GetBytes(Properties.Resources.World ?? string.Empty));
             string tempFilePath = GetTempFilePathWithExtension(".xml");
 
-            using (var fileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
+            using (FileStream fileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
             {
                 worldStream.CopyTo(fileStream);
             }
@@ -84,29 +152,20 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             _mapPath = tempFilePath;
         }
 
+        /// <summary>
+        /// Sets up the geo map color gradient.
+        /// </summary>
         protected void SetupColorGradient()
         {
-
-
             List<Color> colors = ColorUtilities.Jet(100);
 
-            ColorGradients = new GradientStopCollection();
+            ColorGradientElements = new GradientStopCollection();
             for (int i = 0; i < colors.Count - 1; i++)
             {
-                ColorGradients.Add(new GradientStop(colors[i], (double)i / (double)colors.Count));
+                ColorGradientElements.Add(new GradientStop(colors[i], (double)i / (double)colors.Count));
             }
 
-            ColorGradients.Add(new GradientStop(colors.Last(), 1.0));
-            //_colorGradients = new GradientStopCollection
-            //{
-            //    new GradientStop(Colors.YellowGreen, 0),
-            //    new GradientStop(Colors.Green, 0.2),
-            //    new GradientStop(Colors.Purple, 0.4),
-            //    new GradientStop(Colors.Blue, 0.6),
-            //    new GradientStop(Colors.Yellow, 0.8),
-            //    new GradientStop(Colors.Red, 1)
-            //};
-
+            ColorGradientElements.Add(new GradientStop(colors.Last(), 1.0));
         }
 
         /// <summary>
@@ -115,21 +174,23 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
         protected override void SetupSeries()
         {
             Random r = new Random((int)DateTime.Now.Ticks);
-            List<Color> colors = ColorUtilities.SetupStandardColourSet();
 
-            Values = new Dictionary<string, double>();
+            Values = new Dictionary<string, double>
+            {
+                ["MX"] = r.Next(0, 100),
+                ["CA"] = r.Next(0, 100),
+                ["US"] = r.Next(0, 100),
+                ["IN"] = r.Next(0, 100),
+                ["CN"] = r.Next(0, 100),
+                ["JP"] = r.Next(0, 100),
+                ["BR"] = r.Next(0, 100),
+                ["DE"] = r.Next(0, 100),
+                ["FR"] = r.Next(0, 100),
+                ["GB"] = r.Next(0, 100)
+            };
 
-            Values["MX"] = r.Next(0, 100);
-            Values["CA"] = r.Next(0, 100);
-            Values["US"] = r.Next(0, 100);
-            Values["IN"] = r.Next(0, 100);
-            Values["CN"] = r.Next(0, 100);
-            Values["JP"] = r.Next(0, 100);
-            Values["BR"] = r.Next(0, 100);
-            Values["DE"] = r.Next(0, 100);
-            Values["FR"] = r.Next(0, 100);
-            Values["GB"] = r.Next(0, 100);
-
+            MinValue = Values.Values.Min();
+            MaxValue = Values.Values.Max();
         }
 
         /// <summary>

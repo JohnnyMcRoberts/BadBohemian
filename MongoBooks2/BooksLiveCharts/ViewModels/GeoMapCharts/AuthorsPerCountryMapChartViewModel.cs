@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BooksPerCountryMapChartViewModel.cs" company="N/A">
+// <copyright file="AuthorsPerCountryMapChartViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The books per country geo map chart view model.
+//   The authors per country geo map chart view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksLiveCharts.ViewModels.GeoMapCharts
@@ -15,9 +15,9 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
     using LiveCharts;
 
     /// <summary>
-    /// The books per country map chart view model class.
+    /// The authors per country map chart view model class.
     /// </summary>
-    public sealed class BooksPerCountryMapChartViewModel : BaseGeoMapChartViewModel
+    public sealed class AuthorsPerCountryMapChartViewModel : BaseGeoMapChartViewModel
     {
         /// <summary>
         /// Sets up the map chart series values.
@@ -37,7 +37,7 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             foreach (AuthorCountry authorCountry in BooksReadProvider.AuthorCountries)
             {
                 Nation nation = authorCountry.Nation;
-                int total = authorCountry.TotalBooksReadFromCountry;
+                int total = authorCountry.AuthorsFromCountry.Count;
                 if (!string.IsNullOrEmpty(nation.Geography.ISO_A2) && total > 0)
                 {
                     Values.Add(nation.Geography.ISO_A2, Math.Log10(total));
@@ -59,9 +59,9 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BooksPerCountryMapChartViewModel"/> class.
+        /// Initializes a new instance of the <see cref="AuthorsPerCountryMapChartViewModel"/> class.
         /// </summary>
-        public BooksPerCountryMapChartViewModel()
+        public AuthorsPerCountryMapChartViewModel()
         {
             Title = "Books Per Country";
             LegendLocation = LegendLocation.None;

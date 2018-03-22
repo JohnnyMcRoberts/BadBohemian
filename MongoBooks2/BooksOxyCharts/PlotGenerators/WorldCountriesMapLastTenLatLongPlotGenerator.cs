@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AverageDaysPerBookPlotGenerator.cs" company="N/A">
+// <copyright file="WorldCountriesMapLastTenLatLongPlotGenerator.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
@@ -18,6 +18,10 @@ namespace BooksOxyCharts.PlotGenerators
 
     public class WorldCountriesMapLastTenLatLongPlotGenerator : BasePlotGenerator
     {
+        /// <summary>
+        /// Sets up the plot model to be displayed.
+        /// </summary>
+        /// <returns>The plot model.</returns>
         protected override PlotModel SetupPlot()
         {
             // Create the plot model
@@ -62,7 +66,7 @@ namespace BooksOxyCharts.PlotGenerators
                 double x, y;
                 latLong.GetCoordinates(out x, out y);
 
-                lastTenSeries.Points.Add( new DataPoint(x, y) );
+                lastTenSeries.Points.Add(new DataPoint(x, y) );
 
                 ScatterPoint point =
                     new ScatterPoint(x, y, pointSize, delta.DaysSinceStart) { Tag = delta.Date.ToString("ddd d MMM yyy") };
@@ -76,9 +80,6 @@ namespace BooksOxyCharts.PlotGenerators
             }
 
             // don't draw these as renders the pic unusable
-            //newPlot.Series.Add(lastTenSeries);
-            //newPlot.Series.Add(overallSeries);
-
             pointsSeries.RenderInLegend = false;
             pointsSeries.TrackerFormatString = "{Tag}\nLat/Long ( {4:0.###} ,{2:0.###} )";
             newPlot.Series.Add(pointsSeries);
@@ -136,6 +137,10 @@ namespace BooksOxyCharts.PlotGenerators
             }
         }
 
+        /// <summary>
+        /// Sets up the axes for the plot.
+        /// </summary>
+        /// <param name="newPlot">The plot to set up the axes for.</param>
         private void SetupLatitudeAndLongitudeAxes(PlotModel newPlot)
         {
             LinearAxis xAxis = new LinearAxis

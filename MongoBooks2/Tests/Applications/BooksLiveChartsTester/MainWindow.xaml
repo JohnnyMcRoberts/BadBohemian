@@ -123,16 +123,14 @@
 
                         <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdateGeoMapChartCommand}"></Button>
 
-                        <!--
                         <ComboBox
-                            ItemsSource="{Binding LineChartTypesByTitle}"
-                            SelectedValue="{Binding SelectedLineChartType}"
+                            ItemsSource="{Binding GeoMapChartTypesByTitle}"
+                            SelectedValue="{Binding SelectedGeoMapChartType}"
                             SelectedValuePath="Key"
                             DisplayMemberPath="Value"
                             Height="22"
                             Margin="2"
                         />
-                        -->
 
                     </StackPanel>
 
