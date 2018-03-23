@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PagesPerDayWithTimeLineChartViewModel.cs" company="N/A">
+// <copyright file="AverageDaysPerBookLineChartViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The pages per day with time line chart view model.
+//   The average days per book with time line chart view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksLiveCharts.ViewModels.LineCharts
@@ -20,7 +20,7 @@ namespace BooksLiveCharts.ViewModels.LineCharts
     using LiveCharts.Definitions.Series;
 
     /// <summary>
-    /// The pages per day with time line chart view model class.
+    /// The average days per book with time line chart view model class.
     /// </summary>
     public sealed class AverageDaysPerBookLineChartViewModel : BaseLineChartViewModel
     {
@@ -72,8 +72,23 @@ namespace BooksLiveCharts.ViewModels.LineCharts
             MaxY = Math.Ceiling(allValues.Max());
         }
 
-        private List<DateTime> GetDataForSeries(ICurveFitter overallCurveFitter, ICurveFitter lastTenCurveFitter, out List<double> overallSeries,
-            out List<double> lastTenSeries, out List<double> overallTrendlineSeries, out List<double> lastTenTrendlineSeries)
+        /// <summary>
+        /// Gets data for the line chart series.
+        /// </summary>
+        /// <param name="lastTenCurveFitter">The last ten curve fitter.</param>
+        /// <param name="overallCurveFitter">The overall curve fitter.</param>
+        /// <param name="overallSeries">The overall series y-values on completion.</param>
+        /// <param name="lastTenSeries">The last ten series y-values on completion.</param>
+        /// <param name="overallTrendlineSeries">The overall trend-line series y-values on completion.</param>
+        /// <param name="lastTenTrendlineSeries">The last ten trend-line series y-values on completion.</param>
+        /// <returns>The dates associated with the series values.</returns>
+        private List<DateTime> GetDataForSeries(
+            ICurveFitter overallCurveFitter,
+            ICurveFitter lastTenCurveFitter,
+            out List<double> overallSeries,
+            out List<double> lastTenSeries,
+            out List<double> overallTrendlineSeries,
+            out List<double> lastTenTrendlineSeries)
         {
             List<DateTime> dates = new List<DateTime>();
 
@@ -102,8 +117,14 @@ namespace BooksLiveCharts.ViewModels.LineCharts
             return dates;
         }
 
+        /// <summary>
+        /// Gets the curve fitters for the two trend lines.
+        /// </summary>
+        /// <param name="lastTenCurveFitter">The last ten curve fitter.</param>
+        /// <param name="overallCurveFitter">The overall curve fitter.</param>
         private void GetAverageDaysPerBookCurveFitters(
-            out ICurveFitter lastTenCurveFitter, out ICurveFitter overallCurveFitter)
+            out ICurveFitter lastTenCurveFitter,
+            out ICurveFitter overallCurveFitter)
         {
             List<double> xVals = new List<double>();
             List<double> yValsLastTen = new List<double>();
@@ -121,7 +142,7 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagesPerDayWithTimeLineChartViewModel"/> class.
+        /// Initializes a new instance of the <see cref="AverageDaysPerBookLineChartViewModel"/> class.
         /// </summary>
         public AverageDaysPerBookLineChartViewModel()
         {
