@@ -64,6 +64,7 @@
     <Compile Include="Utilities\ChartTypeAttribute.cs" />
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ViewModels\ColumnCharts\BaseColumnChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\BasePercentageLineChartViewModel.cs" />
     <Compile Include="ViewModels\MultipleAxisLineCharts\BaseMultipleAxisLineChart.cs" />
     <Compile Include="ViewModels\StackedAreaCharts\BaseStackedAreaChartViewModel.cs" />
     <Compile Include="ViewModels\BaseChartViewModel.cs" />
