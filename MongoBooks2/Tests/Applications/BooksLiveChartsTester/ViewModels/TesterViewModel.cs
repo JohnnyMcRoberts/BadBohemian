@@ -22,6 +22,7 @@ namespace BooksLiveChartsTester.ViewModels
     using BooksLiveCharts.ViewModels.LineCharts;
     using BooksLiveCharts.ViewModels.ScatterCharts;
     using BooksLiveCharts.ViewModels.GeoMapCharts;
+    using BooksLiveCharts.ViewModels.MultipleAxisLineCharts;
 
     /// <summary>
     /// The view model for a books live chart test application.
@@ -98,6 +99,16 @@ namespace BooksLiveChartsTester.ViewModels
         /// The geo map chart view model.
         /// </summary>
         private BaseGeoMapChartViewModel _baseGeoMapChart;
+
+        /// <summary>
+        /// The multiple axis line chart view model.
+        /// </summary>
+        private BaseMultipleAxisLineChartViewModel _baseMultipleAxisLineChart;
+
+        /// <summary>
+        /// The selected multiple axis line chart type.
+        /// </summary>
+        private MultipleAxisLineChartType _selectedMultipleAxisLineChart;
 
         /// <summary>
         /// The get books command.
@@ -206,19 +217,19 @@ namespace BooksLiveChartsTester.ViewModels
         /// <summary>
         /// Gets or sets the selected scatter chart type.
         /// </summary>
-        public LineChartType SelectedLineChartType
+        public MultipleAxisLineChartType SelectedMultipleAxisLineChartType
         {
             get
             {
-                return _selectedLineChart;
+                return _selectedMultipleAxisLineChart;
             }
 
             set
             {
-                if (value != _selectedLineChart)
+                if (value != _selectedMultipleAxisLineChart)
                 {
-                    _selectedLineChart = value;
-                    UpdateLineChartCommandAction();
+                    _selectedMultipleAxisLineChart = value;
+                    UpdateMultipleAxisLineChartCommandAction();
                 }
             }
         }
@@ -226,12 +237,12 @@ namespace BooksLiveChartsTester.ViewModels
         /// <summary>
         /// Gets the line chart types and titles.
         /// </summary>
-        public Dictionary<LineChartType, string> LineChartTypesByTitle { get; private set; }
+        public Dictionary<LineChartType, string> MultipleAxisLineChartTypesByTitle { get; private set; }
 
         /// <summary>
         /// Gets the line chart.
         /// </summary>
-        public BaseLineChartViewModel BaseLineChart => _baseLineChart;
+        public BaseMultipleAxisLineChartViewModel BaseMultipleAxisLineChart => _baseMultipleAxisLineChart;
 
         /// <summary>
         /// Gets or sets the selected scatter chart type.
@@ -262,6 +273,36 @@ namespace BooksLiveChartsTester.ViewModels
         /// Gets the geo map chart.
         /// </summary>
         public BaseGeoMapChartViewModel BaseGeoMapChart => _baseGeoMapChart;
+
+        /// <summary>
+        /// Gets or sets the selected scatter chart type.
+        /// </summary>
+        public LineChartType SelectedLineChartType
+        {
+            get
+            {
+                return _selectedLineChart;
+            }
+
+            set
+            {
+                if (value != _selectedLineChart)
+                {
+                    _selectedLineChart = value;
+                    UpdateLineChartCommandAction();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the line chart types and titles.
+        /// </summary>
+        public Dictionary<LineChartType, string> LineChartTypesByTitle { get; private set; }
+
+        /// <summary>
+        /// Gets the line chart.
+        /// </summary>
+        public BaseLineChartViewModel BaseLineChart => _baseLineChart;
 
         /// <summary>
         /// Gets the get books from database command.
@@ -489,6 +530,26 @@ namespace BooksLiveChartsTester.ViewModels
                 OnPropertyChanged(() => BaseGeoMapChart);
             }
         }
+
+        /// <summary>
+        /// The update average days per book plot command action.
+        /// </summary>
+        private void UpdateMultipleAxisLineChartCommandAction()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                Type lineChartType = _selectedLineChart.GetGeneratorClass();
+                object instance = Activator.CreateInstance(lineChartType);
+                _baseMultipleAxisLineChart = (BaseMultipleAxisLineChartViewModel)instance;
+                _baseMultipleAxisLineChart.SetupPlot(geographyProvider, booksReadProvider);
+
+                OnPropertyChanged(() => BaseMultipleAxisLineChart);
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -515,6 +576,8 @@ namespace BooksLiveChartsTester.ViewModels
 
             _baseGeoMapChart = new BaseGeoMapChartViewModel();
             SetupGeoMapChartTypesByTitle();
+
+            _baseMultipleAxisLineChart = new BaseMultipleAxisLineChartViewModel();
         }
 
         #endregion

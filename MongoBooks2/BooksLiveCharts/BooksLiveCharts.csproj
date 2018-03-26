@@ -65,7 +65,8 @@
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ViewModels\ColumnCharts\BaseColumnChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BasePercentageLineChartViewModel.cs" />
-    <Compile Include="ViewModels\MultipleAxisLineCharts\BaseMultipleAxisLineChart.cs" />
+    <Compile Include="ViewModels\MultipleAxisLineCharts\BaseMultipleAxisLineChartViewModel.cs" />
+    <Compile Include="ViewModels\MultipleAxisLineCharts\MultipleAxisLineChartType.cs" />
     <Compile Include="ViewModels\StackedAreaCharts\BaseStackedAreaChartViewModel.cs" />
     <Compile Include="ViewModels\BaseChartViewModel.cs" />
     <Compile Include="ViewModels\GeoMapCharts\AuthorsPerCountryMapChartViewModel.cs" />
@@ -99,6 +100,9 @@
     <Compile Include="Views\LineChartView.xaml.cs">
       <DependentUpon>LineChartView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MultipleAxisLineChartView.xaml.cs">
+      <DependentUpon>MultipleAxisLineChartView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PieChartView.xaml.cs">
       <DependentUpon>PieChartView.xaml</DependentUpon>
     </Compile>
@@ -112,6 +116,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LineChartView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MultipleAxisLineChartView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
