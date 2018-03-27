@@ -66,6 +66,7 @@
     <Compile Include="ViewModels\ColumnCharts\BaseColumnChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BasePercentageLineChartViewModel.cs" />
     <Compile Include="ViewModels\MultipleAxisLineCharts\BaseMultipleAxisLineChartViewModel.cs" />
+    <Compile Include="ViewModels\MultipleAxisLineCharts\TotalBooksAndPagesReadMultipleAxisLineChartViewModel.cs" />
     <Compile Include="ViewModels\MultipleAxisLineCharts\MultipleAxisLineChartType.cs" />
     <Compile Include="ViewModels\StackedAreaCharts\BaseStackedAreaChartViewModel.cs" />
     <Compile Include="ViewModels\BaseChartViewModel.cs" />

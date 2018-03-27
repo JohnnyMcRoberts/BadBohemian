@@ -437,7 +437,6 @@ namespace BooksLiveCharts.ViewModels.MultipleAxisLineCharts
                 UpdateMaxMinValues(dates, yValues, isLeftHandSide);
 
                 LineSeries seriesView = CreateLineSeries($"Test {1 + i}", dates, yValues, color, leftHandSide: isLeftHandSide);
-                seriesView.ScalesYAt = (i % 2);
                 seriesViews.Add(seriesView);
             }
 
@@ -511,7 +510,7 @@ namespace BooksLiveCharts.ViewModels.MultipleAxisLineCharts
             // Finally create the line series and set the values.
             LineSeries lineSeries = GetBasicLineSeries(title, color, pointSize);
             lineSeries.Values = values;
-
+            lineSeries.ScalesYAt = leftHandSide ? 0 : 1;
             return lineSeries;
         }
 

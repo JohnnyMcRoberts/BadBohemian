@@ -8,7 +8,12 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksLiveCharts.ViewModels.MultipleAxisLineCharts
 {
+    using BooksLiveCharts.Utilities;
+
     public enum MultipleAxisLineChartType
     {
+        [ChartType(Title = "Books and pages read with time",
+            GeneratorClass = typeof(TotalBooksAndPagesReadMultipleAxisLineChartViewModel))]
+        BooksAndPagesThisYear,
     }
 }
