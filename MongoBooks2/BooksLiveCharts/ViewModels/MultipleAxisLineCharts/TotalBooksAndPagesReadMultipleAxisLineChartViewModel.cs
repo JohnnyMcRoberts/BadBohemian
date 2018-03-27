@@ -76,13 +76,13 @@ namespace BooksLiveCharts.ViewModels.MultipleAxisLineCharts
 
             // Create series from them.
             seriesViews.Add(
-                CreateLineSeries("Books", dates, booksReadSeriesValues, Colors.Blue, 0d, true));
+                CreateLineSeries("Books", dates, booksReadSeriesValues, Colors.Blue, true, 0d));
             seriesViews.Add(
-                CreateLineSeries("Books trendline", dates, booksReadTrendlineSeriesValues, ColorUtilities.GetFaintColor(Colors.Blue), 0d, true));
+                CreateLineSeries("Books trendline", dates, booksReadTrendlineSeriesValues, ColorUtilities.GetFaintColor(Colors.Blue), true, 0d));
             seriesViews.Add(
-                CreateLineSeries("Pages", dates, pagesReadSeriesValues, Colors.Red, 0d, false));
+                CreateLineSeries("Pages", dates, pagesReadSeriesValues, Colors.Red, false, 0d));
             seriesViews.Add(
-                CreateLineSeries("Pages trendline", dates, pagesReadTrendlineSeriesValues, ColorUtilities.GetFaintColor(Colors.Red), 0d, false));
+                CreateLineSeries("Pages trendline", dates, pagesReadTrendlineSeriesValues, ColorUtilities.GetFaintColor(Colors.Red), false, 0d));
 
             Series.AddRange(seriesViews);
             SeriesCollection = Series;

@@ -17,6 +17,92 @@ namespace BooksCore.Utilities
 
     public static class BookTotalsUtilities
     {
+        public const int FirstMonth = 1;
+        public const int LastMonth = 12;
+
+        public static readonly string[] MonthNames =
+        {
+            "",
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        };
+
+        public static Dictionary<int, List<MonthOfYearTally>> GetBookListsByMonthOfYear(IBooksReadProvider booksReadProvider)
+        {
+            // get the books foreach year
+            Dictionary<int, List<BookRead>> bookListsByYear = new Dictionary<int, List<BookRead>>();
+
+            foreach (BookRead book in booksReadProvider.BooksRead)
+            {
+                int bookReadYear = book.Date.Year;
+                if (bookListsByYear.ContainsKey(bookReadYear))
+                {
+                    bookListsByYear[bookReadYear].Add(book);
+                }
+                else
+                {
+                    bookListsByYear.Add(bookReadYear, new List<BookRead> { book });
+                }
+            }
+
+            // for each year get the lists of books read each day
+            Dictionary<int, Dictionary<int, List<BookRead>>> bookTotalsByMonthAndYear = new Dictionary<int, Dictionary<int, List<BookRead>>>();
+
+            foreach (int year in bookListsByYear.Keys)
+            {
+                Dictionary<int, List<BookRead>> booksByMonthOfYear = new Dictionary<int, List<BookRead>>();
+                foreach (BookRead book in bookListsByYear[year])
+                {
+                    int bookReadMonthOfYear = book.Date.Month;
+                    if (booksByMonthOfYear.ContainsKey(bookReadMonthOfYear))
+                    {
+                        booksByMonthOfYear[bookReadMonthOfYear].Add(book);
+                    }
+                    else
+                    {
+                        booksByMonthOfYear.Add(bookReadMonthOfYear, new List<BookRead> { book });
+                    }
+                }
+
+                bookTotalsByMonthAndYear.Add(year, booksByMonthOfYear);
+            }
+
+            // from these get the daily tallies for each year
+            Dictionary<int, List<MonthOfYearTally>> bookListsByMonthAndYear = new Dictionary<int, List<MonthOfYearTally>>();
+            foreach (int year in bookTotalsByMonthAndYear.Keys)
+            {
+                Dictionary<int, List<BookRead>> booksByMonthOfYear = bookTotalsByMonthAndYear[year];
+                List<MonthOfYearTally> monthOfYearTallies = new List<MonthOfYearTally>();
+
+                foreach (int monthOfYear in booksByMonthOfYear.Keys.ToList().OrderBy(x => x))
+                {
+                    List<BookRead> booksforMonth = booksByMonthOfYear[monthOfYear];
+                    MonthOfYearTally tally = new MonthOfYearTally
+                    {
+                        MonthOfYear = monthOfYear,
+                        BooksReadThisMonth = booksforMonth.Count,
+                        PagesReadThisMonth = booksforMonth.Sum(x => x.Pages)
+                    };
+
+                    monthOfYearTallies.Add(tally);
+                }
+
+                bookListsByMonthAndYear.Add(year, monthOfYearTallies);
+            }
+
+            return bookListsByMonthAndYear;
+        }
+
         public static List<KeyValuePair<string, int>> SortedSortedPagesReadByCountryTotals(IBooksReadProvider booksReadProvider)
         {
             BooksDelta currentResults = booksReadProvider.BookDeltas.Last();

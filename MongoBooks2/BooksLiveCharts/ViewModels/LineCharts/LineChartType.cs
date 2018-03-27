@@ -46,7 +46,22 @@ namespace BooksLiveCharts.ViewModels.LineCharts
 
         [ChartType(Title = "Percentage Pages Read by Language With Time",
             GeneratorClass = typeof(PercentagePagesReadByLanguageLineChartViewModel))]
-        PercentagePagesReadByLanguage
+        PercentagePagesReadByLanguage,
 
+        [ChartType(Title = "Monthly Pages Read Tallies by Year",
+            GeneratorClass = typeof(MonthlyPageTalliesPerYearLineChartViewModel))]
+        MonthlyPageTalliesPerYear,
+
+        [ChartType(Title = "Monthly Books Read Tallies by Year",
+            GeneratorClass = typeof(MonthlyBookTalliesPerYearLineChartViewModel))]
+        MonthlyBookTalliesPerYear,
+
+        [ChartType(Title = "Monthly Pages Read Totals by Year",
+            GeneratorClass = typeof(MonthlyPageTotalsPerYearLineChartViewModel))]
+        MonthlyPageTotalsPerYear,
+
+        [ChartType(Title = "Monthly Books Read Totals by Year",
+            GeneratorClass = typeof(MonthlyBookTotalsPerYearLineChartViewModel))]
+        MonthlyBookTotalsPerYear
     }
 }

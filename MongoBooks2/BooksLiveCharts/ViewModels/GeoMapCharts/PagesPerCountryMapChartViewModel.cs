@@ -38,9 +38,10 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             {
                 Nation nation = authorCountry.Nation;
                 uint total = authorCountry.TotalPagesReadFromCountry;
-                if (!string.IsNullOrEmpty(nation.Geography.ISO_A2) && total > 0)
+                string code = GetNationCode(nation);
+                if (!string.IsNullOrEmpty(code) && total > 0)
                 {
-                    Values.Add(nation.Geography.ISO_A2, Math.Log10(total));
+                    Values.Add(code, Math.Log10(total));
                     minValue = Math.Min(minValue, total);
                     maxValue = Math.Max(maxValue, total);
                 }

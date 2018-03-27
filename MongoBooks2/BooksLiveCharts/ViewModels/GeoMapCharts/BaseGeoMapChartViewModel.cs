@@ -16,6 +16,7 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
     using LiveCharts;
     using System.IO;
     using System.Text;
+    using BooksCore.Geography;
 
     /// <summary>
     /// The base geo map chart view model class.
@@ -166,6 +167,15 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
             }
 
             ColorGradientElements.Add(new GradientStop(colors.Last(), 1.0));
+        }
+
+        /// <summary>
+        /// Gets the country code for a given nation.
+        /// </summary>
+        /// <param name="nation">The nation to get the code for.</param>
+        protected static string GetNationCode(Nation nation)
+        {
+            return nation.Geography.Name.Contains("Northern Ireland") ? "UL" : nation.Geography.ISO_A2;
         }
 
         /// <summary>
