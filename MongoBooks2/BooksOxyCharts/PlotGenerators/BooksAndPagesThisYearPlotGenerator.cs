@@ -45,8 +45,7 @@ namespace BooksOxyCharts.PlotGenerators
             LineSeries pagesReadSeries;
             LineSeries pagesReadTrendlineSeries;
             OxyPlotUtilities.CreateLineSeries(out pagesReadSeries, ChartAxisKeys.DateKey, ChartAxisKeys.PagesPerDayKey, "Pages Read", 0);
-            OxyPlotUtilities.CreateLineSeries(out pagesReadTrendlineSeries, ChartAxisKeys.DateKey, ChartAxisKeys.PagesPerDayKey, "Pages Read Trendline", 3
-                );
+            OxyPlotUtilities.CreateLineSeries(out pagesReadTrendlineSeries, ChartAxisKeys.DateKey, ChartAxisKeys.PagesPerDayKey, "Pages Read Trendline", 3);
             
             ICurveFitter curveFitterPages;
             GetPagesReadWithTimeCurveFitter(out curveFitterPages);

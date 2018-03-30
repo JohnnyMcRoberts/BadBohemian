@@ -1,12 +1,12 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BaseLineChartViewModel.cs" company="N/A">
+// <copyright file="BaseMultipleAxisLineChartViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The base line chart view model.
+//   The base multiple-axis line chart view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-namespace BooksLiveCharts.ViewModels.LineCharts
+namespace BooksLiveCharts.ViewModels.MultipleAxisLineCharts
 {
     using System;
     using System.Collections.Generic;
@@ -19,9 +19,9 @@ namespace BooksLiveCharts.ViewModels.LineCharts
     using LiveCharts.Wpf;
 
     /// <summary>
-    /// The base line chart view model class.
+    /// The base multiple-axis line chart view model class.
     /// </summary>
-    public class BaseLineChartViewModel : BaseChartViewModel
+    public class BaseMultipleAxisLineChartViewModel : BaseChartViewModel
     {
         /// <summary>
         /// The minimum X Axis Value.
@@ -44,14 +44,24 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         private DateTime _maxX;
 
         /// <summary>
-        /// The minimum Y Axis Value.
+        /// The minimum LHS Y Axis Value.
         /// </summary>
-        private double _minY;
+        private double _minLeftHandSideY;
 
         /// <summary>
-        /// The maximum Y Axis Value.
+        /// The maximum LHS Y Axis Value.
         /// </summary>
-        private double _maxY;
+        private double _maxLeftHandSideY;
+
+        /// <summary>
+        /// The minimum RHS Y Axis Value.
+        /// </summary>
+        private double _minRightHandSideY;
+
+        /// <summary>
+        /// The maximum RHS Y Axis Value.
+        /// </summary>
+        private double _maxRightHandSideY;
 
         /// <summary>
         /// Gets or sets X Axis Title.
@@ -59,9 +69,14 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         private string _xAxisString;
 
         /// <summary>
-        /// Gets or sets Y Axis Title.
+        /// Gets or sets LHS Y Axis Title.
         /// </summary>
-        private string _yAxisString;
+        private string _leftHandSideYAxisString;
+
+        /// <summary>
+        /// Gets or sets RHS Y Axis Title.
+        /// </summary>
+        private string _rightHandSideYAxisString;
 
         /// <summary>
         /// Gets the minimum X Axis tick value.
@@ -134,36 +149,70 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         }
 
         /// <summary>
-        /// Gets or sets the minimum Y Axis Value.
+        /// Gets or sets the minimum Left Hand Side Y Axis Value.
         /// </summary>
-        public double MinY
+        public double MinLeftHandSideY
         {
             get
             {
-                return _minY;
+                return _minLeftHandSideY;
             }
 
             protected set
             {
-                _minY = value;
-                OnPropertyChanged(() => MinY);
+                _minLeftHandSideY = value;
+                OnPropertyChanged(() => MinLeftHandSideY);
             }
         }
 
         /// <summary>
-        /// Gets or sets the maximum Y Axis Value.
+        /// Gets or sets the maximum Left Hand Side Y Axis Value.
         /// </summary>
-        public double MaxY
+        public double MaxLeftHandSideY
         {
             get
             {
-                return _maxY;
+                return _maxLeftHandSideY;
             }
 
             protected set
             {
-                _maxY = value;
-                OnPropertyChanged(() => MaxY);
+                _maxLeftHandSideY = value;
+                OnPropertyChanged(() => MaxLeftHandSideY);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum Right Hand Side Y Axis Value.
+        /// </summary>
+        public double MinRightHandSideY
+        {
+            get
+            {
+                return _minRightHandSideY;
+            }
+
+            protected set
+            {
+                _minRightHandSideY = value;
+                OnPropertyChanged(() => MinRightHandSideY);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum Right Hand Side Y Axis Value.
+        /// </summary>
+        public double MaxRightHandSideY
+        {
+            get
+            {
+                return _maxRightHandSideY;
+            }
+
+            protected set
+            {
+                _maxRightHandSideY = value;
+                OnPropertyChanged(() => MaxRightHandSideY);
             }
         }
 
@@ -190,19 +239,39 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         /// <summary>
         /// Gets or sets Y Axis Title.
         /// </summary>
-        public string YAxisTitle
+        public string LeftHandSideYAxisTitle
         {
             get
             {
-                return _yAxisString;
+                return _leftHandSideYAxisString;
             }
 
             protected set
             {
-                if (value != _yAxisString)
+                if (value != _leftHandSideYAxisString)
                 {
-                    _yAxisString = value;
-                    OnPropertyChanged(() => YAxisTitle);
+                    _leftHandSideYAxisString = value;
+                    OnPropertyChanged(() => LeftHandSideYAxisTitle);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets Y Axis Title.
+        /// </summary>
+        public string RightHandSideYAxisTitle
+        {
+            get
+            {
+                return _rightHandSideYAxisString;
+            }
+
+            protected set
+            {
+                if (value != _rightHandSideYAxisString)
+                {
+                    _rightHandSideYAxisString = value;
+                    OnPropertyChanged(() => RightHandSideYAxisTitle);
                 }
             }
         }
@@ -215,7 +284,12 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         /// <summary>
         /// Gets or sets the series numeric values formatter.
         /// </summary>
-        public Func<double, string> YValueFormatter { get; set; }
+        public Func<double, string> LeftHandSideYValueFormatter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the series numeric values formatter.
+        /// </summary>
+        public Func<double, string> RightHandSideYValueFormatter { get; set; }
 
         /// <summary>
         /// Initialises line chart title, series etc.
@@ -223,18 +297,30 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         private void Initialise()
         {
             XAxisTitle = "X dates";
-            YAxisTitle = "Y values";
+            LeftHandSideYAxisTitle = "Left Hand Side Y values";
+            RightHandSideYAxisTitle = "Right Hand Side Y values";
 
             MinX = DateTime.MaxValue;
             MaxX = DateTime.MinValue;
 
-            MinY = 0;
-            MaxY = 1;
+            MinLeftHandSideY = 0;
+            MaxLeftHandSideY = 1;
 
-            PointLabel = chartPoint => $"Pt ({XAxisTitle} {new DateTime((long)chartPoint.X):d} , {YAxisTitle} {chartPoint.Y:G})";
+            MinRightHandSideY = 0;
+            MaxRightHandSideY = 1;
+
+            PointLabel = chartPoint =>
+            {
+                string yAxisName = chartPoint.SeriesView.ScalesYAt == 0
+                    ? LeftHandSideYAxisTitle
+                    : RightHandSideYAxisTitle;
+
+                return $"Pt ({XAxisTitle} {new DateTime((long)chartPoint.X):d} , {yAxisName} {chartPoint.Y:G})";
+            };
 
             XValueFormatter = value => $"{new DateTime((long)value):d}";
-            YValueFormatter = value => $"{value:G}";
+            LeftHandSideYValueFormatter = value => $"{value:G}";
+            RightHandSideYValueFormatter = value => $"{value:G}";
 
             LegendLocation = LegendLocation.None;
             SetupSeries();
@@ -278,7 +364,7 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         /// <summary>
         /// Update the maximum and minimum values for the series.
         /// </summary>
-        protected void UpdateMaxMinValues(List<DateTime> xValues, List<double> yValues)
+        protected void UpdateMaxMinValues(List<DateTime> xValues, List<double> yValues, bool isLeftHandSide)
         {
             MinX = MinX.Ticks < xValues.Min().Ticks ? MinX : xValues.Min();
             MaxX = MaxX.Ticks > xValues.Max().Ticks ? MaxX : xValues.Max();
@@ -286,19 +372,35 @@ namespace BooksLiveCharts.ViewModels.LineCharts
             MinTick = MinX.Ticks;
             MaxTick = MaxX.Ticks;
 
-            MinY = Math.Min(yValues.Min(), MinY);
-            MaxY = Math.Max(yValues.Max(), MaxY);
+            if (isLeftHandSide)
+            {
+                MinLeftHandSideY = Math.Min(yValues.Min(), MinLeftHandSideY);
+                MaxLeftHandSideY = Math.Max(yValues.Max(), MaxLeftHandSideY);
+            }
+            else
+            {
+                MinRightHandSideY = Math.Min(yValues.Min(), MinRightHandSideY);
+                MaxRightHandSideY = Math.Max(yValues.Max(), MaxRightHandSideY);
+            }
         }
 
         /// <summary>
         /// Update the maximum and minimum values for the series.
         /// </summary>
-        protected void UpdateMaxMinValues(List<double> xValues, List<double> yValues)
+        protected void UpdateMaxMinValues(List<double> xValues, List<double> yValues, bool isLeftHandSide)
         {
             MinTick = MinTick < xValues.Min() ? MinTick : xValues.Min();
             MaxTick = MaxTick > xValues.Max() ? MaxTick : xValues.Max();
-            MinY = Math.Min(yValues.Min(), MinY);
-            MaxY = Math.Max(yValues.Max(), MaxY);
+            if (isLeftHandSide)
+            {
+                MinLeftHandSideY = Math.Min(yValues.Min(), MinLeftHandSideY);
+                MaxLeftHandSideY = Math.Max(yValues.Max(), MaxLeftHandSideY);
+            }
+            else
+            {
+                MinRightHandSideY = Math.Min(yValues.Min(), MinRightHandSideY);
+                MaxRightHandSideY = Math.Max(yValues.Max(), MaxRightHandSideY);
+            }
         }
 
         /// <summary>
@@ -309,14 +411,15 @@ namespace BooksLiveCharts.ViewModels.LineCharts
             Random random = new Random((int)DateTime.Now.Ticks);
             List<Color> colors = ColorUtilities.SetupStandardColourSet();
 
-            DateTime startTime = DateTime.Today.Subtract(new TimeSpan(300, 0, 0,0));
+            DateTime startTime = DateTime.Today.Subtract(new TimeSpan(300, 0, 0, 0));
             MinX = MaxX = startTime;
 
             Series = new SeriesCollection();
             List<ISeriesView> seriesViews = new List<ISeriesView>();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 Color color = colors[i % colors.Count];
+                bool isLeftHandSide = (i % 2) == 0;
 
                 DateTime date = startTime;
                 List<DateTime> dates = new List<DateTime>();
@@ -326,12 +429,15 @@ namespace BooksLiveCharts.ViewModels.LineCharts
                     int timeIncrement = random.Next(1, 10);
                     date = date.Add(new TimeSpan(timeIncrement, 0, 0, 0));
                     dates.Add(date);
-                    yValues.Add(random.NextDouble() * 100);
+                    double yValue = random.NextDouble() * (isLeftHandSide ? 100 : 10);
+
+                    yValues.Add(yValue);
                 }
 
-                UpdateMaxMinValues(dates, yValues);
+                UpdateMaxMinValues(dates, yValues, isLeftHandSide);
 
-                seriesViews.Add(CreateLineSeries($"Test {1 + i}", dates, yValues, color));
+                LineSeries seriesView = CreateLineSeries($"Test {1 + i}", dates, yValues, color, leftHandSide: isLeftHandSide);
+                seriesViews.Add(seriesView);
             }
 
             Series.AddRange(seriesViews);
@@ -346,11 +452,18 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         /// <param name="yValues">The y values for the series.</param>
         /// <param name="color">The color for the series.</param>
         /// <param name="pointSize">The size of the points in pixels.</param>
+        /// <param name="leftHandSide">True if the axis is located on the left, false if it is on the right.</param>
         /// <returns>The newly created line series.</returns>
-        public LineSeries CreateLineSeries(string title, List<double> xValues, List<double> yValues, Color color, double pointSize = 15d)
+        public LineSeries CreateLineSeries(
+            string title,
+            List<double> xValues,
+            List<double> yValues,
+            Color color,
+            double pointSize = 15d,
+            bool leftHandSide = true)
         {
             // Update the maxima and minima.
-            UpdateMaxMinValues(xValues, yValues);
+            UpdateMaxMinValues(xValues, yValues, leftHandSide);
 
             // Get the date time point values.
             ChartValues<ObservablePoint> values = new ChartValues<ObservablePoint>();
@@ -374,11 +487,18 @@ namespace BooksLiveCharts.ViewModels.LineCharts
         /// <param name="yValues">The y values for the series.</param>
         /// <param name="color">The color for the series.</param>
         /// <param name="pointSize">The size of the points in pixels.</param>
+        /// <param name="leftHandSide">True if the axis is located on the left, false if it is on the right.</param>
         /// <returns>The newly created line series.</returns>
-        public LineSeries CreateLineSeries(string title, List<DateTime> xValues, List<double> yValues, Color color, double pointSize = 15d)
+        public LineSeries CreateLineSeries(
+            string title,
+            List<DateTime> xValues,
+            List<double> yValues,
+            Color color,
+            double pointSize = 15d,
+            bool leftHandSide = true)
         {
             // Update the maxima and minima.
-            UpdateMaxMinValues(xValues, yValues);
+            UpdateMaxMinValues(xValues, yValues, leftHandSide);
 
             // Get the date time point values.
             ChartValues<DateTimePoint> values = new ChartValues<DateTimePoint>();
@@ -390,14 +510,14 @@ namespace BooksLiveCharts.ViewModels.LineCharts
             // Finally create the line series and set the values.
             LineSeries lineSeries = GetBasicLineSeries(title, color, pointSize);
             lineSeries.Values = values;
-
+            lineSeries.ScalesYAt = leftHandSide ? 0 : 1;
             return lineSeries;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseLineChartViewModel"/> class.
+        /// Initializes a new instance of the <see cref="BaseMultipleAxisLineChartViewModel"/> class.
         /// </summary>
-        public BaseLineChartViewModel()
+        public BaseMultipleAxisLineChartViewModel()
         {
             Initialise();
         }
