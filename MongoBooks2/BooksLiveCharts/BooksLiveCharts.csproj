@@ -64,6 +64,9 @@
     <Compile Include="Utilities\ChartTypeAttribute.cs" />
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ViewModels\ColumnCharts\BaseColumnChartViewModel.cs" />
+    <Compile Include="ViewModels\ColumnCharts\ColumnChartType.cs" />
+    <Compile Include="ViewModels\ColumnCharts\MonthlyBooksTalliesByCalendarYearColumnChartViewModel.cs" />
+    <Compile Include="ViewModels\ColumnCharts\MonthlyPagesTalliesByCalendarYearColumnChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BasePercentageLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\MonthlyBookTalliesPerYearLineChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\MonthlyBookTotalsPerYearLineChartViewModel.cs" />
@@ -99,6 +102,11 @@
     <Compile Include="ViewModels\ScatterCharts\LastTenBooksAndPagesScatterChartViewModel.cs" />
     <Compile Include="ViewModels\ScatterCharts\LastTenBooksAndPagesWithTimeScatterChartViewModel.cs" />
     <Compile Include="ViewModels\ScatterCharts\ScatterChartType.cs" />
+    <Compile Include="ViewModels\StackedAreaCharts\StackedAreaChartType.cs" />
+    <Compile Include="ViewModels\StackedAreaCharts\TotalBooksReadByCountryStackedAreaChartViewModel.cs" />
+    <Compile Include="ViewModels\StackedAreaCharts\TotalBooksReadByLanguageStackedAreaChartViewModel.cs" />
+    <Compile Include="ViewModels\StackedAreaCharts\TotalPagesReadByCountryStackedAreaChartViewModel.cs" />
+    <Compile Include="ViewModels\StackedAreaCharts\TotalPagesReadByLanguageStackedAreaChartViewModel.cs" />
     <Compile Include="Views\ColumnChartView.xaml.cs">
       <DependentUpon>ColumnChartView.xaml</DependentUpon>
     </Compile>
@@ -116,6 +124,9 @@
     </Compile>
     <Compile Include="Views\ScatterChartView.xaml.cs">
       <DependentUpon>ScatterChartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StackedAreaChartView.xaml.cs">
+      <DependentUpon>StackedAreaChartView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ScatterChartView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StackedAreaChartView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

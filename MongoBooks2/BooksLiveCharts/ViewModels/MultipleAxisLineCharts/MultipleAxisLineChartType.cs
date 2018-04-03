@@ -10,6 +10,9 @@ namespace BooksLiveCharts.ViewModels.MultipleAxisLineCharts
 {
     using BooksLiveCharts.Utilities;
 
+    /// <summary>
+    /// Type of multiple axis line chart.
+    /// </summary>
     public enum MultipleAxisLineChartType
     {
         [ChartType(Title = "Books and pages read with time",

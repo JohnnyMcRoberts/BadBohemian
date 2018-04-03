@@ -10,6 +10,9 @@ namespace BooksLiveCharts.ViewModels.LineCharts
 {
     using BooksLiveCharts.Utilities;
 
+    /// <summary>
+    /// Type of line chart.
+    /// </summary>
     public enum LineChartType
     {
         [ChartType(Title = "Pages per Day with time",
