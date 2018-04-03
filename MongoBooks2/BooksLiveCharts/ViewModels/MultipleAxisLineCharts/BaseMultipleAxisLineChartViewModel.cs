@@ -494,8 +494,8 @@ namespace BooksLiveCharts.ViewModels.MultipleAxisLineCharts
             List<DateTime> xValues,
             List<double> yValues,
             Color color,
-            double pointSize = 15d,
-            bool leftHandSide = true)
+            bool leftHandSide,
+            double pointSize = 15d)
         {
             // Update the maxima and minima.
             UpdateMaxMinValues(xValues, yValues, leftHandSide);

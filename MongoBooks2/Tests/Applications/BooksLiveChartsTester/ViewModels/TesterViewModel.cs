@@ -18,6 +18,7 @@ namespace BooksLiveChartsTester.ViewModels
     using BooksDatabase.Implementations;
     using BooksUtilities.ViewModels;
     using BooksLiveCharts.Utilities;
+    using BooksLiveCharts.ViewModels.ColumnCharts;
     using BooksLiveCharts.ViewModels.PieCharts;
     using BooksLiveCharts.ViewModels.LineCharts;
     using BooksLiveCharts.ViewModels.ScatterCharts;
@@ -109,6 +110,11 @@ namespace BooksLiveChartsTester.ViewModels
         /// The selected multiple axis line chart type.
         /// </summary>
         private MultipleAxisLineChartType _selectedMultipleAxisLineChart;
+
+        /// <summary>
+        /// The multiple axis line chart view model.
+        /// </summary>
+        private BaseColumnChartViewModel _baseColumnChart;
 
         /// <summary>
         /// The get books command.
@@ -308,6 +314,11 @@ namespace BooksLiveChartsTester.ViewModels
         /// Gets the line chart.
         /// </summary>
         public BaseLineChartViewModel BaseLineChart => _baseLineChart;
+
+        /// <summary>
+        /// Gets the column chart.
+        /// </summary>
+        public BaseColumnChartViewModel BaseColumnChart => _baseColumnChart;
 
         /// <summary>
         /// Gets the get books from database command.
@@ -602,6 +613,8 @@ namespace BooksLiveChartsTester.ViewModels
 
             _baseMultipleAxisLineChart = new BaseMultipleAxisLineChartViewModel();
             SetupMultipleAxisLineChartTypesByTitle();
+
+            _baseColumnChart = new BaseColumnChartViewModel();
         }
 
         #endregion

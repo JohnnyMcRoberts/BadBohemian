@@ -61,6 +61,7 @@
 
                 </Grid>
             </TabItem>
+
             <TabItem Header="Scatter Chart">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -161,6 +162,34 @@
                     </StackPanel>
 
                     <liveCharts:MultipleAxisLineChartView Grid.Row="1" DataContext="{Binding Path=BaseMultipleAxisLineChart}"/>
+
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Column Chart">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+
+                        <Button Width="150" Content="Update" Height="22" Command="{Binding Path=UpdateColumnChartCommand}"></Button>
+
+                        <!--
+                        <ComboBox
+                            ItemsSource="{Binding ColumnChartTypesByTitle}"
+                            SelectedValue="{Binding ColumnScatterChartType}"
+                            SelectedValuePath="Key"
+                            DisplayMemberPath="Value"
+                            Height="22"
+                            Margin="2"
+                        />
+                        -->
+
+                    </StackPanel>
+
+                    <liveCharts:ScatterChartView  Grid.Row="1" DataContext="{Binding Path=BaseColumnChart}"/>
 
                 </Grid>
             </TabItem>

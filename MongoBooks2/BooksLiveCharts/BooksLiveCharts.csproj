@@ -65,6 +65,10 @@
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ViewModels\ColumnCharts\BaseColumnChartViewModel.cs" />
     <Compile Include="ViewModels\LineCharts\BasePercentageLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\MonthlyBookTalliesPerYearLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\MonthlyBookTotalsPerYearLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\MonthlyPageTalliesPerYearLineChartViewModel.cs" />
+    <Compile Include="ViewModels\LineCharts\MonthlyPageTotalsPerYearLineChartViewModel.cs" />
     <Compile Include="ViewModels\MultipleAxisLineCharts\BaseMultipleAxisLineChartViewModel.cs" />
     <Compile Include="ViewModels\MultipleAxisLineCharts\TotalBooksAndPagesReadMultipleAxisLineChartViewModel.cs" />
     <Compile Include="ViewModels\MultipleAxisLineCharts\MultipleAxisLineChartType.cs" />
@@ -95,6 +99,9 @@
     <Compile Include="ViewModels\ScatterCharts\LastTenBooksAndPagesScatterChartViewModel.cs" />
     <Compile Include="ViewModels\ScatterCharts\LastTenBooksAndPagesWithTimeScatterChartViewModel.cs" />
     <Compile Include="ViewModels\ScatterCharts\ScatterChartType.cs" />
+    <Compile Include="Views\ColumnChartView.xaml.cs">
+      <DependentUpon>ColumnChartView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GeoMapChartView.xaml.cs">
       <DependentUpon>GeoMapChartView.xaml</DependentUpon>
     </Compile>
@@ -112,6 +119,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ColumnChartView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GeoMapChartView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
