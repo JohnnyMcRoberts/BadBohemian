@@ -10,6 +10,9 @@ namespace BooksLiveCharts.ViewModels.PieCharts
 {
     using BooksLiveCharts.Utilities;
 
+    /// <summary>
+    /// Type of pie chart.
+    /// </summary>
     public enum PieChartType
     {
         [ChartType(Title = "Current Books Read By Country",

@@ -10,6 +10,9 @@ namespace BooksLiveCharts.ViewModels.ScatterCharts
 {
     using BooksLiveCharts.Utilities;
 
+    /// <summary>
+    /// Type of scatter chart.
+    /// </summary>
     public enum ScatterChartType
     {
         [ChartType(Title = "Last 10 Books: Time Taken vs Pages",

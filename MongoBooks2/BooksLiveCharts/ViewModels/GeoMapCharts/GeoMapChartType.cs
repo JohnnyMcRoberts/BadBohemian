@@ -10,6 +10,9 @@ namespace BooksLiveCharts.ViewModels.GeoMapCharts
 {
     using BooksLiveCharts.Utilities;
 
+    /// <summary>
+    /// Type of geo-map chart.
+    /// </summary>
     public enum GeoMapChartType
     {
         [ChartType(Title = "Books Per Country",

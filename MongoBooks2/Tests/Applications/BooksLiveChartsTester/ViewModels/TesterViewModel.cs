@@ -24,6 +24,7 @@ namespace BooksLiveChartsTester.ViewModels
     using BooksLiveCharts.ViewModels.ScatterCharts;
     using BooksLiveCharts.ViewModels.GeoMapCharts;
     using BooksLiveCharts.ViewModels.MultipleAxisLineCharts;
+    using BooksLiveCharts.ViewModels.StackedAreaCharts;
 
     /// <summary>
     /// The view model for a books live chart test application.
@@ -117,6 +118,21 @@ namespace BooksLiveChartsTester.ViewModels
         private BaseColumnChartViewModel _baseColumnChart;
 
         /// <summary>
+        /// The selected column chart type.
+        /// </summary>
+        private ColumnChartType _selectedColumnChart;
+
+        /// <summary>
+        /// The multiple axis Stacked Area chart view model.
+        /// </summary>
+        private BaseStackedAreaChartViewModel _baseStackedAreaChart;
+
+        /// <summary>
+        /// The selected stacked area chart type.
+        /// </summary>
+        private StackedAreaChartType _selectedStackedAreaChart;
+
+        /// <summary>
         /// The get books command.
         /// </summary>
         private ICommand _getBooksCommand;
@@ -150,6 +166,16 @@ namespace BooksLiveChartsTester.ViewModels
         /// The update the selected multiple axis line chart command.
         /// </summary>
         private ICommand _updateMultipleAxisLineChartCommand;
+
+        /// <summary>
+        /// The update the selected column chart command.
+        /// </summary>
+        private ICommand _updateColumnChartCommand;
+
+        /// <summary>
+        /// The update the selected stacked area chart command.
+        /// </summary>
+        private ICommand _updateStackedAreaChartCommand;
 
         #endregion
 
@@ -286,7 +312,7 @@ namespace BooksLiveChartsTester.ViewModels
         public BaseGeoMapChartViewModel BaseGeoMapChart => _baseGeoMapChart;
 
         /// <summary>
-        /// Gets or sets the selected scatter chart type.
+        /// Gets or sets the selected line chart type.
         /// </summary>
         public LineChartType SelectedLineChartType
         {
@@ -316,6 +342,61 @@ namespace BooksLiveChartsTester.ViewModels
         public BaseLineChartViewModel BaseLineChart => _baseLineChart;
 
         /// <summary>
+        /// Gets or sets the column chart type.
+        /// </summary>
+        public ColumnChartType SelectedColumnChartType
+        {
+            get
+            {
+                return _selectedColumnChart;
+            }
+
+            set
+            {
+                if (value != _selectedColumnChart)
+                {
+                    _selectedColumnChart = value;
+                    UpdateColumnChartCommandAction();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the column chart types and titles.
+        /// </summary>
+        public Dictionary<ColumnChartType, string> ColumnChartTypesByTitle { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the stacked area chart type.
+        /// </summary>
+        public StackedAreaChartType SelectedStackedAreaChartType
+        {
+            get
+            {
+                return _selectedStackedAreaChart;
+            }
+
+            set
+            {
+                if (value != _selectedStackedAreaChart)
+                {
+                    _selectedStackedAreaChart = value;
+                    UpdateStackedAreaChartCommandAction();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the stacked area chart types and titles.
+        /// </summary>
+        public Dictionary<StackedAreaChartType, string> StackedAreaChartTypesByTitle { get; private set; }
+
+        /// <summary>
+        /// Gets the stacked area chart.
+        /// </summary>
+        public BaseStackedAreaChartViewModel BaseStackedAreaChart => _baseStackedAreaChart;
+
+        /// <summary>
         /// Gets the column chart.
         /// </summary>
         public BaseColumnChartViewModel BaseColumnChart => _baseColumnChart;
@@ -323,37 +404,57 @@ namespace BooksLiveChartsTester.ViewModels
         /// <summary>
         /// Gets the get books from database command.
         /// </summary>
-        public ICommand GetBooksCommand => _getBooksCommand ?? (_getBooksCommand = new CommandHandler(GetBooksCommandAction, true));
+        public ICommand GetBooksCommand => 
+            _getBooksCommand ?? (_getBooksCommand = new CommandHandler(GetBooksCommandAction, true));
 
         /// <summary>
         /// Gets the get nations from database command.
         /// </summary>
-        public ICommand GetNationsCommand => _getNationsCommand ?? (_getNationsCommand = new CommandHandler(GetNationsCommandAction, true));
+        public ICommand GetNationsCommand => 
+            _getNationsCommand ?? (_getNationsCommand = new CommandHandler(GetNationsCommandAction, true));
 
         /// <summary>
         /// Gets the update pie chart command.
         /// </summary>
-        public ICommand UpdatePieChartCommand => _updatePieChartCommand ?? (_updatePieChartCommand = new CommandHandler(UpdatePieChartCommandAction, true));
+        public ICommand UpdatePieChartCommand => 
+            _updatePieChartCommand ?? (_updatePieChartCommand = new CommandHandler(UpdatePieChartCommandAction, true));
 
         /// <summary>
         /// Gets the update scatter chart command.
         /// </summary>
-        public ICommand UpdateScatterChartCommand => _updateScatterChartCommand ?? (_updateScatterChartCommand = new CommandHandler(UpdateScatterChartCommandAction, true));
+        public ICommand UpdateScatterChartCommand => 
+            _updateScatterChartCommand ?? (_updateScatterChartCommand = new CommandHandler(UpdateScatterChartCommandAction, true));
 
         /// <summary>
         /// Gets the update line chart command.
         /// </summary>
-        public ICommand UpdateLineChartCommand => _updateLineChartCommand ?? (_updateLineChartCommand = new CommandHandler(UpdateLineChartCommandAction, true));
+        public ICommand UpdateLineChartCommand => 
+            _updateLineChartCommand ?? (_updateLineChartCommand = new CommandHandler(UpdateLineChartCommandAction, true));
 
         /// <summary>
         /// Gets the update geo map chart command.
         /// </summary>
-        public ICommand UpdateGeoMapChartCommand => _updateGeoMapChartCommand ?? (_updateGeoMapChartCommand = new CommandHandler(UpdateGeoMapChartCommandAction, true));
+        public ICommand UpdateGeoMapChartCommand => 
+            _updateGeoMapChartCommand ?? (_updateGeoMapChartCommand = new CommandHandler(UpdateGeoMapChartCommandAction, true));
 
         /// <summary>
         /// Gets the update multiple axis line chart command.
         /// </summary>
-        public ICommand UpdateMultipleAxisLineChartCommand => _updateMultipleAxisLineChartCommand ?? (_updateMultipleAxisLineChartCommand = new CommandHandler(UpdateMultipleAxisLineChartCommandAction, true));
+        public ICommand UpdateMultipleAxisLineChartCommand => 
+            _updateMultipleAxisLineChartCommand ?? (_updateMultipleAxisLineChartCommand = new CommandHandler(UpdateMultipleAxisLineChartCommandAction, true));
+
+        /// <summary>
+        /// Gets the update column chart command.
+        /// </summary>
+        public ICommand UpdateColumnChartCommand => 
+            _updateColumnChartCommand ?? (_updateColumnChartCommand = new CommandHandler(UpdateColumnChartCommandAction, true));
+
+        /// <summary>
+        /// Gets the update stacked area chart command.
+        /// </summary>
+        public ICommand UpdateStackedAreaChartCommand => 
+            _updateStackedAreaChartCommand ?? (_updateStackedAreaChartCommand = new CommandHandler(UpdateStackedAreaChartCommandAction, true));
+
 
         #endregion
 
@@ -457,6 +558,32 @@ namespace BooksLiveChartsTester.ViewModels
             {
                 string title = selection.GetTitle();
                 MultipleAxisLineChartTypesByTitle.Add(selection, title);
+            }
+        }
+
+        /// <summary>
+        /// Sets up the Column chart selection types.
+        /// </summary>
+        private void SetupColumnChartTypesByTitle()
+        {
+            ColumnChartTypesByTitle = new Dictionary<ColumnChartType, string>();
+            foreach (ColumnChartType selection in Enum.GetValues(typeof(ColumnChartType)))
+            {
+                string title = selection.GetTitle();
+                ColumnChartTypesByTitle.Add(selection, title);
+            }
+        }
+
+        /// <summary>
+        /// Sets up the stacked area chart selection types.
+        /// </summary>
+        private void SetupStackedAreaChartTypesByTitle()
+        {
+            StackedAreaChartTypesByTitle = new Dictionary<StackedAreaChartType, string>();
+            foreach (StackedAreaChartType selection in Enum.GetValues(typeof(StackedAreaChartType)))
+            {
+                string title = selection.GetTitle();
+                StackedAreaChartTypesByTitle.Add(selection, title);
             }
         }
 
@@ -584,6 +711,44 @@ namespace BooksLiveChartsTester.ViewModels
             }
         }
 
+        /// <summary>
+        /// The update Column chart command action.
+        /// </summary>
+        private void UpdateColumnChartCommandAction()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                Type columnChartType = _selectedColumnChart.GetGeneratorClass();
+                object instance = Activator.CreateInstance(columnChartType);
+                _baseColumnChart = (BaseColumnChartViewModel)instance;
+                _baseColumnChart.SetupPlot(geographyProvider, booksReadProvider);
+
+                OnPropertyChanged(() => BaseColumnChart);
+            }
+        }
+
+        /// <summary>
+        /// The update stacked area chart command action.
+        /// </summary>
+        private void UpdateStackedAreaChartCommandAction()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                Type stackedAreaChartType = _selectedStackedAreaChart.GetGeneratorClass();
+                object instance = Activator.CreateInstance(stackedAreaChartType);
+                _baseStackedAreaChart = (BaseStackedAreaChartViewModel)instance;
+                _baseStackedAreaChart.SetupPlot(geographyProvider, booksReadProvider);
+
+                OnPropertyChanged(() => BaseStackedAreaChart);
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -615,6 +780,10 @@ namespace BooksLiveChartsTester.ViewModels
             SetupMultipleAxisLineChartTypesByTitle();
 
             _baseColumnChart = new BaseColumnChartViewModel();
+            SetupColumnChartTypesByTitle();
+
+            _baseStackedAreaChart = new BaseStackedAreaChartViewModel();
+            SetupStackedAreaChartTypesByTitle();
         }
 
         #endregion
