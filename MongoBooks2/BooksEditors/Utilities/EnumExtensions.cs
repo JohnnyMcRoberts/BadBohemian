@@ -1,4 +1,12 @@
-﻿namespace BooksLiveCharts.Utilities
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GridTypeAttribute.cs" company="N/A">
+//   2016
+// </copyright>
+// <summary>
+//   The grid enum extensions.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+namespace BooksEditors.Utilities
 {
     using System;
     using System.Reflection;
@@ -11,8 +19,8 @@
             if (GetFieldInfo(value, out field))
                 return null;
 
-            ChartTypeAttribute attr =
-                Attribute.GetCustomAttribute(field, typeof(ChartTypeAttribute)) as ChartTypeAttribute;
+            GridTypeAttribute attr =
+                Attribute.GetCustomAttribute(field, typeof(GridTypeAttribute)) as GridTypeAttribute;
 
             return attr?.Title;
         }
@@ -23,8 +31,8 @@
             if (GetFieldInfo(value, out field))
                 return null;
 
-            ChartTypeAttribute attr =
-                Attribute.GetCustomAttribute(field, typeof(ChartTypeAttribute)) as ChartTypeAttribute;
+            GridTypeAttribute attr =
+                Attribute.GetCustomAttribute(field, typeof(GridTypeAttribute)) as GridTypeAttribute;
 
             return attr?.GeneratorClass;
         }

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BasePieChartViewModel.cs" company="N/A">
+// <copyright file="BaseChartViewModel.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
@@ -112,7 +112,7 @@ namespace BooksLiveCharts.ViewModels
         }
 
         /// <summary>
-        /// Sets up the pie chart series.
+        /// Sets up the chart series.
         /// </summary>
         protected abstract void SetupSeries();
 

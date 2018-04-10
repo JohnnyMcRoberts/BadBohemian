@@ -1,0 +1,72 @@
+﻿<Window x:Class="BooksEditorsTester.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BooksEditorsTester"
+        xmlns:gridEditors="clr-namespace:BooksEditors.Views.Grids;assembly=BooksEditors"
+        mc:Ignorable="d"
+        Title="Books Editor Tester" Height="350" Width="525">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Books">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Width="150" Content="Get Books" Height="22" Command="{Binding Path=GetBooksCommand}"></Button>
+
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=Books, Mode=OneWay}"
+                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Nations">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Width="150" Content="Get Nations" Height="22" Command="{Binding Path=GetNationsCommand}"></Button>
+
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=Nations, Mode=OneWay}"
+                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Users">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Width="150" Content="Get Users" Height="22" Command="{Binding Path=GetUsersCommand}"></Button>
+
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=Users, Mode=OneWay}"
+                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Grids">
+                <TabControl>
+                    <TabItem Header="Authors">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Button Width="150" Content="Get Authors" Height="22"
+                                    Command="{Binding Path=GetAuthorsGridCommand}"/>
+                            <gridEditors:AuthorsGridView Grid.Row="1" DataContext="{Binding Path=AuthorsGrid}"/>
+
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

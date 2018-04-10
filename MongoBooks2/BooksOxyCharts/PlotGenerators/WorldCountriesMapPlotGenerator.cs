@@ -44,7 +44,7 @@ namespace BooksOxyCharts.PlotGenerators
                     OxyPlotUtilities.AddCountryGeographyAreaSeriesToPlot(newPlot, country, colour, title, tag, trackerFormat);
                 }
 
-                if (!string.IsNullOrEmpty(nation.ImageUri) && flagCount < 10)
+                if (!string.IsNullOrEmpty(nation.ImageUri) && flagCount < 100)
                 {
                     PolygonPoint capitalCity =
                         new PolygonPoint(nation.Longitude, nation.Latitude);

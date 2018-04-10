@@ -1,23 +1,23 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ChartTypeAttribute.cs" company="N/A">
+// <copyright file="GridTypeAttribute.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The base pie-chart view model.
+//   The grid type attribute.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-namespace BooksLiveCharts.Utilities
+namespace BooksEditors.Utilities
 {
     using System;
 
     [AttributeUsage(AttributeTargets.Field)]
-    public class ChartTypeAttribute : Attribute
+    public class GridTypeAttribute : Attribute
     {
         public string Title { get; set; }
 
         public Type GeneratorClass { get; set; }
 
-        public ChartTypeAttribute()
+        public GridTypeAttribute()
         {
             Title = string.Empty;
         }
