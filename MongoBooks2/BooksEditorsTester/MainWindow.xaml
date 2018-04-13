@@ -52,6 +52,20 @@
             </TabItem>
             <TabItem Header="Grids">
                 <TabControl>
+
+                    <TabItem Header="Books Read">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Button Width="150" Content="Get Books Read" Height="22"
+                                    Command="{Binding Path=GetBooksReadGridCommand}"/>
+                            <gridEditors:BooksReadGridView Grid.Row="1" DataContext="{Binding Path=BooksReadGrid}"/>
+
+                        </Grid>
+                    </TabItem>
+
                     <TabItem Header="Authors">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -64,6 +78,33 @@
 
                         </Grid>
                     </TabItem>
+
+                    <TabItem Header="Languages">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Button Width="150" Content="Get Languages" Height="22"
+                                    Command="{Binding Path=GetLanguagesGridCommand}"/>
+                            <gridEditors:LanguagesGridView Grid.Row="1" DataContext="{Binding Path=LanguagesGrid}"/>
+
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="Countries">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Button Width="150" Content="Get Countries" Height="22"
+                                    Command="{Binding Path=GetCountriesGridCommand}"/>
+                            <gridEditors:CountriesGridView Grid.Row="1" DataContext="{Binding Path=CountriesGrid}"/>
+
+                        </Grid>
+                    </TabItem>
+
                 </TabControl>
 
             </TabItem>

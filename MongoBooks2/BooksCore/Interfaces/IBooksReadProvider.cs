@@ -47,8 +47,19 @@ namespace BooksCore.Interfaces
         /// </summary>
         ObservableCollection<AuthorCountry> AuthorCountries { get; }
 
-        ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
+        /// <summary>
+        /// Gets the author languages.
+        /// </summary>
+        ObservableCollection<AuthorLanguage> AuthorLanguages { get; }
 
+        /// <summary>
+        /// Gets the tallied months.
+        /// </summary>
+        ObservableCollection<TalliedMonth> TalliedMonths { get;}
+
+        /// <summary>
+        /// Gets or sets the selected month tally.
+        /// </summary>
         TalliedMonth SelectedMonthTally { get; set; }
     }
 }

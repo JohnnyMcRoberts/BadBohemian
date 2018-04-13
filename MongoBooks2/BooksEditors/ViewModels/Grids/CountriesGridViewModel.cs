@@ -3,7 +3,7 @@
 //   2016
 // </copyright>
 // <summary>
-//   The authors grid view model.
+//   The countries grid view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksEditors.ViewModels.Grids
@@ -12,59 +12,58 @@ namespace BooksEditors.ViewModels.Grids
     using BooksCore.Books;
 
     /// <summary>
-    /// The authors grid view model class.
+    /// The countries grid view model class.
     /// </summary>
-    public sealed class AuthorsGridViewModel : BaseGridViewModel
+    public sealed class CountriesGridViewModel : BaseGridViewModel
     {
         /// <summary>
-        /// The authors read list for the grid.
+        /// The author countries for the grid.
         /// </summary>
-        private ObservableCollection<BookAuthor> _authorsRead;
+        private ObservableCollection<AuthorCountry> _authorCountries;
 
         /// <summary>
-        /// Gets the Authors read for the grid.
+        /// Gets the author countries for the grid.
         /// </summary>
-        public ObservableCollection<BookAuthor> AuthorsRead
+        public ObservableCollection<AuthorCountry> AuthorCountries
         {
             get
             {
-                return _authorsRead;
+                return _authorCountries;
             }
 
             private set
             {
-                _authorsRead = value;
-                OnPropertyChanged(() => AuthorsRead);
+                _authorCountries = value;
+                OnPropertyChanged(() => AuthorCountries);
             }
 
         }
 
         /// <summary>
-        /// Sets up the authors grid.
+        /// Sets up the author languages grid.
         /// </summary>
         protected override void SetupGrid()
         {
-            Title = "Authors";
+            Title = "Countries";
 
             // If no books return the default.
             if (BooksReadProvider == null)
             {
-                _authorsRead = new ObservableCollection<BookAuthor>();
+                _authorCountries = new ObservableCollection<AuthorCountry>();
                 return;
             }
 
-            // Otherwise set to the books authors.
-            AuthorsRead = BooksReadProvider.AuthorsRead;
+            // Otherwise set to the author languages.
+            AuthorCountries = BooksReadProvider.AuthorCountries;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthorsGridViewModel"/> class.
+        /// Initializes a new instance of the <see cref="CountriesGridViewModel"/> class.
         /// </summary>
-        public AuthorsGridViewModel()
+        public CountriesGridViewModel()
         {
-            Title = "Authors";
+            Title = "Countries";
             SetupGrid();
         }
-
     }
 }

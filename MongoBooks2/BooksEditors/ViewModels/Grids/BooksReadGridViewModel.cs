@@ -3,7 +3,7 @@
 //   2016
 // </copyright>
 // <summary>
-//   The authors grid view model.
+//   The books read grid view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksEditors.ViewModels.Grids
@@ -12,59 +12,58 @@ namespace BooksEditors.ViewModels.Grids
     using BooksCore.Books;
 
     /// <summary>
-    /// The authors grid view model class.
+    /// The books read grid view model class.
     /// </summary>
-    public sealed class AuthorsGridViewModel : BaseGridViewModel
+    public sealed class BooksReadGridViewModel : BaseGridViewModel
     {
         /// <summary>
-        /// The authors read list for the grid.
+        /// The author languages for the grid.
         /// </summary>
-        private ObservableCollection<BookAuthor> _authorsRead;
+        private ObservableCollection<BookRead> _booksRead;
 
         /// <summary>
-        /// Gets the Authors read for the grid.
+        /// Gets the books read for the grid.
         /// </summary>
-        public ObservableCollection<BookAuthor> AuthorsRead
+        public ObservableCollection<BookRead> BooksRead
         {
             get
             {
-                return _authorsRead;
+                return _booksRead;
             }
 
             private set
             {
-                _authorsRead = value;
-                OnPropertyChanged(() => AuthorsRead);
+                _booksRead = value;
+                OnPropertyChanged(() => BooksRead);
             }
 
         }
 
         /// <summary>
-        /// Sets up the authors grid.
+        /// Sets up the books read grid.
         /// </summary>
         protected override void SetupGrid()
         {
-            Title = "Authors";
+            Title = "Languages";
 
             // If no books return the default.
             if (BooksReadProvider == null)
             {
-                _authorsRead = new ObservableCollection<BookAuthor>();
+                _booksRead = new ObservableCollection<BookRead>();
                 return;
             }
 
-            // Otherwise set to the books authors.
-            AuthorsRead = BooksReadProvider.AuthorsRead;
+            // Otherwise set to the books read.
+            BooksRead = BooksReadProvider.BooksRead;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthorsGridViewModel"/> class.
+        /// Initializes a new instance of the <see cref="BooksReadGridViewModel"/> class.
         /// </summary>
-        public AuthorsGridViewModel()
+        public BooksReadGridViewModel()
         {
-            Title = "Authors";
+            Title = "Books Read";
             SetupGrid();
         }
-
     }
 }

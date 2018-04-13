@@ -18,5 +18,9 @@ namespace BooksEditors.ViewModels.Grids
         [GridType(Title = "Authors",
             GeneratorClass = typeof(AuthorsGridViewModel))]
         Authors,
+
+        [GridType(Title = "Languages",
+            GeneratorClass = typeof(LanguagesGridViewModel))]
+        Languages,
     }
 }
