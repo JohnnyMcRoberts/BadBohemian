@@ -40,6 +40,11 @@ namespace BooksEditors.ViewModels.Grids
         }
 
         /// <summary>
+        /// Gets or sets the selected book read from the grid.
+        /// </summary>
+        public BookRead SelectedBook { get; set; }
+
+        /// <summary>
         /// Sets up the books read grid.
         /// </summary>
         protected override void SetupGrid()
