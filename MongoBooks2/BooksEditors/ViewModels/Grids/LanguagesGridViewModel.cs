@@ -3,7 +3,7 @@
 //   2016
 // </copyright>
 // <summary>
-//   The authors grid view model.
+//   The languages grid view model.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksEditors.ViewModels.Grids
@@ -12,59 +12,58 @@ namespace BooksEditors.ViewModels.Grids
     using BooksCore.Books;
 
     /// <summary>
-    /// The authors grid view model class.
+    /// The languages grid view model class.
     /// </summary>
-    public sealed class AuthorsGridViewModel : BaseGridViewModel
+    public sealed class LanguagesGridViewModel : BaseGridViewModel
     {
         /// <summary>
-        /// The authors read list for the grid.
+        /// The author languages for the grid.
         /// </summary>
-        private ObservableCollection<BookAuthor> _authorsRead;
+        private ObservableCollection<AuthorLanguage> _authorLanguages;
 
         /// <summary>
-        /// Gets the Authors read for the grid.
+        /// Gets the author languages for the grid.
         /// </summary>
-        public ObservableCollection<BookAuthor> AuthorsRead
+        public ObservableCollection<AuthorLanguage> AuthorLanguages
         {
             get
             {
-                return _authorsRead;
+                return _authorLanguages;
             }
 
             private set
             {
-                _authorsRead = value;
-                OnPropertyChanged(() => AuthorsRead);
+                _authorLanguages = value;
+                OnPropertyChanged(() => AuthorLanguages);
             }
 
         }
 
         /// <summary>
-        /// Sets up the authors grid.
+        /// Sets up the author languages grid.
         /// </summary>
         protected override void SetupGrid()
         {
-            Title = "Authors";
+            Title = "Languages";
 
             // If no books return the default.
             if (BooksReadProvider == null)
             {
-                _authorsRead = new ObservableCollection<BookAuthor>();
+                _authorLanguages = new ObservableCollection<AuthorLanguage>();
                 return;
             }
 
-            // Otherwise set to the books authors.
-            AuthorsRead = BooksReadProvider.AuthorsRead;
+            // Otherwise set to the author languages.
+            AuthorLanguages = BooksReadProvider.AuthorLanguages;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthorsGridViewModel"/> class.
+        /// Initializes a new instance of the <see cref="LanguagesGridViewModel"/> class.
         /// </summary>
-        public AuthorsGridViewModel()
+        public LanguagesGridViewModel()
         {
-            Title = "Authors";
+            Title = "Languages";
             SetupGrid();
         }
-
     }
 }

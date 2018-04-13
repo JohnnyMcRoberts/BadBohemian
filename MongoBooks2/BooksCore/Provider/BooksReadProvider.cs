@@ -44,7 +44,12 @@ namespace BooksCore.Provider
         /// Gets the author countries.
         /// </summary>
         public ObservableCollection<AuthorCountry> AuthorCountries { get; }
-        
+
+        /// <summary>
+        /// Gets the author languages.
+        /// </summary>
+        public ObservableCollection<AuthorLanguage> AuthorLanguages { get; }
+
         public ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
 
         public TalliedMonth SelectedMonthTally { get; set; }
@@ -235,6 +240,33 @@ namespace BooksCore.Provider
             }
         }
 
+        private void UpdateLanguages(int booksReadWorldwide, uint pagesReadWorldwide)
+        {
+            // clear the list
+            AuthorLanguages.Clear();
+
+            // get the uniquely named languages
+            Dictionary<string, AuthorLanguage> languageSet = new Dictionary<string, AuthorLanguage>();
+            foreach (BookAuthor author in AuthorsRead)
+            {
+                if (languageSet.ContainsKey(author.Language))
+                    languageSet[author.Language].AuthorsInLanguage.Add(author);
+                else
+                {
+                    AuthorLanguage language = new AuthorLanguage { Language = author.Language };
+                    language.AuthorsInLanguage.Add(author);
+                    languageSet.Add(language.Language, language);
+                }
+            }
+
+            // Update the language totals + add to the list
+            foreach (AuthorLanguage language in languageSet.Values.ToList())
+            {
+                language.TotalBooksWorldWide = booksReadWorldwide;
+                language.TotalPagesWorldWide = pagesReadWorldwide;
+                AuthorLanguages.Add(language);
+            }
+        }
 
         private void UpdateBooksPerMonth()
         {
@@ -292,6 +324,7 @@ namespace BooksCore.Provider
             int booksReadWorldwide;
             uint pagesReadWorldwide;
             UpdateCountries(out booksReadWorldwide, out pagesReadWorldwide);
+            UpdateLanguages(booksReadWorldwide, pagesReadWorldwide);
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             UpdateBookLocationDeltas();
             UpdateBooksPerMonth();
@@ -304,6 +337,7 @@ namespace BooksCore.Provider
             BookDeltas = new ObservableCollection<BooksDelta>();
             BookPerYearDeltas = new ObservableCollection<BooksDelta>();
             AuthorsRead = new ObservableCollection<BookAuthor>();
+            AuthorLanguages = new ObservableCollection<AuthorLanguage>();
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             AuthorCountries = new ObservableCollection<AuthorCountry>();
             TalliedMonths = new ObservableCollection<TalliedMonth>();

@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="BooksEditors.Views.Grids.LanguagesGridView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BooksEditors.Views.Grids"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <DataGrid AutoGenerateColumns="False" 
+              ItemsSource="{Binding Path=AuthorLanguages, Mode=OneWay}"
+              MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+        <DataGrid.Columns>
+
+            <DataGridTextColumn Header="Language " 
+                                            Binding="{Binding Language }" 
+                                            Width="Auto"/>
+
+            <DataGridTextColumn Header="Total Pages" 
+                                            Binding="{Binding TotalPagesReadInLanguage  }" 
+                                            Width="Auto"/>
+
+            <DataGridTextColumn Header="% of all Pages Read" 
+                                            Binding="{Binding PercentageOfPagesRead, StringFormat=N2 }" 
+                                            Width="Auto"/>
+
+            <DataGridTextColumn Header="Total Books Read In Language" 
+                                            Binding="{Binding TotalBooksReadInLanguage}" 
+                                            Width="Auto"/>
+
+            <DataGridTextColumn Header="% of all Books Read" 
+                                            Binding="{Binding PercentageOfBooksRead, StringFormat=N2}" 
+                                            Width="Auto"/>
+
+            <DataGridTemplateColumn Header="Authors" Width="*">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ListBox ItemsSource="{Binding AuthorsInLanguage }">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Author}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+        </DataGrid.Columns>
+
+    </DataGrid>
+
+</UserControl>

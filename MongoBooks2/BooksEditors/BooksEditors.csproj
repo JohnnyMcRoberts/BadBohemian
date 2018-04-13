@@ -53,9 +53,21 @@
     <Compile Include="Utilities\GridTypeAttribute.cs" />
     <Compile Include="ViewModels\Grids\AuthorsGridViewModel.cs" />
     <Compile Include="ViewModels\Grids\BaseGridViewModel.cs" />
+    <Compile Include="ViewModels\Grids\BooksReadGridViewModel.cs" />
+    <Compile Include="ViewModels\Grids\CountriesGridViewModel.cs" />
     <Compile Include="ViewModels\Grids\GridType.cs" />
+    <Compile Include="ViewModels\Grids\LanguagesGridViewModel.cs" />
     <Compile Include="Views\Grids\AuthorsGridView.xaml.cs">
       <DependentUpon>AuthorsGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Grids\BooksReadGridView.xaml.cs">
+      <DependentUpon>BooksReadGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Grids\CountriesGridView.xaml.cs">
+      <DependentUpon>CountriesGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Grids\LanguagesGridView.xaml.cs">
+      <DependentUpon>LanguagesGridView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup />
@@ -71,6 +83,18 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\Grids\AuthorsGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Grids\BooksReadGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Grids\CountriesGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Grids\LanguagesGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

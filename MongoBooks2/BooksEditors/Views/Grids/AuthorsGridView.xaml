@@ -33,7 +33,6 @@
                                 Binding="{Binding TotalBooksReadBy}" 
                                 Width="Auto"/>
 
-
             <DataGridTemplateColumn Header="Books" Width="*">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
