@@ -8,6 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <DataGrid AutoGenerateColumns="False" 
                                 ItemsSource="{Binding Path=BooksRead, Mode=OneWay}"
+                                SelectedItem="{Binding Path=SelectedBook, Mode=TwoWay}"
                                 MinHeight="280" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
 
         <DataGrid.Columns>

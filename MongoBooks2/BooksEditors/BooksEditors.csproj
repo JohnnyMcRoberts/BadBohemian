@@ -70,7 +70,9 @@
       <DependentUpon>LanguagesGridView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Editors\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BooksCore\BooksCore.csproj">
       <Project>{1822dbf9-753d-4aed-8834-e04e4e91577c}</Project>
