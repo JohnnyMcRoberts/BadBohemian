@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+
+<html ng-app="app">
+
+<style>
+    table, th, td {
+        border: 1px solid grey;
+        border-collapse: collapse;
+        padding: 5px;
+    }
+
+        table tr:nth-child(odd) {
+            background-color: #f1f1f1;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+</style>
+
+<head>
+    <title></title>
+</head>
+<body ng-controller="Main as vm">
+    
+    <table>
+        <tr ng-repeat="x in vm.names">
+            <td>{{ x.name }}</td>
+            <td>{{ x.country }}</td>
+            <td>Third col</td>
+            <td>And 4th</td>
+        </tr>
+    </table>
+
+    <table>
+        <tbody ng-repeat="item in vm.items">
+            <tr><td>
+                <table>
+                    <tr ng-repeat="subitem in item.subitems">
+                        <td>{{subitem}}</td>
+                        <td> and agin {{subitem}}</td>
+                    </tr>
+                </table>
+            </td></tr>
+        </tbody>
+    </table>
+        
+    <script src="Scripts/angular.min.js"></script>
+    <script src="app/app.module.js"></script>
+    <script src="app/main.js"></script>
+
+</body>
+</html>
