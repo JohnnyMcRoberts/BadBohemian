@@ -1,0 +1,102 @@
+﻿<Window x:Class="BooksImportExportTester.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BooksImportExportTester"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Books">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Width="150" Content="Get Books" Height="22" Command="{Binding Path=GetBooksCommand}"></Button>
+
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=Books, Mode=OneWay}"
+                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Nations">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Width="150" Content="Get Nations" Height="22" Command="{Binding Path=GetNationsCommand}"></Button>
+
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=Nations, Mode=OneWay}"
+                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Users">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Width="150" Content="Get Users" Height="22" Command="{Binding Path=GetUsersCommand}"></Button>
+
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=Users, Mode=OneWay}"
+                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"/>
+
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Importers">
+
+            </TabItem>
+
+            <TabItem Header="Exporters">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Content="Export Type:"></Label>
+                    <ComboBox Grid.Row="0" Grid.Column="1"
+                        ItemsSource="{Binding ExportTypesByTitle}"
+                        SelectedValue="{Binding SelectedExportType}"
+                        SelectedValuePath="Key"
+                        DisplayMemberPath="Value"
+                        Height="22"
+                        Margin="2"
+                    />
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Output File:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Stretch"  Height="23" TextWrapping="Wrap" IsReadOnly="True"  
+                             Text="{Binding OutputFile, Mode=OneWay}" VerticalAlignment="Center" 
+                             Margin="10,0,10,0"/>
+                    <Button Grid.Row="1" Grid.Column="2"  Content="Select Directory" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="125"
+                            Command="{Binding Path=SelectOutputFileCommand}" />
+
+
+                    <Button Grid.Row="2" Grid.Column="1"  
+                            Width="150" Content="Export File" Height="22" Command="{Binding Path=ExportFileCommand}" 
+                            IsEnabled="{Binding Path=IsValidOutputFile}"></Button>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"  
+                               Text="{Binding ExportErrorMessage, Mode=OneWay}" TextWrapping="WrapWithOverflow"></TextBlock>
+
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>

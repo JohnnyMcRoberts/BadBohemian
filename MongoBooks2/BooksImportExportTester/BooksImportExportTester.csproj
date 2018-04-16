@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3AAF91A6-56E2-4E25-89F6-4D10193D4B8F}</ProjectGuid>
+    <ProjectGuid>{90F8988F-3354-4F27-9024-6D2CA13BE18A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BooksEditorsTester</RootNamespace>
-    <AssemblyName>BooksEditorsTester</AssemblyName>
+    <RootNamespace>BooksImportExportTester</RootNamespace>
+    <AssemblyName>BooksImportExportTester</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,7 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ViewModels\TesterViewModel.cs" />
+    <Compile Include="ViewModel\TesterViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -96,6 +97,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\BooksCore\BooksCore.csproj">
       <Project>{1822dbf9-753d-4aed-8834-e04e4e91577c}</Project>
@@ -105,9 +107,9 @@
       <Project>{61f0d977-ed96-4dd8-a260-42257c5bb68d}</Project>
       <Name>BooksDatabase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BooksEditors\BooksEditors.csproj">
-      <Project>{33a63a92-6bda-45e6-ba0e-0e0785de6f5a}</Project>
-      <Name>BooksEditors</Name>
+    <ProjectReference Include="..\BooksImportExport\BooksImportExport.csproj">
+      <Project>{1863be9c-f41b-45d0-9c56-70a2a069e36d}</Project>
+      <Name>BooksImportExport</Name>
     </ProjectReference>
     <ProjectReference Include="..\BooksTesterUtilities\BooksTesterUtilities.csproj">
       <Project>{60669267-c598-405c-a8ba-3a5676d98465}</Project>
