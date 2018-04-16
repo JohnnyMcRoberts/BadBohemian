@@ -8,62 +8,19 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksEditorsTester.ViewModels
 {
-    using System.Collections.ObjectModel;
     using System.Windows.Input;
-
-    using BooksCore.Books;
-    using BooksCore.Geography;
+    
     using BooksCore.Provider;
-    using BooksCore.Users;
-    using BooksDatabase.Implementations;
     using BooksEditors.ViewModels.Grids;
+    using BooksTesterUtilities.ViewModels;
     using BooksUtilities.ViewModels;
 
     /// <summary>
     /// The view model for the books editors tester application.
     /// </summary>
-    public class TesterViewModel : BaseViewModel
+    public class TesterViewModel : BaseTesterViewModel
     {
-        #region Constants
-
-        /// <summary>
-        /// The connection string for the database.
-        /// </summary>
-        public const string DatabaseConnectionString = "mongodb://localhost:27017";
-
-        #endregion
-
         #region Private data
-
-        /// <summary>
-        /// The books read database.
-        /// </summary>
-        private readonly BooksReadDatabase _booksReadDatabase;
-
-        /// <summary>
-        /// The nations read database.
-        /// </summary>
-        private readonly NationDatabase _nationsReadDatabase;
-
-        /// <summary>
-        /// The users read database.
-        /// </summary>
-        private readonly UserDatabase _usersReadDatabase;
-
-        /// <summary>
-        /// The books read from database.
-        /// </summary>
-        private ObservableCollection<BookRead> _booksReadFromDatabase;
-
-        /// <summary>
-        /// The nations read from database.
-        /// </summary>
-        private ObservableCollection<Nation> _nationsReadFromDatabase;
-
-        /// <summary>
-        /// The users read from database.
-        /// </summary>
-        private ObservableCollection<User> _usersReadFromDatabase;
 
         /// <summary>
         /// The books read grid.
@@ -84,21 +41,6 @@ namespace BooksEditorsTester.ViewModels
         /// The countries grid.
         /// </summary>
         private CountriesGridViewModel _countriesGrid;
-
-        /// <summary>
-        /// The get books command.
-        /// </summary>
-        private ICommand _getBooksCommand;
-
-        /// <summary>
-        /// The get nations command.
-        /// </summary>
-        private ICommand _getNationsCommand;
-
-        /// <summary>
-        /// The get users command.
-        /// </summary>
-        private ICommand _getUsersCommand;
 
         /// <summary>
         /// The get books read grid command.
@@ -125,21 +67,6 @@ namespace BooksEditorsTester.ViewModels
         #region Public data
 
         /// <summary>
-        /// Gets the books.
-        /// </summary>
-        public ObservableCollection<BookRead> Books => _booksReadFromDatabase;
-
-        /// <summary>
-        /// Gets the books.
-        /// </summary>
-        public ObservableCollection<Nation> Nations => _nationsReadFromDatabase;
-
-        /// <summary>
-        /// Gets the books.
-        /// </summary>
-        public ObservableCollection<User> Users => _usersReadFromDatabase;
-
-        /// <summary>
         /// Gets the books read grid.
         /// </summary>
         public BooksReadGridViewModel BooksReadGrid => _booksReadGrid;
@@ -158,21 +85,6 @@ namespace BooksEditorsTester.ViewModels
         /// Gets the countries grid.
         /// </summary>
         public CountriesGridViewModel CountriesGrid => _countriesGrid;
-
-        /// <summary>
-        /// Gets the get books from database command.
-        /// </summary>
-        public ICommand GetBooksCommand => _getBooksCommand ?? (_getBooksCommand = new CommandHandler(GetBooksCommandAction, true));
-
-        /// <summary>
-        /// Gets the get nations from database command.
-        /// </summary>
-        public ICommand GetNationsCommand => _getNationsCommand ?? (_getNationsCommand = new CommandHandler(GetNationsCommandAction, true));
-
-        /// <summary>
-        /// Gets the get users from database command.
-        /// </summary>
-        public ICommand GetUsersCommand => _getUsersCommand ?? (_getUsersCommand = new CommandHandler(GetUsersCommandAction, true));
 
         /// <summary>
         /// Gets the get books read grid command.
@@ -200,86 +112,7 @@ namespace BooksEditorsTester.ViewModels
 
         #endregion
 
-        #region Utility Functions
-
-        /// <summary>
-        /// Gets the providers for the books and geography data.
-        /// </summary>
-        /// <param name="geographyProvider">The geography data provider on exit.</param>
-        /// <param name="booksReadProvider">The books data provider on exit.</param>
-        /// <returns>True if successful, false otherwise.</returns>
-        private bool GetProviders(out GeographyProvider geographyProvider, out BooksReadProvider booksReadProvider)
-        {
-            geographyProvider = null;
-            booksReadProvider = null;
-
-            if (!_booksReadDatabase.ReadFromDatabase)
-            {
-                _booksReadDatabase.ConnectToDatabase();
-            }
-
-            if (!_nationsReadDatabase.ReadFromDatabase)
-            {
-                _nationsReadDatabase.ConnectToDatabase();
-            }
-
-            if (_booksReadDatabase.ReadFromDatabase && _nationsReadDatabase.ReadFromDatabase)
-            {
-                // Setup the providers.
-                geographyProvider = new GeographyProvider();
-                geographyProvider.Setup(_nationsReadDatabase.LoadedItems);
-
-                booksReadProvider = new BooksReadProvider();
-                booksReadProvider.Setup(_booksReadDatabase.LoadedItems, geographyProvider);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        #endregion
-
         #region Command handlers
-
-        /// <summary>
-        /// The get books from database command action.
-        /// </summary>
-        public void GetBooksCommandAction()
-        {
-            _booksReadDatabase.ConnectToDatabase();
-            if (_booksReadDatabase.ReadFromDatabase)
-            {
-                _booksReadFromDatabase = _booksReadDatabase.LoadedItems;
-                OnPropertyChanged(() => Books);
-            }
-        }
-
-        /// <summary>
-        /// The get nations from database command action.
-        /// </summary>
-        public void GetNationsCommandAction()
-        {
-            _nationsReadDatabase.ConnectToDatabase();
-            if (_nationsReadDatabase.ReadFromDatabase)
-            {
-                _nationsReadFromDatabase = _nationsReadDatabase.LoadedItems;
-                OnPropertyChanged(() => Nations);
-            }
-        }
-
-        /// <summary>
-        /// The get users from database command action.
-        /// </summary>
-        public void GetUsersCommandAction()
-        {
-            _usersReadDatabase.ConnectToDatabase();
-            if (_usersReadDatabase.ReadFromDatabase)
-            {
-                _usersReadFromDatabase = _usersReadDatabase.LoadedItems;
-                OnPropertyChanged(() => Users);
-            }
-        }
 
         /// <summary>
         /// The get books read command action.
@@ -350,14 +183,6 @@ namespace BooksEditorsTester.ViewModels
         /// </summary>
         public TesterViewModel()
         {
-            _booksReadFromDatabase = new ObservableCollection<BookRead>();
-            _nationsReadFromDatabase = new ObservableCollection<Nation>();
-            _usersReadFromDatabase = new ObservableCollection<User>();
-
-            _booksReadDatabase = new BooksReadDatabase(DatabaseConnectionString);
-            _nationsReadDatabase = new NationDatabase(DatabaseConnectionString);
-            _usersReadDatabase = new UserDatabase(DatabaseConnectionString);
-
             _booksReadGrid = new BooksReadGridViewModel();
             _authorsGrid = new AuthorsGridViewModel();
             _languagesGrid = new LanguagesGridViewModel();
