@@ -12,9 +12,9 @@ namespace BooksImportExport.Exporters
     using System.IO;
     using System.Text;
     using BooksCore.Books;
+    using BooksCore.Interfaces;
     using CsvHelper;
-
-    using BooksCore.Provider;
+    
     using BooksImportExport.Interfaces;
 
     public class BooksToCsvFileExport : IBooksFileExport
@@ -44,8 +44,8 @@ namespace BooksImportExport.Exporters
         /// <returns>True if written successfully, false otherwise.</returns>
         public bool WriteToFile(
             string filename,
-            GeographyProvider geographyProvider,
-            BooksReadProvider booksReadProvider,
+            IGeographyProvider geographyProvider,
+            IBooksReadProvider booksReadProvider,
             out string errorMessage)
         {
             errorMessage = string.Empty;

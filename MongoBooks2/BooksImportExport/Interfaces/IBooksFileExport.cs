@@ -9,6 +9,7 @@
 
 namespace BooksImportExport.Interfaces
 {
+    using BooksCore.Interfaces;
     using BooksCore.Provider;
 
     /// <summary>
@@ -41,8 +42,8 @@ namespace BooksImportExport.Interfaces
         /// <returns>True if written successfully, false otherwise.</returns>
         bool WriteToFile(
             string filename,
-            GeographyProvider geographyProvider,
-            BooksReadProvider booksReadProvider,
+            IGeographyProvider geographyProvider,
+            IBooksReadProvider booksReadProvider,
             out string errorMessage);
     }
 }

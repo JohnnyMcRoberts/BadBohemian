@@ -20,5 +20,8 @@ namespace BooksImportExport.Exporters
 
         [ImportExportType(Title = "Nations to xml", GeneratorClass = typeof(NationsToXmlFileExport))]
         NationsToXml,
+
+        [ImportExportType(Title = "Selected month to html", GeneratorClass = typeof(SelectedMonthToHtmlFileExporter))]
+        SelectedMonthToHtml
     }
 }

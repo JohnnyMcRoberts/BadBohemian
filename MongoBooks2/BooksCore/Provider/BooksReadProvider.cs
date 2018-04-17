@@ -68,6 +68,11 @@ namespace BooksCore.Provider
         public ObservableCollection<TalliedMonth> TalliedMonths { get; private set; }
 
         /// <summary>
+        /// Gets the current month and overall tallies for the reports.
+        /// </summary>
+        public ObservableCollection<MonthlyReportsTally> ReportsTallies { get; private set; }
+
+        /// <summary>
         /// Gets or sets the selected month tally.
         /// </summary>
         public DateTime SelectedMonth
@@ -85,9 +90,17 @@ namespace BooksCore.Provider
                     foreach (TalliedMonth talliedMonth in TalliedMonths)
                     {
                         if (talliedMonth.MonthDate.Year == _selectedMonth.Year &&
-                            talliedMonth.MonthDate.Year == _selectedMonth.Month)
+                            talliedMonth.MonthDate.Month == _selectedMonth.Month)
                         {
+                            // Set the selected month and report tallies.
                             SelectedMonthTally = talliedMonth;
+                            ReportsTallies =
+                                new ObservableCollection<MonthlyReportsTally>
+                                {
+                                    new MonthlyReportsTally(SelectedMonthTally),
+                                    new MonthlyReportsTally(BookDeltas.Last().OverallTally)
+                                };
+
                             break;
                         }
                     }
@@ -390,6 +403,7 @@ namespace BooksCore.Provider
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             AuthorCountries = new ObservableCollection<AuthorCountry>();
             TalliedMonths = new ObservableCollection<TalliedMonth>();
+            ReportsTallies = new ObservableCollection<MonthlyReportsTally>();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace BooksImportExportTester.ViewModel
     using System.Linq;
     using System.Windows.Input;
     using System.Windows.Forms;
-
+    using BooksCore.Interfaces;
     using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
     using BooksCore.Provider;
@@ -29,6 +29,16 @@ namespace BooksImportExportTester.ViewModel
     public class TesterViewModel : BaseTesterViewModel
     {
         #region Private data
+
+        /// <summary>
+        /// The output file.
+        /// </summary>
+        private GeographyProvider _geographyProvider;
+
+        /// <summary>
+        /// The output file.
+        /// </summary>
+        private BooksReadProvider _booksReadProvider;
 
         /// <summary>
         /// The output file.
@@ -78,6 +88,38 @@ namespace BooksImportExportTester.ViewModel
         #endregion
 
         #region Public data
+
+        /// <summary>
+        /// Gets or sets the column chart type.
+        /// </summary>
+        public IBooksReadProvider BooksReadProvider
+        {
+            get
+            {
+                if (_booksReadProvider == null)
+                {
+                    GetProviders(out _geographyProvider, out _booksReadProvider);
+                }
+
+                return _booksReadProvider;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the column chart type.
+        /// </summary>
+        public IGeographyProvider GeographyProvider
+        {
+            get
+            {
+                if (_geographyProvider == null)
+                {
+                    GetProviders(out _geographyProvider, out _booksReadProvider);
+                }
+
+                return _geographyProvider;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the column chart type.
@@ -186,11 +228,9 @@ namespace BooksImportExportTester.ViewModel
                     OnPropertyChanged(() => SelectedMonth);
 
                     // Get the data.
-                    GeographyProvider geographyProvider;
-                    BooksReadProvider booksReadProvider;
-                    if (GetProviders(out geographyProvider, out booksReadProvider))
+                    if (BooksReadProvider != null)
                     {
-                        booksReadProvider.SelectedMonth = _selectedMonth;
+                        BooksReadProvider.SelectedMonth = _selectedMonth;
                     }
                 }
             }
@@ -243,23 +283,17 @@ namespace BooksImportExportTester.ViewModel
         private void RefreshDateRangeCommandAction()
         {
             // Get the data.
-            GeographyProvider geographyProvider;
-            BooksReadProvider booksReadProvider;
-            if (GetProviders(out geographyProvider, out booksReadProvider))
+            if (BooksReadProvider == null)
             {
-
-                if (!booksReadProvider.TalliedMonths.Any())
-                {
-                    return;
-                }
-
-                DateTime lastMonth = FirstMonth = booksReadProvider.TalliedMonths.Last().MonthDate;
-                FirstMonth = booksReadProvider.TalliedMonths.First().MonthDate;
-                lastMonth = lastMonth.AddMonths(1);
-                lastMonth = lastMonth.AddDays(-1);
-                LastMonth = lastMonth;
-                _selectedMonth = lastMonth.AddMonths(-1);
+                return;
             }
+
+            DateTime lastMonth = FirstMonth = BooksReadProvider.TalliedMonths.Last().MonthDate;
+            FirstMonth = BooksReadProvider.TalliedMonths.First().MonthDate;
+            lastMonth = lastMonth.AddMonths(1);
+            lastMonth = lastMonth.AddDays(-1);
+            LastMonth = lastMonth;
+            _selectedMonth = lastMonth.AddMonths(-1);
         }
 
         /// <summary>
@@ -294,13 +328,11 @@ namespace BooksImportExportTester.ViewModel
             IBooksFileExport exporter = GetSelectedFileExporter();
 
             // Get the data.
-            GeographyProvider geographyProvider;
-            BooksReadProvider booksReadProvider;
-            if (GetProviders(out geographyProvider, out booksReadProvider))
+            if (BooksReadProvider != null)
             {
                 string error;
                 ExportErrorMessage = 
-                    !exporter.WriteToFile(OutputFile, geographyProvider, booksReadProvider, out error) ? error : string.Empty;
+                    !exporter.WriteToFile(OutputFile, GeographyProvider, BooksReadProvider, out error) ? error : string.Empty;
             }
         }
 

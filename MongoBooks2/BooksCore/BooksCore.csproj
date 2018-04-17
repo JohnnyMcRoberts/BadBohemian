@@ -76,6 +76,7 @@
     <Compile Include="Books\BookRead.cs" />
     <Compile Include="Books\BooksDelta.cs" />
     <Compile Include="Books\BookTag.cs" />
+    <Compile Include="Books\MonthlyReportsTally.cs" />
     <Compile Include="Geography\CountriesData.cs" />
     <Compile Include="Geography\CountryGeography.cs" />
     <Compile Include="Interfaces\IBooksReadProvider.cs" />

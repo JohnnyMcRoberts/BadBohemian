@@ -15,6 +15,7 @@ namespace BooksImportExport.Exporters
     using System.Xml.Serialization;
 
     using BooksCore.Geography;
+    using BooksCore.Interfaces;
     using BooksCore.Provider;
     using BooksImportExport.Interfaces;
     using BooksImportExport.Utilities;
@@ -46,8 +47,8 @@ namespace BooksImportExport.Exporters
         /// <returns>True if written successfully, false otherwise.</returns>
         public bool WriteToFile(
             string filename,
-            GeographyProvider geographyProvider,
-            BooksReadProvider booksReadProvider,
+            IGeographyProvider geographyProvider,
+            IBooksReadProvider booksReadProvider,
             out string errorMessage)
         {
             errorMessage = string.Empty;

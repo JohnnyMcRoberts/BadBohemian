@@ -111,6 +111,18 @@ td {
             if (!_forBlog || _selectedMonthTally == null)
                 return false;
 
+            GetMonthlyReportTitleAndContent(out title, out content);
+
+            return true;
+        }
+
+        #endregion
+
+        #region Utility Methods
+
+
+        private void GetMonthlyReportTitleAndContent(out string title, out string content)
+        {
             StringWriter sw = new StringWriter();
 
             HtmlTextWriter writer = new HtmlTextWriter(sw);
@@ -132,13 +144,7 @@ td {
 
             title = _selectedMonthTally.DisplayString;
             content = sw.ToString();
-
-            return true;
         }
-
-        #endregion
-
-        #region Utility Methods
 
         private static void WriteCharts(HtmlTextWriter writer)
         {
