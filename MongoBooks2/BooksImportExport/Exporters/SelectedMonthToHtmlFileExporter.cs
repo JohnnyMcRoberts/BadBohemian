@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="NationsToXmlFileExport.cs" company="N/A">
+// <copyright file="BooksImportExport.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The nations to xml file exporter.
+//   The selected month to html file exporter.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksImportExport.Exporters
@@ -15,26 +15,27 @@ namespace BooksImportExport.Exporters
     using System.Xml.Serialization;
 
     using BooksCore.Geography;
+    using BooksCore.Books;
     using BooksCore.Provider;
     using BooksImportExport.Interfaces;
     using BooksImportExport.Utilities;
 
-    public class NationsToXmlFileExport : IBooksFileExport
+    public class SelectedMonthToHtmlFileExporter : IBooksFileExport
     {
         /// <summary>
         /// Gets the export method name.
         /// </summary>
-        public string Name => "Nations To Xml";
+        public string Name => "Selected month to HTML";
 
         /// <summary>
         /// Gets the export file type extension.
         /// </summary>
-        public string Extension => "csv";
+        public string Extension => "html";
 
         /// <summary>
         /// Gets the export file type filter.
         /// </summary>
-        public string Filter => @"All files (*.*)|*.*|XML Files (*.xml)|*.xml";
+        public string Filter => @"All files (*.*)|*.*|HTML Files (*.html)|*.html";
 
         /// <summary>
         /// Writes the data for this export to the file specified.

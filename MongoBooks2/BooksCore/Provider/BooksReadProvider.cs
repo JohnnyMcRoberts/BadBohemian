@@ -5,15 +5,27 @@ namespace BooksCore.Provider
     using System.Collections.Generic;
     using System.Linq;
     using System.Collections.ObjectModel;
+
     using BooksCore.Books;
     using BooksCore.Geography;
     using BooksCore.Interfaces;
 
     public class BooksReadProvider : IBooksReadProvider
     {
+        /// <summary>
+        /// The world countries lookup.
+        /// </summary>
         private Dictionary<string, WorldCountry> _worldCountryLookup;
 
+        /// <summary>
+        /// The geography provider.
+        /// </summary>
         private IGeographyProvider _geographyProvider;
+
+        /// <summary>
+        /// The selected month.
+        /// </summary>
+        private DateTime _selectedMonth;
 
         /// <summary>
         /// Gets the books.
@@ -50,9 +62,43 @@ namespace BooksCore.Provider
         /// </summary>
         public ObservableCollection<AuthorLanguage> AuthorLanguages { get; }
 
-        public ObservableCollection<TalliedMonth> TalliedMonths { get; set; }
+        /// <summary>
+        /// Gets the selected month tally.
+        /// </summary>
+        public ObservableCollection<TalliedMonth> TalliedMonths { get; private set; }
 
-        public TalliedMonth SelectedMonthTally { get; set; }
+        /// <summary>
+        /// Gets or sets the selected month tally.
+        /// </summary>
+        public DateTime SelectedMonth
+        {
+            get
+            {
+                return _selectedMonth;
+            }
+
+            set
+            {
+                if (value.Year != _selectedMonth.Year || value.Month != _selectedMonth.Month)
+                {
+                    _selectedMonth = value;
+                    foreach (TalliedMonth talliedMonth in TalliedMonths)
+                    {
+                        if (talliedMonth.MonthDate.Year == _selectedMonth.Year &&
+                            talliedMonth.MonthDate.Year == _selectedMonth.Month)
+                        {
+                            SelectedMonthTally = talliedMonth;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the selected month tally.
+        /// </summary>
+        public TalliedMonth SelectedMonthTally { get; private set; }
 
         private void UpdateCountries(out int booksReadWorldwide, out uint pagesReadWorldwide)
         {
@@ -329,6 +375,9 @@ namespace BooksCore.Provider
             UpdateBookLocationDeltas();
             UpdateBooksPerMonth();
             SelectedMonthTally = TalliedMonths.FirstOrDefault();
+            _selectedMonth = DateTime.Now;
+            if (SelectedMonthTally != null)
+                _selectedMonth = SelectedMonthTally.MonthDate;
         }
 
         public BooksReadProvider()

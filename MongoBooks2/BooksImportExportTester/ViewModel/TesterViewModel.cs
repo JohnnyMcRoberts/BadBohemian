@@ -10,6 +10,7 @@ namespace BooksImportExportTester.ViewModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Windows.Input;
     using System.Windows.Forms;
 
@@ -40,6 +41,31 @@ namespace BooksImportExportTester.ViewModel
         private ExportType _selectedExportType;
 
         /// <summary>
+        /// The export file error.
+        /// </summary>
+        private string _exportErrorMessage;
+
+        /// <summary>
+        /// The selected datae for the month books exports.
+        /// </summary>
+        private DateTime _selectedMonth;
+
+        /// <summary>
+        /// The first available date with books.
+        /// </summary>
+        private DateTime _firstMonth;
+
+        /// <summary>
+        /// The last available date with books.
+        /// </summary>
+        private DateTime _lastMonth;
+
+        /// <summary>
+        /// The refresh date range command.
+        /// </summary>
+        private ICommand _refreshDateRangeCommand;
+
+        /// <summary>
         /// The select output file command.
         /// </summary>
         private ICommand _selectOutputFileCommand;
@@ -48,11 +74,6 @@ namespace BooksImportExportTester.ViewModel
         /// The export file command.
         /// </summary>
         private ICommand _exportFileCommand;
-
-        /// <summary>
-        /// The export file error.
-        /// </summary>
-        private string _exportErrorMessage;
 
         #endregion
 
@@ -90,6 +111,12 @@ namespace BooksImportExportTester.ViewModel
         public Dictionary<ExportType, string> ExportTypesByTitle { get; private set; }
 
         /// <summary>
+        /// Gets the refresh date range command.
+        /// </summary>
+        public ICommand RefreshDateRangeCommand =>
+            _refreshDateRangeCommand ?? (_refreshDateRangeCommand = new CommandHandler(RefreshDateRangeCommandAction, true));
+
+        /// <summary>
         /// Gets the select output file command.
         /// </summary>
         public ICommand SelectOutputFileCommand =>
@@ -100,6 +127,74 @@ namespace BooksImportExportTester.ViewModel
         /// </summary>
         public ICommand ExportFileCommand =>
             _exportFileCommand ?? (_exportFileCommand = new CommandHandler(ExportFileCommandAction, true));
+
+        /// <summary>
+        /// Gets the first month.
+        /// </summary>
+        public DateTime LastMonth
+        {
+            get
+            {
+                return _lastMonth;
+            }
+
+            private set
+            {
+                if (_lastMonth != value)
+                {
+                    _lastMonth = value;
+                    OnPropertyChanged(() => LastMonth);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the first month.
+        /// </summary>
+        public DateTime FirstMonth
+        {
+            get
+            {
+                return _firstMonth;
+            }
+
+            private set
+            {
+                if (_firstMonth != value)
+                {
+                    _firstMonth = value;
+                    OnPropertyChanged(() => FirstMonth);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the selected month.
+        /// </summary>
+        public DateTime SelectedMonth
+        {
+            get
+            {
+                return _selectedMonth;
+            }
+
+            set
+            {
+                if (_selectedMonth != value)
+                {
+                    _selectedMonth = value;
+                    OnPropertyChanged(() => SelectedMonth);
+
+                    // Get the data.
+                    GeographyProvider geographyProvider;
+                    BooksReadProvider booksReadProvider;
+                    if (GetProviders(out geographyProvider, out booksReadProvider))
+                    {
+                        booksReadProvider.SelectedMonth = _selectedMonth;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the output file command.
@@ -137,9 +232,35 @@ namespace BooksImportExportTester.ViewModel
                 }
             }
         }
+
         #endregion
 
         #region Command handlers
+
+        /// <summary>
+        /// The refresh date range command action.
+        /// </summary>
+        private void RefreshDateRangeCommandAction()
+        {
+            // Get the data.
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+
+                if (!booksReadProvider.TalliedMonths.Any())
+                {
+                    return;
+                }
+
+                DateTime lastMonth = FirstMonth = booksReadProvider.TalliedMonths.Last().MonthDate;
+                FirstMonth = booksReadProvider.TalliedMonths.First().MonthDate;
+                lastMonth = lastMonth.AddMonths(1);
+                lastMonth = lastMonth.AddDays(-1);
+                LastMonth = lastMonth;
+                _selectedMonth = lastMonth.AddMonths(-1);
+            }
+        }
 
         /// <summary>
         /// The select output file command action.
@@ -224,6 +345,9 @@ namespace BooksImportExportTester.ViewModel
             _selectedExportType = ExportType.BooksToCsv;
             _outputFile = string.Empty;
             SetupExportTypesByTitle();
+            LastMonth = DateTime.Now;
+            SelectedMonth = LastMonth.AddDays(-2);
+            FirstMonth = SelectedMonth.AddDays(-2);
         }
 
         #endregion
