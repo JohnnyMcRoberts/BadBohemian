@@ -1,28 +1,31 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BooksToCsvFileExport.cs" company="N/A">
+// <copyright file="NationsToXmlFileExport.cs" company="N/A">
 //   2016
 // </copyright>
 // <summary>
-//   The books to csv file exporter.
+//   The nations to xml file exporter.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksImportExport.Exporters
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Text;
-    using BooksCore.Books;
-    using BooksCore.Interfaces;
-    using CsvHelper;
-    
-    using BooksImportExport.Interfaces;
+    using System.Xml.Serialization;
 
-    public class BooksToCsvFileExport : IBooksFileExport
+    using BooksCore.Geography;
+    using BooksCore.Interfaces;
+    using BooksCore.Provider;
+    using BooksImportExport.Interfaces;
+    using BooksImportExport.Utilities;
+
+    public class NationsToXmlFileExport : IBooksFileExport
     {
         /// <summary>
         /// Gets the export method name.
         /// </summary>
-        public string Name => "Books To File";
+        public string Name => "Nations To Xml";
 
         /// <summary>
         /// Gets the export file type extension.
@@ -32,7 +35,7 @@ namespace BooksImportExport.Exporters
         /// <summary>
         /// Gets the export file type filter.
         /// </summary>
-        public string Filter => @"All files (*.*)|*.*|CSV files (*.csv)|*.csv";
+        public string Filter => @"All files (*.*)|*.*|XML Files (*.xml)|*.xml";
 
         /// <summary>
         /// Writes the data for this export to the file specified.
@@ -52,35 +55,20 @@ namespace BooksImportExport.Exporters
 
             try
             {
-                StreamWriter sw = new StreamWriter(filename, false, Encoding.Default); //overwrite original file
-
-                // write the header
-                sw.WriteLine(
-                    "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image,Tags"
-                );
-
-                // write the records
-                CsvWriter csv = new CsvWriter(sw);
-                foreach (BookRead book in booksReadProvider.BooksRead)
+                // Set up the nations file.
+                NationsFile nationsFile = new NationsFile();
+                foreach (Nation nation in geographyProvider.Nations.OrderBy(x => x.Name))
                 {
-                    csv.WriteField(book.DateString);
-                    csv.WriteField(book.Date.ToString("d/M/yyyy"));
-                    csv.WriteField(book.Author);
-                    csv.WriteField(book.Title);
-                    csv.WriteField(book.Pages > 0 ? book.Pages.ToString() : "");
-                    csv.WriteField(book.Note);
-                    csv.WriteField(book.Nationality);
-                    csv.WriteField(book.OriginalLanguage);
-                    csv.WriteField(book.Format == BookFormat.Book ? "x" : "");
-                    csv.WriteField(book.Format == BookFormat.Comic ? "x" : "");
-                    csv.WriteField(book.Format == BookFormat.Audio ? "x" : "");
-                    csv.WriteField(book.ImageUrl);
-                    csv.WriteField(book.DisplayTags);
-                    csv.NextRecord();
+                    nationsFile.Nations.Add(nation);
                 }
 
-                // tidy up
-                sw.Close();
+                // Serialize the XML
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(NationsFile));
+                TextWriter textWriter = new StreamWriter(filename, false, Encoding.Default); //overwrite original file
+                xmlSerializer.Serialize(textWriter, nationsFile);
+
+                // Tidy up
+                textWriter.Close();
             }
             catch (Exception e)
             {

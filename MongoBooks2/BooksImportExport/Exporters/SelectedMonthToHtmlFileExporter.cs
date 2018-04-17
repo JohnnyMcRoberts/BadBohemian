@@ -1,48 +1,30 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ExportMonthlyReportToToHtml.cs" company="N/A">
-//   2017-2086
+// <copyright file="BooksImportExport.cs" company="N/A">
+//   2016
 // </copyright>
 // <summary>
-//   The file exporter to get an html file for a selected monthly report.
+//   The selected month to html file exporter.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-namespace MongoDbBooks.Models.Exporters
+namespace BooksImportExport.Exporters
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Web.UI;
+    
+    using BooksCore.Books;
+    using BooksCore.Interfaces;
+    using BooksImportExport.Interfaces;
 
-    using MongoDbBooks.ViewModels;
-
-    public class ExportMonthlyReportToToHtml : BaseFileExporter
+    public class SelectedMonthToHtmlFileExporter : IBooksFileExport
     {
-        #region Private Data
-
-        private readonly TalliedMonth _selectedMonthTally;
-
-        private readonly IList<ReportsViewModel.MonthlyReportsTally> _reportsTallies;
-
-        private readonly IList<string> _chartFiles;
-
-        private readonly bool _forBlog;
-
-        #endregion
-
-        #region Public Data
-
-        public string Filter => @"All files (*.*)|*.*|HTML files (*.html)|*.html";
-
-        public IList<ReportsViewModel.MonthlyReportsTally> ReportsTallies => _reportsTallies;
-
-        #endregion
-
         #region Constants
 
         public const string StylesString =
-@"
+            @"
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
@@ -58,68 +40,38 @@ td {
 
         #endregion
 
-        #region IFileExporter overides
+        #region Private Data
 
-        public override string GetFilter()
-        {
-            return Filter;
-        }
+        private TalliedMonth _selectedMonthTally;
 
-        public override bool WriteToFile(string filename)
-        {
-            Properties.Settings.Default.MonthlyReportFile = filename;
-            Properties.Settings.Default.Save();
-
-            StreamWriter sw = new StreamWriter(filename, false, Encoding.Default); //overwrite original file
-            
-            HtmlTextWriter writer = new HtmlTextWriter(sw);
-
-            writer.RenderBeginTag(HtmlTextWriterTag.Html);
-            
-            writer.RenderBeginTag(HtmlTextWriterTag.Head);
-
-            WriteHeaderContent(writer);
-
-            writer.RenderEndTag();
-            writer.WriteLine();
-
-            writer.RenderBeginTag(HtmlTextWriterTag.Body);
-
-            WriteTitle(writer);
-            WriteIndividualBooks(writer);
-            WriteTotalsTable(writer);
-            WriteCharts(writer);
-
-            writer.RenderEndTag();
-
-            writer.RenderEndTag();
-
-            // tidy up
-            sw.Close();
-
-            return true;
-        }
+        private IList<MonthlyReportsTally> _reportsTallies;
 
         #endregion
 
-        #region Public Functions
+        #region Public Data
 
-        public bool GetAsBlogPost(out string title, out string content)
-        {
-            title = string.Empty;
-            content = string.Empty;
-            if (!_forBlog || _selectedMonthTally == null)
-                return false;
+        /// <summary>
+        /// Gets the export method name.
+        /// </summary>
+        public string Name => "Selected month to HTML";
 
-            GetMonthlyReportTitleAndContent(out title, out content);
+        /// <summary>
+        /// Gets the export file type extension.
+        /// </summary>
+        public string Extension => "html";
 
-            return true;
-        }
+        /// <summary>
+        /// Gets the export file type filter.
+        /// </summary>
+        public string Filter => @"All files (*.*)|*.*|HTML files (*.html)|*.html";
+
+        public IList<MonthlyReportsTally> ReportsTallies => _reportsTallies;
+
+        public bool ForBlog { get; set; }
 
         #endregion
 
         #region Utility Methods
-
 
         private void GetMonthlyReportTitleAndContent(out string title, out string content)
         {
@@ -139,6 +91,7 @@ td {
             WriteTitle(writer);
             WriteIndividualBooks(writer);
             WriteTotalsTable(writer);
+            WriteCharts(writer);
 
             writer.RenderEndTag();
 
@@ -146,13 +99,74 @@ td {
             content = sw.ToString();
         }
 
-        private static void WriteCharts(HtmlTextWriter writer)
+        private void WriteCharts(HtmlTextWriter writer)
         {
             writer.WriteLine();
             writer.AddStyleAttribute("font-size", "14pt");
             writer.RenderBeginTag(HtmlTextWriterTag.P);
             writer.Write("Charts");
-            
+            writer.RenderEndTag();
+            writer.WriteLine();
+
+            // Write script includes
+            writer.AddAttribute(HtmlTextWriterAttribute.Id, "pagesPieChart");
+            writer.RenderBeginTag(HtmlTextWriterTag.Div);
+            writer.RenderEndTag();
+
+            // Write google charts script include
+            writer.WriteLine();
+            writer.AddAttribute(HtmlTextWriterAttribute.Src, "https://www.gstatic.com/charts/loader.js");
+            writer.AddAttribute(HtmlTextWriterAttribute.Type, "text/javascript");
+            writer.RenderBeginTag(HtmlTextWriterTag.Script);
+            writer.RenderEndTag();
+            writer.WriteLine();
+
+            // Get the json for chart
+
+            Dictionary<string, int> pagesPerCountry = new Dictionary<string, int>();
+
+            foreach (BookRead book in _selectedMonthTally.BooksRead)
+            {
+                if (pagesPerCountry.ContainsKey(book.Nationality))
+                    pagesPerCountry[book.Nationality] += book.Pages;
+                else
+                    pagesPerCountry.Add(book.Nationality, book.Pages);
+
+            }
+
+            List<KeyValuePair<string, int>> sortedCountryTotals = pagesPerCountry.OrderByDescending(x => x.Value).ToList();
+
+            string json = string.Empty;
+            for (int i = 0; i < sortedCountryTotals.Count; i++)
+            {
+                if (i == 0)
+                    json += "['Country', 'Pages']";
+
+                json += ",\n";
+
+                json += $"['{sortedCountryTotals[i].Key}', {sortedCountryTotals[i].Value}]";
+            }
+
+            // Write the script itself
+            writer.WriteLine();
+            writer.AddAttribute(HtmlTextWriterAttribute.Type, "text/javascript");
+            writer.RenderBeginTag(HtmlTextWriterTag.Script);
+            writer.Write(@"// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+// Draw the chart and set the chart values
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+  "+ json + @"]);
+
+  // Optional; add a title and set the width and height of the chart
+  var options = {'title':'Pages by country', 'width':550, 'height':400};
+
+  // Display the chart inside the <div> element with id=""piechart""
+  var chart = new google.visualization.PieChart(document.getElementById('pagesPieChart'));
+  chart.draw(data, options);
+}");
             writer.RenderEndTag();
             writer.WriteLine();
         }
@@ -219,7 +233,7 @@ td {
         {
             writer.WriteLine();
             writer.AddStyleAttribute("font-size", "12pt");
-            writer.AddStyleAttribute("width", _forBlog ? "90%" : "75%");
+            writer.AddStyleAttribute("width", ForBlog ? "90%" : "75%");
             writer.AddAttribute(HtmlTextWriterAttribute.Align, "center");
             writer.RenderBeginTag(HtmlTextWriterTag.Table);
             {
@@ -311,7 +325,7 @@ td {
 
         private void AddBookImageTableCell(HtmlTextWriter writer, BookRead book)
         {
-            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
+            writer.AddStyleAttribute("width", ForBlog ? "30%" : "20%");
             writer.AddAttribute(HtmlTextWriterAttribute.Rowspan, "7");
             writer.RenderBeginTag(HtmlTextWriterTag.Td);
             {
@@ -326,7 +340,7 @@ td {
 
         private void AddBookValueTableCell(HtmlTextWriter writer, string dataTitle, string dataValue)
         {
-            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
+            writer.AddStyleAttribute("width", ForBlog ? "30%" : "20%");
             writer.RenderBeginTag(HtmlTextWriterTag.Th);
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.B);
@@ -353,7 +367,7 @@ td {
             writer.WriteLine();
 
             writer.AddStyleAttribute("font-size", "12pt");
-            writer.AddStyleAttribute("width", _forBlog ? "90%" : "60%");
+            writer.AddStyleAttribute("width", ForBlog ? "90%" : "60%");
             writer.AddStyleAttribute("border", "none");
 
             List<Tuple<string, string, string>> tableRowValues = GetTotalsTableRowValues();
@@ -412,7 +426,7 @@ td {
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
             {
                 // Write the header cell.
-                writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
+                writer.AddStyleAttribute("width", ForBlog ? "30%" : "20%");
                 writer.AddStyleAttribute("text-align", "left");
                 writer.AddStyleAttribute("background-color", "Beige");
                 writer.AddStyleAttribute("border", "none");
@@ -434,7 +448,7 @@ td {
 
         private void WriteTotalsTableDataRowValueCell(HtmlTextWriter writer, string rowDataValue)
         {
-            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
+            writer.AddStyleAttribute("width", ForBlog ? "30%" : "20%");
             writer.AddStyleAttribute("text-align", "right");
             writer.AddStyleAttribute("background-color", "LightSteelBlue");
             writer.AddStyleAttribute("border", "none");
@@ -448,7 +462,7 @@ td {
 
         private void WriteTotalsTableHeaderCell(HtmlTextWriter writer, string headerText)
         {
-            writer.AddStyleAttribute("width", _forBlog ? "30%" : "20%");
+            writer.AddStyleAttribute("width", ForBlog ? "30%" : "20%");
             writer.AddStyleAttribute("text-align", "center");
             writer.AddStyleAttribute("font-size", "18pt");
             writer.AddStyleAttribute("background-color", string.IsNullOrEmpty(headerText) ? "Beige" : "LightSteelBlue");
@@ -495,21 +509,45 @@ td {
 
         #endregion
 
-        #region Constructors
-
-        public ExportMonthlyReportToToHtml(
-            TalliedMonth selectedMonthTally,
-            IList<ReportsViewModel.MonthlyReportsTally> reportsTallies,
-            IList<string> chartFiles,
-            bool forBlog = false)
+        /// <summary>
+        /// Writes the data for this export to the file specified.
+        /// </summary>
+        /// <param name="filename">The file to write to.</param>
+        /// <param name="geographyProvider">The geography data provider.</param>
+        /// <param name="booksReadProvider">The books data provider.</param>
+        /// <param name="errorMessage">The error message if unsuccessful.</param>
+        /// <returns>True if written successfully, false otherwise.</returns>
+        public bool WriteToFile(
+            string filename,
+            IGeographyProvider geographyProvider,
+            IBooksReadProvider booksReadProvider,
+            out string errorMessage)
         {
-            _forBlog = forBlog;
-            _selectedMonthTally = selectedMonthTally;
-            _reportsTallies = reportsTallies;
-            _chartFiles = chartFiles;
-            OutputFilePath = Properties.Settings.Default.MonthlyReportFile;
-        }
+            errorMessage = string.Empty;
+            _selectedMonthTally = booksReadProvider.SelectedMonthTally;
+            _reportsTallies = booksReadProvider.ReportsTallies;
 
-        #endregion
+            try
+            {
+                // Set up the file content.
+                string title;
+                string content;
+                GetMonthlyReportTitleAndContent(out title, out content);
+
+                // Write out the content
+                TextWriter textWriter = new StreamWriter(filename, false, Encoding.Default); //overwrite original file
+                textWriter.Write(content);
+
+                // Tidy up
+                textWriter.Close();
+            }
+            catch (Exception e)
+            {
+                errorMessage = e.ToString();
+                return false;
+            }
+
+            return true;
+        }
     }
 }

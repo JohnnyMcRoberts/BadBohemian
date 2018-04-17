@@ -10,9 +10,10 @@ namespace BooksImportExportTester.ViewModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Windows.Input;
     using System.Windows.Forms;
-
+    using BooksCore.Interfaces;
     using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
     using BooksCore.Provider;
@@ -32,12 +33,47 @@ namespace BooksImportExportTester.ViewModel
         /// <summary>
         /// The output file.
         /// </summary>
+        private GeographyProvider _geographyProvider;
+
+        /// <summary>
+        /// The output file.
+        /// </summary>
+        private BooksReadProvider _booksReadProvider;
+
+        /// <summary>
+        /// The output file.
+        /// </summary>
         private string _outputFile;
 
         /// <summary>
         /// The selected export type.
         /// </summary>
         private ExportType _selectedExportType;
+
+        /// <summary>
+        /// The export file error.
+        /// </summary>
+        private string _exportErrorMessage;
+
+        /// <summary>
+        /// The selected datae for the month books exports.
+        /// </summary>
+        private DateTime _selectedMonth;
+
+        /// <summary>
+        /// The first available date with books.
+        /// </summary>
+        private DateTime _firstMonth;
+
+        /// <summary>
+        /// The last available date with books.
+        /// </summary>
+        private DateTime _lastMonth;
+
+        /// <summary>
+        /// The refresh date range command.
+        /// </summary>
+        private ICommand _refreshDateRangeCommand;
 
         /// <summary>
         /// The select output file command.
@@ -49,14 +85,41 @@ namespace BooksImportExportTester.ViewModel
         /// </summary>
         private ICommand _exportFileCommand;
 
-        /// <summary>
-        /// The export file error.
-        /// </summary>
-        private string _exportErrorMessage;
-
         #endregion
 
         #region Public data
+
+        /// <summary>
+        /// Gets or sets the column chart type.
+        /// </summary>
+        public IBooksReadProvider BooksReadProvider
+        {
+            get
+            {
+                if (_booksReadProvider == null)
+                {
+                    GetProviders(out _geographyProvider, out _booksReadProvider);
+                }
+
+                return _booksReadProvider;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the column chart type.
+        /// </summary>
+        public IGeographyProvider GeographyProvider
+        {
+            get
+            {
+                if (_geographyProvider == null)
+                {
+                    GetProviders(out _geographyProvider, out _booksReadProvider);
+                }
+
+                return _geographyProvider;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the column chart type.
@@ -90,6 +153,12 @@ namespace BooksImportExportTester.ViewModel
         public Dictionary<ExportType, string> ExportTypesByTitle { get; private set; }
 
         /// <summary>
+        /// Gets the refresh date range command.
+        /// </summary>
+        public ICommand RefreshDateRangeCommand =>
+            _refreshDateRangeCommand ?? (_refreshDateRangeCommand = new CommandHandler(RefreshDateRangeCommandAction, true));
+
+        /// <summary>
         /// Gets the select output file command.
         /// </summary>
         public ICommand SelectOutputFileCommand =>
@@ -100,6 +169,72 @@ namespace BooksImportExportTester.ViewModel
         /// </summary>
         public ICommand ExportFileCommand =>
             _exportFileCommand ?? (_exportFileCommand = new CommandHandler(ExportFileCommandAction, true));
+
+        /// <summary>
+        /// Gets the first month.
+        /// </summary>
+        public DateTime LastMonth
+        {
+            get
+            {
+                return _lastMonth;
+            }
+
+            private set
+            {
+                if (_lastMonth != value)
+                {
+                    _lastMonth = value;
+                    OnPropertyChanged(() => LastMonth);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the first month.
+        /// </summary>
+        public DateTime FirstMonth
+        {
+            get
+            {
+                return _firstMonth;
+            }
+
+            private set
+            {
+                if (_firstMonth != value)
+                {
+                    _firstMonth = value;
+                    OnPropertyChanged(() => FirstMonth);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the selected month.
+        /// </summary>
+        public DateTime SelectedMonth
+        {
+            get
+            {
+                return _selectedMonth;
+            }
+
+            set
+            {
+                if (_selectedMonth != value)
+                {
+                    _selectedMonth = value;
+                    OnPropertyChanged(() => SelectedMonth);
+
+                    // Get the data.
+                    if (BooksReadProvider != null)
+                    {
+                        BooksReadProvider.SelectedMonth = _selectedMonth;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the output file command.
@@ -137,9 +272,29 @@ namespace BooksImportExportTester.ViewModel
                 }
             }
         }
+
         #endregion
 
         #region Command handlers
+
+        /// <summary>
+        /// The refresh date range command action.
+        /// </summary>
+        private void RefreshDateRangeCommandAction()
+        {
+            // Get the data.
+            if (BooksReadProvider == null)
+            {
+                return;
+            }
+
+            DateTime lastMonth = FirstMonth = BooksReadProvider.TalliedMonths.Last().MonthDate;
+            FirstMonth = BooksReadProvider.TalliedMonths.First().MonthDate;
+            lastMonth = lastMonth.AddMonths(1);
+            lastMonth = lastMonth.AddDays(-1);
+            LastMonth = lastMonth;
+            _selectedMonth = lastMonth.AddMonths(-1);
+        }
 
         /// <summary>
         /// The select output file command action.
@@ -173,13 +328,11 @@ namespace BooksImportExportTester.ViewModel
             IBooksFileExport exporter = GetSelectedFileExporter();
 
             // Get the data.
-            GeographyProvider geographyProvider;
-            BooksReadProvider booksReadProvider;
-            if (GetProviders(out geographyProvider, out booksReadProvider))
+            if (BooksReadProvider != null)
             {
                 string error;
                 ExportErrorMessage = 
-                    !exporter.WriteToFile(OutputFile, geographyProvider, booksReadProvider, out error) ? error : string.Empty;
+                    !exporter.WriteToFile(OutputFile, GeographyProvider, BooksReadProvider, out error) ? error : string.Empty;
             }
         }
 
@@ -224,6 +377,9 @@ namespace BooksImportExportTester.ViewModel
             _selectedExportType = ExportType.BooksToCsv;
             _outputFile = string.Empty;
             SetupExportTypesByTitle();
+            LastMonth = DateTime.Now;
+            SelectedMonth = LastMonth.AddDays(-2);
+            FirstMonth = SelectedMonth.AddDays(-2);
         }
 
         #endregion

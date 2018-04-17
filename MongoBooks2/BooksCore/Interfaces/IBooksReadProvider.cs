@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksCore.Interfaces
 {
+    using System;
     using System.Collections.ObjectModel;
 
     using BooksCore.Books;
@@ -55,11 +56,21 @@ namespace BooksCore.Interfaces
         /// <summary>
         /// Gets the tallied months.
         /// </summary>
-        ObservableCollection<TalliedMonth> TalliedMonths { get;}
+        ObservableCollection<TalliedMonth> TalliedMonths { get; }
+
+        /// <summary>
+        /// Gets the current month and overall tallies for the reports.
+        /// </summary>
+        ObservableCollection<MonthlyReportsTally> ReportsTallies { get; }
+
+        /// <summary>
+        /// Gets the selected month tally.
+        /// </summary>
+        TalliedMonth SelectedMonthTally { get; }
 
         /// <summary>
         /// Gets or sets the selected month tally.
         /// </summary>
-        TalliedMonth SelectedMonthTally { get; set; }
+        DateTime SelectedMonth { get; set; }
     }
 }
