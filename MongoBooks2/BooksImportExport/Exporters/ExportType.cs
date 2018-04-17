@@ -18,5 +18,7 @@ namespace BooksImportExport.Exporters
         [ImportExportType(Title = "Books to csv", GeneratorClass = typeof(BooksToCsvFileExport))]
         BooksToCsv,
 
+        [ImportExportType(Title = "Nations to xml", GeneratorClass = typeof(NationsToXmlFileExport))]
+        NationsToXml,
     }
 }

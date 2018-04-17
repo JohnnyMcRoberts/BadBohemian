@@ -46,10 +46,12 @@
   <ItemGroup>
     <Compile Include="Exporters\BooksToCsvFileExport.cs" />
     <Compile Include="Exporters\ExportType.cs" />
+    <Compile Include="Exporters\NationsToXmlFileExport.cs" />
     <Compile Include="Interfaces\IBooksFileExport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="Utilities\ImportExportTypeAttribute.cs" />
+    <Compile Include="Utilities\NationsFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BooksCore\BooksCore.csproj">

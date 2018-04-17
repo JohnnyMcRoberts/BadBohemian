@@ -83,7 +83,7 @@
                     <TextBox Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Stretch"  Height="23" TextWrapping="Wrap" IsReadOnly="True"  
                              Text="{Binding OutputFile, Mode=OneWay}" VerticalAlignment="Center" 
                              Margin="10,0,10,0"/>
-                    <Button Grid.Row="1" Grid.Column="2"  Content="Select Directory" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="125"
+                    <Button Grid.Row="1" Grid.Column="2"  Content="Choose File" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="125"
                             Command="{Binding Path=SelectOutputFileCommand}" />
 
 
