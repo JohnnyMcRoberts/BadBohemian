@@ -16,7 +16,6 @@ namespace BooksImportExport.Exporters
 
     using BooksCore.Geography;
     using BooksCore.Interfaces;
-    using BooksCore.Provider;
     using BooksImportExport.Interfaces;
     using BooksImportExport.Utilities;
 

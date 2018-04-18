@@ -10,7 +10,6 @@
 namespace BooksImportExport.Interfaces
 {
     using BooksCore.Interfaces;
-    using BooksCore.Provider;
 
     /// <summary>
     /// The books file export interface.

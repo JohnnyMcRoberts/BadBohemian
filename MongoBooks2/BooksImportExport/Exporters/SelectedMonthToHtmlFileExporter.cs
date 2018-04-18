@@ -101,53 +101,30 @@ td {
 
         private void WriteCharts(HtmlTextWriter writer)
         {
-            writer.WriteLine();
-            writer.AddStyleAttribute("font-size", "14pt");
-            writer.RenderBeginTag(HtmlTextWriterTag.P);
-            writer.Write("Charts");
-            writer.RenderEndTag();
-            writer.WriteLine();
+            // Write the header
+            WriteHeaderParagraph(writer, "Charts");
 
-            // Write script includes
-            writer.AddAttribute(HtmlTextWriterAttribute.Id, "pagesPieChart");
-            writer.RenderBeginTag(HtmlTextWriterTag.Div);
-            writer.RenderEndTag();
+            // Write charts table
+            WriteChartsTable(writer, ForBlog);
 
             // Write google charts script include
-            writer.WriteLine();
-            writer.AddAttribute(HtmlTextWriterAttribute.Src, "https://www.gstatic.com/charts/loader.js");
-            writer.AddAttribute(HtmlTextWriterAttribute.Type, "text/javascript");
-            writer.RenderBeginTag(HtmlTextWriterTag.Script);
-            writer.RenderEndTag();
-            writer.WriteLine();
+            WriteGoogleChartsScriptInclude(writer);
 
-            // Get the json for chart
-
-            Dictionary<string, int> pagesPerCountry = new Dictionary<string, int>();
-
-            foreach (BookRead book in _selectedMonthTally.BooksRead)
+            // Get the java script for the totals charts
+            string[] totalsChartJavascriptSnippets =
             {
-                if (pagesPerCountry.ContainsKey(book.Nationality))
-                    pagesPerCountry[book.Nationality] += book.Pages;
-                else
-                    pagesPerCountry.Add(book.Nationality, book.Pages);
-
-            }
-
-            List<KeyValuePair<string, int>> sortedCountryTotals = pagesPerCountry.OrderByDescending(x => x.Value).ToList();
-
-            string json = string.Empty;
-            for (int i = 0; i < sortedCountryTotals.Count; i++)
-            {
-                if (i == 0)
-                    json += "['Country', 'Pages']";
-
-                json += ",\n";
-
-                json += $"['{sortedCountryTotals[i].Key}', {sortedCountryTotals[i].Value}]";
-            }
+                GetPieChartTotalsJavascriptSnippet(true, true, "countryPagesPieChart", "Pages by country"),
+                GetBarChartTotalsJavascriptSnippet(true, false, "countryBooksBarChart", "Books by country"),
+                GetPieChartTotalsJavascriptSnippet(false, true, "languagePagesPieChart", "Pages by language"),
+                GetBarChartTotalsJavascriptSnippet(false, false, "languageBooksBarChart", "Books by language")
+            };
 
             // Write the script itself
+            WriteGoogleChartsJavascript(writer, string.Join("\n", totalsChartJavascriptSnippets));
+        }
+
+        private static void WriteGoogleChartsJavascript(HtmlTextWriter writer, string javascript)
+        {
             writer.WriteLine();
             writer.AddAttribute(HtmlTextWriterAttribute.Type, "text/javascript");
             writer.RenderBeginTag(HtmlTextWriterTag.Script);
@@ -157,18 +134,149 @@ google.charts.setOnLoadCallback(drawChart);
 
 // Draw the chart and set the chart values
 function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-  "+ json + @"]);
-
-  // Optional; add a title and set the width and height of the chart
-  var options = {'title':'Pages by country', 'width':550, 'height':400};
-
-  // Display the chart inside the <div> element with id=""piechart""
-  var chart = new google.visualization.PieChart(document.getElementById('pagesPieChart'));
-  chart.draw(data, options);
+  " + javascript + @"
 }");
             writer.RenderEndTag();
             writer.WriteLine();
+        }
+
+        private string GetBarChartTotalsJavascriptSnippet(bool isCountries, bool isPages, string divId, string chartTitle)
+        {
+            List<KeyValuePair<string, int>> sortedLanguageBookTotals = GetSelectedMonthSortedTotals(isCountries, isPages);
+            string sortedLanguageBookJsonTable = ConvertTotalsToJsonTable(sortedLanguageBookTotals, isCountries, isPages);
+            string sortedLanguageBookJavascript =
+                GetBarChartJavascript(divId, sortedLanguageBookJsonTable, chartTitle);
+            return sortedLanguageBookJavascript;
+        }
+
+        private string GetPieChartTotalsJavascriptSnippet(bool isCountries, bool isPages, string divId, string chartTitle)
+        {
+            List<KeyValuePair<string, int>> sortedLanguageBookTotals = GetSelectedMonthSortedTotals(isCountries, isPages);
+            string sortedLanguageBookJsonTable = ConvertTotalsToJsonTable(sortedLanguageBookTotals, isCountries, isPages);
+            string sortedLanguageBookJavascript =
+                GetPieChartJavascript(divId, sortedLanguageBookJsonTable, chartTitle);
+            return sortedLanguageBookJavascript;
+        }
+
+        private string GetPieChartJavascript(string divId, string jsonTable, string title)
+        {
+            string javascript = string.Empty;
+            javascript += $"  var {divId}Data = google.visualization.arrayToDataTable({jsonTable});\n\n";
+            javascript += "  // Optional; add a title and set the width and height of the chart\n";
+            javascript += "  var " + divId + "Options = {'title':'" + title + "', 'width':550, 'height':400};\n\n";
+            javascript += "  // Display the chart inside the <div> element with id=\"" + divId + "\"\n";
+            javascript += "  var " + divId + "_chart = new google.visualization.PieChart(document.getElementById('" + divId + "'));\n";
+            javascript += "  " + divId + $"_chart.draw({divId}Data, {divId}Options);\n";
+
+            return javascript;
+        }
+
+        private string GetBarChartJavascript(string divId, string jsonTable, string title)
+        {
+            string javascript = string.Empty;
+            javascript += $"  var {divId}Data = google.visualization.arrayToDataTable({jsonTable});\n\n";
+            javascript += "  // Optional; add a title and set the width and height of the chart\n";
+            javascript += "  var " + divId + "Options = {'title':'" + title + "', 'width':550, 'height':400, legend: 'none'};\n\n";
+            javascript += "  // Display the chart inside the <div> element with id=\"" + divId + "\"\n";
+            javascript += "  var " + divId + "_chart = new google.visualization.BarChart(document.getElementById('" + divId + "'));\n";
+            javascript += "  " + divId + $"_chart.draw({divId}Data, {divId}Options);\n";
+
+            return javascript;
+        }
+
+        private static void WriteGoogleChartsScriptInclude(HtmlTextWriter writer)
+        {
+            writer.WriteLine();
+            writer.AddAttribute(HtmlTextWriterAttribute.Src, "https://www.gstatic.com/charts/loader.js");
+            writer.AddAttribute(HtmlTextWriterAttribute.Type, "text/javascript");
+            writer.RenderBeginTag(HtmlTextWriterTag.Script);
+            writer.RenderEndTag();
+            writer.WriteLine();
+        }
+
+        private static void WriteChartsTable(HtmlTextWriter writer, bool forBlog)
+        {
+            writer.AddStyleAttribute("font-size", "12pt");
+            writer.AddStyleAttribute("width", forBlog ? "90%" : "60%");
+            writer.AddStyleAttribute("border", "none");
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Align, "center");
+            writer.AddAttribute(HtmlTextWriterAttribute.Class, "columns");
+            writer.RenderBeginTag(HtmlTextWriterTag.Table);
+            {
+                writer.RenderBeginTag(HtmlTextWriterTag.Tr);
+                {
+                    WriteDivTableCell(writer, "countryPagesPieChart");
+                    WriteDivTableCell(writer, "countryBooksBarChart");
+                }
+                writer.RenderEndTag();
+                writer.WriteLine();
+
+                writer.RenderBeginTag(HtmlTextWriterTag.Tr);
+                {
+                    WriteDivTableCell(writer, "languagePagesPieChart");
+                    WriteDivTableCell(writer, "languageBooksBarChart");
+                }
+                writer.RenderEndTag();
+                writer.WriteLine();
+            }
+            writer.RenderEndTag();
+
+            writer.WriteLine();
+        }
+
+        private static void WriteDivTableCell(HtmlTextWriter writer, string divId)
+        {
+            writer.RenderBeginTag(HtmlTextWriterTag.Td);
+            {
+                writer.AddStyleAttribute("border", "1px solid #ccc");
+                writer.AddAttribute(HtmlTextWriterAttribute.Id, divId);
+                writer.RenderBeginTag(HtmlTextWriterTag.Div);
+                writer.RenderEndTag();
+            }
+
+            writer.RenderEndTag();
+            writer.WriteLine();
+        }
+
+        private List<KeyValuePair<string, int>> GetSelectedMonthSortedTotals(bool isCountries = true, bool isPages = true)
+        {
+            Dictionary<string, int> totalsPerHeading = new Dictionary<string, int>();
+
+            foreach (BookRead book in _selectedMonthTally.BooksRead)
+            {
+                string key = isCountries ? book.Nationality : book.OriginalLanguage;
+
+                if (totalsPerHeading.ContainsKey(key))
+                    totalsPerHeading[key] += isPages ? book.Pages : 1;
+                else
+                    totalsPerHeading.Add(key, isPages ? book.Pages : 1);
+            }
+
+            return totalsPerHeading.OrderByDescending(x => x.Value).ToList();
+        }
+
+        private static string ConvertTotalsToJsonTable(
+            List<KeyValuePair<string, int>> sortedTotals,
+            bool isCountries = true,
+            bool isPages = true)
+        {
+            string key = isCountries ? "Country" : "Language";
+            string value = isPages ? "Pages" : "Books";
+
+            string json = "[\n";
+            for (int i = 0; i < sortedTotals.Count; i++)
+            {
+                if (i == 0)
+                    json += $"['{key}', '{value}']";
+
+                json += ",\n";
+
+                json += $"['{sortedTotals[i].Key}', {sortedTotals[i].Value}]";
+            }
+
+            json += "\n]";
+            return json;
         }
 
         private static void WriteHeaderContent(HtmlTextWriter writer)
@@ -216,16 +324,14 @@ function drawChart() {
         private void WriteIndividualBooks(HtmlTextWriter writer)
         {
             writer.WriteLine();
-            writer.AddStyleAttribute("font-size", "14pt");
-            writer.RenderBeginTag(HtmlTextWriterTag.P);
-            writer.Write("Individual books");
+
+            WriteHeaderParagraph(writer, "Individual books");
 
             foreach (BookRead book in _selectedMonthTally.BooksRead)
             {
                 WriteIndividualBookTable(writer, book);
             }
-
-            writer.RenderEndTag();
+            
             writer.WriteLine();
         }
 
@@ -359,12 +465,7 @@ function drawChart() {
 
         private void WriteTotalsTable(HtmlTextWriter writer)
         {
-            writer.WriteLine();
-            writer.AddStyleAttribute("font-size", "14pt");
-            writer.RenderBeginTag(HtmlTextWriterTag.P);
-            writer.Write("Tables");
-            writer.RenderEndTag();
-            writer.WriteLine();
+            WriteHeaderParagraph(writer, "Tables");
 
             writer.AddStyleAttribute("font-size", "12pt");
             writer.AddStyleAttribute("width", ForBlog ? "90%" : "60%");
@@ -413,6 +514,16 @@ function drawChart() {
             }
             writer.RenderEndTag();
 
+            writer.WriteLine();
+        }
+
+        private static void WriteHeaderParagraph(HtmlTextWriter writer, string title)
+        {
+            writer.WriteLine();
+            writer.AddStyleAttribute("font-size", "14pt");
+            writer.RenderBeginTag(HtmlTextWriterTag.P);
+            writer.Write(title);
+            writer.RenderEndTag();
             writer.WriteLine();
         }
 
