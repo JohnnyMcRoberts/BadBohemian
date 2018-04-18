@@ -11,10 +11,11 @@ namespace BooksImportExport.Exporters
     using System;
     using System.IO;
     using System.Text;
+
+    using CsvHelper;
+
     using BooksCore.Books;
     using BooksCore.Interfaces;
-    using CsvHelper;
-    
     using BooksImportExport.Interfaces;
 
     public class BooksToCsvFileExport : IBooksFileExport
