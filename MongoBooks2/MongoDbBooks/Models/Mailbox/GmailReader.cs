@@ -508,6 +508,7 @@ namespace MongoDbBooks.Models.Mailbox
         private bool GetBookEntriesFromPlainText(string text, out List<string> bookEntries)
         {
             string[] delimiterStrs = { "\r\n\r\n" };
+            text = text.Replace(">", "");
             string[] blocks = text.Split(delimiterStrs, StringSplitOptions.RemoveEmptyEntries);
 
             if (blocks.Length < 1)
@@ -519,9 +520,9 @@ namespace MongoDbBooks.Models.Mailbox
             List<string> betterBlocks = new List<string>();
             foreach (string block in blocks)
             {
-                if (_dayNames.Any(day => block.ToLower().StartsWith(day.ToLower())))
+                if (_dayNames.Any(day => block.Trim().ToLower().StartsWith(day.ToLower())))
                 {
-                    betterBlocks.Add(block.Replace("\r\n", " "));
+                    betterBlocks.Add(block.Trim().Replace("\r\n", " "));
                 }
             }
 

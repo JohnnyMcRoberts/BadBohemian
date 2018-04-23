@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDbBooks", "MongoDbBooks\MongoDbBooks.csproj", "{F7A750B3-2C51-417E-BA0D-4C4708939FBE}"
 EndProject
@@ -68,6 +68,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooksTesterUtilities", "BooksTesterUtilities\BooksTesterUtilities.csproj", "{60669267-C598-405C-A8BA-3A5676D98465}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularMonthlyReport", "JavaScript\Node\AngularMonthlyReport\AngularMonthlyReport.csproj", "{1E930A2C-A8D7-4BAC-A71D-6699901FC938}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfEmbeddedBrowser", "WpfEmbeddedBrowser\WpfEmbeddedBrowser.csproj", "{7F305CF0-1FE1-48EC-B323-E0F525036EC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -299,6 +301,14 @@ Global
 		{1E930A2C-A8D7-4BAC-A71D-6699901FC938}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1E930A2C-A8D7-4BAC-A71D-6699901FC938}.Release|x86.ActiveCfg = Release|Any CPU
 		{1E930A2C-A8D7-4BAC-A71D-6699901FC938}.Release|x86.Build.0 = Release|Any CPU
+		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Debug|x86.Build.0 = Debug|Any CPU
+		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

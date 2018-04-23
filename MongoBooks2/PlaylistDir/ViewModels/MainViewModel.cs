@@ -5,12 +5,9 @@
     using System.Linq.Expressions;
     using System.Windows.Forms;
     using System.Windows.Input;
-    using System.Xml.Linq;
     using System.Collections.Generic;
     using System.IO;
-    using System.Text;
     using System.Xml;
-    using System.Linq;
     using System.Collections.ObjectModel;
 
     public class MainViewModel : INotifyPropertyChanged

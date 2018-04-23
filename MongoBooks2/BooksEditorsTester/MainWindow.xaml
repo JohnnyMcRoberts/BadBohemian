@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BooksEditorsTester"
-        xmlns:gridEditors="clr-namespace:BooksEditors.Views.Grids;assembly=BooksEditors"
+        xmlns:editorsGrids="clr-namespace:BooksEditors.Views.Grids;assembly=BooksEditors"
+        xmlns:editorsItems="clr-namespace:BooksEditors.Views.Editors;assembly=BooksEditors"
         mc:Ignorable="d"
-        Title="Books Editor Tester" Height="350" Width="525">
+        Title="Books Editor Tester" Height="550" Width="650">
     <Grid>
         <TabControl>
             <TabItem Header="Books">
@@ -61,7 +62,7 @@
                             </Grid.RowDefinitions>
                             <Button Width="150" Content="Get Books Read" Height="22"
                                     Command="{Binding Path=GetBooksReadGridCommand}"/>
-                            <gridEditors:BooksReadGridView Grid.Row="1" DataContext="{Binding Path=BooksReadGrid}"/>
+                            <editorsGrids:BooksReadGridView Grid.Row="1" DataContext="{Binding Path=BooksReadGrid}"/>
 
                         </Grid>
                     </TabItem>
@@ -72,9 +73,10 @@
                                 <RowDefinition Height="30" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
+
                             <Button Width="150" Content="Get Authors" Height="22"
                                     Command="{Binding Path=GetAuthorsGridCommand}"/>
-                            <gridEditors:AuthorsGridView Grid.Row="1" DataContext="{Binding Path=AuthorsGrid}"/>
+                            <editorsGrids:AuthorsGridView Grid.Row="1" DataContext="{Binding Path=AuthorsGrid}"/>
 
                         </Grid>
                     </TabItem>
@@ -87,7 +89,7 @@
                             </Grid.RowDefinitions>
                             <Button Width="150" Content="Get Languages" Height="22"
                                     Command="{Binding Path=GetLanguagesGridCommand}"/>
-                            <gridEditors:LanguagesGridView Grid.Row="1" DataContext="{Binding Path=LanguagesGrid}"/>
+                            <editorsGrids:LanguagesGridView Grid.Row="1" DataContext="{Binding Path=LanguagesGrid}"/>
 
                         </Grid>
                     </TabItem>
@@ -100,13 +102,57 @@
                             </Grid.RowDefinitions>
                             <Button Width="150" Content="Get Countries" Height="22"
                                     Command="{Binding Path=GetCountriesGridCommand}"/>
-                            <gridEditors:CountriesGridView Grid.Row="1" DataContext="{Binding Path=CountriesGrid}"/>
+                            <editorsGrids:CountriesGridView Grid.Row="1" DataContext="{Binding Path=CountriesGrid}"/>
 
                         </Grid>
                     </TabItem>
 
                 </TabControl>
+            </TabItem>
+            <TabItem Header="Editors">
+                <TabControl>
 
+                    <TabItem Header="Book Read">
+                        <Grid MinHeight="400" MinWidth="600">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal">
+
+                                <Button Width="150" Content="Get Books Read" Height="22" Margin="5,1,5,1"
+                                        Command="{Binding Path=GetBooksReadGridCommand}"/>
+
+                                <Button Width="150" Content="Set Editor To Add" Height="22" Margin="5,1,5,1"
+                                        Command="{Binding Path=SetEditorToAddCommand}"/>
+
+                                <Button Width="150" Content="Set Editor To Update" Height="22" Margin="5,1,5,1"
+                                        Command="{Binding Path=SetEditorToUpdateCommand}"/>
+                            </StackPanel>
+                            <editorsItems:BookEditorView Grid.Row="1" DataContext="{Binding Path=BookEditor}"/>
+
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="Image Editor">
+                        <Grid MinHeight="400" MinWidth="600">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Initial Search Term"></Label>
+                                <TextBox Text="{Binding InitialImageSearchTerm}" MinWidth="150"></TextBox>
+
+                                <Button Width="150" Content="Select Image" Height="22" Margin="5,1,5,1"
+                                        Command="{Binding Path=SelectImageCommand}"/>
+
+                            </StackPanel>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
             </TabItem>
         </TabControl>
     </Grid>

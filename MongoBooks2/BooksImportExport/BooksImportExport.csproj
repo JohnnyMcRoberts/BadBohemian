@@ -47,9 +47,13 @@
   <ItemGroup>
     <Compile Include="Exporters\BooksToCsvFileExport.cs" />
     <Compile Include="Exporters\ExportType.cs" />
+    <Compile Include="Exporters\ImportType.cs" />
     <Compile Include="Exporters\NationsToXmlFileExport.cs" />
     <Compile Include="Exporters\SelectedMonthToHtmlFileExporter.cs" />
+    <Compile Include="Importers\BooksFromCsvFileImport.cs" />
+    <Compile Include="Importers\NationsFromXmlFileImport.cs" />
     <Compile Include="Interfaces\IBooksFileExport.cs" />
+    <Compile Include="Interfaces\IBooksFileImport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="Utilities\ImportExportTypeAttribute.cs" />
