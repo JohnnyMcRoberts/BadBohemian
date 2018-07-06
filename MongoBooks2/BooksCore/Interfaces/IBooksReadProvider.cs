@@ -64,6 +64,11 @@ namespace BooksCore.Interfaces
         ObservableCollection<MonthlyReportsTally> ReportsTallies { get; }
 
         /// <summary>
+        /// Gets the tags added to the books.
+        /// </summary>
+        ObservableCollection<BookTag> BookTags { get; }
+
+        /// <summary>
         /// Gets the selected month tally.
         /// </summary>
         TalliedMonth SelectedMonthTally { get; }

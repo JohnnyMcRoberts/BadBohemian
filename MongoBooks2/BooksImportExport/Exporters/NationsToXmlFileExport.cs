@@ -29,7 +29,7 @@ namespace BooksImportExport.Exporters
         /// <summary>
         /// Gets the export file type extension.
         /// </summary>
-        public string Extension => "csv";
+        public string Extension => "xml";
 
         /// <summary>
         /// Gets the export file type filter.

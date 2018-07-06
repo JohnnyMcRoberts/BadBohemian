@@ -23,7 +23,7 @@ namespace BooksImportExport.Exporters
         /// <summary>
         /// Gets the export method name.
         /// </summary>
-        public string Name => "Books To File";
+        public string Name => "Books To CSV";
 
         /// <summary>
         /// Gets the export file type extension.

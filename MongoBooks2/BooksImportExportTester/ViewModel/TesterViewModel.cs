@@ -10,13 +10,15 @@ namespace BooksImportExportTester.ViewModel
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Data;
     using System.Linq;
     using System.Windows.Input;
     using System.Windows.Forms;
-    using BooksCore.Interfaces;
     using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
     using BooksCore.Provider;
+    using BooksCore.Interfaces;
     using BooksImportExport.Exporters;
     using BooksImportExport.Interfaces;
     using BooksImportExport.Utilities;
@@ -84,6 +86,36 @@ namespace BooksImportExportTester.ViewModel
         /// The export file command.
         /// </summary>
         private ICommand _exportFileCommand;
+
+        /// <summary>
+        /// The input file.
+        /// </summary>
+        private string _inputFile;
+
+        /// <summary>
+        /// The selected import type.
+        /// </summary>
+        private ImportType _selectedImportType;
+
+        /// <summary>
+        /// The import data table.
+        /// </summary>
+        private DataTable _importDataTable;
+
+        /// <summary>
+        /// The import file error.
+        /// </summary>
+        private string _importErrorMessage;
+
+        /// <summary>
+        /// The select input file command.
+        /// </summary>
+        private ICommand _selectInputFileCommand;
+
+        /// <summary>
+        /// The import file command.
+        /// </summary>
+        private ICommand _importFileCommand;
 
         #endregion
 
@@ -169,6 +201,18 @@ namespace BooksImportExportTester.ViewModel
         /// </summary>
         public ICommand ExportFileCommand =>
             _exportFileCommand ?? (_exportFileCommand = new CommandHandler(ExportFileCommandAction, true));
+
+        /// <summary>
+        /// Gets the select input file command.
+        /// </summary>
+        public ICommand SelectInputFileCommand =>
+            _selectInputFileCommand ?? (_selectInputFileCommand = new CommandHandler(SelectInputFileCommandAction, true));
+
+        /// <summary>
+        /// Gets the export file command.
+        /// </summary>
+        public ICommand ImportFileCommand =>
+            _importFileCommand ?? (_importFileCommand = new CommandHandler(ImportFileCommandAction, true));
 
         /// <summary>
         /// Gets the first month.
@@ -273,6 +317,95 @@ namespace BooksImportExportTester.ViewModel
             }
         }
 
+        /// <summary>
+        /// Gets the input file command.
+        /// </summary>
+        public string InputFile
+        {
+            get
+            {
+                return _inputFile;
+            }
+
+            private set
+            {
+                if (_inputFile != value)
+                {
+                    _inputFile = value;
+                    OnPropertyChanged(() => IsValidInputFile);
+                    OnPropertyChanged(() => InputFile);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the import error.
+        /// </summary>
+        public string ImportErrorMessage
+        {
+            get
+            {
+                return _importErrorMessage;
+            }
+
+            private set
+            {
+                if (_importErrorMessage != value)
+                {
+                    _importErrorMessage = value;
+                    OnPropertyChanged(() => ImportErrorMessage);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the import type.
+        /// </summary>
+        public ImportType SelectedImportType
+        {
+            get
+            {
+                return _selectedImportType;
+            }
+
+            set
+            {
+                if (value != _selectedImportType)
+                {
+                    _selectedImportType = value;
+                    OnPropertyChanged(() => SelectedImportType);
+                    OutputFile = String.Empty;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets if have a valid input file set.
+        /// </summary>
+        public bool IsValidInputFile => !string.IsNullOrEmpty(InputFile);
+
+        /// <summary>
+        /// Gets the import types and titles.
+        /// </summary>
+        public Dictionary<ImportType, string> ImportTypesByTitle { get; private set; }
+
+        /// <summary>
+        /// Gets the import data table.
+        /// </summary>
+        public DataTable ImportDataTable
+        {
+            get
+            {
+                return _importDataTable;
+            }
+
+            private set
+            {
+                _importDataTable = value;
+                OnPropertyChanged(() => ImportDataTable);
+            }
+        }
+
         #endregion
 
         #region Command handlers
@@ -336,6 +469,55 @@ namespace BooksImportExportTester.ViewModel
             }
         }
 
+        /// <summary>
+        /// The select output file command action.
+        /// </summary>
+        private void SelectInputFileCommandAction()
+        {
+            // Get the exporter.
+            IBooksFileImport importer = GetSelectedFileImporter();
+
+            // Set up the save file dialog.
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Filter = importer.Filter,
+                FilterIndex = 4,
+                RestoreDirectory = true
+            };
+
+            // If exporting set the output file.
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                InputFile = fileDialog.FileName;
+            }
+        }
+
+        /// <summary>
+        /// The import file command action.
+        /// </summary>
+        private void ImportFileCommandAction()
+        {
+            // Get the exporter.
+            IBooksFileImport importer = GetSelectedFileImporter();
+
+            // Get the data.
+            string error;
+            if (!importer.ReadFromFile(InputFile, out error))
+            {
+                ImportErrorMessage = error;
+            }
+            else
+            {
+                ImportErrorMessage = string.Empty;
+                Type importeditemType = importer.ImportType;
+                var importedItems = new List<object>();
+                foreach(var item in importer.ImportedItems)
+                    importedItems.Add(item);
+
+                ImportDataTable = ToDataTable(importedItems, importeditemType);
+
+            }
+        }
         #endregion
 
         #region Utility Functions
@@ -365,6 +547,70 @@ namespace BooksImportExportTester.ViewModel
             }
         }
 
+        /// <summary>
+        /// Gets a data table from a list of items of a given type.
+        /// </summary>
+        public static DataTable ToDataTable(IList<object> data, Type itemType)
+        {
+            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(itemType);
+            DataTable table = new DataTable();
+            foreach (PropertyDescriptor prop in properties)
+                table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+            foreach (object item in data)
+            {
+                DataRow row = table.NewRow();
+                foreach (PropertyDescriptor prop in properties)
+                    row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                table.Rows.Add(row);
+            }
+            return table;
+        }
+
+        /// <summary>
+        /// Gets a data table from a list of items of a given type.
+        /// </summary>
+        public static DataTable ToDataTable<T>(IList<T> data)
+        {
+            PropertyDescriptorCollection properties =
+                TypeDescriptor.GetProperties(typeof(T));
+            DataTable table = new DataTable();
+            foreach (PropertyDescriptor prop in properties)
+                table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+            foreach (T item in data)
+            {
+                DataRow row = table.NewRow();
+                foreach (PropertyDescriptor prop in properties)
+                    row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                table.Rows.Add(row);
+            }
+            return table;
+        }
+
+        /// <summary>
+        /// Gets the selected file exporter.
+        /// </summary>
+        /// <returns>The file exporter.</returns>
+        private IBooksFileImport GetSelectedFileImporter()
+        {
+            Type importerType = SelectedImportType.GetGeneratorClass();
+            object instance = Activator.CreateInstance(importerType);
+            IBooksFileImport importer = (IBooksFileImport)instance;
+            return importer;
+        }
+
+        /// <summary>
+        /// Sets up the importer types.
+        /// </summary>
+        private void SetupImportTypesByTitle()
+        {
+            ImportTypesByTitle = new Dictionary<ImportType, string>();
+            foreach (ImportType selection in Enum.GetValues(typeof(ImportType)))
+            {
+                string title = selection.GetTitle();
+                ImportTypesByTitle.Add(selection, title);
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -380,6 +626,11 @@ namespace BooksImportExportTester.ViewModel
             LastMonth = DateTime.Now;
             SelectedMonth = LastMonth.AddDays(-2);
             FirstMonth = SelectedMonth.AddDays(-2);
+
+            _selectedImportType = ImportType.BooksFromCsv;
+            _inputFile = string.Empty;
+            SetupImportTypesByTitle();
+            ImportDataTable = new DataTable();
         }
 
         #endregion

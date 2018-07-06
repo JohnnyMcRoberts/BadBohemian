@@ -63,6 +63,11 @@ namespace BooksCore.Provider
         public ObservableCollection<AuthorLanguage> AuthorLanguages { get; }
 
         /// <summary>
+        /// Gets the tags added to the books.
+        /// </summary>
+        public ObservableCollection<BookTag> BookTags { get; }
+
+        /// <summary>
         /// Gets the selected month tally.
         /// </summary>
         public ObservableCollection<TalliedMonth> TalliedMonths { get; private set; }
@@ -368,6 +373,37 @@ namespace BooksCore.Provider
             }
         }
 
+        private void UpdateBookTags()
+        {
+            BookTags.Clear();
+
+            Dictionary<string, BookTag> bookTagSet = new Dictionary<string, BookTag>();
+            foreach (BookRead book in BooksRead)
+            {
+                if (book.Tags == null || book.Tags.Count == 0)
+                    continue;
+
+                foreach (string tag in book.Tags)
+                {
+                    string trimmedTag = tag.Trim();
+                    if (bookTagSet.ContainsKey(trimmedTag))
+                    {
+                        bookTagSet[trimmedTag].BooksWithTag.Add(book);
+                    }
+                    else
+                    {
+                        BookTag bookTag = new BookTag { Tag = trimmedTag };
+                        bookTag.BooksWithTag.Add(book);
+                        bookTagSet.Add(trimmedTag, bookTag);
+                    }
+                }
+            }
+
+            foreach (BookTag bookTag in bookTagSet.Values.ToList())
+            {
+                BookTags.Add(bookTag);
+            }
+        }
         public void Setup(IList<BookRead> books, IGeographyProvider geographyProvider)
         {
             _geographyProvider = geographyProvider;
@@ -387,6 +423,7 @@ namespace BooksCore.Provider
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             UpdateBookLocationDeltas();
             UpdateBooksPerMonth();
+            UpdateBookTags();
             SelectedMonthTally = TalliedMonths.FirstOrDefault();
             _selectedMonth = DateTime.Now;
             if (SelectedMonthTally != null)
@@ -402,6 +439,7 @@ namespace BooksCore.Provider
             AuthorLanguages = new ObservableCollection<AuthorLanguage>();
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             AuthorCountries = new ObservableCollection<AuthorCountry>();
+            BookTags = new ObservableCollection<BookTag>();
             TalliedMonths = new ObservableCollection<TalliedMonth>();
             ReportsTallies = new ObservableCollection<MonthlyReportsTally>();
         }
