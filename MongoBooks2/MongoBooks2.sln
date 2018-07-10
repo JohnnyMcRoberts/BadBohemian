@@ -71,6 +71,29 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularMonthlyReport", "Jav
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfEmbeddedBrowser", "WpfEmbeddedBrowser\WpfEmbeddedBrowser.csproj", "{7F305CF0-1FE1-48EC-B323-E0F525036EC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular-With-VS-2", "JavaScript\Node\MoreVS\Angular-With-VS-2\Angular-With-VS-2.csproj", "{1CF43787-10BE-4DFE-98B3-932CC20A11BE}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "my-project", "JavaScript\Node\AngularCLI\my-project\", "{EAFD574F-061E-45BC-B9F4-04C3F5E73990}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_54056"
+		Debug.AspNetCompiler.PhysicalPath = "JavaScript\Node\AngularCLI\my-project\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_54056\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_54056"
+		Release.AspNetCompiler.PhysicalPath = "JavaScript\Node\AngularCLI\my-project\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_54056\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "54056"
+		SlnRelativePath = "JavaScript\Node\AngularCLI\my-project\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -309,6 +332,22 @@ Global
 		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Release|x86.ActiveCfg = Release|Any CPU
 		{7F305CF0-1FE1-48EC-B323-E0F525036EC5}.Release|x86.Build.0 = Release|Any CPU
+		{1CF43787-10BE-4DFE-98B3-932CC20A11BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CF43787-10BE-4DFE-98B3-932CC20A11BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CF43787-10BE-4DFE-98B3-932CC20A11BE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1CF43787-10BE-4DFE-98B3-932CC20A11BE}.Debug|x86.Build.0 = Debug|Any CPU
+		{1CF43787-10BE-4DFE-98B3-932CC20A11BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CF43787-10BE-4DFE-98B3-932CC20A11BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CF43787-10BE-4DFE-98B3-932CC20A11BE}.Release|x86.ActiveCfg = Release|Any CPU
+		{1CF43787-10BE-4DFE-98B3-932CC20A11BE}.Release|x86.Build.0 = Release|Any CPU
+		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Debug|x86.Build.0 = Debug|Any CPU
+		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Release|x86.ActiveCfg = Debug|Any CPU
+		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Release|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -328,6 +367,8 @@ Global
 		{90F8988F-3354-4F27-9024-6D2CA13BE18A} = {829E5594-2BD1-40F4-A50B-AA13180B742D}
 		{60669267-C598-405C-A8BA-3A5676D98465} = {829E5594-2BD1-40F4-A50B-AA13180B742D}
 		{1E930A2C-A8D7-4BAC-A71D-6699901FC938} = {CEE5A82B-4EBA-4D00-9125-00B443BD962F}
+		{1CF43787-10BE-4DFE-98B3-932CC20A11BE} = {CEE5A82B-4EBA-4D00-9125-00B443BD962F}
+		{EAFD574F-061E-45BC-B9F4-04C3F5E73990} = {CEE5A82B-4EBA-4D00-9125-00B443BD962F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B850ED9D-DC3A-4235-BA47-E0B181EDF282}
