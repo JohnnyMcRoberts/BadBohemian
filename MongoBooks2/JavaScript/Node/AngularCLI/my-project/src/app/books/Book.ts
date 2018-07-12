@@ -1,5 +1,4 @@
-﻿import Book1 = require("./IBook");
-import IBook = Book1.IBook;
+﻿import IBook = books.IBook;
 
 export class Book implements IBook {
   public _id: string;
@@ -15,6 +14,7 @@ export class Book implements IBook {
   public tags: Array<string>;
   public format: number;
   public prettyDate: string;
+  public prettyFormat: string;
 
   //constructor() { }
   constructor(
@@ -44,8 +44,13 @@ export class Book implements IBook {
     this.format = format;
 
     this.prettyDate = this.displayDate();
+    this.prettyFormat = this.displayFormat();
   }
 
+  private displayFormat(): string {
+    const formats = ["undefined", "book", "comic", "audio"];
+    return formats[this.format % formats.length];
+  }
 
   private displayDate(): string {
     const months = ["January", "February", "March", "April", "May", "June",

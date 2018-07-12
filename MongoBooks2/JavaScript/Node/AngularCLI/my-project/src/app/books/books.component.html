@@ -1,8 +1,9 @@
 <h2>{{book1.title | uppercase}} - Details</h2>
 <div><span>author: </span>{{book1.author}}</div>
 <div><span>pages: </span>{{book1.pages}}</div>
-<div><span>date: </span>{{book1.date.toLocaleDateString("en-GB", { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}}</div>
-<div><span>pretty date: </span>{{book1.prettyDate}}</div>
+<div><span>date read: </span>{{book1.prettyDate}}</div>
+<div><span>format: </span>{{book1.prettyFormat}}</div>
+<div><span>nationality: </span>{{book1.nationality}}</div>
 <img src="{{book1.image_url}}" />
 <div>
   <label>
