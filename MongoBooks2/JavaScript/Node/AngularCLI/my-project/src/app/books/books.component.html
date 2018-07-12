@@ -2,3 +2,11 @@
 <div><span>author: </span>{{book1.author}}</div>
 <div><span>pages: </span>{{book1.pages}}</div>
 <div><span>date: </span>{{book1.date.toLocaleDateString("en-GB", { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}}</div>
+<div><span>pretty date: </span>{{book1.prettyDate}}</div>
+<img src="{{book1.image_url}}" />
+<div>
+  <label>
+    home country:
+    <input [(ngModel)]="book1.nationality" placeholder="name">
+  </label>
+</div>
