@@ -11,3 +11,20 @@
     <input [(ngModel)]="book1.nationality" placeholder="name">
   </label>
 </div>
+<h2>My Books</h2>
+<table class="theBooks">
+  <tr>
+    <th>Date</th>
+    <th>Author</th>
+    <th>Title</th>
+    <th>Pages</th>
+    <th>Image</th>
+  </tr>
+  <tr *ngFor="let book of BooksSet">
+    <td>{{book.dateString}}</td>
+    <td>{{book.author}}</td>
+    <td>{{book.title}}</td>
+    <td>{{book.pages}}</td>
+    <td><img src={{book.image_url}}  height="80" /></td>
+  </tr>
+</table>
