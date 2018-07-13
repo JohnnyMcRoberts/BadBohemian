@@ -12,7 +12,7 @@ import { MockBooksSet } from './MockBooks';
 
 export class BooksComponent implements OnInit {
 
-  book1: IBook = new Book("5a6b69dc6488960e6808bad0",
+  bookSelected: IBook = new Book("5a6b69dc6488960e6808bad0",
      "24th February 2012",
    new Date("2012-02-24T00:00:00.000Z"),
    "Gabriel Garcia Marquez",
@@ -28,8 +28,28 @@ export class BooksComponent implements OnInit {
   constructor() { }
   author = 'Joseph Roth';
 
-  BooksSet = MockBooksSet;
+  booksSet = MockBooksSet;
+  selection = "no selection";
   ngOnInit() {
+  }
+  selectedBook: BookData;
+
+  onSelect(book: BookData): void {
+    this.selectedBook = book;
+    this.selection = this.selectedBook.title + " by " + this.selectedBook.author;
+
+    this.bookSelected = new Book(book._id,
+      book.dateString,
+      book.date,
+      book.author,
+      book.title,
+      book.pages,
+      book.note,
+      book.nationality,
+      book.originalLanguage,
+      book.image_url,
+      book.tags,
+      book.format);
   }
 
 }

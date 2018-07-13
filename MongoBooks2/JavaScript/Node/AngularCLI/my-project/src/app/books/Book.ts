@@ -48,7 +48,7 @@ export class Book implements IBook {
   }
 
   private displayFormat(): string {
-    const formats = ["undefined", "book", "comic", "audio"];
+    const formats = ["undefined", "Book", "Comic", "Audio"];
     return formats[this.format % formats.length];
   }
 

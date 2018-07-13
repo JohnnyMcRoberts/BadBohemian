@@ -1,30 +1,57 @@
-<h2>{{book1.title | uppercase}} - Details</h2>
-<div><span>author: </span>{{book1.author}}</div>
-<div><span>pages: </span>{{book1.pages}}</div>
-<div><span>date read: </span>{{book1.prettyDate}}</div>
-<div><span>format: </span>{{book1.prettyFormat}}</div>
-<div><span>nationality: </span>{{book1.nationality}}</div>
-<img src="{{book1.image_url}}" />
+<table class="selectedBook" align="center" style="font-size:12pt;width:75%;">
+  <tr>
+    <td rowspan="7" style="width:20%;"><img src="{{bookSelected.image_url}}" alt="No Image Provided" height="200" /></td><th style="width:20%;"><b>Title: </b></th>
+    <td>{{bookSelected.title}}</td>
+  </tr><tr>
+    <th style="width:20%;"><b>Author: </b></th>
+    <td>{{bookSelected.author}}</td>
+  </tr>
+  <tr>
+    <th style="width:20%;"><b>Pages: </b></th>
+    <td>{{bookSelected.pages}}</td>
+  </tr>
+  <tr>
+    <th style="width:20%;"><b>Nationality: </b></th>
+    <td>{{bookSelected.nationality}}</td>
+  </tr>
+  <tr>
+    <th style="width:20%;"><b>Original Language: </b></th>
+    <td>{{bookSelected.originalLanguage}}</td>
+  </tr>
+  <tr>
+    <th style="width:20%;"><b>Date: </b></th>
+    <td>{{bookSelected.prettyDate}}</td>
+  </tr>
+  <tr>
+    <th style="width:20%;"><b>Format: </b></th>
+    <td>{{bookSelected.prettyFormat}}</td>
+  </tr>
+  <th><b>Notes: </b></th>
+  <td colspan="2">{{bookSelected.note}}</td>
+
+</table>
+
 <div>
   <label>
     home country:
-    <input [(ngModel)]="book1.nationality" placeholder="name">
+    <input [(ngModel)]="bookSelected.nationality" placeholder="name">
   </label>
 </div>
 <h2>My Books</h2>
-<table class="theBooks">
+<div><span>selected: </span>{{selection}}</div>
+<table class="booksLists">
   <tr>
     <th>Date</th>
     <th>Author</th>
     <th>Title</th>
     <th>Pages</th>
-    <th>Image</th>
+    <th>Cover</th>
   </tr>
-  <tr *ngFor="let book of BooksSet">
+  <tr *ngFor="let book of booksSet" (click)="onSelect(book)">
     <td>{{book.dateString}}</td>
     <td>{{book.author}}</td>
     <td>{{book.title}}</td>
     <td>{{book.pages}}</td>
-    <td><img src={{book.image_url}}  height="80" /></td>
+    <td><img src={{book.image_url}} alt="No Image Provided" height="80" /></td>
   </tr>
 </table>
