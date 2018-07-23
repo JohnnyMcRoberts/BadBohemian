@@ -12,7 +12,7 @@ export class GooglePieChartService extends GoogleChartsBaseService {
   constructor() { super(); }
 
   public BuildPieChart(elementId: String, data: any[], config: PieChartConfig): void {
-    var chartFunc = () => { return new google.visualization.PieChart(document.getElementById(elementId)); };
+    var chartFunc = () => { return new google.visualization.PieChart(document.getElementById(elementId.toString())); };
     var options = {
       title: config.title,
       pieHole: config.pieHole,
