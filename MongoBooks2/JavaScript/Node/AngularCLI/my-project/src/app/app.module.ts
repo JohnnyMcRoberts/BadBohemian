@@ -4,11 +4,14 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { BooksComponent } from './books/books.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
+ 
 
 @NgModule({
   declarations: [
     AppComponent,
-    BooksComponent
+    BooksComponent,
+    PieChartComponent
   ],
   imports: [
     BrowserModule,
