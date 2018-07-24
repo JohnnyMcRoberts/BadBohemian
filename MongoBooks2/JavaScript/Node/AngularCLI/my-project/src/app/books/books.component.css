@@ -1,0 +1,43 @@
+
+.selectedBook table, th, td {
+  border: none;
+  border-collapse: collapse;
+  color: black;
+}
+.selectedBook th {
+  padding: 5px;
+  text-align: left;    
+}
+
+.selectedBook td {
+  padding: 5px;
+  text-align: left;    
+}
+
+.booksLists table {
+  font-size: 12pt;
+  width: 60%;
+  border: none;
+}
+
+.booksLists tr {
+  border: none;
+  color: black;
+}
+
+.booksLists th {
+  border: none;
+  font-size: 24pt;
+  width: 20%;
+  text-align: center;
+  background-color: LightSteelBlue;
+}
+
+.booksLists td {
+  border: none;
+  width: 20%;
+  text-align: left;
+  background-color: Silver;
+}
+
+
