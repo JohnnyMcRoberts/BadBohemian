@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 declare var google: any;
 
 
@@ -8,6 +8,7 @@ declare var google: any;
   styleUrls: ['./pie-chart.component.css']
 })
 export class PieChartComponent implements OnInit {
+  @Input() userId: string;
 
   constructor()
   {
@@ -15,9 +16,11 @@ export class PieChartComponent implements OnInit {
     google.charts.setOnLoadCallback(this.drawChart);
   }
 
-  chartTitle = "Book Countries.";
+  chartTitle: string;
+  
 
   ngOnInit() {
+    this.chartTitle = "Book Countries." + " construct = *" + this.userId + "* ";
   }
 
 
