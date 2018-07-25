@@ -5,7 +5,6 @@ import { BookData } from './../Models/BookData';
 import { Book } from './../Models/Book';
 import { CountryTotal } from './../Models/CountryTotal';
 import { MockBooksSet } from './../Services/MockBooks';
-//import { IBook } from './../Interfaces/IBook';
 import IBook = books.IBook;
 import ICountryTotal = books.ICountryTotal;
 
@@ -49,16 +48,29 @@ export class BookDataService implements OnInit  {
     public GetCountryTotals(calculatePages: boolean): ICountryTotal[]
     {
       var result: ICountryTotal[];
-      if (calculatePages) {
-        result =
-        [
-          new CountryTotal( "USA", 1363), // {nationality: "USA", total: 1363},
-          new CountryTotal("Scotland", 518), // ["Scotland", 518],
-          new CountryTotal("France", 351), // ["France", 351],
-          new CountryTotal("Hungary", 312), // ["Hungary", 312],
-          new CountryTotal("Belgium", 154), // ["Belgium", 154],
-          new CountryTotal("England", 0) // ["England", 0]
-        ];
+      if (calculatePages)
+      {
+        result = [ ];
+
+        for (let bookData of this.booksSet)
+        {
+          let existingItem: ICountryTotal = null;
+
+          for (let total of result)
+          {
+            if (total.nationality === bookData.nationality)
+            {
+              existingItem = total;
+              existingItem.total += bookData.pages;
+              break;
+            }
+          }
+
+          if (existingItem === null)
+          {
+            result.push(new CountryTotal(bookData.nationality, bookData.pages));
+          }
+        }
       }
       else
       {
