@@ -9,6 +9,8 @@ declare var google: any;
 })
 export class PieChartComponent implements OnInit {
   @Input() userId: string;
+  @Input() maxDisplayItems: number;
+  @Input() isForBooks: boolean;
 
   constructor()
   {
@@ -20,7 +22,7 @@ export class PieChartComponent implements OnInit {
   
 
   ngOnInit() {
-    this.chartTitle = "Book Countries." + " construct = *" + this.userId + "* ";
+    this.chartTitle = `Book Countries. construct = *${this.userId}* max items =  *${this.maxDisplayItems - 1}*  for pages =  *${!this.isForBooks}*`;
   }
 
 

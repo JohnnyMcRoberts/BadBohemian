@@ -15,8 +15,7 @@ export class Book implements IBook {
   public format: number;
   public prettyDate: string;
   public prettyFormat: string;
-
-  //constructor() { }
+  
   constructor(
     _id: string,
     dateString: string,

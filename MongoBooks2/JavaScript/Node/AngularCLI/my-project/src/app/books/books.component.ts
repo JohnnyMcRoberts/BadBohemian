@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Book } from './Book';
+import { Book } from './../Models/Book';
 import IBook = books.IBook;
-import { BookData } from './BookData';
-import { MockBooksSet } from './MockBooks';
+import { BookData } from './../Models/BookData';
+import { MockBooksSet } from './../Services/MockBooks';
 
 @Component({
   selector: 'app-books',

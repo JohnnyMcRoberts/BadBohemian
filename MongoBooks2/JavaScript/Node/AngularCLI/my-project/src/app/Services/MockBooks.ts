@@ -1,4 +1,4 @@
-﻿import { BookData } from './BookData';
+﻿import { BookData } from './../Models/BookData';
 
 export const MockBooksSet: BookData[] = [
 
