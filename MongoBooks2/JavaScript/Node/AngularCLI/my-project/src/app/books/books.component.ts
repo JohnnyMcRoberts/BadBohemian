@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Book } from './../Models/Book';
 import IBook = books.IBook;
-import { BookData } from './../Models/BookData';
-import { MockBooksSet } from './../Services/MockBooks';
+import { BookDataService } from './../Services/BookDataService';
 
 @Component({
   selector: 'app-books',
@@ -26,18 +25,23 @@ export class BooksComponent implements OnInit {
     1);
 
   constructor() { }
-  author = 'Joseph Roth';
-
-  booksSet = MockBooksSet;
-  selection = "no selection";
+  
   ngOnInit() {
+    this.booksSet = this.vBookDataService.GetAllBookData();
+    this.selection = "no selection from " + this.booksSet.length;
   }
-  selectedBook: BookData;
+  selectedBook: IBook;
+  booksSet: IBook[];
+  vBookDataService: BookDataService = new BookDataService();
+  selection: string;
+  author: string = 'Joseph Roth';
 
-  onSelect(book: BookData): void {
+  onSelect(book: IBook): void {
     this.selectedBook = book;
-    this.selection = this.selectedBook.title + " by " + this.selectedBook.author;
-
+    this.selection = this.selectedBook.title +
+      " by " +
+      this.selectedBook.author;
+    //this.bookSelected = book;
     this.bookSelected = new Book(book._id,
       book.dateString,
       book.date,

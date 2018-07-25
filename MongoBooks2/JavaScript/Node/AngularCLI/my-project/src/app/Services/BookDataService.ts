@@ -1,44 +1,45 @@
-﻿import { BookData } from './../Models/BookData';
+﻿
+import { BookData } from './../Models/BookData';
 import { Book } from './../Models/Book';
+import { Component, OnInit } from '@angular/core';
 import { MockBooksSet } from './../Services/MockBooks';
+//import { IBook } from './../Interfaces/IBook';
 import IBook = books.IBook;
 
-export class BookDataService {
-  booksSet = MockBooksSet;
+
+export class BookDataService implements OnInit  {
 
   constructor() {
+    this.booksSet = MockBooksSet;
   }
 
-  public GetAllBookData(): IBook[]
-  {
-    var allBooks = new Array<IBook>();
+    ngOnInit() {
+    }
+  
+    booksSet: BookData[];
+    public status: string;
 
-    for (let item of this.booksSet)
-    {
-      if (item instanceof BookData)
+    public GetAllBookData(): IBook[] {
+      var allBooks = new Array<IBook>();
+      for (let bookData of this.booksSet)
       {
-        var bookData = <BookData>item;
-        var book = new Book(
-          bookData._id,
-          bookData.dateString,
-          bookData.date,
-          bookData.author,
-          bookData.title,
-          bookData.pages,
-          bookData.note,
-          bookData.nationality,
-          bookData.originalLanguage,
-          bookData.image_url,
-          bookData.tags,
-          bookData.format
-        );
-
-        allBooks.push(book);
+          allBooks.push(new Book(
+            bookData._id,
+            bookData.dateString,
+            bookData.date,
+            bookData.author,
+            bookData.title,
+            bookData.pages,
+            bookData.note,
+            bookData.nationality,
+            bookData.originalLanguage,
+            bookData.image_url,
+            bookData.tags,
+            bookData.format
+          ));
       }
 
+      return allBooks;
     }
 
-    return allBooks;
   }
-
-}
