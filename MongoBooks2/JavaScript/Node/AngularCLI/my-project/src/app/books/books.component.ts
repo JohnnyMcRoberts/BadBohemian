@@ -27,12 +27,14 @@ export class BooksComponent implements OnInit {
   constructor() { }
   
   ngOnInit() {
-    this.booksSet = this.vBookDataService.GetAllBookData();
+    this.booksSet = this.bookDataService.GetAllBookData();
     this.selection = "no selection from " + this.booksSet.length;
   }
+
+  private bookDataService: BookDataService = new BookDataService();
+
   selectedBook: IBook;
   booksSet: IBook[];
-  vBookDataService: BookDataService = new BookDataService();
   selection: string;
   author: string = 'Joseph Roth';
 

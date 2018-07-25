@@ -1,5 +1,5 @@
 ﻿namespace books {
-  export interface INationTotal {
+  export interface ICountryTotal {
     nationality: string;
     total: number;
   }
