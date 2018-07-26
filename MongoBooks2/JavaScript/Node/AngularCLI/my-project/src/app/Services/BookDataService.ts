@@ -47,10 +47,10 @@ export class BookDataService implements OnInit  {
 
     public GetCountryTotals(calculatePages: boolean): ICountryTotal[]
     {
-      var result: ICountryTotal[];
+      let result: ICountryTotal[];
       if (calculatePages)
       {
-        result = [ ];
+        result = [];
 
         for (let bookData of this.booksSet)
         {
@@ -74,16 +74,27 @@ export class BookDataService implements OnInit  {
       }
       else
       {
-        result =
-        [
-          new CountryTotal("USA", 6), // ["USA", 6],
-          new CountryTotal("England", 2), // ["England", 2],
-          new CountryTotal("Belgium", 1), // ["Belgium", 1],
-          new CountryTotal("Hungary", 1), // ["Hungary", 1],
-          new CountryTotal("France", 1), // ["France", 1],
-          new CountryTotal("Scotland", 1) // ["Scotland", 1]
-        ];
+        result = [];
+
+        for (let bookData of this.booksSet) {
+          let existingItem: ICountryTotal = null;
+
+          for (let total of result) {
+            if (total.nationality === bookData.nationality) {
+              existingItem = total;
+              existingItem.total += 1;
+              break;
+            }
+          }
+
+          if (existingItem === null) {
+            result.push(new CountryTotal(bookData.nationality, 1));
+          }
+        }
       }
+
+      // sort then items largest to smallest
+      result.sort(function(a, b) { return b.total - a.total });
 
       return result;
     }
