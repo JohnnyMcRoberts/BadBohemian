@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { BooksComponent } from './books/books.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
 import { AppRoutingModule } from './app-routing.module';
+import { BookDetailComponent } from './book-detail/book-detail.component';
  
 
 @NgModule({
   declarations: [
     AppComponent,
     BooksComponent,
-    PieChartComponent
+    PieChartComponent,
+    BookDetailComponent
   ],
   imports: [
     BrowserModule,
