@@ -4,8 +4,9 @@
     Welcome yo {{ title }}!
   </h1>
 </div>
-<h2>before the charts</h2>
-<app-books></app-books>
-<h2>afterwards....</h2>
-<app-pie-chart></app-pie-chart>
+<nav>
+  <a routerLink="/books">Books</a>
+  <a routerLink="/pie-chart">Pie Charts</a>
+</nav>
+<router-outlet></router-outlet>
 
