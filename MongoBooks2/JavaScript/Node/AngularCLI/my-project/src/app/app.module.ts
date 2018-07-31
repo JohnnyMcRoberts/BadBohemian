@@ -7,6 +7,11 @@ import { BooksComponent } from './books/books.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BookDetailComponent } from './book-detail/book-detail.component';
+import { AppDatePickerComponent } from './app-date-picker/app-date-picker.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule, MatCheckboxModule, MatDatepickerModule } from '@angular/material';
+import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
+  MatSortModule, MatTableModule } from "@angular/material";
  
 
 @NgModule({
@@ -14,12 +19,22 @@ import { BookDetailComponent } from './book-detail/book-detail.component';
     AppComponent,
     BooksComponent,
     PieChartComponent,
-    BookDetailComponent
+    BookDetailComponent,
+    AppDatePickerComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    AppRoutingModule
+    NoopAnimationsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    AppRoutingModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

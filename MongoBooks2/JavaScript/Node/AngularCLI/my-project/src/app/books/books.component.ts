@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Book } from './../Models/Book';
 import IBook = books.IBook;
-import { BookDataService } from './../Services/BookDataService';
+import { LibraryService } from './../Services/library.service';
+
 
 @Component({
   selector: 'app-books',
@@ -24,14 +25,18 @@ export class BooksComponent implements OnInit {
    ["Magic Realism"],
     1);
 
-  constructor() { }
+  constructor(private libraryService: LibraryService) { }
   
   ngOnInit() {
-    this.booksSet = this.bookDataService.GetAllBookData();
+    this.getBooks();
     this.selection = "no selection from " + this.booksSet.length;
   }
 
-  private bookDataService: BookDataService = new BookDataService();
+  getBooks(): void {
+    this.libraryService.getHeroes()
+      .subscribe(books => this.booksSet = books);
+
+  }
 
   selectedBook: IBook;
   booksSet: IBook[];
