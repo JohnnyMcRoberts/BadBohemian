@@ -94,6 +94,27 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "my-project", "JavaScript\No
 		SlnRelativePath = "JavaScript\Node\AngularCLI\my-project\"
 	EndProjectSection
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "mean-angular5(1)", "JavaScript\Node\AngularCLI\mean-angular5\", "{B9968A68-A71E-4875-AB1F-6D9089985780}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_53502"
+		Debug.AspNetCompiler.PhysicalPath = "JavaScript\Node\AngularCLI\mean-angular5\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53502\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_53502"
+		Release.AspNetCompiler.PhysicalPath = "JavaScript\Node\AngularCLI\mean-angular5\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53502\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "53502"
+		SlnRelativePath = "JavaScript\Node\AngularCLI\mean-angular5\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -348,6 +369,14 @@ Global
 		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Release|x86.ActiveCfg = Debug|Any CPU
 		{EAFD574F-061E-45BC-B9F4-04C3F5E73990}.Release|x86.Build.0 = Debug|Any CPU
+		{B9968A68-A71E-4875-AB1F-6D9089985780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9968A68-A71E-4875-AB1F-6D9089985780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9968A68-A71E-4875-AB1F-6D9089985780}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B9968A68-A71E-4875-AB1F-6D9089985780}.Debug|x86.Build.0 = Debug|Any CPU
+		{B9968A68-A71E-4875-AB1F-6D9089985780}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9968A68-A71E-4875-AB1F-6D9089985780}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{B9968A68-A71E-4875-AB1F-6D9089985780}.Release|x86.ActiveCfg = Debug|Any CPU
+		{B9968A68-A71E-4875-AB1F-6D9089985780}.Release|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -369,6 +398,7 @@ Global
 		{1E930A2C-A8D7-4BAC-A71D-6699901FC938} = {CEE5A82B-4EBA-4D00-9125-00B443BD962F}
 		{1CF43787-10BE-4DFE-98B3-932CC20A11BE} = {CEE5A82B-4EBA-4D00-9125-00B443BD962F}
 		{EAFD574F-061E-45BC-B9F4-04C3F5E73990} = {CEE5A82B-4EBA-4D00-9125-00B443BD962F}
+		{B9968A68-A71E-4875-AB1F-6D9089985780} = {CEE5A82B-4EBA-4D00-9125-00B443BD962F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B850ED9D-DC3A-4235-BA47-E0B181EDF282}
