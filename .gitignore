@@ -243,3 +243,9 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/MongoBooks2/JavaScript/NodeExamples/node-apis-project1/dist/server.js.map
+/MongoBooks2/JavaScript/NodeExamples/node-apis-project1/dist/server.js
+/MongoBooks2/JavaScript/NodeExamples/node-apis-project1/dist/routes/crmRoutes.js.map
+/MongoBooks2/JavaScript/NodeExamples/node-apis-project1/dist/routes/crmRoutes.js
+/MongoBooks2/JavaScript/NodeExamples/node-apis-project1/dist/app.js.map
+/MongoBooks2/JavaScript/NodeExamples/node-apis-project1/dist/app.js

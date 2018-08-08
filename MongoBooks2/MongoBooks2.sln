@@ -133,6 +133,28 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "node-apis-project1", "JavaS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "node-apis-project1", "node-apis-project1", "{5ED84669-50FD-4A6C-ABC2-EC9A46360A63}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "node-mongodb-test-1", "node-mongodb-test-1", "{50D6E518-250A-47F3-A5CE-8974FADB4C70}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "node-mongodb-test-1", "JavaScript\NodeExamples\node-mongodb-test-1\", "{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_55310"
+		Debug.AspNetCompiler.PhysicalPath = "JavaScript\NodeExamples\node-mongodb-test-1\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_55310\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_55310"
+		Release.AspNetCompiler.PhysicalPath = "JavaScript\NodeExamples\node-mongodb-test-1\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_55310\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "55310"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -663,6 +685,22 @@ Global
 		{706F2DA5-32D6-4F5E-B7FE-21A5D2E8F840}.Release|x64.Build.0 = Debug|Any CPU
 		{706F2DA5-32D6-4F5E-B7FE-21A5D2E8F840}.Release|x86.ActiveCfg = Debug|Any CPU
 		{706F2DA5-32D6-4F5E-B7FE-21A5D2E8F840}.Release|x86.Build.0 = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Debug|ARM.Build.0 = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Debug|x64.Build.0 = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Debug|x86.Build.0 = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|ARM.ActiveCfg = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|ARM.Build.0 = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|x64.ActiveCfg = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|x64.Build.0 = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|x86.ActiveCfg = Debug|Any CPU
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -690,6 +728,8 @@ Global
 		{7C8DFB47-92CF-475B-B7D9-E08D22CA0D2D} = {95075223-6DD6-489A-9509-423F073AF03B}
 		{706F2DA5-32D6-4F5E-B7FE-21A5D2E8F840} = {5ED84669-50FD-4A6C-ABC2-EC9A46360A63}
 		{5ED84669-50FD-4A6C-ABC2-EC9A46360A63} = {95075223-6DD6-489A-9509-423F073AF03B}
+		{50D6E518-250A-47F3-A5CE-8974FADB4C70} = {95075223-6DD6-489A-9509-423F073AF03B}
+		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B} = {50D6E518-250A-47F3-A5CE-8974FADB4C70}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B850ED9D-DC3A-4235-BA47-E0B181EDF282}
