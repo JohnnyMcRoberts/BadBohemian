@@ -153,6 +153,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "node-mongodb-test-1", "Java
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "55310"
+		SlnRelativePath = "JavaScript\NodeExamples\node-mongodb-test-1\"
 	EndProjectSection
 EndProject
 Global
