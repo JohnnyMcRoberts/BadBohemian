@@ -1,0 +1,35 @@
+{
+  "name": "mongodb-test-1",
+  "version": "1.0.0",
+  "description": "a tester for typescript using mongo db and express",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "build": "tsc",
+    "dev": "ts-node ./app/server.ts",
+    "start": "nodemon ./dist/server.js",
+    "prod": "npm run build && npm run start"
+  },
+  "keywords": [
+    "mongo",
+    "express",
+    "typscript",
+    "books"
+  ],
+  "author": "Johnny McRoberts",
+  "license": "ISC",
+  "dependencies": {
+    "@types/es6-shim": "^0.31.37",
+    "@types/express": "^4.16.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.7",
+    "nodemon": "^1.18.3",
+    "typescript": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.1.3",
+    "@types/mongoose": "^5.2.4",
+    "@types/node": "^10.5.7"
+  }
+}

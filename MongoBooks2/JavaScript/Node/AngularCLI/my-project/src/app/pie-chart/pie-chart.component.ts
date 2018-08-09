@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import ICountryTotal = books.ICountryTotal;
-import { BookDataService } from './../Services/BookDataService';
+import { LibraryService } from './../Services/library.service';
 
 declare var google: any;
 
@@ -15,25 +15,34 @@ export class PieChartComponent implements OnInit {
   @Input() maxDisplayItems: number;
   @Input() isForBooks: boolean;
 
-  constructor()
+  constructor(private libraryService: LibraryService)
   {
     google.charts.load("current", { "packages": ["corechart"] });
   }
 
   chartTitle: string;
-  
+
+  getCountryPageTotals(): void {
+    this.libraryService.GetCountryTotals(true)
+      .subscribe(totals => this.countryPageTotals = totals );
+  }
+
+  getCountryBookTotals(): void {
+    this.libraryService.GetCountryTotals(false)
+      .subscribe(totals => this.countryBookTotals = totals);
+  } 
 
   ngOnInit() {
-    this.countryPageTotals = this.bookDataService.GetCountryTotals(true);
-    this.countryBookTotals = this.bookDataService.GetCountryTotals(false);
+    this.getCountryPageTotals();
+    this.getCountryBookTotals();
+
     this.chartTitle = `Book Countries. construct = *${this.userId}* max items =  *${this.maxDisplayItems - 1}*  for pages =  *${!this.isForBooks}*`;
 
     google.charts.setOnLoadCallback(
       () => { drawChart(this.countryPageTotals, this.countryBookTotals); }
     );
   }
-
-  private bookDataService: BookDataService = new BookDataService();
+  
   public countryPageTotals: ICountryTotal[];
   public countryBookTotals: ICountryTotal[];
 }
