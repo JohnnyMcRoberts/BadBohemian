@@ -1,54 +1,36 @@
 ﻿/* app/routes/crmRoutes.ts */
-import {Request, Response} from "express";
+import { Request, Response, NextFunction } from "express";
+import { BooksController } from "../controllers";
 
 export class Routes {
+
+  public booksController: BooksController = new BooksController();
+
   public routes(app: any): void {
-    app.route('/')
 
     app.route('/')
       .get((req: Request, res: Response) => {
-        res.status(200).send({
-          message: 'GET request successfulll!!!!'
-        })
-      })
+        res.status(200).send(
+          {
+            message: 'GET request successfulll!!!!'
+          }
+        );
+      });
 
-    // Contact 
-    app.route('/contact')
-      // GET endpoint 
-      .get((req: Request, res: Response) => {
-        // Get all contacts            
-        res.status(200).send({
-          message: 'GET request successfulll!!!! (for a contact)'
-        })
-      })
+    app.route('/book')
+      // Get all books
+      .get(this.booksController.getBooks)
+
       // POST endpoint
-      .post((req: Request, res: Response) => {
-        // Create new contact         
-        res.status(200).send({
-          message: 'POST request successfulll!!!!'
-        })
-      })
+      .post(this.booksController.addNewBook);
 
-    // Contact detail
-    app.route('/contact/:contactId')
-      // get specific contact
-      .get((req: Request, res: Response) => {
-        // Get a single contact detail            
-        res.status(200).send({
-          message: 'GET request successfulll!!!!'
-        })
-      })
-      .put((req: Request, res: Response) => {
-        // Update a contact           
-        res.status(200).send({
-          message: 'PUT request successfulll!!!!'
-        })
-      })
-      .delete((req: Request, res: Response) => {
-        // Delete a contact     
-        res.status(200).send({
-          message: 'DELETE request successfulll!!!!'
-        })
-      })
+    // Book detail
+    app.route('/book/:bookId')
+      // get specific book
+      .get(this.booksController.getBookById)
+      .put(this.booksController.updateBook)
+      .delete(this.booksController.deleteBook);
+
+
   }
 }
