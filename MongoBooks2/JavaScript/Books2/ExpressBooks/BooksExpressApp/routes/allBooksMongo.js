@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
     let books = book_1.default.find((err, books) => {
         if (err) {
             console.log('error in books find - ', err);
-            res.render('allBooksHack', {
+            res.render('allBooksMongo', {
                 title: 'Express all books from DB error!',
                 books: [
                     { author: "A bad thing", title: "but worse" },
@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
             }); //.send("Error!");
         }
         else {
-            res.render('allBooksHack', {
+            res.render('allBooksMongo', {
                 title: 'Express got all books from DB',
                 books: books
             });
