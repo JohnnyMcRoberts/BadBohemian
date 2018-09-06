@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -10,13 +13,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Hello = (function (_super) {
+var Hello = /** @class */ (function (_super) {
     __extends(Hello, _super);
     function Hello() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Hello.prototype.render = function () {
-        return (React.createElement("h1", null, "Welcome to React!!"));
+        return (React.createElement("h1", null, "Welcome to React!! yo git is this it?"));
     };
     return Hello;
 }(React.Component));

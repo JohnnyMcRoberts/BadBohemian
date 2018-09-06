@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDbBooks", "MongoDbBooks\MongoDbBooks.csproj", "{F7A750B3-2C51-417E-BA0D-4C4708939FBE}"
 EndProject
@@ -155,6 +155,37 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "node-mongodb-test-1", "Java
 		VWDPort = "55310"
 		SlnRelativePath = "JavaScript\NodeExamples\node-mongodb-test-1\"
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "node-books-data-server", "node-books-data-server", "{94AEC2F9-91BD-44AD-8CE3-215791A0995A}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "node-books-data-server", "JavaScript\NodeExamples\node-books-data-server\", "{6816E0C9-85D1-4504-816A-19FD15E86C0A}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_64060"
+		Debug.AspNetCompiler.PhysicalPath = "JavaScript\NodeExamples\node-books-data-server\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64060\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_64060"
+		Release.AspNetCompiler.PhysicalPath = "JavaScript\NodeExamples\node-books-data-server\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64060\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "64060"
+		SlnRelativePath = "JavaScript\NodeExamples\node-books-data-server\"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Books2", "Books2", "{AFEEBE20-1A7C-4A05-BCD9-F0E65128A7CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AngularBooks", "AngularBooks", "{A0143C73-8869-4E49-9BC7-EA3B723A433B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExpressBooks", "ExpressBooks", "{9E21A553-C1A4-449E-951F-FEBCB516C8E6}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "BooksExpressApp", "JavaScript\Books2\ExpressBooks\BooksExpressApp\BooksExpressApp.njsproj", "{4FAB2A67-A239-494B-8BDA-CB7C79D30251}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -702,6 +733,38 @@ Global
 		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|x64.Build.0 = Debug|Any CPU
 		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|x86.ActiveCfg = Debug|Any CPU
 		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B}.Release|x86.Build.0 = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Debug|ARM.Build.0 = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Debug|x64.Build.0 = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Debug|x86.Build.0 = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Release|ARM.ActiveCfg = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Release|ARM.Build.0 = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Release|x64.ActiveCfg = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Release|x64.Build.0 = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Release|x86.ActiveCfg = Debug|Any CPU
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A}.Release|x86.Build.0 = Debug|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Debug|x64.Build.0 = Debug|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Debug|x86.Build.0 = Debug|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|ARM.Build.0 = Release|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|x64.ActiveCfg = Release|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|x64.Build.0 = Release|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|x86.ActiveCfg = Release|Any CPU
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -731,6 +794,12 @@ Global
 		{5ED84669-50FD-4A6C-ABC2-EC9A46360A63} = {95075223-6DD6-489A-9509-423F073AF03B}
 		{50D6E518-250A-47F3-A5CE-8974FADB4C70} = {95075223-6DD6-489A-9509-423F073AF03B}
 		{8706F15C-ABF1-47BC-AE96-17BD2F6F094B} = {50D6E518-250A-47F3-A5CE-8974FADB4C70}
+		{94AEC2F9-91BD-44AD-8CE3-215791A0995A} = {95075223-6DD6-489A-9509-423F073AF03B}
+		{6816E0C9-85D1-4504-816A-19FD15E86C0A} = {94AEC2F9-91BD-44AD-8CE3-215791A0995A}
+		{AFEEBE20-1A7C-4A05-BCD9-F0E65128A7CF} = {BA23CDBE-D7E8-4F90-AB7E-D8B365E91B00}
+		{A0143C73-8869-4E49-9BC7-EA3B723A433B} = {AFEEBE20-1A7C-4A05-BCD9-F0E65128A7CF}
+		{9E21A553-C1A4-449E-951F-FEBCB516C8E6} = {AFEEBE20-1A7C-4A05-BCD9-F0E65128A7CF}
+		{4FAB2A67-A239-494B-8BDA-CB7C79D30251} = {9E21A553-C1A4-449E-951F-FEBCB516C8E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B850ED9D-DC3A-4235-BA47-E0B181EDF282}
