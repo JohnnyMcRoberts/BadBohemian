@@ -7,6 +7,7 @@ import users from './routes/user';
 import allBooksHack from './routes/allBooksHack';
 import allBooksMongo from './routes/allBooksMongo';
 import addDummyBook from './routes/addDummyBook';
+import allBooks from './routes/allBooks';
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.use('/users', users);
 app.use('/allBooksHack', allBooksHack);
 app.use('/allBooksMongo', allBooksMongo);
 app.use('/addDummyBook', addDummyBook);
+app.use('/allBooks', allBooks);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

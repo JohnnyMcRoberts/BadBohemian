@@ -37,6 +37,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="routes\addDummyBook.ts" />
     <TypeScriptCompile Include="routes\allBooksHack.ts" />
+    <TypeScriptCompile Include="routes\allBooks.ts" />
     <TypeScriptCompile Include="routes\book.ts" />
     <TypeScriptCompile Include="routes\index.ts" />
     <TypeScriptCompile Include="routes\allBooksMongo.ts">
@@ -48,6 +49,7 @@
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
     <Content Include="views\addDummyBook.pug" />
+    <Content Include="views\allBooksMongo.pug" />
     <Content Include="views\allBooksHack.pug" />
     <Content Include="views\index.pug" />
     <Content Include="views\layout.pug" />
