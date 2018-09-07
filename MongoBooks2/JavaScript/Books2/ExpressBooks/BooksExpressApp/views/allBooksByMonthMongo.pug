@@ -1,0 +1,23 @@
+﻿extends layout
+
+block content
+  h1= title
+  p Welcome allBooksByMonthMongo to #{title} 
+  p And also #{extra}
+  p Hi there, #{user}!
+  
+  div
+    table(style='width:100%', border='1')
+      tr
+        th Author
+        th Title
+        th Date
+        th Format
+        th Id
+      for book in books
+        tr
+            td= book.author
+            td= book.title
+            td= book.displayDate()
+            td= book.displayFormat()
+            td 888

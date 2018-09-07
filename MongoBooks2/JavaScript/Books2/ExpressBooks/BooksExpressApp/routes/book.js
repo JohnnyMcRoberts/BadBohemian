@@ -21,7 +21,8 @@ var Format;
     Format[Format["Book"] = 1] = "Book";
     Format[Format["Comic"] = 2] = "Comic";
     Format[Format["Audio"] = 3] = "Audio";
-})(Format || (Format = {}));
+})(Format = exports.Format || (exports.Format = {}));
+;
 ;
 ;
 exports.BookSchema = new mongoose.Schema({
