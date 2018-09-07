@@ -9,6 +9,7 @@ const allBooksHack_1 = require("./routes/allBooksHack");
 const allBooksMongo_1 = require("./routes/allBooksMongo");
 const addDummyBook_1 = require("./routes/addDummyBook");
 const allBooks_1 = require("./routes/allBooks");
+const allBooksByMonthMongo_1 = require("./routes/allBooksByMonthMongo");
 var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,6 +21,7 @@ app.use('/allBooksHack', allBooksHack_1.default);
 app.use('/allBooksMongo', allBooksMongo_1.default);
 app.use('/addDummyBook', addDummyBook_1.default);
 app.use('/allBooks', allBooks_1.default);
+app.use('/allBooksByMonthMongo', allBooksByMonthMongo_1.default);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
