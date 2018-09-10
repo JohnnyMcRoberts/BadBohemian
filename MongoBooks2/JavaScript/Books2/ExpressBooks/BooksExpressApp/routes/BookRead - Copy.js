@@ -54,4 +54,4 @@ class BookRead {
     }
 }
 exports.BookRead = BookRead;
-//# sourceMappingURL=BookRead.js.map
+//# sourceMappingURL=BookRead - Copy.js.map

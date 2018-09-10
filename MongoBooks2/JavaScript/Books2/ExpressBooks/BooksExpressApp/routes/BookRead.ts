@@ -31,6 +31,13 @@ export class BookRead
     this.format = theBook.format;
   }
 
+  public isInTranslation(): boolean {
+    if (this.originalLanguage !== "English")
+      return true;
+    else
+      return false;
+  }
+
   public displayFormat(): string {
     const formats = ["undefined", "Book", "Comic", "Audio"];
     return formats[this.format % formats.length];
@@ -47,16 +54,26 @@ export class BookRead
     return weekday + " " + displayDay + " " + month + " " + this.date.getFullYear();
   }
 
-  private nthDay(day: number): string {
-    switch (day % 10) {
-    case 1:
-      return day + "st";
-    case 2:
-      return day + "nd";
-    case 3:
-      return day + "rd";
-    default:
-      return day + "th";
+  private nthDay(day: number): string
+  {
+    switch (day)
+    {
+      case 11:
+      case 12:
+      case 13:
+          return day + "th";
+    }
+
+    switch (day % 10)
+    {
+      case 1:
+        return day + "st";
+      case 2:
+        return day + "nd";
+      case 3:
+        return day + "rd";
+      default:
+        return day + "th";
     }
   }
   
