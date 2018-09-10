@@ -40,6 +40,9 @@
     <TypeScriptCompile Include="routes\allBooks.ts" />
     <TypeScriptCompile Include="routes\allBooksByMonthMongo.ts" />
     <TypeScriptCompile Include="routes\book.ts" />
+    <TypeScriptCompile Include="routes\MonthDate.ts" />
+    <TypeScriptCompile Include="routes\BooksTotal.ts" />
+    <TypeScriptCompile Include="routes\BreakdownTotal.ts" />
     <TypeScriptCompile Include="routes\MonthlyBooksRead.ts" />
     <TypeScriptCompile Include="routes\BookRead.ts" />
     <TypeScriptCompile Include="routes\index.ts" />
