@@ -1,16 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /*
- * allBooks.ts
- * GET all books.
+ * allBooksByMonth.ts
+ * GET all books by month for reports.
  */
 const express = require("express");
 const book_1 = require("./book");
+const MonthlyBooksReports_1 = require("./MonthlyBooksReports");
 const router = express.Router();
-var hostname;
 router.get('/', (req, res) => {
-    console.log('router.get allBooks / ');
-    hostname = req.hostname;
+    console.log('router.get allBooksByMonth / ');
     let books = book_1.default.find((err, books) => {
         if (err) {
             console.log('error in books find - ', err);
@@ -23,12 +22,21 @@ router.get('/', (req, res) => {
             });
         }
         else {
+            let i = 0;
+            const listBookItems = new Array();
+            for (let book in books) {
+                if (books.hasOwnProperty(book)) {
+                    listBookItems.push(books[i]);
+                    i++;
+                }
+            }
+            let monthlyBooksReports = new MonthlyBooksReports_1.MonthlyBooksReports(listBookItems);
             res.send({
-                title: 'Express got all books from DB',
-                books: books
+                title: 'Express got all monthly books reports from DB',
+                monthlyBooksReports: monthlyBooksReports
             });
         }
     });
 });
 exports.default = router;
-//# sourceMappingURL=allBooks.js.map
+//# sourceMappingURL=allBooksByMonth.js.map

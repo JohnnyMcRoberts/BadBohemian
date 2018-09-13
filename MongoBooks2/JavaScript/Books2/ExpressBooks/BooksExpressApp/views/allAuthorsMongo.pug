@@ -1,0 +1,24 @@
+﻿extends layout
+
+block content
+  h1= title
+  p Welcome to allAuthorsMongo 
+
+  div
+    h3 Month Books
+    table(style='width:100%', border='1')
+      tr
+        th Author
+        th Nationality
+        th Original Language
+        th Total Pages
+        th Total Books
+        th Books
+      for authorTotal in authorTotals.authors
+        tr
+            td= authorTotal.name
+            td= authorTotal.nation
+            td= authorTotal.language
+            td= authorTotal.totalPages
+            td= authorTotal.totalBooks
+            td #{authorTotal.books.join(',\n')}

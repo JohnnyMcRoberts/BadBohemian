@@ -1,20 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /*
- * allBooks.ts
- * GET all books.
+ * allAuthorsMongo.ts
+ * GET all authors mongo.
  */
 const express = require("express");
 const book_1 = require("./book");
+const AuthorTotals_1 = require("./AuthorTotals");
 const router = express.Router();
 var hostname;
 router.get('/', (req, res) => {
-    console.log('router.get allBooks / ');
+    console.log('router.get allAuthorsMongo / ');
     hostname = req.hostname;
     let books = book_1.default.find((err, books) => {
         if (err) {
             console.log('error in books find - ', err);
-            res.send({
+            res.render('allAuthorsMongo', {
                 title: 'Express all books from DB error!',
                 books: [
                     { author: "A bad thing", title: "but worse" },
@@ -23,12 +24,13 @@ router.get('/', (req, res) => {
             });
         }
         else {
-            res.send({
-                title: 'Express got all books from DB',
-                books: books
+            const authorTotals = new AuthorTotals_1.AuthorTotals(books);
+            res.render('allAuthorsMongo', {
+                title: 'Express got all books and authors from DB',
+                authorTotals: authorTotals
             });
         }
     });
 });
 exports.default = router;
-//# sourceMappingURL=allBooks.js.map
+//# sourceMappingURL=allAuthorsMongo.js.map

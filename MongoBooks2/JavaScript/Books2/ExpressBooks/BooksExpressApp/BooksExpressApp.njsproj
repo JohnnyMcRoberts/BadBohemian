@@ -36,13 +36,19 @@
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="routes\addDummyBook.ts" />
+    <TypeScriptCompile Include="routes\allBooksByMonth.ts" />
     <TypeScriptCompile Include="routes\allBooksHack.ts" />
     <TypeScriptCompile Include="routes\allBooks.ts" />
     <TypeScriptCompile Include="routes\allBooksByMonthMongo.ts" />
+    <TypeScriptCompile Include="routes\allAuthorsMongo.ts" />
     <TypeScriptCompile Include="routes\book.ts" />
+    <TypeScriptCompile Include="routes\AuthorTotal.ts" />
+    <TypeScriptCompile Include="routes\AuthorTotals.ts" />
+    <TypeScriptCompile Include="routes\MonthlyReportAvailableYear.ts" />
     <TypeScriptCompile Include="routes\MonthDate.ts" />
     <TypeScriptCompile Include="routes\BooksTotal.ts" />
     <TypeScriptCompile Include="routes\BreakdownTotal.ts" />
+    <TypeScriptCompile Include="routes\MonthlyBooksReports.ts" />
     <TypeScriptCompile Include="routes\MonthlyBooksRead.ts" />
     <TypeScriptCompile Include="routes\BookRead.ts" />
     <TypeScriptCompile Include="routes\index.ts" />
@@ -55,6 +61,7 @@
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
     <Content Include="views\addDummyBook.pug" />
+    <Content Include="views\allAuthorsMongo.pug" />
     <Content Include="views\allBooksByMonthMongo.pug" />
     <Content Include="views\allBooksMongo.pug" />
     <Content Include="views\allBooksHack.pug" />
