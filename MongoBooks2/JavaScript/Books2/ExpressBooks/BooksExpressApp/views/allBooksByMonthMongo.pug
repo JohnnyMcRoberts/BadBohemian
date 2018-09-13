@@ -89,5 +89,19 @@ block content
                 tr
                     td= element.title
                     td= element.total
+  
+  div
+    h3 Monthly Report Months
+    for availableYear in availableMonthsByYear
+      div
+        p <strong>#{availableYear.year}</strong>
+        table(style='width:100%', border='1')
+            tr
+                th Month
+                th Index
+            for availableMonth in availableYear.availableMonths
+                tr
+                    td= availableMonth.name
+                    td= availableMonth.index
 
         

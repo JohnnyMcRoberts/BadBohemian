@@ -4,14 +4,10 @@
  */
 import express = require('express');
 import mongoose = require('mongoose');
-import Collections = require('typescript-collections');
 
 import Book from './book'
 import { IBook } from "./book";
-import { BookRead } from './BookRead'
-import { MonthDate } from './MonthDate'
-import { BooksTotal } from './BooksTotal'
-import { MonthlyBooksRead } from './MonthlyBooksRead'
+import { MonthlyBooksReports } from './MonthlyBooksReports'
 
 
 const router = express.Router();
@@ -19,30 +15,6 @@ const router = express.Router();
 var hostname: string;
 var listBook: IBook;
 var listBookItems: IBook[];
-
-
-function getMonthlyBooksRead(books: IBook[]): MonthlyBooksRead[]
-{
-  const dict = new Collections.Dictionary<MonthDate, MonthlyBooksRead>();
-  for (let book of books) {
-    const month = new MonthDate(book.date);
-
-    if (dict.containsKey(month))
-    {
-      const monthSet = dict.getValue(month);
-      monthSet.listBooksRead.push(new BookRead(book));
-      dict.setValue(month, monthSet);
-    }
-    else
-    {
-      const monthOfBooks = new MonthlyBooksRead(book.date);
-      monthOfBooks.listBooksRead.push(new BookRead(book));
-      dict.setValue(month, monthOfBooks);
-    }
-  }
-
-  return dict.values();
-}
 
 function randomIntFromInterval(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -81,7 +53,6 @@ router.get('/', (req: express.Request, res: express.Response) => {
     else
     {
       console.log('successfully got the books');
-      //console.log('successfully got the books -> ', books.toString().slice(0, 50));
 
       let i: number = 0;
       for (let book in books) {
@@ -94,16 +65,15 @@ router.get('/', (req: express.Request, res: express.Response) => {
         }
       }
 
-      let bookMonths = getMonthlyBooksRead(listBookItems);
+      let monthlyBooksReports: MonthlyBooksReports = new MonthlyBooksReports(listBookItems);
+
+      let bookMonths = monthlyBooksReports.monthlyBooksRead;
 
       let monthIndex = randomIntFromInterval(0, bookMonths.length);
 
       let randomMonth = bookMonths[monthIndex];
-      randomMonth.updateTotals();
 
       const totalDays: number = getDifferenceInDays(listBookItems[0].date, listBookItems[listBookItems.length - 1].date);
-
-      const overallTotals: BooksTotal = new BooksTotal(totalDays, listBookItems);
       
       res.render(
         'allBooksByMonthMongo',
@@ -112,8 +82,9 @@ router.get('/', (req: express.Request, res: express.Response) => {
           monthDate: randomMonth.monthDate,
           monthTotals: randomMonth.monthTotals,
           monthlyBreakdownTotals: randomMonth.breakdownTotals,
-          overallTotals: overallTotals,
-          books: randomMonth.listBooksRead
+          overallTotals: monthlyBooksReports.overallTotals,
+          books: randomMonth.listBooksRead,
+          availableMonthsByYear: monthlyBooksReports.monthlyReportYears
         });
     }
   });

@@ -9,6 +9,8 @@ import allBooksMongo from './routes/allBooksMongo';
 import addDummyBook from './routes/addDummyBook';
 import allBooks from './routes/allBooks';
 import allBooksByMonthMongo from './routes/allBooksByMonthMongo'
+import allBooksByMonth from './routes/allBooksByMonth';
+import allAuthorsMongo from './routes/allAuthorsMongo'
 
 var app = express();
 
@@ -25,6 +27,9 @@ app.use('/allBooksMongo', allBooksMongo);
 app.use('/addDummyBook', addDummyBook);
 app.use('/allBooks', allBooks);
 app.use('/allBooksByMonthMongo', allBooksByMonthMongo);
+app.use('/allBooksByMonth', allBooksByMonth);
+app.use('/allAuthorsMongo', allAuthorsMongo);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

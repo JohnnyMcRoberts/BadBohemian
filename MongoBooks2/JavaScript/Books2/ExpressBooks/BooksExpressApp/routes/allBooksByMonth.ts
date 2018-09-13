@@ -1,19 +1,19 @@
 ﻿/*
- * allBooks.ts
- * GET all books.
+ * allBooksByMonth.ts
+ * GET all books by month for reports.
  */
 import express = require('express');
 import mongoose = require('mongoose');
+
 import Book from './book'
+import { IBook } from "./book";
+import { MonthlyBooksReports } from './MonthlyBooksReports'
 
 const router = express.Router();
 
-var hostname: string;
-
 router.get('/', (req: express.Request, res: express.Response) => {
 
-  console.log('router.get allBooks / ');
-  hostname = req.hostname;
+  console.log('router.get allBooksByMonth / ');
 
   let books = Book.find((err: any, books: any) => {
     if (err)
@@ -30,10 +30,21 @@ router.get('/', (req: express.Request, res: express.Response) => {
         });
     } else
     {
+      let i: number = 0;
+      const listBookItems: IBook[] = new Array<IBook>();
+      for (let book in books) {
+        if (books.hasOwnProperty(book))
+        {
+          listBookItems.push(books[i] as IBook);
+          i++;
+        }
+      }
+
+      let monthlyBooksReports: MonthlyBooksReports = new MonthlyBooksReports(listBookItems);
       res.send(
         {
-          title: 'Express got all books from DB',
-          books: books
+          title: 'Express got all monthly books reports from DB',
+          monthlyBooksReports: monthlyBooksReports
         });
     }
   });
