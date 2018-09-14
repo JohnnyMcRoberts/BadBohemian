@@ -187,6 +187,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExpressBooks", "ExpressBook
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "BooksExpressApp", "JavaScript\Books2\ExpressBooks\BooksExpressApp\BooksExpressApp.njsproj", "{4FAB2A67-A239-494B-8BDA-CB7C79D30251}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooksAngularApp", "JavaScript\Books2\AngularBooks\BooksAngularApp\BooksAngularApp.csproj", "{0C309441-8E3A-4313-9912-9B0320F062D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -765,6 +767,22 @@ Global
 		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|x64.Build.0 = Release|Any CPU
 		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|x86.ActiveCfg = Release|Any CPU
 		{4FAB2A67-A239-494B-8BDA-CB7C79D30251}.Release|x86.Build.0 = Release|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Debug|ARM.Build.0 = Debug|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Debug|x64.Build.0 = Debug|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Debug|x86.Build.0 = Debug|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Release|ARM.ActiveCfg = Release|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Release|ARM.Build.0 = Release|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Release|x64.ActiveCfg = Release|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Release|x64.Build.0 = Release|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Release|x86.ActiveCfg = Release|Any CPU
+		{0C309441-8E3A-4313-9912-9B0320F062D0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -800,6 +818,7 @@ Global
 		{A0143C73-8869-4E49-9BC7-EA3B723A433B} = {AFEEBE20-1A7C-4A05-BCD9-F0E65128A7CF}
 		{9E21A553-C1A4-449E-951F-FEBCB516C8E6} = {AFEEBE20-1A7C-4A05-BCD9-F0E65128A7CF}
 		{4FAB2A67-A239-494B-8BDA-CB7C79D30251} = {9E21A553-C1A4-449E-951F-FEBCB516C8E6}
+		{0C309441-8E3A-4313-9912-9B0320F062D0} = {A0143C73-8869-4E49-9BC7-EA3B723A433B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B850ED9D-DC3A-4235-BA47-E0B181EDF282}

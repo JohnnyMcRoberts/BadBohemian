@@ -20,14 +20,13 @@ router.get('/', (req, res) => {
                     { author: "A bad thing", title: "but worse" },
                     { author: "is going", title: "To follow" }
                 ]
-            }); //.send("Error!");
+            });
         }
         else {
             res.send({
                 title: 'Express got all books from DB',
                 books: books
             });
-            //res.send(books);
         }
     });
 });

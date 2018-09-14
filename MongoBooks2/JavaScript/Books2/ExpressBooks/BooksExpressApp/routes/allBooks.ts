@@ -27,7 +27,7 @@ router.get('/', (req: express.Request, res: express.Response) => {
             { author: "A bad thing", title: "but worse" },
             { author: "is going", title: "To follow" }
           ]
-        });//.send("Error!");
+        });
     } else
     {
       res.send(
@@ -35,7 +35,6 @@ router.get('/', (req: express.Request, res: express.Response) => {
           title: 'Express got all books from DB',
           books: books
         });
-      //res.send(books);
     }
   });
 });
