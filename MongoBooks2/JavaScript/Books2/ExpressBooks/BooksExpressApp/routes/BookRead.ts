@@ -1,6 +1,7 @@
 ﻿import { IBook, Format } from "./book";
+import { IBookRead } from './book'
 
-export class BookRead
+export class BookRead implements IBookRead
 {
   _id: string;
   dateString: string;
