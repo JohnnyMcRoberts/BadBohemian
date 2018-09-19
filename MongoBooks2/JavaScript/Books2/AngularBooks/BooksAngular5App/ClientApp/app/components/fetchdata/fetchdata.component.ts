@@ -2,7 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { Http } from '@angular/http';
 import { IBookRead } from './../../interfaces/IBookRead';
 import { AllBooksService } from './../../services/allBooks/allBooks.service';
-import { AuthorService } from './../../services/allNames/allNames.service';
 
 @Component({
     selector: 'fetchdata',
