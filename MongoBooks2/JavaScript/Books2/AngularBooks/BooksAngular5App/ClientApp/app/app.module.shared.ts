@@ -11,6 +11,8 @@ import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { Counter2Component } from './components/counter2/counter2.component';
+import { Counter3Component } from './components/counter3/counter3.component';
+import { AuthorService, Author } from './services/allNames/allNames.service';
 
 @NgModule({
     declarations: [
@@ -18,9 +20,11 @@ import { Counter2Component } from './components/counter2/counter2.component';
       NavMenuComponent,
       CounterComponent,
       Counter2Component,
+      Counter3Component,
       FetchDataComponent,
         HomeComponent
-    ],
+  ],
+  providers: [AuthorService],
     imports: [
         CommonModule,
       HttpModule,
@@ -31,6 +35,7 @@ import { Counter2Component } from './components/counter2/counter2.component';
           { path: 'home', component: HomeComponent },
           { path: 'counter', component: CounterComponent },
           { path: 'counter2', component: Counter2Component },
+          { path: 'counter3', component: Counter3Component },
           { path: 'fetch-data', component: FetchDataComponent },
             { path: '**', redirectTo: 'home' }
         ])
