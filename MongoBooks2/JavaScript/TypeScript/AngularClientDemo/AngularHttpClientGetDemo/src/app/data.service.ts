@@ -17,6 +17,9 @@ export class DataService {
     return this.httpClient.get(this.baseUrl + '/locations');
   }
   get_transactions() {
-    return this.httpClient.get(this.baseUrl + '/families');
+    return this.httpClient.get(this.baseUrl + '/transactions');
+  }
+  get_authors() {
+    return this.httpClient.get(this.baseUrl + '/authors');
   }
 }

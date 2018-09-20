@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class BooksReadDataService {
+  baseUrl: string = "http://localhost:9000";
 
-  constructor() { }
+  constructor(private httpClient: HttpClient) { }
+
+  get_authors() {
+    return this.httpClient.get(this.baseUrl + '/authors');
+  }
 }
