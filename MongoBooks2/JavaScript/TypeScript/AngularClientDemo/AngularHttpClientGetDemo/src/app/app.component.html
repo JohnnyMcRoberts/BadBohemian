@@ -1,10 +1,11 @@
 <!--The whole content below can be removed with the new code.-->
 <div style="text-align:center">
   <h1>
-    Angular 4+ HttpClient Examples 
+    Angular 4+ HttpClient Examples
   </h1>
 </div>
 <h2>HttpClient Get </h2>
+<h3>{{test}}</h3>
 <ul>
   <li>
     <button (click)="get_products()">GET /products</button>
@@ -22,52 +23,52 @@
       </li>
     </ul>
   </li>
-  <li><hr/></li>
+  <li><hr /></li>
   <li>
     <ul>
-      <li *ngFor="let family of families" >
+      <li *ngFor="let family of families">
         -- id: {{family.id}}
         -- name: {{family.name}}
       </li>
-    </ul>     
+    </ul>
   </li>
-  <li><hr/></li>
+  <li><hr /></li>
   <li>
     <ul>
-      <li *ngFor="let location of locations" >
+      <li *ngFor="let location of locations">
         -- id: {{location.id}}
         -- name: {{location.name}}
       </li>
-    </ul>     
+    </ul>
   </li>
-  <li><hr/></li>
+  <li><hr /></li>
   <li>
     <ul>
-      <li *ngFor="let transaction of transactions" >
+      <li *ngFor="let transaction of transactions">
         -- id: {{transaction.id}}
         -- product: {{transaction.productId}}
         -- cost: {{transaction.cost}}
         -- quantity: {{transaction.quantity}}
       </li>
-    </ul> 
-    
-  </li>  
-  <li><hr/></li>
+    </ul>
+
+  </li>
+  <li><hr /></li>
   <li>
     <ul>
       <li *ngFor="let author of authors">
         -- name: {{author.name}}
       </li>
-    </ul> 
-    
-  </li>        
-  <li><hr/></li>
+    </ul>
+
+  </li>
+  <li><hr /></li>
   <li>
     <ul>
       <li *ngFor="let author2 of authors2">
         -- name: {{author2.name}}
       </li>
-    </ul> 
-    
+    </ul>
+
   </li>
 </ul>

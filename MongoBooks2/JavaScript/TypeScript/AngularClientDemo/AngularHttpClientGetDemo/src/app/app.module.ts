@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { DataService } from './data.service';
 import { BooksReadDataService } from './books-read-data.service';
+import { TextDataService } from './text-data.service';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { BooksReadDataService } from './books-read-data.service';
   ],
   providers: [
     DataService,
-    BooksReadDataService
+    BooksReadDataService,
+    TextDataService
   ],
   bootstrap: [AppComponent]
 })

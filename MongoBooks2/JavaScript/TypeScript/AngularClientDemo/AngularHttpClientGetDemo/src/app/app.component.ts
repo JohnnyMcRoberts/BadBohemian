@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 
 import { DataService } from './data.service';
 import { BooksReadDataService } from './books-read-data.service';
+import { TextDataService } from './text-data.service';
+
 import { Product } from './product';
 import { Family } from './family';
 import { Location } from './location';
@@ -23,10 +25,11 @@ export class AppComponent {
   private transactions: Transaction[] = [];
   private authors: Author[] = [];
   private authors2: Author[] = [];
+  private test: string = "nothing yet";
 
   private productsObservable: Observable<Product[]>;
 
-  constructor(private dataService: DataService, private booksReadDataService: BooksReadDataService) {
+  constructor(private dataService: DataService, private booksReadDataService: BooksReadDataService, private textDataService: TextDataService) {
 
     //this.productsObservable = this.dataService.get_products();
 
@@ -45,6 +48,11 @@ export class AppComponent {
       console.log(res);
       console.log('From booksReadDataService ');
       this.authors = res;
+    });
+    this.textDataService.get_text().subscribe((res: string) => {
+      console.log(res);
+      console.log('From textDataService ');
+      this.test = res;
     });
     this.dataService.get_authors().subscribe((res: Author[]) => {
       console.log(res);
