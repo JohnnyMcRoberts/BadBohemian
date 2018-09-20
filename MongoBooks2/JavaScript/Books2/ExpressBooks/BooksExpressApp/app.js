@@ -55,7 +55,7 @@ app.use((err, req, res, next) => {
         error: {}
     });
 });
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 9000);
 var server = app.listen(app.get('port'), function () {
     debug('JMCR Express server listening on port ' + server.address().port);
     console.log('JMCR Express server listening on port ' + server.address().port);

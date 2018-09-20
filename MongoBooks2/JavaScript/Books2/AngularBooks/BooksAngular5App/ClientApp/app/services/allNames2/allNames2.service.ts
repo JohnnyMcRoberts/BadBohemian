@@ -14,9 +14,9 @@ export interface Author {
 @Injectable()
 export class AllNames2Service {
 
-  public allAuthors: Author[];
+  public allAuthors: Author[] = [];
 
-  private authorsUrl: string = 'http://localhost:3000/authors';
+  private authorsUrl: string = 'http://localhost:9000/authors';
 
   constructor(http: Http) {
 

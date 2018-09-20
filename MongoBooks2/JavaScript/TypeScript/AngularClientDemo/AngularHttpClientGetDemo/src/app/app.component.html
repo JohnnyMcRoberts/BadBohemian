@@ -11,15 +11,16 @@
     <button (click)="get_families()">GET /families</button>
     <button (click)="get_locations()">GET /locations</button>
     <button (click)="get_transactions()">GET /transactions</button>
-    
+    <button (click)="get_authors2()">GET /authors</button>
+    <button (click)="get_authors2()">GET /authors2</button>
     <ul>
-      <li *ngFor="let product of productsObservable | async " >
+      <li *ngFor="let product of productsObservable | async ">
         -- id: {{product.id}}
         -- name: {{product.name}}
         -- cost: {{product.cost}}
         -- quantity: {{product.quantity}}
       </li>
-    </ul> 
+    </ul>
   </li>
   <li><hr/></li>
   <li>
@@ -50,5 +51,23 @@
       </li>
     </ul> 
     
-  </li>    
+  </li>  
+  <li><hr/></li>
+  <li>
+    <ul>
+      <li *ngFor="let author of authors">
+        -- name: {{author.name}}
+      </li>
+    </ul> 
+    
+  </li>        
+  <li><hr/></li>
+  <li>
+    <ul>
+      <li *ngFor="let author2 of authors2">
+        -- name: {{author2.name}}
+      </li>
+    </ul> 
+    
+  </li>
 </ul>
