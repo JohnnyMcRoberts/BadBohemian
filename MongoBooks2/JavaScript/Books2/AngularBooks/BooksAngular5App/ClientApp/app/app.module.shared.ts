@@ -13,6 +13,7 @@ import { CounterComponent } from './components/counter/counter.component';
 import { Counter2Component } from './components/counter2/counter2.component';
 import { Counter3Component } from './components/counter3/counter3.component';
 import { AuthorService, Author } from './services/allNames/allNames.service';
+import { AllNames2Service } from './services/allNames2/allNames2.service';
 
 @NgModule({
     declarations: [
@@ -24,7 +25,10 @@ import { AuthorService, Author } from './services/allNames/allNames.service';
       FetchDataComponent,
         HomeComponent
   ],
-  providers: [AuthorService],
+  providers: [
+    AuthorService,
+    AllNames2Service
+    ],
     imports: [
         CommonModule,
       HttpModule,
