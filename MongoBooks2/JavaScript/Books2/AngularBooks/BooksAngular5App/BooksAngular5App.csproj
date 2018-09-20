@@ -22,10 +22,12 @@
 
   <ItemGroup>
     <None Remove="ClientApp\app\services\allBooks\allBooks.service.ts" />
+    <None Remove="ClientApp\app\services\allNames2\allNames2.service.ts" />
     <None Remove="ClientApp\app\services\allNames\allNames.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\services\allNames2\allNames2.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\allNames\allNames.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\allBooks\allBooks.service.ts" />
   </ItemGroup>

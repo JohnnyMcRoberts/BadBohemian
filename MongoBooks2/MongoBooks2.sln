@@ -189,7 +189,9 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "BooksExpressApp", "JavaScri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooksAngularApp", "JavaScript\Books2\AngularBooks\BooksAngularApp\BooksAngularApp.csproj", "{0C309441-8E3A-4313-9912-9B0320F062D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooksAngular5App", "JavaScript\Books2\AngularBooks\BooksAngular5App\BooksAngular5App.csproj", "{C25600CD-E43F-4464-BDDE-7EDB152BF767}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooksAngular5App", "JavaScript\Books2\AngularBooks\BooksAngular5App\BooksAngular5App.csproj", "{C25600CD-E43F-4464-BDDE-7EDB152BF767}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRequestTester", "Tests\Applications\WebRequestTester\WebRequestTester.csproj", "{D98ECD49-0979-424C-9162-83AC6E74CD7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -801,6 +803,22 @@ Global
 		{C25600CD-E43F-4464-BDDE-7EDB152BF767}.Release|x64.Build.0 = Release|Any CPU
 		{C25600CD-E43F-4464-BDDE-7EDB152BF767}.Release|x86.ActiveCfg = Release|Any CPU
 		{C25600CD-E43F-4464-BDDE-7EDB152BF767}.Release|x86.Build.0 = Release|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Debug|ARM.Build.0 = Debug|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Debug|x64.Build.0 = Debug|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Debug|x86.Build.0 = Debug|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Release|ARM.ActiveCfg = Release|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Release|ARM.Build.0 = Release|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Release|x64.ActiveCfg = Release|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Release|x64.Build.0 = Release|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Release|x86.ActiveCfg = Release|Any CPU
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -838,6 +856,7 @@ Global
 		{4FAB2A67-A239-494B-8BDA-CB7C79D30251} = {9E21A553-C1A4-449E-951F-FEBCB516C8E6}
 		{0C309441-8E3A-4313-9912-9B0320F062D0} = {A0143C73-8869-4E49-9BC7-EA3B723A433B}
 		{C25600CD-E43F-4464-BDDE-7EDB152BF767} = {A0143C73-8869-4E49-9BC7-EA3B723A433B}
+		{D98ECD49-0979-424C-9162-83AC6E74CD7F} = {829E5594-2BD1-40F4-A50B-AA13180B742D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B850ED9D-DC3A-4235-BA47-E0B181EDF282}
