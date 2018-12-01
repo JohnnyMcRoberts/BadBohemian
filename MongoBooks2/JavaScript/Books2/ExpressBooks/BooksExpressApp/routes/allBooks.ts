@@ -30,11 +30,12 @@ router.get('/', (req: express.Request, res: express.Response) => {
         });
     } else
     {
-      res.send(
-        {
-          title: 'Express got all books from DB',
-          books: books
-        });
+      res.send({ allBooks: books });
+      //res.send(
+      //  {
+      //    title: 'Express got all books from DB',
+      //    books: books
+      //  });
     }
   });
 });

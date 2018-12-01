@@ -36,6 +36,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="routes\addDummyBook.ts" />
+    <TypeScriptCompile Include="routes\authors.ts" />
     <TypeScriptCompile Include="routes\allBooksByMonth.ts" />
     <TypeScriptCompile Include="routes\allBooksHack.ts" />
     <TypeScriptCompile Include="routes\allBooks.ts" />

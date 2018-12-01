@@ -10,7 +10,8 @@ import addDummyBook from './routes/addDummyBook';
 import allBooks from './routes/allBooks';
 import allBooksByMonthMongo from './routes/allBooksByMonthMongo'
 import allBooksByMonth from './routes/allBooksByMonth';
-import allAuthorsMongo from './routes/allAuthorsMongo'
+import allAuthorsMongo from './routes/allAuthorsMongo';
+import authors from './routes/authors';
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use('/allBooks', allBooks);
 app.use('/allBooksByMonthMongo', allBooksByMonthMongo);
 app.use('/allBooksByMonth', allBooksByMonth);
 app.use('/allAuthorsMongo', allAuthorsMongo);
+app.use('/authors', authors);
 
 
 // catch 404 and forward to error handler
@@ -62,7 +64,7 @@ app.use((err: any, req, res, next) => {
     });
 });
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 9000);
 
 var server = app.listen(app.get('port'), function () {
   debug('JMCR Express server listening on port ' + server.address().port);
