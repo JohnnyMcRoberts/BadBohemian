@@ -12,3 +12,20 @@
   <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration automatically invokes <code>ng build</code> to produce minified, ahead-of-time compiled JavaScript files.</li>
 </ul>
 <p>The <code>ClientApp</code> subdirectory is a standard Angular CLI application. If you open a command prompt in that directory, you can run any <code>ng</code> command (e.g., <code>ng test</code>), or use <code>npm</code> to install extra packages into it.</p>
+
+<button mat-raised-button color="warn">Warn</button>
+
+<br />
+
+<div class="mat-app-background">
+  <mat-slider></mat-slider>
+</div>
+<mat-tab-group dynamicHeight>
+  <mat-tab label="First">
+    <p>Content 1</p>
+    <br />
+    <p>More Content 1</p>
+  </mat-tab>
+  <mat-tab label="Second"> Content 2 </mat-tab>
+  <mat-tab label="Third"> Content 3 </mat-tab>
+</mat-tab-group>
