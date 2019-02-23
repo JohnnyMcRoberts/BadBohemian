@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Book } from '../Models/Book';
+import { Author } from '../Models/Author';
 
 const httpOptions =
 {
@@ -31,6 +32,16 @@ export class BooksDataService
         {
           this.books = result as Book[];
         },
+        error => console.error(error));
+  }
+
+
+  public authors: Author[];
+  fetchAllAuthorsData() {
+    return this.http.get<Author[]>(this.requestUrl + "GetAllAuthors")
+      .toPromise().then(result => {
+        this.authors = result as Author[];
+      },
         error => console.error(error));
   }
 
