@@ -16,7 +16,7 @@ export class BooksReadTableComponent implements OnInit, AfterViewInit
   constructor(booksDataService: BooksDataService)
   {
     // works you know
-    this.componentTitle = "Loading" + " stuff with http client & location";
+    this.componentTitle = "Loading books from database...";
     this.booksDataService = booksDataService;
   }
 

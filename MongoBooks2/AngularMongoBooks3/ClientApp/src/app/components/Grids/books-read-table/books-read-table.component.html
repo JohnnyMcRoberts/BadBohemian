@@ -1,11 +1,24 @@
 <p *ngIf="!books">{{componentTitle}}</p>
 
 <div class="mat-elevation-z8" *ngIf="books">
-
-  <mat-form-field appearance="fill">
-    <input matInput (keyup)="applyBooksFilter($event.target.value)"
-           placeholder="Filter">
-  </mat-form-field>
+  <table class="noborders-table">
+    <tr class="noborders">
+      <td class="noborders">
+        <mat-form-field appearance="fill">
+          <input matInput (keyup)="applyBooksFilter($event.target.value)"
+                 placeholder="Filter">
+        </mat-form-field>
+      </td>
+      <td class="noborders">
+        <mat-paginator #booksTablePaginator
+                       [length]="5"
+                       [pageSize]="6"
+                       [pageSizeOptions]="[5, 10, 20]"
+                       showFirstLastButtons>
+        </mat-paginator>
+      </td>
+    </tr>
+  </table>
 
   <mat-table #table [dataSource]="booksDataSource"
              #booksTableSort="matSort"
@@ -68,12 +81,6 @@
 
   </mat-table>
 
-  <mat-paginator #booksTablePaginator
-                 [length]="5"
-                 [pageSize]="6"
-                 [pageSizeOptions]="[5, 10, 20]"
-                 showFirstLastButtons>
-  </mat-paginator>
 
 </div>
 
