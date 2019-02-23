@@ -34,6 +34,7 @@ export class BooksReadTableComponent implements OnInit, AfterViewInit
     'nationality',
     'originalLanguage',
     'format',
+    'cover',
     'note'
   ];
 

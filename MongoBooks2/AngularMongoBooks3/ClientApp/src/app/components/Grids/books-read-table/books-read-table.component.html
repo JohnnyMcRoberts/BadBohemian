@@ -49,9 +49,16 @@
       <mat-cell *matCellDef="let element">{{element.format}}</mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="cover">
+      <mat-header-cell *matHeaderCellDef> Cover </mat-header-cell>
+      <mat-cell *matCellDef="let element"><img src="{{element.imageUrl}}"  class="aspectshrink"/></mat-cell>
+    </ng-container>
+
     <ng-container matColumnDef="note">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Notes </mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.note}}</mat-cell>
+      <mat-cell *matCellDef="let element">
+        <div class="scrollable">{{element.note}}</div>
+      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="booksDisplayedColumns"></mat-header-row>
