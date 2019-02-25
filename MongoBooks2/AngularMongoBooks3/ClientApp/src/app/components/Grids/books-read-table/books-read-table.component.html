@@ -1,11 +1,24 @@
 <p *ngIf="!books">{{componentTitle}}</p>
 
 <div class="mat-elevation-z8" *ngIf="books">
-
-  <mat-form-field appearance="fill">
-    <input matInput (keyup)="applyBooksFilter($event.target.value)"
-           placeholder="Filter">
-  </mat-form-field>
+  <table class="noborders-table">
+    <tr class="noborders">
+      <td class="noborders">
+        <mat-form-field appearance="fill">
+          <input matInput (keyup)="applyBooksFilter($event.target.value)"
+                 placeholder="Filter">
+        </mat-form-field>
+      </td>
+      <td class="noborders">
+        <mat-paginator #booksTablePaginator
+                       [length]="5"
+                       [pageSize]="6"
+                       [pageSizeOptions]="[5, 10, 20]"
+                       showFirstLastButtons>
+        </mat-paginator>
+      </td>
+    </tr>
+  </table>
 
   <mat-table #table [dataSource]="booksDataSource"
              #booksTableSort="matSort"
@@ -49,9 +62,16 @@
       <mat-cell *matCellDef="let element">{{element.format}}</mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="cover">
+      <mat-header-cell *matHeaderCellDef> Cover </mat-header-cell>
+      <mat-cell *matCellDef="let element"><img src="{{element.imageUrl}}"  class="aspectshrink"/></mat-cell>
+    </ng-container>
+
     <ng-container matColumnDef="note">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Notes </mat-header-cell>
-      <mat-cell *matCellDef="let element">{{element.note}}</mat-cell>
+      <mat-cell *matCellDef="let element">
+        <div class="scrollable">{{element.note}}</div>
+      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="booksDisplayedColumns"></mat-header-row>
@@ -61,12 +81,6 @@
 
   </mat-table>
 
-  <mat-paginator #booksTablePaginator
-                 [length]="5"
-                 [pageSize]="6"
-                 [pageSizeOptions]="[5, 10, 20]"
-                 showFirstLastButtons>
-  </mat-paginator>
 
 </div>
 
