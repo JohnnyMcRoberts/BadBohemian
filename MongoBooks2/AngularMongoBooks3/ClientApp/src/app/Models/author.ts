@@ -1,4 +1,5 @@
 import { Book } from './book'
+
 export interface IAuthor
 {
   name: string;

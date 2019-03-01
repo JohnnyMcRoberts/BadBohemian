@@ -16,6 +16,7 @@ import { HomeComponent } from './components/home-component/home.component';
 
 import { MainBooksGridsComponent } from './components/Grids/main-books-grids/main-books-grids.component';
 import { BooksReadTableComponent } from './components/Grids/books-read-table/books-read-table.component';
+import { AuthorsReadTableComponent } from './components/Grids/authors-read-table/authors-read-table.component';
 
 
 import { MainBooksChartsComponent } from './components/Charts/main-books-charts/main-books-charts.component';
@@ -25,7 +26,8 @@ import { MainBooksFormsComponent } from './components/Forms/main-books-forms/mai
 
 
 @NgModule({
-  declarations: [
+  declarations:
+  [
     AppComponent,
     MaincomponentComponent,
 
@@ -35,20 +37,40 @@ import { MainBooksFormsComponent } from './components/Forms/main-books-forms/mai
 
     MainBooksGridsComponent,
     BooksReadTableComponent,
+    AuthorsReadTableComponent,
 
     MainBooksChartsComponent,
 
-    MainBooksFormsComponent,
+    MainBooksFormsComponent
   ],
   entryComponents: [],
-  imports: [
+  imports:
+  [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    MatDialogModule, MatTabsModule, MatProgressBarModule, MatTableModule, MatInputModule, MatFormFieldModule, MatButtonModule, MatCheckboxModule, BrowserAnimationsModule, MatGridListModule, MatCardModule, MatMenuModule, MatIconModule, LayoutModule, MatToolbarModule, MatSidenavModule, MatListModule, AppRoutingModule,
-    AppRoutingModule,
 
-    MatSortModule, MatPaginatorModule,
+    MatDialogModule,
+    MatTabsModule,
+    MatProgressBarModule,
+    MatTableModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatGridListModule,
+    MatCardModule,
+    MatMenuModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatSidenavModule,
+    MatListModule,
+
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    LayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

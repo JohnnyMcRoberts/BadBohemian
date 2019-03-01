@@ -1,1 +1,86 @@
-﻿<div style="border: 1px solid red">AuthorsReadTable Component</div>
+<p *ngIf="!authors">{{componentTitle}}</p>
+
+<div class="mat-elevation-z8" *ngIf="authors">
+  <table class="noborders-table">
+    <tr class="noborders">
+      <td class="noborders">
+        <mat-form-field appearance="fill">
+          <input matInput (keyup)="applyAuthorsFilter($event.target.value)"
+                 placeholder="Filter">
+        </mat-form-field>
+      </td>
+      <td class="noborders">
+        <mat-paginator #authorsTablePaginator
+                       [length]="5"
+                       [pageSize]="6"
+                       [pageSizeOptions]="[5, 10, 20]"
+                       showFirstLastButtons>
+        </mat-paginator>
+      </td>
+    </tr>
+  </table>
+
+  <mat-table #table [dataSource]="authorsDataSource"
+             #authorsTableSort="matSort"
+             matSortActive="name"
+             matSortDisableClear
+             matSortDirection="asc"
+             matSort>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="nationality">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Nationality </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.nationality}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="language">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Language </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.language}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalPages">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Total Pages </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.totalPages}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalBooksReadBy">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Total Books </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.totalBooksReadBy}}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="authorsDisplayedColumns"></mat-header-row>
+
+    <mat-row *matRowDef="let row; columns: authorsDisplayedColumns"
+             (click)="onAuthorsRowClicked(row)"></mat-row>
+
+  </mat-table>
+
+</div>
+
+<div *ngIf="selectedBooks">
+  
+  <table class="full-width-table">
+
+    <tr>
+      <th>Title</th>
+      <th>Date</th>
+      <th>Pages</th>
+      <th>Cover</th>
+    </tr>
+
+    <tr *ngFor="let book of selectedBooks">
+      <td class="padded-cell"><b>{{book.title}}</b></td>
+      <td>{{book.date | date : "d MMMM yyyy"}}</td>
+      <td>{{book.pages}}</td>
+      <td><img src="{{book.imageUrl}}" class="aspectshrink" /></td>
+    </tr>
+
+  </table>
+</div>
+
+
+
