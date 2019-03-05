@@ -1,0 +1,74 @@
+<p *ngIf="!items">{{componentTitle}}</p>
+
+<div class="mat-elevation-z8" *ngIf="items">
+  <table class="noborders-table">
+    <tr class="noborders">
+      <td class="noborders">
+        <mat-form-field appearance="fill">
+          <input matInput (keyup)="applyItemsFilter($event.target.value)"
+                 placeholder="Filter">
+        </mat-form-field>
+      </td>
+      <td class="noborders">
+        <mat-paginator #itemsTablePaginator
+                       [length]="5"
+                       [pageSize]="6"
+                       [pageSizeOptions]="[5, 10, 20]"
+                       showFirstLastButtons>
+        </mat-paginator>
+      </td>
+    </tr>
+  </table>
+
+  <mat-table #table [dataSource]="itemsDataSource"
+             #itemsTableSort="matSort"
+             matSortActive="name"
+             matSortDisableClear
+             matSortDirection="asc"
+             matSort>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalBooksReadInLanguage">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Total Books Read </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.totalBooksReadInLanguage}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalPagesReadInLanguage">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Total Pages Read </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.totalPagesReadInLanguage}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="percentageOfBooksRead">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> % of all Books </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.percentageOfBooksRead}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="percentageOfPagesRead">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> % of all Pages </mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.percentageOfPagesRead}}</mat-cell>
+    </ng-container>
+
+    <!--<ng-container matColumnDef="flag">
+      <mat-header-cell *matHeaderCellDef> Flag </mat-header-cell>
+      <mat-cell *matCellDef="let element"><img src="{{element.imageUrl}}" class="aspectshrink" /></mat-cell>
+    </ng-container>-->
+
+    <ng-container matColumnDef="authorsNames">
+      <mat-header-cell *matHeaderCellDef> Authors </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <div class="scrollable" [innerHTML]="element.authorsNames | noSanitize"></div>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="itemsDisplayedColumns"></mat-header-row>
+
+    <mat-row *matRowDef="let row; columns: itemsDisplayedColumns"
+             (click)="onItemsRowClicked(row)"></mat-row>
+
+  </mat-table>
+
+</div>

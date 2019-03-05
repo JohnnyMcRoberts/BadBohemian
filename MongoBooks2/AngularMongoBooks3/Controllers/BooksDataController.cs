@@ -153,6 +153,23 @@ namespace AngularMongoBooks3.Controllers
             return _authors;
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<LanguageAuthors> GetAllLanguageAuthors()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            var languageAuthors = new ObservableCollection<LanguageAuthors>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                foreach (AuthorLanguage authorLanguage in booksReadProvider.AuthorLanguages)
+                {
+                    languageAuthors.Add(new LanguageAuthors(authorLanguage));
+                }
+            }
+
+            return languageAuthors;
+        }
 
 
         public BooksDataController(IOptions<MongoDbSettings> config)

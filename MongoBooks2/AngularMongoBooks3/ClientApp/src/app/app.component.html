@@ -1,30 +1,13 @@
-<mat-sidenav-container  >
-    <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-        [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="false">
-        <mat-nav-list>
-          
-          <!--<a mat-list-item routerLink='/dashboard'>First Component</a>
-          <a mat-list-item routerLink='/home-component'>Second Component</a>-->
-        </mat-nav-list>
+<app-layout>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav role="navigation">
+      <app-side-navigation-list (sidenavClose)="sidenav.close()" (selectedMenuItem)='onSelectedMenuItem($event)'></app-side-navigation-list>
     </mat-sidenav>
-    <mat-sidenav-content class="shadow-lg ">
-      <mat-toolbar class="sidenav-container bg-info fixed-top ">
-        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
-          <mat-icon aria-label="Side nav toggle icon">Menu</mat-icon>
-        </button>
-        <a class="mx-3 text-white row" routerLink='/home-component'>To Do list</a>
-        <a class="mx-3 text-white row" routerLink='/main-books-grids'>Grids</a>
-        <a class="mx-3 text-white row" routerLink='/main-books-charts'>Charts</a>
-        <a class="mx-3 text-white row" routerLink='/main-books-forms'>Forms</a>
-        <a class="mx-3 text-white row" href="/">
-          WebApp
-        </a>
-        <a class="mx-3 text-white row" routerLink='/dashboard'>First Component</a>
-      </mat-toolbar>
-      <div class="mt-5">
-       <div class=" pt-4">
+    <mat-sidenav-content>
+      <app-navigation-header [selectedMenuOption]="selectedMenu" (sidenavToggle)="sidenav.toggle()"></app-navigation-header>
+      <main>
         <router-outlet></router-outlet>
-       </div>
-      </div>
+      </main>
     </mat-sidenav-content>
-</mat-sidenav-container>
+  </mat-sidenav-container>
+</app-layout>
