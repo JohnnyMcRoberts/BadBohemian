@@ -5,6 +5,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { Book } from '../Models/Book';
 import { Author } from '../Models/Author';
+import { LanguageAuthors } from '../Models/LanguageAuthors';
 
 const httpOptions =
 {
@@ -37,11 +38,25 @@ export class BooksDataService
 
 
   public authors: Author[];
-  fetchAllAuthorsData() {
+  fetchAllAuthorsData()
+  {
     return this.http.get<Author[]>(this.requestUrl + "GetAllAuthors")
-      .toPromise().then(result => {
-        this.authors = result as Author[];
-      },
+      .toPromise().then(result =>
+        {
+          this.authors = result as Author[];
+        },
+        error => console.error(error));
+  }
+
+
+  public languageAuthors: LanguageAuthors[];
+  fetchAllLanguageAuthorsData()
+  {
+    return this.http.get<LanguageAuthors[]>(this.requestUrl + "GetAllLanguageAuthors")
+      .toPromise().then(result =>
+        {
+          this.languageAuthors = result as LanguageAuthors[];
+        },
         error => console.error(error));
   }
 

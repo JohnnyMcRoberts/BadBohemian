@@ -7,11 +7,11 @@ import { MainBooksGridsComponent } from './components/Grids/main-books-grids/mai
 import { MainBooksChartsComponent } from './components/Charts/main-books-charts/main-books-charts.component';
 import { MainBooksFormsComponent } from './components/Forms/main-books-forms/main-books-forms.component';
 
-const routes: Routes = [
+const routes: Routes =
+[
   { path: '', component: HomeComponent, pathMatch: 'full' },
-  //{ path: '', component: MaincomponentComponent, pathMatch: 'full' },
   { path: 'dashboard', component: MaincomponentComponent },
-  { path: 'home-component', component: HomeComponent },
+  { path: 'to-do-list', component: HomeComponent },
   { path: 'main-books-grids', component: MainBooksGridsComponent },
   { path: 'main-books-charts', component: MainBooksChartsComponent },
   { path: 'main-books-forms', component: MainBooksFormsComponent },
