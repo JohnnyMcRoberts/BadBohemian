@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material';
 
-import { Book } from './../../../Models/Book';
 import { Author } from './../../../Models/Author';
 import { LanguageAuthors } from './../../../Models/LanguageAuthors';
 import { BooksDataService } from './../../../Services/books-data.service';
@@ -13,7 +12,9 @@ import { BaseTableComponent } from './../base-table.component'
     styleUrls: ['./language-authors-table.component.scss']
 })
 /** LanguageAuthorsTable component*/
-export class LanguageAuthorsTableComponent extends BaseTableComponent implements OnInit, AfterViewInit
+export class LanguageAuthorsTableComponent
+  extends BaseTableComponent
+  implements OnInit, AfterViewInit
 {
     /** LanguageAuthorsTable ctor */
   constructor(booksDataService: BooksDataService)

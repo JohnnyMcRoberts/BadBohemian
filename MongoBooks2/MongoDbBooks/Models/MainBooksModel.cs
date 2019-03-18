@@ -757,7 +757,7 @@
                 booksTally.Add(tally);
             }
 
-            // finally need to sort them into datae descending
+            // finally need to sort them into date descending
             var sortedTallies =
                 (from item in booksTally orderby item.TotalBooks descending select item);
             foreach (var tallied in sortedTallies)

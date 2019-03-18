@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material';
 
-import { Book } from './../../../Models/Book';
 import { Author } from './../../../Models/Author';
-import { LanguageAuthors } from './../../../Models/LanguageAuthors';
+import { CountryAuthors } from './../../../Models/CountryAuthors';
 import { BooksDataService } from './../../../Services/books-data.service';
-import { BaseTableComponent } from './../base-table.component'
+import { BaseTableComponent } from './../base-table.component';
 
 @Component({
     selector: 'app-country-author-table',
@@ -28,18 +27,20 @@ export class CountryAuthorTableComponent
     private booksDataService: BooksDataService;
     public componentTitle: string;
 
-    public selectedItem: LanguageAuthors;
+    public selectedItem: CountryAuthors;
     public selectedAuthors: Author[];
 
-    ngOnInit() {
-      this.booksDataService.fetchAllLanguageAuthorsData().then(() =>
+    ngOnInit()
+    {
+      this.booksDataService.fetchAllCountryAuthorsData().then(() =>
       {
-        this.items = new Array<LanguageAuthors>();
+        this.items = new Array<CountryAuthors>();
 
-        for (let item of this.booksDataService.languageAuthors) {
-          var languageAuthor: LanguageAuthors = item;
-          languageAuthor.authorsNames = LanguageAuthors.getAuthorsAsHtmlList(languageAuthor);
-          this.items.push(languageAuthor);
+        for (let item of this.booksDataService.countryAuthors)
+        {
+          var countryAuthor: CountryAuthors = item;
+          countryAuthor.authorsNames = CountryAuthors.getAuthorsAsHtmlList(countryAuthor);
+          this.items.push(countryAuthor);
         }
 
         this.itemsDataSource = new MatTableDataSource(this.items);
@@ -47,8 +48,8 @@ export class CountryAuthorTableComponent
       });
     }
 
-  ngAfterViewInit()
-  {
+    ngAfterViewInit()
+    {
       this.setupItemsPagingAndSorting();
     }
 
@@ -60,7 +61,7 @@ export class CountryAuthorTableComponent
         'totalPagesReadInLanguage',
         'percentageOfBooksRead',
         'percentageOfPagesRead',
-        //'flag',
+        'flag',
 
         'authorsNames'
       ];
