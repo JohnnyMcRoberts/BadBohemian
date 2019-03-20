@@ -1,8 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material';
 
 import { Author } from './../../../Models/Author';
-import { LanguageAuthors } from './../../../Models/LanguageAuthors';
 import { BookTally } from './../../../Models/BookTally';
 import { BooksDataService } from './../../../Services/books-data.service';
 import { BaseTableComponent } from './../base-table.component'
@@ -18,7 +17,8 @@ export class BookTalliesTableComponent
   implements OnInit, AfterViewInit
 {
   /** BookTalliesTable ctor */
-  constructor(booksDataService: BooksDataService) {
+  constructor(booksDataService: BooksDataService)
+  {
     super();
     this.componentTitle = "Loading book tallies from database...";
     this.booksDataService = booksDataService;

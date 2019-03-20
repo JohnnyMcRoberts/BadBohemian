@@ -10,6 +10,8 @@ import { CountryAuthors } from '../Models/CountryAuthors';
 import { BookTally } from '../Models/BookTally';
 import { MonthlyTally } from '../Models/MonthlyTally';
 import { TagBooks } from '../Models/TagBooks';
+import { DeltaBooks } from '../Models/DeltaBooks';
+import { EditorDetails } from '../Models/EditorDetails';
 
 const httpOptions =
 {
@@ -107,4 +109,27 @@ export class BooksDataService
         },
         error => console.error(error));
   }
+
+  public deltaBooks: DeltaBooks[];
+  fetchAllDeltaBooksData()
+  {
+    return this.http.get<DeltaBooks[]>(this.requestUrl + "GetAllBooksDeltas")
+      .toPromise().then(result =>
+        {
+          this.deltaBooks = result as DeltaBooks[];
+        },
+        error => console.error(error));
+  }
+
+  public editorDetails: EditorDetails;
+  fetchEditorDetails()
+  {
+    return this.http.get<EditorDetails>(this.requestUrl + "GetEditorDetails")
+      .toPromise().then(result =>
+        {
+          this.editorDetails = result as EditorDetails;
+        },
+        error => console.error(error));
+  }
+
 }

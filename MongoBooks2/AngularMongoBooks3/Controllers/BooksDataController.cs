@@ -1,26 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace AngularMongoBooks3.Controllers
+﻿namespace AngularMongoBooks3.Controllers
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Threading.Tasks;
-    using AngularMongoBooks3.Controllers.DataClasses;
-    using AngularMongoBooks3.Controllers.Settings;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
 
     using BooksCore.Books;
     using BooksCore.Geography;
-    using BooksCore.Interfaces;
     using BooksCore.Users;
     using BooksDatabase.Implementations;
-    using BooksUtilities.ViewModels;
     using BooksCore.Provider;
+
+    using AngularMongoBooks3.Controllers.DataClasses;
+    using AngularMongoBooks3.Controllers.Settings;
 
     [Route("api/[controller]")]
     public class BooksDataController : Controller
@@ -198,9 +191,9 @@ namespace AngularMongoBooks3.Controllers
 
             if (GetProviders(out geographyProvider, out booksReadProvider))
             {
-                foreach (TalliedBook authorCountry in booksReadProvider.TalliedBooks)
+                foreach (TalliedBook talliedBook in booksReadProvider.TalliedBooks)
                 {
-                    bookTallies.Add(new BookTally(authorCountry));
+                    bookTallies.Add(new BookTally(talliedBook));
                 }
             }
 
@@ -234,13 +227,58 @@ namespace AngularMongoBooks3.Controllers
 
             if (GetProviders(out geographyProvider, out booksReadProvider))
             {
-                foreach (BookTag authorCountry in booksReadProvider.BookTags)
+                foreach (BookTag bookTag in booksReadProvider.BookTags)
                 {
-                    tagBooks.Add(new TagBooks(authorCountry));
+                    tagBooks.Add(new TagBooks(bookTag));
                 }
             }
 
             return tagBooks;
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<DeltaBooks> GetAllBooksDeltas()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            var booksDeltas = new ObservableCollection<DeltaBooks>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                foreach (BooksDelta bookDeltas in booksReadProvider.BookDeltas)
+                {
+                    booksDeltas.Add(new DeltaBooks(bookDeltas));
+                }
+            }
+
+            return booksDeltas;
+        }
+
+        [HttpGet("[action]")]
+        [ProducesResponseType(200, Type = typeof(EditorDetails))]
+        [ProducesResponseType(404)]
+        public ActionResult<EditorDetails> GetEditorDetails()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            EditorDetails editorDetails = new EditorDetails();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                editorDetails.AuthorNames =
+                    booksReadProvider.AuthorsRead.Select(x => x.Author).OrderBy(x => x).ToArray();
+
+                editorDetails.CountryNames =
+                    geographyProvider.Nations.Select(x => x.Name).OrderBy(x => x).ToArray();
+
+                editorDetails.Languages =
+                    booksReadProvider.AuthorLanguages.Select(x => x.Language).OrderBy(x => x).ToArray();
+
+                editorDetails.Tags =
+                    booksReadProvider.BookTags.Select(x => x.Tag).OrderBy(x => x).ToArray();
+            }
+
+            return editorDetails;
         }
 
         public BooksDataController(IOptions<MongoDbSettings> config)
