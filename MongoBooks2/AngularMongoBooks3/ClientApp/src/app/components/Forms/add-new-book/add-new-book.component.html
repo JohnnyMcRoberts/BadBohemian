@@ -1,0 +1,244 @@
+
+<p *ngIf="!editorDetails"><em>Loading...</em></p>
+
+<mat-spinner *ngIf="!editorDetails"></mat-spinner>
+
+
+<mat-tab-group dynamicHeight #tabGroup *ngIf="editorDetails">
+
+  <mat-tab label="Add New Book Form">
+    <form [formGroup]="addNewBookForm">
+
+      <table class="full-width-table">
+        <tr>
+          <th class="wide-coloumn">Basics</th>
+          <th class="wide-coloumn">Images</th>
+          <th class="narrow-coloumn">Notes and Tags</th>
+        </tr>
+        <tr>
+
+          <td>
+
+            <div>
+              <span>
+
+                <mat-label>Date Read </mat-label>
+
+                <input [matDatepicker]="datePickerBookRead"
+                       [max]="currentDate"
+                       (dateChange)="setNewDateRead()"
+                       formControlName="dateBookRead"
+                       type="text"
+                       class="right"
+                       placeholder="Date Read">
+                <mat-datepicker-toggle [for]="datePickerBookRead"></mat-datepicker-toggle>
+                <mat-datepicker #datePickerBookRead></mat-datepicker>
+              </span>
+            </div>
+
+          </td>
+
+          <td class="images-td" rowspan="4" >
+            <div>
+              <img src="{{imageUrl}}" height="250"/>
+            </div>
+          </td>
+
+          <td class="narrow-coloumn" rowspan="4" >
+            <div>
+              <mat-form-field>
+                <mat-label>Notes</mat-label>
+                <textarea
+                  matInput mdTextareaAutosize rows="10"
+                  formControlName="bookNotes"
+                  placeholder="Notes about the book">
+
+                </textarea>
+              </mat-form-field>
+            </div>
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            <div>
+              <mat-form-field class="example-full-width">
+                <input type="text" placeholder="Author" aria-label="Author" matInput formControlName="bookAuthor" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredAuthors | async" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            <div>
+              <mat-form-field>
+                <mat-label>Title</mat-label>
+                <input matInput placeholder="Title" formControlName="bookTitle" required>
+              </mat-form-field>
+            </div>
+
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            <div>
+              <mat-form-field>
+                <mat-label>Pages</mat-label>
+                <input matInput type="number" min="0" max="3000" formControlName="bookPages" required>
+              </mat-form-field>
+            </div>
+
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            <div>
+              <mat-form-field>
+                <mat-label>Home Country</mat-label>
+                <mat-select [(value)]="selectedCountry"
+                            placeholder="Chosen Country"
+                            (selectionChange)="newSelectedCountry($event.value)"
+                            formControlName="authorCountry"
+                            required>
+                  <mat-option *ngFor="let item of countryOptions" [value]="item.value">
+                    {{item.viewValue}}
+                  </mat-option>
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+
+          </td>
+
+          <td></td>
+
+          <td class="narrow-coloumn">
+            <div>
+              <mat-form-field>
+                <mat-label>Tags</mat-label>
+                <mat-select formControlName="bookTags"
+                            (selectionChange)="tagsSelectionChange($event.value)"
+                            multiple>
+                  <mat-option *ngFor="let tag of tagOptions" [value]="tag">{{tag}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </td>
+
+        </tr>
+        <tr>
+
+          <td>
+            <div>
+              <mat-form-field>
+                <input type="text"
+                       placeholder="Language"
+                       aria-label="Language"
+                       matInput
+                       formControlName="originalLanguage"
+                       [matAutocomplete]="autoLanguage">
+                <mat-autocomplete #autoLanguage="matAutocomplete">
+                  <mat-option *ngFor="let language of filteredLanguages | async" [value]="language">
+                    {{language}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+
+          </td>
+
+          <td></td>
+
+          <td rowspan="2" class="narrow-coloumn"><b>Tags:</b> {{displayTags}}</td>
+
+        </tr>
+        <tr>
+
+          <td>
+            <div>
+              <mat-form-field>
+                <mat-label>Format</mat-label>
+                <mat-select [(value)]="selectedFormat"
+                            placeholder="Chosen Format"
+                            (selectionChange)="newSelectedFormat($event.value)"
+                            formControlName="bookFormat"
+                            required>
+                  <mat-option *ngFor="let item of formatOptions" [value]="item.value">
+                    {{item.viewValue}}
+                  </mat-option>
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+
+          </td>
+
+        </tr>
+      </table>
+
+
+      <button (click)="onSubmit()" [disabled]="!addNewBookForm.valid">Submit</button>
+
+    </form>
+
+  </mat-tab>
+
+  <mat-tab label="Authors">
+
+    <p> <b> Authors </b> </p>
+    <mat-list>
+      <mat-list-item *ngFor="let author of editorDetails.authorNames">
+        <p matLine> {{author}} </p>
+      </mat-list-item>
+    </mat-list>
+
+  </mat-tab>
+
+  <mat-tab label="Countries">
+
+    <p> <b> Countries </b> </p>
+    <mat-list>
+      <mat-list-item *ngFor="let country of editorDetails.countryNames">
+        <p matLine> {{country}} </p>
+      </mat-list-item>
+    </mat-list>
+
+  </mat-tab>
+
+  <mat-tab label="Languages">
+
+    <p> <b> Languages </b> </p>
+    <mat-list>
+      <mat-list-item *ngFor="let language of editorDetails.languages">
+        <p matLine> {{language}} </p>
+      </mat-list-item>
+    </mat-list>
+
+
+  </mat-tab>
+
+  <mat-tab label="Tags">
+
+    <p> <b> Tags </b> </p>
+    <mat-list>
+      <mat-list-item *ngFor="let tag of editorDetails.tags">
+        <p matLine> {{tag}} </p>
+      </mat-list-item>
+    </mat-list>
+
+  </mat-tab>
+
+</mat-tab-group>

@@ -1,21 +1,21 @@
 ﻿/// <reference path="../../../../../../node_modules/@types/jasmine/index.d.ts" />
 import { TestBed, async, ComponentFixture, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from "@angular/platform-browser";
-import { MainBooksGridsComponent } from './main-books-grids.component';
+import { AddNewBookComponent } from './add-new-book.component';
 
-let component: MainBooksGridsComponent;
-let fixture: ComponentFixture<MainBooksGridsComponent>;
+let component: AddNewBookComponent;
+let fixture: ComponentFixture<AddNewBookComponent>;
 
-describe('MainBooksGrids component', () => {
+describe('AddNewBook component', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ MainBooksGridsComponent ],
+            declarations: [ AddNewBookComponent ],
             imports: [ BrowserModule ],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
             ]
         });
-        fixture = TestBed.createComponent(MainBooksGridsComponent);
+        fixture = TestBed.createComponent(AddNewBookComponent);
         component = fixture.componentInstance;
     }));
 
