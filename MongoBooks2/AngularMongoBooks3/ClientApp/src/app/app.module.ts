@@ -23,6 +23,9 @@ import { BooksReadTableComponent } from './components/Grids/books-read-table/boo
 import { AuthorsReadTableComponent } from './components/Grids/authors-read-table/authors-read-table.component';
 import { LanguageAuthorsTableComponent } from './components/Grids/language-authors-table/language-authors-table.component';
 import { CountryAuthorTableComponent } from './components/Grids/country-author-table/country-author-table.component';
+import { BookTalliesTableComponent } from './components/Grids/book-tallies-table/book-tallies-table.component';
+import { BooksTagsTableComponent } from './components/Grids/books-tags-table/books-tags-table.component';
+import { MonthlyTalliesTableComponent } from './components/Grids/monthly-tallies-table/monthly-tallies-table.component';
 
 
 import { MainBooksChartsComponent } from './components/Charts/main-books-charts/main-books-charts.component';
@@ -58,6 +61,9 @@ import { NavigationHeaderComponent } from './Layout/navigation-header/navigation
     AuthorsReadTableComponent,
     LanguageAuthorsTableComponent,
     CountryAuthorTableComponent,
+    BookTalliesTableComponent,
+    MonthlyTalliesTableComponent,
+    BooksTagsTableComponent,
 
     MainBooksChartsComponent,
 

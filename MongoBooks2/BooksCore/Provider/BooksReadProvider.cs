@@ -63,6 +63,11 @@ namespace BooksCore.Provider
         public ObservableCollection<AuthorLanguage> AuthorLanguages { get; }
 
         /// <summary>
+        /// Gets the book tallies.
+        /// </summary>
+        public ObservableCollection<TalliedBook> TalliedBooks { get; }
+
+        /// <summary>
         /// Gets the tags added to the books.
         /// </summary>
         public ObservableCollection<BookTag> BookTags { get; }
@@ -404,6 +409,46 @@ namespace BooksCore.Provider
                 BookTags.Add(bookTag);
             }
         }
+
+        private void UpdateTalliedBooks()
+        {
+            // clear the list and the counts
+            TalliedBooks.Clear();
+            UInt32 totalBooks = 0;
+            UInt32 totalPagesRead = 0;
+            UInt32 totalBookFormat = 0;
+            UInt32 totalComicFormat = 0;
+            UInt32 totalAudioFormat = 0;
+
+            // The assumption is the books arrive in order (as they do)
+            List<TalliedBook> booksTally = new List<TalliedBook>();
+            foreach (var book in BooksRead)
+            {
+                totalBooks++;
+                totalPagesRead += book.Pages;
+                if (book.Format == BookFormat.Book) totalBookFormat++;
+                if (book.Format == BookFormat.Comic) totalComicFormat++;
+                if (book.Format == BookFormat.Audio) totalAudioFormat++;
+
+                TalliedBook tally = new TalliedBook(book)
+                {
+                    TotalBooks = totalBooks,
+                    TotalAudioFormat = totalAudioFormat,
+                    TotalBookFormat = totalBookFormat,
+                    TotalComicFormat = totalComicFormat,
+                    TotalPagesRead = totalPagesRead
+                };
+
+                booksTally.Add(tally);
+            }
+
+            // finally need to sort them into date descending
+            var sortedTallies =
+                (from item in booksTally orderby item.TotalBooks descending select item);
+            foreach (var tallied in sortedTallies)
+                TalliedBooks.Add(tallied);
+        }
+
         public void Setup(IList<BookRead> books, IGeographyProvider geographyProvider)
         {
             _geographyProvider = geographyProvider;
@@ -424,6 +469,7 @@ namespace BooksCore.Provider
             UpdateBookLocationDeltas();
             UpdateBooksPerMonth();
             UpdateBookTags();
+            UpdateTalliedBooks();
             SelectedMonthTally = TalliedMonths.FirstOrDefault();
             _selectedMonth = DateTime.Now;
             if (SelectedMonthTally != null)
@@ -440,6 +486,7 @@ namespace BooksCore.Provider
             BookLocationDeltas = new ObservableCollection<BookLocationDelta>();
             AuthorCountries = new ObservableCollection<AuthorCountry>();
             BookTags = new ObservableCollection<BookTag>();
+            TalliedBooks = new ObservableCollection<TalliedBook>();
             TalliedMonths = new ObservableCollection<TalliedMonth>();
             ReportsTallies = new ObservableCollection<MonthlyReportsTally>();
         }

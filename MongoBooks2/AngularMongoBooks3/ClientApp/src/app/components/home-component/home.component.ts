@@ -25,21 +25,21 @@ export class HomeComponent
       name: 'Read & display data from the Mongo DB',
       updated: new Date('21/02/19'),
     },
+    {
+      name: 'Add the other Grids',
+      updated: new Date('20/03/19'),
+    },
   ];
 
   public todos: Section[] =
   [
     {
-      name: 'Add the other Grids',
-      updated: new Date('28/02/19'),
-    },
-    {
       name: 'Add the books editor',
-      updated: new Date('28/02/19'),
+      updated: new Date('28/03/19'),
     },
     {
       name: 'Add the charts',
-      updated: new Date('28/02/19'),
+      updated: new Date('28/03/19'),
     },
   ];
 }

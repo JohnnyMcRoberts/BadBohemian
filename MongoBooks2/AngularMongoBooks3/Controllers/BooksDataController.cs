@@ -171,6 +171,77 @@ namespace AngularMongoBooks3.Controllers
             return languageAuthors;
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<CountryAuthors> GetAllCountryAuthors()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            var countryAuthors = new ObservableCollection<CountryAuthors>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                foreach (AuthorCountry authorCountry in booksReadProvider.AuthorCountries)
+                {
+                    countryAuthors.Add(new CountryAuthors(authorCountry));
+                }
+            }
+
+            return countryAuthors;
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<BookTally> GetAllBookTallies()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            var bookTallies = new ObservableCollection<BookTally>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                foreach (TalliedBook authorCountry in booksReadProvider.TalliedBooks)
+                {
+                    bookTallies.Add(new BookTally(authorCountry));
+                }
+            }
+
+            return bookTallies;
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<MonthlyTally> GetAllMonthlyTallies()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            var monthlyTallies = new ObservableCollection<MonthlyTally>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                foreach (TalliedMonth talliedMonth in booksReadProvider.TalliedMonths)
+                {
+                    monthlyTallies.Add(new MonthlyTally(talliedMonth));
+                }
+            }
+
+            return monthlyTallies;
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<TagBooks> GetAllTagBooks()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            var tagBooks = new ObservableCollection<TagBooks>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                foreach (BookTag authorCountry in booksReadProvider.BookTags)
+                {
+                    tagBooks.Add(new TagBooks(authorCountry));
+                }
+            }
+
+            return tagBooks;
+        }
 
         public BooksDataController(IOptions<MongoDbSettings> config)
         {

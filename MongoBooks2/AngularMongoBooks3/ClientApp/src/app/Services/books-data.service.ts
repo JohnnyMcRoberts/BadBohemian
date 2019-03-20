@@ -6,6 +6,10 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Book } from '../Models/Book';
 import { Author } from '../Models/Author';
 import { LanguageAuthors } from '../Models/LanguageAuthors';
+import { CountryAuthors } from '../Models/CountryAuthors';
+import { BookTally } from '../Models/BookTally';
+import { MonthlyTally } from '../Models/MonthlyTally';
+import { TagBooks } from '../Models/TagBooks';
 
 const httpOptions =
 {
@@ -60,4 +64,47 @@ export class BooksDataService
         error => console.error(error));
   }
 
+
+  public countryAuthors: CountryAuthors[];
+  fetchAllCountryAuthorsData()
+  {
+    return this.http.get<CountryAuthors[]>(this.requestUrl + "GetAllCountryAuthors")
+      .toPromise().then(result =>
+        {
+          this.countryAuthors = result as CountryAuthors[];
+        },
+        error => console.error(error));
+  }
+
+  public bookTallies: BookTally[];
+  fetchAllBookTalliesData() {
+    return this.http.get<BookTally[]>(this.requestUrl + "GetAllBookTallies")
+      .toPromise().then(result =>
+        {
+          this.bookTallies = result as BookTally[];
+        },
+        error => console.error(error));
+  }
+
+  public monthlyTallies: MonthlyTally[];
+  fetchAllMonthlyTalliesData()
+  {
+    return this.http.get<MonthlyTally[]>(this.requestUrl + "GetAllMonthlyTallies")
+      .toPromise().then(result =>
+        {
+          this.monthlyTallies = result as MonthlyTally[];
+        },
+        error => console.error(error));
+  }
+
+  public tagBooks: TagBooks[];
+  fetchAllTagBooksData()
+  {
+    return this.http.get<TagBooks[]>(this.requestUrl + "GetAllTagBooks")
+      .toPromise().then(result =>
+        {
+          this.tagBooks = result as TagBooks[];
+        },
+        error => console.error(error));
+  }
 }
