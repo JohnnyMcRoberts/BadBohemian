@@ -1,0 +1,29 @@
+<mat-tab-group dynamicHeight #tabGroup>
+
+  <mat-tab label="Overall Tallies">
+    
+    <plotly-plot
+      [data]="overallTalliesData"
+      [layout]="overallTalliesLayout"
+      [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+  <mat-tab label="Days Per book">
+
+
+  </mat-tab>
+
+  <mat-tab label="Page Rate">
+
+
+  </mat-tab>
+
+  <mat-tab label="Pages Per Book">
+
+
+  </mat-tab>
+
+</mat-tab-group>

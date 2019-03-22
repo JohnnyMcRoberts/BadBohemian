@@ -2,14 +2,56 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import {
-  MatDialogModule, MatTabsModule, MatProgressBarModule, MatTableModule, MatButtonModule, MatCheckboxModule, MatGridListModule, MatCardModule, MatMenuModule, MatIconModule, MatToolbarModule, MatSidenavModule, MatListModule, MatFormFieldModule, MatInputModule,
-  MatSortModule, MatPaginatorModule, } from '@angular/material';
+import
+{
+
+  MatAutocompleteModule,
+  MatBadgeModule,
+  MatBottomSheetModule,
+  MatButtonModule,
+  MatButtonToggleModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDatepickerModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatExpansionModule,
+  MatGridListModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatPaginatorModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatRippleModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatSliderModule,
+  MatSlideToggleModule,
+  MatSnackBarModule,
+  MatSortModule,
+  MatStepperModule,
+  MatTableModule,
+  MatTabsModule,
+  MatToolbarModule,
+  MatTooltipModule,
+  MatTreeModule,
+
+  MatFormFieldModule
+
+} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AppRoutingModule } from './app-routing.module';
 import { AgmCoreModule } from '@agm/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+
+import { PlotlyModule } from 'angular-plotly.js';
 
 import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
 
@@ -29,9 +71,12 @@ import { MonthlyTalliesTableComponent } from './components/Grids/monthly-tallies
 
 
 import { MainBooksChartsComponent } from './components/Charts/main-books-charts/main-books-charts.component';
+import { BookAndPageRatesComponent } from './components/Charts/book-and-page-rates/book-and-page-rates.component';
 
 
 import { MainBooksFormsComponent } from './components/Forms/main-books-forms/main-books-forms.component';
+import { AddNewBookComponent } from './components/Forms/add-new-book/add-new-book.component';
+
 
 import { LayoutComponent } from './Layout/layout/layout.component';
 import { SideNavigationListComponent } from './Layout/side-navigation-list/side-navigation-list.component';
@@ -53,9 +98,6 @@ import { NavigationHeaderComponent } from './Layout/navigation-header/navigation
     SideNavigationListComponent,
     NavigationHeaderComponent,
 
-
-    HomeComponent,
-
     MainBooksGridsComponent,
     BooksReadTableComponent,
     AuthorsReadTableComponent,
@@ -66,34 +108,62 @@ import { NavigationHeaderComponent } from './Layout/navigation-header/navigation
     BooksTagsTableComponent,
 
     MainBooksChartsComponent,
+    BookAndPageRatesComponent,
 
-    MainBooksFormsComponent
+    MainBooksFormsComponent,
+    AddNewBookComponent,
+
+
+    HomeComponent
   ],
   entryComponents: [],
   imports:
   [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
 
-    MatDialogModule,
-    MatTabsModule,
-    MatProgressBarModule,
-    MatTableModule,
-    MatInputModule,
-    MatFormFieldModule,
+    MatAutocompleteModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
     MatButtonModule,
-    MatCheckboxModule,
-    MatGridListModule,
+    MatButtonToggleModule,
     MatCardModule,
-    MatMenuModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatGridListModule,
     MatIconModule,
-    MatToolbarModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatSidenavModule,
+    MatInputModule,
     MatListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatStepperModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatTreeModule,
 
+    MatFormFieldModule,
+
+
+    PlotlyModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule
