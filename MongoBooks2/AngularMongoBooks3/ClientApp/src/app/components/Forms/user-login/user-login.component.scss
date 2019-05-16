@@ -1,0 +1,100 @@
+.mat-label-prefix
+{
+  min-width: 150px;
+}
+
+.right
+{
+  text-align: right
+}
+
+table
+{
+  width: 100%;
+}
+
+th
+{
+  text-align: left;
+}
+
+table td, table td *
+{
+  vertical-align: top;
+}
+
+.example-form
+{
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width
+{
+  width: 100%;
+}
+
+.section-values-table
+{
+  min-width: 100px;
+  margin-left: 30px;
+}
+
+.section-values-table-first-col
+{
+  width: 40%;
+}
+
+.section-values-table-second-col
+{
+  width: 60%;
+}
+
+.summary-values-table td, .summary-values-table th
+{
+  min-width: 100px;
+}
+
+.summary-values-table-first-col
+{
+  width: 50%;
+}
+
+.summary-values-table-second-col
+{
+  width: 50%;
+}
+
+.green
+{
+  /* color: green; */
+  color: green;
+  font-size: 150%;
+}
+
+.red
+{
+  /* color: red; */
+  color: red;
+  font-size: 150%;
+}
+
+.orange
+{
+  /* color: orange; */
+  color: orange;
+  font-size: 150%;
+}
+
+.analysis-group
+{
+  display: flex;
+  flex-direction: row;
+  margin: 15px 0;
+}
+
+.analysis-button
+{
+  margin: 5px;
+}

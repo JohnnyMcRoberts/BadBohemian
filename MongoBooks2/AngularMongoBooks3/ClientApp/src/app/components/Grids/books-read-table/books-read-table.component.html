@@ -64,7 +64,7 @@
 
     <ng-container matColumnDef="cover">
       <mat-header-cell *matHeaderCellDef> Cover </mat-header-cell>
-      <mat-cell *matCellDef="let element"><img src="{{element.imageUrl}}"  class="aspectshrink"/></mat-cell>
+      <mat-cell *matCellDef="let element"><img src="{{element.imageUrl}}" class="aspectshrink" /></mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="note">
@@ -80,6 +80,15 @@
              (click)="onBooksRowClicked(row)"></mat-row>
 
   </mat-table>
+
+
+  <div *ngIf="selectedBookToDisplay">
+
+    <app-book-detail [bookSelected]="selectedBook">
+
+    </app-book-detail>
+
+  </div>
 
 
 </div>

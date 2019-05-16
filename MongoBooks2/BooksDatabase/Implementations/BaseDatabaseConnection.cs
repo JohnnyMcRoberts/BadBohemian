@@ -21,6 +21,8 @@ namespace BooksDatabase.Implementations
     /// <typeparam name="T">Type of the data entity</typeparam>
     public abstract class BaseDatabaseConnection<T> : IDatabaseConnection<T> where T : BaseMongoEntity
     {
+        #region Abstract Properties
+
         /// <summary>
         /// Gets or sets the connection string for the database.
         /// </summary>
@@ -46,6 +48,11 @@ namespace BooksDatabase.Implementations
         /// </summary>
         public abstract ObservableCollection<T> LoadedItems { get; set; }
 
+        #endregion
+
+        #region Properties
+
+
         /// <summary>
         /// Gets or sets the connection to the database.
         /// </summary>
@@ -61,82 +68,9 @@ namespace BooksDatabase.Implementations
         /// </summary>
         public bool ReadFromDatabase { get; protected set; }
 
-        /// <summary>
-        /// Gets if two items are equivalent.
-        /// </summary>
-        /// <param name="itemA">The first item.</param>
-        /// <param name="itemB">The second item.</param>
-        /// <returns>True if equivalent, false otherwise</returns>
-        public virtual bool ItemsEquivalent(T itemA, T itemB)
-        {
-            return itemA.EquivalenceName == itemB.EquivalenceName;
-        }
+        #endregion
 
-        /// <summary>
-        /// Adds a new item to the database.
-        /// </summary>
-        /// <param name="newItem">The item to add.</param>
-        public void AddNewItemToDatabase(T newItem)
-        {
-            Client = new MongoClient(DatabaseConnectionString);
-
-            ItemsDatabase = Client.GetDatabase(DatabaseName);
-
-            IMongoCollection<T> itemsRead = ItemsDatabase.GetCollection<T>(CollectionName);
-
-            itemsRead.InsertOne(newItem);
-        }
-
-        /// <summary>
-        /// Updates an existing item in the database.
-        /// </summary>
-        /// <param name="existingItem">The item to update.</param>
-        public void UpdateDatabaseItem(T existingItem)
-        {
-            Client = new MongoClient(DatabaseConnectionString);
-
-            ItemsDatabase = Client.GetDatabase(DatabaseName);
-
-            IMongoCollection<T> itemsRead = ItemsDatabase.GetCollection<T>(CollectionName);
-
-            var filterOnId = Builders<T>.Filter.Eq(s => s.Id, existingItem.Id);
-
-            long totalCount = itemsRead.Count(filterOnId);
-
-            var result = itemsRead.ReplaceOne(filterOnId, existingItem);
-        }
-
-        /// <summary>
-        /// Connects to the database and sets up the loaded items from the collection or vice versa.
-        /// </summary>
-        public void ConnectToDatabase()
-        {
-            ReadFromDatabase = false;
-            Client = new MongoClient(DatabaseConnectionString);
-            ItemsDatabase = Client.GetDatabase(DatabaseName);
-            IMongoCollection<T> itemsRead = ItemsDatabase.GetCollection<T>(CollectionName);
-
-            long totalCount = itemsRead.Count(Filter);
-
-            if (totalCount == 0 && LoadedItems.Count != 0)
-            {
-                AddLoadedItemsToBlankDatabase(itemsRead);
-            }
-            else if (LoadedItems.Count != 0 && LoadedItems.Count > totalCount)
-            {
-                AddNewItemsToExistingDatabase(itemsRead);
-            }
-            else if (totalCount != 0 && LoadedItems.Count <= totalCount)
-            {
-                LoadAllItemsFromDatabase(itemsRead);
-                ReadFromDatabase = true;
-            }
-            else if (totalCount != 0 && totalCount < LoadedItems.Count)
-            {
-                UpdateDatabaseItems(itemsRead);
-                ReadFromDatabase = true;
-            }
-        }
+        #region Utility Functions
 
         /// <summary>
         /// Updates an existing items in the database.
@@ -184,10 +118,10 @@ namespace BooksDatabase.Implementations
 
             using (var cursor = itemsRead.FindSync(Filter))
             {
-                var countryList = cursor.ToList();
-                foreach (var country in countryList)
+                var itemList = cursor.ToList();
+                foreach (var item in itemList)
                 {
-                    LoadedItems.Add(country);
+                    LoadedItems.Add(item);
                 }
             }
         }
@@ -242,5 +176,137 @@ namespace BooksDatabase.Implementations
             itemsInDatabase.InsertMany(LoadedItems);
             return itemsInDatabase.Count(Filter);
         }
+
+        private void UpdateLoadedAfterRemove()
+        {
+            var collection = Client.GetDatabase(DatabaseName).GetCollection<T>(CollectionName);
+
+            List<T> reloadedItems = new List<T>();
+            using (var cursor = collection.FindSync(Filter))
+            {
+                var countryList = cursor.ToList();
+                foreach (var country in countryList)
+                {
+                    reloadedItems.Add(country);
+                }
+            }
+
+            if (reloadedItems.Count != LoadedItems.Count)
+            {
+                LoadedItems.Clear();
+                foreach (var item in reloadedItems)
+                    LoadedItems.Add(item);
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Gets if two items are equivalent.
+        /// </summary>
+        /// <param name="itemA">The first item.</param>
+        /// <param name="itemB">The second item.</param>
+        /// <returns>True if equivalent, false otherwise</returns>
+        public virtual bool ItemsEquivalent(T itemA, T itemB)
+        {
+            return itemA.EquivalenceName == itemB.EquivalenceName;
+        }
+
+        /// <summary>
+        /// Adds a new item to the database.
+        /// </summary>
+        /// <param name="newItem">The item to add.</param>
+        public void AddNewItemToDatabase(T newItem)
+        {
+            Client = new MongoClient(DatabaseConnectionString);
+
+            ItemsDatabase = Client.GetDatabase(DatabaseName);
+
+            IMongoCollection<T> itemsRead = ItemsDatabase.GetCollection<T>(CollectionName);
+
+            itemsRead.InsertOne(newItem);
+        }
+
+        /// <summary>
+        /// Removes an item from the database.
+        /// </summary>
+        /// <param name="deleteItem">The item to remove.</param>
+        public bool RemoveItemFromDatabase(T deleteItem)
+        {
+            bool removed = false;
+            Client = new MongoClient(DatabaseConnectionString);
+
+            ItemsDatabase = Client.GetDatabase(DatabaseName);
+
+            IMongoCollection<T> itemsRead = ItemsDatabase.GetCollection<T>(CollectionName);
+            LoadAllItemsFromDatabase(itemsRead);
+            T foundItem = LoadedItems.Where(x => x.EquivalenceName == deleteItem.EquivalenceName).Select(x => x).FirstOrDefault();
+
+            if (foundItem != null)
+            {
+                itemsRead.DeleteOne(a => a.Id == foundItem.Id);
+
+                UpdateLoadedAfterRemove();
+
+                removed = true;
+            }
+
+            return removed;
+        }
+
+        /// <summary>
+        /// Updates an existing item in the database.
+        /// </summary>
+        /// <param name="existingItem">The item to update.</param>
+        public void UpdateDatabaseItem(T existingItem)
+        {
+            Client = new MongoClient(DatabaseConnectionString);
+
+            ItemsDatabase = Client.GetDatabase(DatabaseName);
+
+            IMongoCollection<T> itemsRead = ItemsDatabase.GetCollection<T>(CollectionName);
+
+            var filterOnId = Builders<T>.Filter.Eq(s => s.Id, existingItem.Id);
+
+            long totalCount = itemsRead.Count(filterOnId);
+
+            var result = itemsRead.ReplaceOne(filterOnId, existingItem);
+        }
+
+        /// <summary>
+        /// Connects to the database and sets up the loaded items from the collection or vice versa.
+        /// </summary>
+        public void ConnectToDatabase()
+        {
+            ReadFromDatabase = false;
+            Client = new MongoClient(DatabaseConnectionString);
+            ItemsDatabase = Client.GetDatabase(DatabaseName);
+            IMongoCollection<T> itemsRead = ItemsDatabase.GetCollection<T>(CollectionName);
+
+            long totalCount = itemsRead.Count(Filter);
+
+            if (totalCount == 0 && LoadedItems.Count != 0)
+            {
+                AddLoadedItemsToBlankDatabase(itemsRead);
+            }
+            else if (LoadedItems.Count != 0 && LoadedItems.Count > totalCount)
+            {
+                AddNewItemsToExistingDatabase(itemsRead);
+            }
+            else if (totalCount != 0 && LoadedItems.Count <= totalCount)
+            {
+                LoadAllItemsFromDatabase(itemsRead);
+                ReadFromDatabase = true;
+            }
+            else if (totalCount != 0 && totalCount < LoadedItems.Count)
+            {
+                UpdateDatabaseItems(itemsRead);
+                ReadFromDatabase = true;
+            }
+        }
+
+        #endregion
     }
 }

@@ -34,6 +34,10 @@ export class HomeComponent
   public todos: Section[] =
   [
     {
+      name: 'Add the users login',
+      updated: new Date('26/08/19'),
+    },
+    {
       name: 'Add the books editor',
       updated: new Date('28/03/19'),
     },

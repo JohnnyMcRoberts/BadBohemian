@@ -85,9 +85,12 @@ export class BooksReadTableComponent implements OnInit, AfterViewInit
     }
   }
 
+  public selectedBookToDisplay: boolean = false; 
+
   onBooksRowClicked(row)
   {
     this.selectedBook = row;
     console.log('Books Row clicked: ', this.selectedBook.dateTime);
+    this.selectedBookToDisplay = true;
   }
 }

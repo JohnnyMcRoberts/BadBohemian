@@ -1,0 +1,183 @@
+<mat-tab-group dynamicHeight #tabGroup>
+
+  <mat-tab label="Existing User Login">
+
+    <div *ngIf="existingUserLoginSuccessString != ''" style="margin: 15px">
+
+      <h2> Successfully Logged In </h2>
+
+      <table>
+        <tr>
+          <td>User: </td>
+          <td>{{currentLoginService.name}}</td>
+        </tr>
+
+        <tr>
+          <td>E-Mail: </td>
+          <td>{{currentLoginService.email}}</td>
+        </tr>
+
+        <tr>
+          <td>Description: </td>
+          <td>{{currentLoginService.description}}</td>
+        </tr>
+
+      </table>
+
+      <button mat-raised-button (click)="onExistingUserReset()">
+        Reset
+      </button>
+    </div>
+
+    <div *ngIf="existingUserLoginSuccessString === ''">
+      <div *ngIf="existingUserLoginErrorString != ''">
+        <p>Error in User Login {{existingUserLoginErrorString}}</p>
+      </div>
+
+      <form [formGroup]="existingUserFormGroup" #formDir="ngForm" class="example-form">
+
+        <table class="section-values-table" style="margin: 30px;">
+
+          <tr>
+            <td>
+
+              <mat-form-field class="example-full-width">
+                <input matInput type="text"
+                       placeholder="User Name"
+                       formControlName="existingUserName"
+                       (input)="onExistingUserNameInput()">
+                <mat-error *ngIf="existingUserName.hasError('required')">User Name is required</mat-error>
+              </mat-form-field>
+
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+
+              <mat-form-field class="example-full-width">
+                <input matInput type="password"
+                       placeholder="Password"
+                       formControlName="existingUserPassword"
+                       (input)="onExistingPasswordInput()">
+                <mat-error *ngIf="existingUserPassword.hasError('required')">Password is required</mat-error>
+              </mat-form-field>
+
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <button type="submit" class="btn btn-default" (click)="onExistingUserSubmitted()"
+                      [disabled]="existingUserFormGroup.invalid">
+                Submit
+              </button>
+            </td>
+          </tr>
+
+        </table>
+      </form>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="New User Login">
+
+    <div *ngIf="addUserLoginSuccessString != ''">
+      <p>{{addUserLoginSuccessString}}</p>
+    </div>
+
+    <div *ngIf="addUserLoginErrorString != ''">
+      <p>Error adding new User Login {{addUserLoginErrorString}}</p>
+    </div>
+
+    <form [formGroup]="newUserFormGroup" #formDir="ngForm" class="example-form">
+
+      <table class="section-values-table" style="margin: 30px;">
+
+        <tr>
+          <td>
+
+            <mat-form-field class="example-full-width">
+              <input matInput type="text"
+                     placeholder="New User Name"
+                     formControlName="newUserName"
+                     (input)="onNewUserNameInput()">
+              <mat-error *ngIf="newUserName.hasError('required')">User Name is required</mat-error>
+              <mat-error *ngIf="newUserName.hasError('minlength')">User Name must have at least {{minNameLength}} characters</mat-error>
+            </mat-form-field>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+
+            <mat-form-field class="example-full-width">
+              <input matInput type="password" placeholder="Password" formControlName="password" (input)="onNewPasswordInput()">
+              <mat-error *ngIf="password.hasError('required')">Password is required</mat-error>
+              <mat-error *ngIf="password.hasError('minlength')">Password must have at least {{minPasswordLength}} characters</mat-error>
+            </mat-form-field>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+
+            <mat-form-field class="example-full-width">
+              <input matInput type="password" placeholder="Confirm password" formControlName="password2" (input)="onNewPasswordInput()">
+              <mat-error *ngIf="password2.hasError('required')">Please confirm your password</mat-error>
+              <mat-error *ngIf="password2.invalid && !password2.hasError('required')">Passwords don't match</mat-error>
+            </mat-form-field>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+
+            <mat-form-field class="example-full-width">
+              <input matInput type="text"
+                     placeholder="New User Email"
+                     formControlName="newUserEmail"
+                     (input)="onNewUserEmailInput()">
+              <mat-error *ngIf="newUserEmail.hasError('email') && !newUserEmail.hasError('required')">
+                Please enter a valid email address
+              </mat-error>
+              <mat-error *ngIf="newUserEmail.hasError('required')">
+                Email is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+
+            <mat-form-field class="example-full-width">
+              <input matInput type="text"
+                     placeholder="Description"
+                     formControlName="newUserDescription"
+                     (input)="onNewUserDescriptionInput()">
+            </mat-form-field>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <button type="submit" class="btn btn-default" (click)="onNewUserSubmitted()"
+                    [disabled]="newUserFormGroup.invalid">
+              Submit
+            </button>
+          </td>
+        </tr>
+
+      </table>
+    </form>
+
+
+  </mat-tab>
+
+</mat-tab-group>
