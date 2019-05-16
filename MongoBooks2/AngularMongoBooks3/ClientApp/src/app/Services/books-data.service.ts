@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Book } from '../Models/Book';
+import { Book, BookReadAddResponse, BookReadAddRequest } from '../Models/Book';
 import { Author } from '../Models/Author';
 import { LanguageAuthors } from '../Models/LanguageAuthors';
 import { CountryAuthors } from '../Models/CountryAuthors';
@@ -54,7 +54,6 @@ export class BooksDataService
         error => console.error(error));
   }
 
-
   public languageAuthors: LanguageAuthors[];
   fetchAllLanguageAuthorsData()
   {
@@ -65,7 +64,6 @@ export class BooksDataService
         },
         error => console.error(error));
   }
-
 
   public countryAuthors: CountryAuthors[];
   fetchAllCountryAuthorsData()
@@ -130,6 +128,18 @@ export class BooksDataService
           this.editorDetails = result as EditorDetails;
         },
         error => console.error(error));
+  }
+
+
+  public addBookReadResponse: any;
+  async addAsyncBookRead(request: BookReadAddRequest)
+  {
+    this.addBookReadResponse =
+      await this.http.post<BookReadAddResponse>(
+        this.requestUrl, request, httpOptions
+      ).toPromise();
+
+    console.log('No issues, waiting until promise is resolved...');
   }
 
 }

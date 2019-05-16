@@ -27,6 +27,9 @@ export class SideNavigationListComponent implements OnInit
       link: "/to-do-list", text: "To Do List", icon: "list_alt"
     },
     {
+      link: "/user-login", text: "User Login", icon: "lock_open"
+    },
+    {
       link: "/main-books-grids", text: "Tables", icon: "table_chart"
     },
     {

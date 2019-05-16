@@ -6,9 +6,10 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { BooksDataService } from './../../../Services/books-data.service';
+import { CurrentLoginService } from './../../../Services/current-login.service';
 
 import { EditorDetails } from './../../../Models/EditorDetails';
-import { Book } from './../../../Models/Book';
+import { Book, BookReadAddResponse, BookReadAddRequest } from './../../../Models/Book';
 
 export class SelectionItem
 {
@@ -40,7 +41,8 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
     /** AddNewBook ctor */
     constructor(
       private formBuilder: FormBuilder,
-      private booksDataService: BooksDataService)
+      private booksDataService: BooksDataService,
+      private currentLoginService: CurrentLoginService)
     {
       this.componentTitle = "Loading books data...";
       this.booksDataService = booksDataService;
@@ -58,6 +60,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
           originalLanguage: this.originalLanguage,
           bookFormat: ['', Validators.required],
           bookNotes: [''],
+          imageUrl: [''],
           bookTags: ['']
           });
     }
@@ -130,9 +133,58 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
 
     public addNewBookForm: FormGroup;
 
-    public onSubmit()
+    public async onSubmit()
     {
-      // TODO: Use EventEmitter with form value
+      this.setupNewBook();
+
+      var addRequest: BookReadAddRequest =
+        BookReadAddRequest.fromBook(this.newBook, this.currentLoginService.userId);
+
+      await this.booksDataService.addAsyncBookRead(addRequest);
+      console.log("addAsyncBookRead has returned");
+
+      var resp = BookReadAddResponse.fromData(this.booksDataService.addBookReadResponse);
+
+      if (resp == undefined)
+      {
+        console.log("Error in response");
+      }
+      else
+      {
+        console.log("Response OK");
+
+        if (resp.errorCode === 0)
+        {
+          console.log("Successfully added a book");
+        }
+        else
+        {
+          console.log("Add book failed - reason:" + resp.failReason);
+        }
+
+      }
+    }
+
+    public onNewBookReset()
+    {
+      // do the clear properly....
+      this.selectedBookToDisplay = false;
+      this.imageUrl = this.defaultImageUrl;
+    }
+
+    public selectedBookToDisplay: boolean = false;
+    public selectedBook: Book;
+
+    public onNewBookDisplay()
+    {
+      this.setupNewBook();
+      this.selectedBook = this.newBook;
+      console.log('Books Row clicked: ', this.selectedBook.dateTime);
+      this.selectedBookToDisplay = true;
+    }
+
+    public setupNewBook(): void
+    {
       var title = this.addNewBookForm.value.bookTitle;
       var author = this.addNewBookForm.value.bookAuthor;
       this.inputDateRead = this.addNewBookForm.value.dateBookRead;
@@ -140,9 +192,11 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
       var country = this.countryLookup.get(this.addNewBookForm.value.authorCountry).viewValue;
       var language = this.addNewBookForm.value.originalLanguage;
       var format = this.formatLookup.get(this.addNewBookForm.value.bookFormat).viewValue;
+      var imageUrl: string = this.addNewBookForm.value.imageUrl;
       var theTags: string[] = this.addNewBookForm.value.bookTags;
       var notes: string = this.addNewBookForm.value.bookNotes;
 
+      console.warn("setupNewBook ==== >>>> ");
       console.warn("Input Date Read: " + this.inputDateRead.toString());
       console.warn("Title: " + title);
       console.warn("Author: " + author);
@@ -162,7 +216,13 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
       this.newBook.originalLanguage = language;
       this.newBook.tags = theTags;
       this.newBook.format = this.formatLookup.get(this.addNewBookForm.value.bookFormat).viewValue.toString();
+      this.newBook.imageUrl = imageUrl;
       this.newBook.note = notes;
+
+      if (this.newBook.imageUrl !== '')
+      {
+        this.imageUrl = imageUrl;
+      }
     }
 
     //#endregion
@@ -183,13 +243,6 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
       if (day === 3 || day === 23)
         ordinal = "rd";
 
-      //var d = new Date(date),
-      //  month = '' + (d.getMonth() + 1),
-      //  day = '' + d.getDate(),
-      //  year = d.getFullYear();
-
-      //if (month.length < 2) month = '0' + month;
-      //if (day.length < 2) day = '0' + day;
 
       return day.toString() + ordinal + " " + month + " " + year.toString();
     }
@@ -325,7 +378,9 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
 
     //#region Images
 
-  public imageUrl: string = "https://images-na.ssl-images-amazon.com/images/I/61TGJyLMu6L._SY606_.jpg";
+    public readonly defaultImageUrl = "https://images-na.ssl-images-amazon.com/images/I/61TGJyLMu6L._SY606_.jpg";
+
+    public imageUrl: string = this.defaultImageUrl;
 
     //#endregion
 }

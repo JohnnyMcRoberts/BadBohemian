@@ -1,21 +1,21 @@
 /// <reference path="../../../../../../ClientApp/node_modules/@types/jasmine/index.d.ts" />
 import { TestBed, async, ComponentFixture, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from "@angular/platform-browser";
-import { BooksReadTableComponent } from './books-read-table.component';
+import { BookDetailComponent } from './book-detail.component';
 
-let component: BooksReadTableComponent;
-let fixture: ComponentFixture<BooksReadTableComponent>;
+let component: BookDetailComponent;
+let fixture: ComponentFixture<BookDetailComponent>;
 
-describe('BooksReadTable component', () => {
+describe('BookDetail component', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ BooksReadTableComponent ],
+            declarations: [ BookDetailComponent ],
             imports: [ BrowserModule ],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
             ]
         });
-        fixture = TestBed.createComponent(BooksReadTableComponent);
+        fixture = TestBed.createComponent(BookDetailComponent);
         component = fixture.componentInstance;
     }));
 
