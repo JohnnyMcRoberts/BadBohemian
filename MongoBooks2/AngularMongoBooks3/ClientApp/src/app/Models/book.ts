@@ -1,7 +1,7 @@
 export interface IBook
 {
   dateString: string;
-  dateTime: Date;
+  date: Date;
   author: string;
   title: string;
   pages: number;
@@ -25,7 +25,7 @@ export class Book implements IBook
 
     return new this(
       data.dateString,
-      data.dateTime,
+      data.date,
       data.author,
       data.title,
       data.pages,
@@ -40,7 +40,7 @@ export class Book implements IBook
 
   constructor(
     public dateString: string = "",
-    public dateTime: Date = new Date(),
+    public date: Date = new Date(),
     public author: string = "",
     public title: string = "",
     public pages: number = 0,
@@ -100,7 +100,7 @@ export class BookReadAddRequest implements IBookReadAddRequest
     for (let tag of data.tags)
       tags.push(tag);
 
-    var dateRead: Date = data.dateTime;
+    var dateRead: Date = data.date;
     dateRead.setHours(12, 0, 0);
 
     return new this(
