@@ -11,9 +11,9 @@
 
       <table class="full-width-table">
         <tr>
-          <th class="wide-coloumn">Basics</th>
-          <th class="wide-coloumn">Images</th>
-          <th class="narrow-coloumn">Notes and Tags</th>
+          <th width="33%">Basics</th>
+          <th width="34%">Cover Image</th>
+          <th width="33%">Notes and Tags</th>
         </tr>
         <tr>
 
@@ -79,6 +79,7 @@
         <tr>
 
           <td>
+
             <div>
               <mat-form-field>
                 <mat-label>Title</mat-label>
@@ -160,7 +161,16 @@
 
           </td>
 
-          <td></td>
+          <td>
+
+            <div>
+              <mat-form-field>
+                <mat-label>Image URL</mat-label>
+                <input matInput placeholder="Image URL" formControlName="imageUrl">
+              </mat-form-field>
+            </div>
+
+          </td>
 
           <td rowspan="2" class="narrow-coloumn"><b>Tags:</b> {{displayTags}}</td>
 
@@ -188,11 +198,56 @@
 
         </tr>
       </table>
+      
+      <table>
 
+        <tr>
 
-      <button (click)="onSubmit()" [disabled]="!addNewBookForm.valid">Submit</button>
+          <td>
+
+            <button [disabled]="!addNewBookForm.valid"
+                    mat-raised-button
+                    color="primary"
+                    (click)="onSubmit()">
+              Add New Book
+            </button>
+
+          </td>
+
+          <td>
+
+            <button mat-raised-button
+                    color="warn"
+                    [disabled]="!addNewBookForm.valid"
+                    (click)="onNewBookReset()">
+              Reset Details
+            </button>
+
+          </td>
+
+          <td>
+
+            <button mat-raised-button
+                    [disabled]="!addNewBookForm.valid"
+                    (click)="onNewBookDisplay()">
+              Display Details
+            </button>
+
+          </td>
+
+        </tr>
+
+      </table>
 
     </form>
+    
+    <div *ngIf="selectedBookToDisplay">
+
+      <app-book-detail [bookSelected]="selectedBook">
+
+      </app-book-detail>
+
+    </div>
 
   </mat-tab>
 

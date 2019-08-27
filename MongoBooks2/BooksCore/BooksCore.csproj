@@ -91,6 +91,7 @@
     <Compile Include="Books\TalliedMonth.cs" />
     <Compile Include="Provider\BooksReadProvider.cs" />
     <Compile Include="Provider\GeographyProvider.cs" />
+    <Compile Include="Security\SimpleHash.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="Geography\WorldCountry.cs" />
     <Compile Include="Utilities\BookTotalsUtilities.cs" />

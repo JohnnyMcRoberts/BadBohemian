@@ -90,7 +90,24 @@ namespace BooksCore.Books
                 if (string.IsNullOrEmpty(imageUri) && !string.IsNullOrEmpty(Nation?.ImageUri))
                     imageUri = Nation.ImageUri;
 
-                return string.IsNullOrEmpty(imageUri) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(imageUri);
+                //var uri = new Uri("pack://application:,,,/Images/camera_image_cancel-32.png");
+                var uri = new Uri("https://upload.wikimedia.org/wikipedia/commons/9/99/LEI0440_Leica_IIIf_chrom_-_Sn._580566_1951-52-M39_Blitzsynchron_front_view-6531_hf-.jpg");
+                //var uri = new Uri("https://cdn.imgbin.com/15/23/19/imgbin-computer-icons-photography-cancel-button-wvfSEsjpZ5nx67nXqS23rS4N5.jpg");
+
+                if (!string.IsNullOrEmpty(imageUri))
+                {
+                    try
+                    {
+                        uri = new Uri(imageUri);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        //throw;
+                    }
+                }
+
+                return uri;
             }
         }
 
