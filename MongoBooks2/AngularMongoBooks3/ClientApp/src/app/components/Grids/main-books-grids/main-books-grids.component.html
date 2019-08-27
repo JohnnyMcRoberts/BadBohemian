@@ -1,45 +1,53 @@
-<mat-tab-group dynamicHeight #tabGroup>
+<div *ngIf="!currentLoginService.isLoggedIn" class="not-logged-in-div">
+  <h1>Not currently Logged In</h1>
+</div>
 
-  <mat-tab label="Books Read">
+<div *ngIf="currentLoginService.isLoggedIn" style="margin: 15px">
 
-    <app-books-read-table></app-books-read-table>
+  <mat-tab-group dynamicHeight #tabGroup>
 
-  </mat-tab>
+    <mat-tab label="Books Read">
 
-  <mat-tab label="Authors">
+      <app-books-read-table></app-books-read-table>
 
-    <app-authors-read-table></app-authors-read-table>
+    </mat-tab>
 
-  </mat-tab>
+    <mat-tab label="Authors">
 
-  <mat-tab label="Languages">
+      <app-authors-read-table></app-authors-read-table>
 
-    <app-language-authors-table></app-language-authors-table>
+    </mat-tab>
 
-  </mat-tab>
+    <mat-tab label="Languages">
 
-  <mat-tab label="Countries">
+      <app-language-authors-table></app-language-authors-table>
 
-    <app-country-author-table></app-country-author-table>
+    </mat-tab>
 
-  </mat-tab>
+    <mat-tab label="Countries">
 
-  <mat-tab label="Tallies">
+      <app-country-author-table></app-country-author-table>
 
-    <app-book-tallies-table></app-book-tallies-table>
+    </mat-tab>
 
-  </mat-tab>
+    <mat-tab label="Tallies">
 
-  <mat-tab label="Per Month Tallies">
+      <app-book-tallies-table></app-book-tallies-table>
 
-    <app-monthly-tallies-table></app-monthly-tallies-table>
+    </mat-tab>
 
-  </mat-tab>
+    <mat-tab label="Per Month Tallies">
 
-  <mat-tab label="Tags">
+      <app-monthly-tallies-table></app-monthly-tallies-table>
 
-    <app-books-tags-table></app-books-tags-table>
+    </mat-tab>
 
-  </mat-tab>
+    <mat-tab label="Tags">
 
-</mat-tab-group>
+      <app-books-tags-table></app-books-tags-table>
+
+    </mat-tab>
+
+  </mat-tab-group>
+
+</div>

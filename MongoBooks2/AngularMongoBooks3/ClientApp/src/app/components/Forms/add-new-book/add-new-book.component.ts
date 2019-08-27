@@ -179,7 +179,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
     {
       this.setupNewBook();
       this.selectedBook = this.newBook;
-      console.log('Books Row clicked: ', this.selectedBook.dateTime);
+      console.log('Books Row clicked: ', this.selectedBook.date);
       this.selectedBookToDisplay = true;
     }
 
@@ -208,7 +208,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
       console.warn("Tags: " + theTags.toString());
 
       this.newBook.dateString = this.formatDate(this.inputDateRead);
-      this.newBook.dateTime = this.inputDateRead;
+      this.newBook.date = this.inputDateRead;
       this.newBook.author = author;
       this.newBook.title = title;
       this.newBook.pages = pages as number;

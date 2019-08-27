@@ -1,19 +1,26 @@
-<mat-tab-group dynamicHeight #tabGroup>
+<div *ngIf="!currentLoginService.isLoggedIn" class="not-logged-in-div">
+  <h1>Not currently Logged In</h1>
+</div>
 
-  <mat-tab label="Add New Book">
+<div *ngIf="currentLoginService.isLoggedIn" style="margin: 15px">
+  <mat-tab-group dynamicHeight #tabGroup>
 
-    <app-add-new-book></app-add-new-book>
+    <mat-tab label="Add New Book">
 
-  </mat-tab>
+      <app-add-new-book></app-add-new-book>
 
-  <mat-tab label="Edit Existing Book">
+    </mat-tab>
+
+    <mat-tab label="Edit Existing Book">
+
+      <app-edit-existing-book></app-edit-existing-book>
+
+    </mat-tab>
+
+    <mat-tab label="Add Books from E-Mail">
 
 
-  </mat-tab>
+    </mat-tab>
 
-  <mat-tab label="Add Books from E-Mail">
-
-
-  </mat-tab>
-
-</mat-tab-group>
+  </mat-tab-group>
+</div>

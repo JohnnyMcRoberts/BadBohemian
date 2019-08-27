@@ -1,4 +1,6 @@
-﻿import { Component } from '@angular/core';
+import { Component } from '@angular/core';
+
+import { CurrentLoginService } from './../../../Services/current-login.service';
 
 @Component({
     selector: 'app-main-books-grids',
@@ -6,9 +8,11 @@
     styleUrls: ['./main-books-grids.component.scss']
 })
 /** MainBooksGrids component*/
-export class MainBooksGridsComponent {
+export class MainBooksGridsComponent
+{
     /** MainBooksGrids ctor */
-    constructor() {
+    constructor(private currentLoginService: CurrentLoginService)
+    {
 
     }
 }

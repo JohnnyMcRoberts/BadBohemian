@@ -22,6 +22,7 @@ import { BookAndPageRatesComponent } from './components/Charts/book-and-page-rat
 
 import { MainBooksFormsComponent } from './components/Forms/main-books-forms/main-books-forms.component';
 import { AddNewBookComponent } from './components/Forms/add-new-book/add-new-book.component';
+import { EditExistingBookComponent } from './components/Forms/edit-existing-book/edit-existing-book.component';
 
 
 import { UserLoginComponent } from './components/Forms/user-login/user-login.component';
@@ -90,6 +91,9 @@ import
   MatFormFieldModule
 
 } from '@angular/material';
+
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AppRoutingModule } from './app-routing.module';
@@ -102,7 +106,6 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
 
 
 //#endregion
-
 
 @NgModule({
   declarations:
@@ -134,6 +137,7 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
 
     MainBooksFormsComponent,
     AddNewBookComponent,
+    EditExistingBookComponent,
 
     UserLoginComponent,
 
@@ -185,6 +189,8 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
 
     MatFormFieldModule,
 
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
 
     PlotlyModule,
     AppRoutingModule,
