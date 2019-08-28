@@ -1,19 +1,13 @@
 import { Component, OnInit, Output, EventEmitter, AfterViewInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 
 import { BooksDataService } from './../../../Services/books-data.service';
 import { CurrentLoginService } from './../../../Services/current-login.service';
 
-import { EditorDetails } from './../../../Models/EditorDetails';
-import { Book, BookReadAddResponse, BookReadAddRequest } from './../../../Models/Book';
+import { Book, BookReadAddResponse } from './../../../Models/Book';
 
-
-import { BaseEditBookComponent, NumericSelectionItem, SelectionItem } from './../base-book-edit.component';
-
+import { BaseEditBookComponent, SelectionItem, NumericSelectionItem } from './../base-book-edit.component';
 
 @Component({
     selector: 'app-edit-existing-book',
@@ -21,24 +15,70 @@ import { BaseEditBookComponent, NumericSelectionItem, SelectionItem } from './..
     styleUrls: ['./edit-existing-book.component.scss']
 })
 /** EditExistingBook component*/
-export class EditExistingBookComponent
+export class EditExistingBookComponent extends BaseEditBookComponent implements OnInit, AfterViewInit
 {
     /** EditExistingBook ctor */
   constructor(
-    private formBuilder: FormBuilder,
-    private booksDataService: BooksDataService,
-    private currentLoginService: CurrentLoginService)
+    public formBuilder: FormBuilder,
+    public booksDataService: BooksDataService,
+    public currentLoginService: CurrentLoginService)
   {
-    this.componentTitle = "Loading books data...";
+    super(formBuilder, booksDataService, currentLoginService);
   }
 
-  public componentTitle: string;
+  //#region BaseAlbumEdit Implementation
+
+  @Output() change = new EventEmitter();
+
+  public ngOnInitAddition()
+  {
+    this.booksDataService.fetchAllBooksData().then(() =>
+    {
+      this.books = this.booksDataService.books;
+      this.booksDataSource = new MatTableDataSource(this.books);
+      this.setupBooksPagingAndSorting();
+    });
+  };
+
+  public ngAfterViewInitAddition()
+  {
+
+    this.setupBooksPagingAndSorting();
+  };
+
+  //#endregion
+
+  //#region Local data handlers
+
   public selectedBook: Book = new Book();
-  public editorDetails: EditorDetails;
+
+  public displayOnResp(resp: BookReadAddResponse): void
+  {
+    if (resp == undefined)
+    {
+      console.log("Error in response");
+    }
+    else
+    {
+      console.log("Response OK");
+
+      if (resp.errorCode === 0)
+      {
+        console.log("Successfully added a book");
+      }
+      else
+      {
+        console.log("Add book failed - reason:" + resp.failReason);
+      }
+    }
+  }
+
+  //#endregion
 
   //#region Accordion State implementation
 
   public showAllBooksPanelOpenState = true;
+  public showEditBookPanelOpenState = true;
   public editBook: Book = null;
   public bookToEdit: boolean = false;
 
@@ -63,22 +103,7 @@ export class EditExistingBookComponent
   @ViewChild('booksTablePaginator') booksTablePaginator: MatPaginator;
   @ViewChild('booksTableSort') public booksTableSort: MatSort;
   public booksDataSource: MatTableDataSource<Book>;
-
-  ngOnInit()
-  {
-    this.booksDataService.fetchAllBooksData().then(() =>
-    {
-      this.books = this.booksDataService.books;
-      this.booksDataSource = new MatTableDataSource(this.books);
-      this.setupBooksPagingAndSorting();
-    });
-  }
-
-  ngAfterViewInit()
-  {
-    this.setupBooksPagingAndSorting();
-  }
-
+  
   private setupBooksPagingAndSorting(): void
   {
     if (this.books != null)
@@ -108,27 +133,177 @@ export class EditExistingBookComponent
   }
 
   public selectedBookToDisplay: boolean = false;
+  public selectedBookToEdit: boolean = false;
+  public editBookRead: Book = null;
 
   onBooksRowClicked(row)
   {
-    this.selectedBook = row;
+    var bookRead = Book.fromData(row);
+    this.selectedBook = bookRead ;
     console.log('Books Row clicked: ', this.selectedBook.date);
-    this.selectedBookToDisplay = true;
+    this.selectedBookToDisplay = false;
 
-    var dateSelected: Date = new Date(this.selectedBook.date);
-    this.selectedBookReadTime.setValue(dateSelected);
+    this.selectedBookToEdit = true;
+    this.showEditBookPanelOpenState = true;
+    this.editBookRead = bookRead;
+
+    this.setCurrentValues();
+
   }
 
   //#endregion
 
-
-
   //#region Update Details
 
+  public setCurrentValues()
+  {
+    var dateSelected: Date = new Date(this.selectedBook.date);
+    this.selectedBookReadTime.setValue(dateSelected);
+
+    this.imageUrl = "";
+    if (this.selectedBook.imageUrl !== undefined &&
+      this.selectedBook.imageUrl !== null &&
+      this.selectedBook.imageUrl !== '')
+    {
+      this.imageUrl = this.selectedBook.imageUrl;
+    }
+
+    var authorCountry: string  = this.selectedBook.nationality;
+    for (let i = 0; i < this.countryOptions.length; i++)
+    {
+      let item: SelectionItem = this.countryOptions[i];
+
+      if (item.viewValue === this.selectedBook.nationality)
+      {
+        authorCountry = item.value;
+        break;
+      }
+    }
+
+    var format: string = this.selectedBook.format;
+    for (let i = 0; i < this.formatOptions.length; i++)
+    {
+      let item: NumericSelectionItem = this.formatOptions[i];
+
+      if (item.viewValue === this.selectedBook.format)
+      {
+        format = item.value;
+        break;
+      }
+    }    
+
+    this.editBookFormGroup.setValue(
+      {
+        dateBookRead: this.selectedBook.date,
+        bookAuthor: this.selectedBook.author,
+        bookTitle: this.selectedBook.title,
+        bookPages: this.selectedBook.pages,
+        authorCountry: authorCountry,
+        originalLanguage: this.selectedBook.originalLanguage,
+        bookFormat: format,
+        bookNotes: this.selectedBook.note,
+        imageUrl: this.imageUrl,
+        bookTags: this.selectedBook.tags
+      });
+
+    this.tagsSelectionChange(this.selectedBook.tags);
+  }
 
   public selectedBookReadTime = new FormControl(new Date());
 
   public selectedMoment = new Date();
+
+  public updatedBookRead: Book = null;
+
+  public getUpdatedValues()
+  {
+    var updatedBookRead = Book.fromData(this.editBookRead);
+
+    var inputDateRead = new Date(this.inputDateRead);
+    var title = this.editBookFormGroup.value.bookTitle;
+    var author = this.editBookFormGroup.value.bookAuthor;
+    var pages = this.editBookFormGroup.value.bookPages;
+    var country = this.countryLookup.get(this.editBookFormGroup.value.authorCountry).viewValue;
+    var language = this.editBookFormGroup.value.originalLanguage;
+    var format = this.formatLookup.get(this.editBookFormGroup.value.bookFormat).viewValue;
+    var imageUrl: string = this.editBookFormGroup.value.imageUrl;
+    var theTags: string[] = this.editBookFormGroup.value.bookTags;
+    var notes: string = this.editBookFormGroup.value.bookNotes;
+
+    console.warn("setupNewBook ==== >>>> ");
+    console.warn("Input Date Read: " + inputDateRead.toString());
+    console.warn("Title: " + title);
+    console.warn("Author: " + author);
+    console.warn("Pages: " + pages);
+    console.warn("Country: " + country);
+    console.warn("Language: " + language);
+    console.warn("Format: " + format);
+    console.warn("Notes: " + notes);
+    console.warn("Tags: " + theTags.toString());
+
+    updatedBookRead.dateString = this.formatDate(inputDateRead);
+    updatedBookRead.date = inputDateRead;
+    updatedBookRead.author = author;
+    updatedBookRead.title = title;
+    updatedBookRead.pages = pages as number;
+    updatedBookRead.nationality = country;
+    updatedBookRead.originalLanguage = language;
+    updatedBookRead.tags = theTags;
+    updatedBookRead.format = this.formatLookup.get(this.editBookFormGroup.value.bookFormat).viewValue.toString();
+    updatedBookRead.imageUrl = imageUrl;
+    updatedBookRead.note = notes;
+
+    this.updatedBookRead = updatedBookRead;
+  }
+
+  //#endregion
+
+  //#region Page Button handlers
+
+  public onDisplayUpdated()
+  {
+    console.log("onDisplayUpdated");
+
+    this.selectedBookToDisplay = true;
+    this.inputDateRead = this.selectedBookReadTime.value;
+    this.getUpdatedValues();
+    this.selectedBook = this.updatedBookRead;
+  }
+
+
+  public async onUpdateAlbum()
+  {
+    console.log("onUpdateAlbum");
+
+    this.selectedBookToDisplay = true;
+    this.inputDateRead = this.selectedBookReadTime.value;
+    this.getUpdatedValues();
+    this.selectedBook = this.updatedBookRead;
+    this.selectedBook.user = this.currentLoginService.userId;
+
+    await this.booksDataService.updateAsyncBook(this.selectedBook);
+
+    var resp = BookReadAddResponse.fromData(this.booksDataService.updateBookResponse);
+
+    this.displayOnResp(resp);
+  }
+
+  public async onDeleteAlbum()
+  {
+    console.log("onDeleteAlbum");
+
+    this.selectedBookToDisplay = true;
+    this.inputDateRead = this.selectedBookReadTime.value;
+    this.getUpdatedValues();
+    this.selectedBook = this.updatedBookRead;
+    this.selectedBook.user = this.currentLoginService.userId;
+
+    await this.booksDataService.deleteAsyncBook(this.selectedBook);
+
+    var resp = BookReadAddResponse.fromData(this.booksDataService.deleteBookResponse);
+
+    this.displayOnResp(resp);
+  }
 
 
   //#endregion

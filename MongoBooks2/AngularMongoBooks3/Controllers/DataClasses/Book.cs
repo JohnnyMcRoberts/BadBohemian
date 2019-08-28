@@ -77,6 +77,27 @@
 
         }
 
+        public Book(Book book)
+        {
+            Id = book.Id;
+            DateString = book.DateString;
+            Date = book.Date;
+            Author = book.Author;
+            Title = book.Title;
+            Pages = book.Pages;
+            Note = book.Note;
+            Nationality = book.Nationality;
+            OriginalLanguage = book.OriginalLanguage;
+            ImageUrl = book.ImageUrl;
+            User = book.User;
+            Format = book.Format;
+            Tags = new string[book.Tags.Length];
+            for (int i = 0; i < book.Tags.Length; i++)
+            {
+                Tags[i] = book.Tags[i];
+            }
+        }
+
         public Book(BookRead book)
         {
             Id = book.Id.ToString();

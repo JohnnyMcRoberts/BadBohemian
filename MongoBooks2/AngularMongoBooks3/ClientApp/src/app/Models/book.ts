@@ -24,6 +24,14 @@ export class Book implements IBook
     for (let tag of data.tags)
       tags.push(tag);
 
+    var note: string = "";
+    if (data.note !== undefined && data.note !== null)
+      note = data.note;
+
+    var user: string = "";
+    if (data.user !== undefined && data.user !== null)
+      user = data.user;
+
     return new this(
       data.id,
       data.dateString,
@@ -31,12 +39,12 @@ export class Book implements IBook
       data.author,
       data.title,
       data.pages,
-      data.note,
+      note,
       data.nationality,
       data.originalLanguage,
       data.imageUrl,
       tags,
-      data.user,
+      user,
       data.format);
   }
 
