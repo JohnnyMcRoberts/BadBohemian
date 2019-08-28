@@ -111,224 +111,281 @@
 
 </mat-accordion>
 
+<div *ngIf="selectedBookToEdit">
+
+  <mat-accordion>
+
+    <mat-expansion-panel [expanded]="showEditBookPanelOpenState"
+                         (opened)="showEditBookPanelOpenState = true"
+                         (closed)="showEditBookPanelOpenState = false">
+
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Edit Book Details
+        </mat-panel-title>
+        <mat-panel-description>
+          <div>
+            <span><b>Selected Book: </b> {{selectedBook.author}} {{selectedBook.title}}</span>
+          </div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div>
+
+        <form [formGroup]="editBookFormGroup">
+
+          <table class="full-width-table">
+
+            <tr>
+              <th colspan="2" width="33%">Basics</th>
+              <th colspan="2" width="34%">Cover Image</th>
+              <th width="13%">Notes and Tags</th>
+              <th width="20%"></th>
+            </tr>
+
+            <tr>
+
+              <td><b>Date Time Read</b></td>
+              <td>
+                <div>
+                  <input [formControl]="selectedBookReadTime"
+                         [owlDateTimeTrigger]="dtPicker"
+                         [owlDateTime]="dtPicker"
+                         placeholder="Date Time Read" required>
+                  <owl-date-time #dtPicker></owl-date-time>
+                </div>
+              </td>
+
+              <td colspan="2" class="images-td" rowspan="4">
+                <div>
+                  <img src="{{imageUrl}}" height="250"/>
+                </div>
+              </td>
+
+              <td><b>Notes</b></td>
+              <td rowspan="4">
+                <div>
+                  <mat-form-field>
+                    <mat-label>Notes</mat-label>
+                    <textarea matInput mdTextareaAutosize rows="10"
+                                    formControlName="bookNotes"
+                                    placeholder="Notes about the book">
+
+                            </textarea>
+                  </mat-form-field>
+                </div>
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td><b>Author</b></td>
+              <td>
+
+                <div>
+                  <mat-form-field class="example-full-width">
+                    <input type="text"
+                           placeholder="Author"
+                           aria-label="Author"
+                           matInput formControlName="bookAuthor"
+                           [matAutocomplete]="auto" required>
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let option of filteredAuthors | async" [value]="option">
+                        {{option}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td><b>Title</b></td>
+              <td>
+
+                <div>
+                  <mat-form-field>
+                    <mat-label>Title</mat-label>
+                    <input matInput placeholder="Title" formControlName="bookTitle" required>
+                  </mat-form-field>
+                </div>
+
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td><b>Pages</b></td>
+              <td>
+                <div>
+                  <mat-form-field>
+                    <mat-label>Pages</mat-label>
+                    <input matInput type="number" min="0" max="3000" formControlName="bookPages" required>
+                  </mat-form-field>
+                </div>
+
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td><b>Home Country</b></td>
+              <td>
+                <div>
+                  <mat-form-field>
+                    <mat-label>Home Country</mat-label>
+                    <mat-select [(value)]="selectedCountry"
+                                placeholder="Chosen Country"
+                                (selectionChange)="newSelectedCountry($event.value)"
+                                formControlName="authorCountry"
+                                required>
+                      <mat-option *ngFor="let item of countryOptions" [value]="item.value">
+                        {{item.viewValue}}
+                      </mat-option>
+                    </mat-select>
+
+                  </mat-form-field>
+                </div>
+
+              </td>
+
+              <td colspan="2"></td>
+
+              <td><b>Tags</b></td>
+              <td>
+                <div>
+                  <mat-form-field>
+                    <mat-label>Tags</mat-label>
+                    <mat-select formControlName="bookTags"
+                                (selectionChange)="tagsSelectionChange($event.value)"
+                                multiple>
+                      <mat-option *ngFor="let tag of tagOptions" [value]="tag">{{tag}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td><b>Language</b></td>
+              <td>
+                <div>
+                  <mat-form-field>
+                    <input type="text"
+                           placeholder="Language"
+                           aria-label="Language"
+                           matInput
+                           formControlName="originalLanguage"
+                           [matAutocomplete]="autoLanguage">
+                    <mat-autocomplete #autoLanguage="matAutocomplete">
+                      <mat-option *ngFor="let language of filteredLanguages | async" [value]="language">
+                        {{language}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+
+              </td>
+
+              <td><b>Image URL</b></td>
+              <td>
+
+                <div>
+                  <mat-form-field>
+                    <mat-label>Image URL</mat-label>
+                    <input matInput placeholder="Image URL" formControlName="imageUrl">
+                  </mat-form-field>
+                </div>
+
+              </td>
+
+              <td rowspan="2"><b>Tags:</b> {{displayTags}}</td>
+
+            </tr>
+
+            <tr>
+
+              <td><b>Format</b></td>
+              <td>
+                <div>
+                  <mat-form-field>
+                    <mat-label>Format</mat-label>
+                    <mat-select [(value)]="selectedFormat"
+                                placeholder="Chosen Format"
+                                (selectionChange)="newSelectedFormat($event.value)"
+                                formControlName="bookFormat"
+                                required>
+                      <mat-option *ngFor="let item of formatOptions" [value]="item.value">
+                        {{item.viewValue}}
+                      </mat-option>
+                    </mat-select>
+
+                  </mat-form-field>
+                </div>
+
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td>
+
+                <button mat-raised-button
+                        [disabled]="!editBookFormGroup.valid"
+                        (click)="onDisplayUpdated()">
+                  Display Updated Details
+                </button>
+
+              </td>
+
+              <td>
+
+                <button [disabled]="!editBookFormGroup.valid"
+                        mat-raised-button
+                        color="primary"
+                        (click)="onUpdateAlbum()">
+                  Update Item
+                </button>
+
+              </td>
+
+              <td>
+
+                <button mat-raised-button
+                        color="warn"
+                        [disabled]="!editBookFormGroup.valid"
+                        (click)="onDeleteAlbum()">
+                  Delete Album
+                </button>
+
+              </td>
+
+            </tr>
+
+          </table>
+
+        </form>
+
+      </div>
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+</div>
+
 <div *ngIf="selectedBookToDisplay">
 
-
-
-  <div style="margin: 15px;">
-    <label>Date Time Read:</label>
-    <input [formControl]="selectedBookReadTime"
-           [owlDateTimeTrigger]="dtPicker" [owlDateTime]="dtPicker">
-    <owl-date-time #dtPicker></owl-date-time>
-  </div>
-
-
-  <form [formGroup]="editBookForm">
-
-    <table class="full-width-table">
-      <tr>
-        <th width="33%">Basics</th>
-        <th width="34%">Cover Image</th>
-        <th width="33%">Notes and Tags</th>
-      </tr>
-      <tr>
-
-        <td>
-
-        </td>
-
-        <td class="images-td" rowspan="4">
-          <div>
-            <img src="{{imageUrl}}" height="250" />
-          </div>
-        </td>
-
-        <td class="narrow-coloumn" rowspan="4">
-          <div>
-            <mat-form-field>
-              <mat-label>Notes</mat-label>
-              <textarea matInput mdTextareaAutosize rows="10"
-                        formControlName="bookNotes"
-                        placeholder="Notes about the book">
-
-                </textarea>
-            </mat-form-field>
-          </div>
-        </td>
-
-      </tr>
-      <tr>
-
-        <td>
-          <div>
-            <mat-form-field class="example-full-width">
-              <input type="text" placeholder="Author" aria-label="Author" matInput formControlName="bookAuthor" [matAutocomplete]="auto">
-              <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredAuthors | async" [value]="option">
-                  {{option}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-
-        </td>
-
-      </tr>
-      <tr>
-
-        <td>
-
-          <div>
-            <mat-form-field>
-              <mat-label>Title</mat-label>
-              <input matInput placeholder="Title" formControlName="bookTitle" required>
-            </mat-form-field>
-          </div>
-
-        </td>
-
-      </tr>
-      <tr>
-
-        <td>
-          <div>
-            <mat-form-field>
-              <mat-label>Pages</mat-label>
-              <input matInput type="number" min="0" max="3000" formControlName="bookPages" required>
-            </mat-form-field>
-          </div>
-
-        </td>
-
-      </tr>
-      <tr>
-
-        <td>
-          <div>
-            <mat-form-field>
-              <mat-label>Home Country</mat-label>
-              <mat-select [(value)]="selectedCountry"
-                          placeholder="Chosen Country"
-                          (selectionChange)="newSelectedCountry($event.value)"
-                          formControlName="authorCountry"
-                          required>
-                <mat-option *ngFor="let item of countryOptions" [value]="item.value">
-                  {{item.viewValue}}
-                </mat-option>
-              </mat-select>
-
-            </mat-form-field>
-          </div>
-
-        </td>
-
-        <td></td>
-
-        <td class="narrow-coloumn">
-          <div>
-            <mat-form-field>
-              <mat-label>Tags</mat-label>
-              <mat-select formControlName="bookTags"
-                          (selectionChange)="tagsSelectionChange($event.value)"
-                          multiple>
-                <mat-option *ngFor="let tag of tagOptions" [value]="tag">{{tag}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </td>
-
-      </tr>
-      <tr>
-
-        <td>
-          <div>
-            <mat-form-field>
-              <input type="text"
-                     placeholder="Language"
-                     aria-label="Language"
-                     matInput
-                     formControlName="originalLanguage"
-                     [matAutocomplete]="autoLanguage">
-              <mat-autocomplete #autoLanguage="matAutocomplete">
-                <mat-option *ngFor="let language of filteredLanguages | async" [value]="language">
-                  {{language}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-
-        </td>
-
-        <td>
-
-          <div>
-            <mat-form-field>
-              <mat-label>Image URL</mat-label>
-              <input matInput placeholder="Image URL" formControlName="imageUrl">
-            </mat-form-field>
-          </div>
-
-        </td>
-
-        <td rowspan="2" class="narrow-coloumn"><b>Tags:</b> {{displayTags}}</td>
-
-      </tr>
-      <tr>
-
-        <td>
-          <div>
-            <mat-form-field>
-              <mat-label>Format</mat-label>
-              <mat-select [(value)]="selectedFormat"
-                          placeholder="Chosen Format"
-                          (selectionChange)="newSelectedFormat($event.value)"
-                          formControlName="bookFormat"
-                          required>
-                <mat-option *ngFor="let item of formatOptions" [value]="item.value">
-                  {{item.viewValue}}
-                </mat-option>
-              </mat-select>
-
-            </mat-form-field>
-          </div>
-
-        </td>
-
-      </tr>
-    </table>
-
-    <table>
-      
-      <tr>
-
-        <td>
-
-          <button [disabled]="!addAlbumGroup.valid"
-                  mat-raised-button
-                  color="primary"
-                  (click)="onUpdateAlbum()">
-            Update Item
-          </button>
-
-        </td>
-
-        <td>
-
-          <button mat-raised-button
-                  color="warn"
-                  [disabled]="!addAlbumGroup.valid"
-                  (click)="onDeleteAlbum()">
-            Delete Album
-          </button>
-
-        </td>
-
-      </tr>
-
-    </table>
-
-  </form>
-
+  <div style="margin: 20px"><h2>Updated Item</h2></div>
 
   <app-book-detail [bookSelected]="selectedBook">
 

@@ -1,6 +1,5 @@
 ﻿namespace AngularMongoBooks3.Controllers.RequestsResponses
 {
-    using System;
     using AngularMongoBooks3.Controllers.DataClasses;
 
     public enum BookReadAddResponseCode
@@ -8,7 +7,8 @@
         Success = 0,
         Duplicate,
         UnknownUser,
-        InvalidItem
+        InvalidItem,
+        UnknownItem
     };
 
     public class BookReadAddResponse
