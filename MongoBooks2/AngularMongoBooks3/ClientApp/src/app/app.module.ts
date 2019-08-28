@@ -25,6 +25,10 @@ import { AddNewBookComponent } from './components/Forms/add-new-book/add-new-boo
 import { EditExistingBookComponent } from './components/Forms/edit-existing-book/edit-existing-book.component';
 
 
+import { MainImportExportComponent } from './components/ImportExport/main-import-export/main-import-export.component';
+import { TextFileExportComponent } from './components/ImportExport/text-file-export/text-file-export.component';
+
+
 import { UserLoginComponent } from './components/Forms/user-login/user-login.component';
 
 
@@ -138,6 +142,9 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
     MainBooksFormsComponent,
     AddNewBookComponent,
     EditExistingBookComponent,
+
+    MainImportExportComponent,
+    TextFileExportComponent,
 
     UserLoginComponent,
 
