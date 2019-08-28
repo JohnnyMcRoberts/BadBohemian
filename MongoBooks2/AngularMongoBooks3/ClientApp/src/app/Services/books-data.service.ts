@@ -130,13 +130,32 @@ export class BooksDataService
         error => console.error(error));
   }
 
-
   public addBookReadResponse: any;
   async addAsyncBookRead(request: BookReadAddRequest)
   {
     this.addBookReadResponse =
       await this.http.post<BookReadAddResponse>(
         this.requestUrl, request, httpOptions
+      ).toPromise();
+
+    console.log('No issues, waiting until promise is resolved...');
+  }
+
+  public updateBookResponse: any;
+  async  updateAsyncBook(book: Book) {
+    this.updateBookResponse =
+      await this.http.put<BookReadAddResponse>(
+      this.requestUrl, book, httpOptions
+      ).toPromise();
+
+    console.log('No issues, waiting until promise is resolved...');
+  }
+
+  public deleteBookResponse: any;
+  async  deleteAsyncBook(book: Book) {
+    this.deleteBookResponse =
+      await this.http.delete<BookReadAddResponse>(
+      this.requestUrl + "/" + book.id, httpOptions
       ).toPromise();
 
     console.log('No issues, waiting until promise is resolved...');

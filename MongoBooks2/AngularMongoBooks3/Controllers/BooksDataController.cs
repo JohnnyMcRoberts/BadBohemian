@@ -127,6 +127,65 @@
         /// <param name="addRequest">The request to add a book read.</param>
         /// <param name="newBook">The new book  to add on exit.</param>
         /// <returns>True if a valid new book, false otherwise.</returns>
+        private bool GetBookRead(Book addRequest, out BookRead newBook)
+        {
+            newBook = new BookRead
+            {
+                Author = addRequest.Author,
+                Title = addRequest.Title,
+                Pages = (ushort)addRequest.Pages,
+                Note = addRequest.Note,
+                Nationality = addRequest.Nationality,
+                OriginalLanguage = addRequest.OriginalLanguage,
+                ImageUrl = addRequest.ImageUrl,
+                Tags = addRequest.Tags.ToList()
+            };
+
+            // Check the required strings are ok.
+            if (string.IsNullOrWhiteSpace(newBook.Author)
+                || string.IsNullOrWhiteSpace(newBook.Title)
+                || string.IsNullOrWhiteSpace(newBook.Nationality)
+                || string.IsNullOrWhiteSpace(newBook.OriginalLanguage))
+            {
+                return false;
+            }
+
+            // Check the format is valid
+            switch (addRequest.Format)
+            {
+                case "Book":
+                    newBook.Format = BookFormat.Book;
+                    break;
+                case "Comic":
+                    newBook.Format = BookFormat.Comic;
+                    break;
+                case "Audio":
+                    newBook.Format = BookFormat.Audio;
+                    break;
+                default:
+                    return false;
+            }
+
+            // Check the date
+            if (DateTime.Now < addRequest.Date || addRequest.Date < EarliestDate)
+            {
+                return false;
+            }
+
+            // Set the date string 
+            newBook.Date = addRequest.Date;
+            newBook.DateString =
+                SuffixedDaysOfMonths[newBook.Date.Day] + newBook.Date.ToString(" MMMM yyyy");
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets if there is a valid new book read based on the request.
+        /// </summary>
+        /// <param name="addRequest">The request to add a book read.</param>
+        /// <param name="newBook">The new book  to add on exit.</param>
+        /// <returns>True if a valid new book, false otherwise.</returns>
         private bool GetBookRead(BookReadAddRequest addRequest, out BookRead newBook)
         {
             newBook = new BookRead
@@ -183,7 +242,6 @@
         #endregion
 
         #region HTTP Handlers
-
 
         [HttpGet("[action]")]
         public IEnumerable<Book> GetAllBooks()
@@ -420,6 +478,110 @@
             newBook.User = userLogin.Name;
             _booksReadDatabase.AddNewItemToDatabase(newBook);
             response.NewItem = new Book(newBook);
+
+            return Ok(response);
+        }
+
+        [HttpPut]
+        public IActionResult UpdateAlbum([FromBody] Book existingBook)
+        {
+            // set up the successful response
+            BookReadAddResponse response = new BookReadAddResponse
+            {
+                ErrorCode = (int)UserResponseCode.Success,
+                NewItem = new Book(existingBook),
+                FailReason = "",
+                UserId = ""
+            };
+
+            // First check that the user exists
+            User userLogin =
+                _userDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == existingBook.User);
+
+            if (userLogin == null)
+            {
+                response.ErrorCode = (int)BookReadAddResponseCode.UnknownUser;
+                response.FailReason = "Could not find this user.";
+                return Ok(response);
+            }
+
+            // Check the book data is valid
+            BookRead newBook;
+            if (!GetBookRead(existingBook, out newBook))
+            {
+                response.ErrorCode = (int)BookReadAddResponseCode.InvalidItem;
+                response.FailReason = "Invalid book data please try again.";
+                return Ok(response);
+            }
+
+            // Find the item
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            _books = new ObservableCollection<Book>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                var itemToUpdate =
+                    _booksReadDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == existingBook.Id);
+
+                if (itemToUpdate == null)
+                {
+                    response.ErrorCode = (int)BookReadAddResponseCode.UnknownItem;
+                    response.FailReason = "Could not find item";
+                }
+                else
+                {
+                    itemToUpdate.DateString = newBook.DateString;
+                    itemToUpdate.Date = newBook.Date;
+                    itemToUpdate.Author = newBook.Author;
+                    itemToUpdate.Title = newBook.Title;
+                    itemToUpdate.Pages = newBook.Pages;
+                    itemToUpdate.Note = newBook.Note;
+                    itemToUpdate.Nationality = newBook.Nationality;
+                    itemToUpdate.OriginalLanguage = newBook.OriginalLanguage;
+                    itemToUpdate.ImageUrl = newBook.ImageUrl;
+                    itemToUpdate.Tags = newBook.Tags.ToList();
+                    itemToUpdate.Format = newBook.Format;
+
+                    _booksReadDatabase.UpdateDatabaseItem(itemToUpdate);
+                }
+            }
+
+            return Ok(response);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
+        {
+            // set up the successful response
+            BookReadAddResponse response = new BookReadAddResponse
+            {
+                ErrorCode = (int)BookReadAddResponseCode.Success,
+                NewItem = new Book(),
+                FailReason = "",
+                UserId = ""
+            };
+
+            // Find the item
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            _books = new ObservableCollection<Book>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                var itemToDelete =
+                    _booksReadDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == id);
+
+                if (itemToDelete == null)
+                {
+                    response.ErrorCode = (int)BookReadAddResponseCode.UnknownItem;
+                    response.FailReason = "Could not find item";
+                }
+                else
+                {
+                    _booksReadDatabase.RemoveItemFromDatabase(itemToDelete);
+                }
+            }
 
             return Ok(response);
         }

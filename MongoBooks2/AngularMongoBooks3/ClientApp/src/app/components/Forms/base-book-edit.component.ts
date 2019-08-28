@@ -30,14 +30,14 @@ export class NumericSelectionItem
   { }
 }
 
-/** AddNewBook component*/
+/** BaseEditBook component*/
 export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
 {
-    /** AddNewBook ctor */
+    /** BaseEditBook ctor */
     constructor(
-      private formBuilder: FormBuilder,
-      private booksDataService: BooksDataService,
-      private currentLoginService: CurrentLoginService)
+      public formBuilder: FormBuilder,
+      public booksDataService: BooksDataService,
+      public currentLoginService: CurrentLoginService)
     {
       this.componentTitle = "Loading books data...";
       this.booksDataService = booksDataService;
@@ -66,11 +66,14 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
         this.editorDetails = this.booksDataService.editorDetails;
         this.setupSelectionOptions();
       });
+
+      this.ngOnInitAddition();
     }
 
     ngAfterViewInit()
     {
       this.setupSelectionOptions();
+      this.ngAfterViewInitAddition();
     }
 
     public setupSelectionOptions()
@@ -111,14 +114,14 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
 
     //#region Main Form
 
-    public editBookForm: FormGroup;
+    public editBookFormGroup: FormGroup;
 
     public setupFormGroup(): void
     {
       this.bookAuthor = new FormControl('', Validators.required);
       this.originalLanguage = new FormControl('');
 
-      this.editBookForm =
+      this.editBookFormGroup =
         this.formBuilder.group({
           dateBookRead: ['', Validators.required],
           bookAuthor: this.bookAuthor,
@@ -133,68 +136,22 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
         });
     }
 
-    public async onSubmit()
-    {
-      this.setupNewBook();
-
-      var addRequest: BookReadAddRequest =
-        BookReadAddRequest.fromBook(this.newBook, this.currentLoginService.userId);
-
-      await this.booksDataService.addAsyncBookRead(addRequest);
-      console.log("addAsyncBookRead has returned");
-
-      var resp = BookReadAddResponse.fromData(this.booksDataService.addBookReadResponse);
-
-      if (resp == undefined)
-      {
-        console.log("Error in response");
-      }
-      else
-      {
-        console.log("Response OK");
-
-        if (resp.errorCode === 0)
-        {
-          console.log("Successfully added a book");
-        }
-        else
-        {
-          console.log("Add book failed - reason:" + resp.failReason);
-        }
-
-      }
-    }
-
-    public onNewBookReset()
-    {
-      // do the clear properly....
-      this.selectedBookToDisplay = false;
-      this.imageUrl = this.defaultImageUrl;
-    }
-
     public selectedBookToDisplay: boolean = false;
-    public selectedBook: Book;
 
-    public onNewBookDisplay()
-    {
-      this.setupNewBook();
-      this.selectedBook = this.newBook;
-      console.log('Books Row clicked: ', this.selectedBook.date);
-      this.selectedBookToDisplay = true;
-    }
+    public selectedBook: Book;
 
     public setupNewBook(): void
     {
-      var title = this.editBookForm.value.bookTitle;
-      var author = this.editBookForm.value.bookAuthor;
-      this.inputDateRead = this.editBookForm.value.dateBookRead;
-      var pages = this.editBookForm.value.bookPages;
-      var country = this.countryLookup.get(this.editBookForm.value.authorCountry).viewValue;
-      var language = this.editBookForm.value.originalLanguage;
-      var format = this.formatLookup.get(this.editBookForm.value.bookFormat).viewValue;
-      var imageUrl: string = this.editBookForm.value.imageUrl;
-      var theTags: string[] = this.editBookForm.value.bookTags;
-      var notes: string = this.editBookForm.value.bookNotes;
+      var title = this.editBookFormGroup.value.bookTitle;
+      var author = this.editBookFormGroup.value.bookAuthor;
+      this.inputDateRead = this.editBookFormGroup.value.dateBookRead;
+      var pages = this.editBookFormGroup.value.bookPages;
+      var country = this.countryLookup.get(this.editBookFormGroup.value.authorCountry).viewValue;
+      var language = this.editBookFormGroup.value.originalLanguage;
+      var format = this.formatLookup.get(this.editBookFormGroup.value.bookFormat).viewValue;
+      var imageUrl: string = this.editBookFormGroup.value.imageUrl;
+      var theTags: string[] = this.editBookFormGroup.value.bookTags;
+      var notes: string = this.editBookFormGroup.value.bookNotes;
 
       console.warn("setupNewBook ==== >>>> ");
       console.warn("Input Date Read: " + this.inputDateRead.toString());
@@ -215,7 +172,7 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
       this.newBook.nationality = country;
       this.newBook.originalLanguage = language;
       this.newBook.tags = theTags;
-      this.newBook.format = this.formatLookup.get(this.editBookForm.value.bookFormat).viewValue.toString();
+      this.newBook.format = this.formatLookup.get(this.editBookFormGroup.value.bookFormat).viewValue.toString();
       this.newBook.imageUrl = imageUrl;
       this.newBook.note = notes;
 
@@ -281,7 +238,7 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
     public countryLookup: Map<string, SelectionItem> = null;
     public selectedCountry = 'country_1';
 
-    private setupCountrySelection(): void
+    public setupCountrySelection(): void
     {
       this.countryOptions = new Array<SelectionItem>();
       this.countryLookup = new Map<string, SelectionItem>();
@@ -310,14 +267,14 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
     filteredLanguages: Observable<string[]>;
     originalLanguage: FormControl;
 
-    private filterLanguage(value: string): string[]
+    public filterLanguage(value: string): string[]
     {
       const filterValue = value.toLowerCase();
 
       return this.optionForLanguages.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
     }
 
-  //#endregion
+    //#endregion
 
     //#region Format Options
 
@@ -326,7 +283,7 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
     public selectedFormat = 'format_1';
     public formats:string[] = ["Book", "Comic", "Audio"];
 
-    private setupFormatSelection(): void
+    public setupFormatSelection(): void
     {
       this.formatOptions = new Array<NumericSelectionItem>();
       this.formatLookup = new Map<string, NumericSelectionItem>();
@@ -384,15 +341,14 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
 
     //#endregion
 
+    //#region Abstract Elements
 
-  //#region Abstract Elements
+    //@Output() change = new EventEmitter();	
+    public abstract change: EventEmitter<{}>;
 
-  //@Output() change = new EventEmitter();	
-  public abstract change: EventEmitter<{}>;
+    public abstract ngOnInitAddition();
 
-  public abstract ngOnInitAddition();
+    public abstract ngAfterViewInitAddition();
 
-  public abstract ngAfterViewInitAddition();
-
-  //#endregion
+    //#endregion
 }
