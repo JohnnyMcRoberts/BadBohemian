@@ -1,5 +1,6 @@
 export interface IBook
 {
+  id: string;
   dateString: string;
   date: Date;
   author: string;
@@ -24,6 +25,7 @@ export class Book implements IBook
       tags.push(tag);
 
     return new this(
+      data.id,
       data.dateString,
       data.date,
       data.author,
@@ -39,6 +41,7 @@ export class Book implements IBook
   }
 
   constructor(
+    public id: string = "",
     public dateString: string = "",
     public date: Date = new Date(),
     public author: string = "",

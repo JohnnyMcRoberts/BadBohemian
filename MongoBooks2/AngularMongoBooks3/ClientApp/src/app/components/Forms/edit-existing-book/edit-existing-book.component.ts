@@ -11,6 +11,10 @@ import { CurrentLoginService } from './../../../Services/current-login.service';
 import { EditorDetails } from './../../../Models/EditorDetails';
 import { Book, BookReadAddResponse, BookReadAddRequest } from './../../../Models/Book';
 
+
+import { BaseEditBookComponent, NumericSelectionItem, SelectionItem } from './../base-book-edit.component';
+
+
 @Component({
     selector: 'app-edit-existing-book',
     templateUrl: './edit-existing-book.component.html',
