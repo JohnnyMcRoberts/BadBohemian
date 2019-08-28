@@ -9,6 +9,8 @@ import { MainBooksFormsComponent } from './components/Forms/main-books-forms/mai
 
 import { UserLoginComponent } from './components/Forms/user-login/user-login.component';
 
+import { MainImportExportComponent } from './components/ImportExport/main-import-export/main-import-export.component';
+
 const routes: Routes =
 [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -18,6 +20,7 @@ const routes: Routes =
   { path: 'main-books-charts', component: MainBooksChartsComponent },
   { path: 'main-books-forms', component: MainBooksFormsComponent },
   { path: 'user-login', component: UserLoginComponent },
+  { path: 'import-export', component: MainImportExportComponent },
 ];
  
 @NgModule({
