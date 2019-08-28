@@ -1,12 +1,15 @@
+<div *ngIf="!currentLoginService.isLoggedIn" class="not-logged-in-div">
+  <h1>Not currently Logged In</h1>
+</div>
 
-<p *ngIf="!editorDetails"><em>Loading...</em></p>
+<div *ngIf="currentLoginService.isLoggedIn" style="margin: 15px">
 
-<mat-spinner *ngIf="!editorDetails"></mat-spinner>
+  <p *ngIf="!editorDetails"><em>Loading...</em></p>
 
+  <mat-spinner *ngIf="!editorDetails"></mat-spinner>
 
-<mat-tab-group dynamicHeight #tabGroup *ngIf="editorDetails">
+  <div *ngIf="editorDetails">
 
-  <mat-tab label="Add New Book Form">
     <form [formGroup]="addNewBookForm">
 
       <table class="full-width-table">
@@ -38,20 +41,19 @@
 
           </td>
 
-          <td class="images-td" rowspan="4" >
+          <td class="images-td" rowspan="4">
             <div>
-              <img src="{{imageUrl}}" height="250"/>
+              <img src="{{imageUrl}}" height="250" />
             </div>
           </td>
 
-          <td class="narrow-coloumn" rowspan="4" >
+          <td class="narrow-coloumn" rowspan="4">
             <div>
               <mat-form-field>
                 <mat-label>Notes</mat-label>
-                <textarea
-                  matInput mdTextareaAutosize rows="10"
-                  formControlName="bookNotes"
-                  placeholder="Notes about the book">
+                <textarea matInput mdTextareaAutosize rows="10"
+                          formControlName="bookNotes"
+                          placeholder="Notes about the book">
 
                 </textarea>
               </mat-form-field>
@@ -198,7 +200,7 @@
 
         </tr>
       </table>
-      
+
       <table>
 
         <tr>
@@ -240,7 +242,7 @@
       </table>
 
     </form>
-    
+
     <div *ngIf="selectedBookToDisplay">
 
       <app-book-detail [bookSelected]="selectedBook">
@@ -249,51 +251,7 @@
 
     </div>
 
-  </mat-tab>
-
-  <mat-tab label="Authors">
-
-    <p> <b> Authors </b> </p>
-    <mat-list>
-      <mat-list-item *ngFor="let author of editorDetails.authorNames">
-        <p matLine> {{author}} </p>
-      </mat-list-item>
-    </mat-list>
-
-  </mat-tab>
-
-  <mat-tab label="Countries">
-
-    <p> <b> Countries </b> </p>
-    <mat-list>
-      <mat-list-item *ngFor="let country of editorDetails.countryNames">
-        <p matLine> {{country}} </p>
-      </mat-list-item>
-    </mat-list>
-
-  </mat-tab>
-
-  <mat-tab label="Languages">
-
-    <p> <b> Languages </b> </p>
-    <mat-list>
-      <mat-list-item *ngFor="let language of editorDetails.languages">
-        <p matLine> {{language}} </p>
-      </mat-list-item>
-    </mat-list>
+  </div>
 
 
-  </mat-tab>
-
-  <mat-tab label="Tags">
-
-    <p> <b> Tags </b> </p>
-    <mat-list>
-      <mat-list-item *ngFor="let tag of editorDetails.tags">
-        <p matLine> {{tag}} </p>
-      </mat-list-item>
-    </mat-list>
-
-  </mat-tab>
-
-</mat-tab-group>
+</div>

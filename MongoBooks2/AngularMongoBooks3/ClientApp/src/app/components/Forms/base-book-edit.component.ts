@@ -1,15 +1,15 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { OnInit, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import { BooksDataService } from './../../../Services/books-data.service';
-import { CurrentLoginService } from './../../../Services/current-login.service';
+import { BooksDataService } from './../../Services/books-data.service';
+import { CurrentLoginService } from './../../Services/current-login.service';
 
-import { EditorDetails } from './../../../Models/EditorDetails';
-import { Book, BookReadAddResponse, BookReadAddRequest } from './../../../Models/Book';
+import { EditorDetails } from './../../Models/EditorDetails';
+import { Book, BookReadAddResponse, BookReadAddRequest } from './../../Models/Book';
 
 export class SelectionItem
 {
@@ -30,13 +30,8 @@ export class NumericSelectionItem
   { }
 }
 
-@Component({
-    selector: 'app-add-new-book',
-    templateUrl: './add-new-book.component.html',
-    styleUrls: ['./add-new-book.component.scss']
-})
 /** AddNewBook component*/
-export class AddNewBookComponent implements OnInit, AfterViewInit
+export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
 {
     /** AddNewBook ctor */
     constructor(
@@ -47,22 +42,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
       this.componentTitle = "Loading books data...";
       this.booksDataService = booksDataService;
 
-      this.bookAuthor = new FormControl('', Validators.required);
-      this.originalLanguage = new FormControl('');
-
-      this.addNewBookForm =
-        this.formBuilder.group({
-          dateBookRead: ['', Validators.required],
-          bookAuthor: this.bookAuthor,
-          bookTitle: ['', Validators.required],
-          bookPages: ['', Validators.required],
-          authorCountry: ['', Validators.required],
-          originalLanguage: this.originalLanguage,
-          bookFormat: ['', Validators.required],
-          bookNotes: [''],
-          imageUrl: [''],
-          bookTags: ['']
-          });
+      this.setupFormGroup();
     }
 
     public componentTitle: string;
@@ -131,7 +111,27 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
 
     //#region Main Form
 
-    public addNewBookForm: FormGroup;
+    public editBookForm: FormGroup;
+
+    public setupFormGroup(): void
+    {
+      this.bookAuthor = new FormControl('', Validators.required);
+      this.originalLanguage = new FormControl('');
+
+      this.editBookForm =
+        this.formBuilder.group({
+          dateBookRead: ['', Validators.required],
+          bookAuthor: this.bookAuthor,
+          bookTitle: ['', Validators.required],
+          bookPages: ['', Validators.required],
+          authorCountry: ['', Validators.required],
+          originalLanguage: this.originalLanguage,
+          bookFormat: ['', Validators.required],
+          bookNotes: [''],
+          imageUrl: [''],
+          bookTags: ['']
+        });
+    }
 
     public async onSubmit()
     {
@@ -185,16 +185,16 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
 
     public setupNewBook(): void
     {
-      var title = this.addNewBookForm.value.bookTitle;
-      var author = this.addNewBookForm.value.bookAuthor;
-      this.inputDateRead = this.addNewBookForm.value.dateBookRead;
-      var pages = this.addNewBookForm.value.bookPages;
-      var country = this.countryLookup.get(this.addNewBookForm.value.authorCountry).viewValue;
-      var language = this.addNewBookForm.value.originalLanguage;
-      var format = this.formatLookup.get(this.addNewBookForm.value.bookFormat).viewValue;
-      var imageUrl: string = this.addNewBookForm.value.imageUrl;
-      var theTags: string[] = this.addNewBookForm.value.bookTags;
-      var notes: string = this.addNewBookForm.value.bookNotes;
+      var title = this.editBookForm.value.bookTitle;
+      var author = this.editBookForm.value.bookAuthor;
+      this.inputDateRead = this.editBookForm.value.dateBookRead;
+      var pages = this.editBookForm.value.bookPages;
+      var country = this.countryLookup.get(this.editBookForm.value.authorCountry).viewValue;
+      var language = this.editBookForm.value.originalLanguage;
+      var format = this.formatLookup.get(this.editBookForm.value.bookFormat).viewValue;
+      var imageUrl: string = this.editBookForm.value.imageUrl;
+      var theTags: string[] = this.editBookForm.value.bookTags;
+      var notes: string = this.editBookForm.value.bookNotes;
 
       console.warn("setupNewBook ==== >>>> ");
       console.warn("Input Date Read: " + this.inputDateRead.toString());
@@ -215,7 +215,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
       this.newBook.nationality = country;
       this.newBook.originalLanguage = language;
       this.newBook.tags = theTags;
-      this.newBook.format = this.formatLookup.get(this.addNewBookForm.value.bookFormat).viewValue.toString();
+      this.newBook.format = this.formatLookup.get(this.editBookForm.value.bookFormat).viewValue.toString();
       this.newBook.imageUrl = imageUrl;
       this.newBook.note = notes;
 
@@ -383,4 +383,16 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
     public imageUrl: string = this.defaultImageUrl;
 
     //#endregion
+
+
+  //#region Abstract Elements
+
+  //@Output() change = new EventEmitter();	
+  public abstract change: EventEmitter<{}>;
+
+  public abstract ngOnInitAddition();
+
+  public abstract ngAfterViewInitAddition();
+
+  //#endregion
 }

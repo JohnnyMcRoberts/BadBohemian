@@ -1,4 +1,5 @@
-﻿import { Component } from '@angular/core';
+import { Component } from '@angular/core';
+import { CurrentLoginService } from './../../../Services/current-login.service';
 
 @Component({
     selector: 'app-main-books-forms',
@@ -6,9 +7,11 @@
     styleUrls: ['./main-books-forms.component.scss']
 })
 /** MainBooksForms component*/
-export class MainBooksFormsComponent {
+export class MainBooksFormsComponent
+{
     /** MainBooksForms ctor */
-    constructor() {
+    constructor(private currentLoginService: CurrentLoginService)
+    {
 
     }
 }

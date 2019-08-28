@@ -1,30 +1,52 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, AfterViewInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 
-import { Book } from './../../../Models/Book';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
 import { BooksDataService } from './../../../Services/books-data.service';
+import { CurrentLoginService } from './../../../Services/current-login.service';
+
+import { EditorDetails } from './../../../Models/EditorDetails';
+import { Book, BookReadAddResponse, BookReadAddRequest } from './../../../Models/Book';
+
+
+import { BaseEditBookComponent, NumericSelectionItem, SelectionItem } from './../base-book-edit.component';
+
 
 @Component({
-  selector: 'app-books-read-table',
-  templateUrl: './books-read-table.component.html',
-  styleUrls: ['./books-read-table.component.scss']
+    selector: 'app-edit-existing-book',
+    templateUrl: './edit-existing-book.component.html',
+    styleUrls: ['./edit-existing-book.component.scss']
 })
-/** BooksReadTable component*/
-export class BooksReadTableComponent implements OnInit, AfterViewInit
+/** EditExistingBook component*/
+export class EditExistingBookComponent
 {
-  /** BooksReadTable ctor */
-  constructor(booksDataService: BooksDataService)
+    /** EditExistingBook ctor */
+  constructor(
+    private formBuilder: FormBuilder,
+    private booksDataService: BooksDataService,
+    private currentLoginService: CurrentLoginService)
   {
-    // works you know
-    this.componentTitle = "Loading books from database...";
-    this.booksDataService = booksDataService;
+    this.componentTitle = "Loading books data...";
   }
 
-  private booksDataService: BooksDataService;
   public componentTitle: string;
+  public selectedBook: Book = new Book();
+  public editorDetails: EditorDetails;
+
+  //#region Accordion State implementation
+
+  public showAllBooksPanelOpenState = true;
+  public editBook: Book = null;
+  public bookToEdit: boolean = false;
+
+  //#endregion
+
+  //#region Populate Books Table
 
   public books: Book[];
-  public selectedBook: Book;
   public booksDisplayedColumns: string[] =
   [
     'date',
@@ -85,12 +107,30 @@ export class BooksReadTableComponent implements OnInit, AfterViewInit
     }
   }
 
-  public selectedBookToDisplay: boolean = false; 
+  public selectedBookToDisplay: boolean = false;
 
   onBooksRowClicked(row)
   {
     this.selectedBook = row;
     console.log('Books Row clicked: ', this.selectedBook.date);
     this.selectedBookToDisplay = true;
+
+    var dateSelected: Date = new Date(this.selectedBook.date);
+    this.selectedBookReadTime.setValue(dateSelected);
   }
+
+  //#endregion
+
+
+
+  //#region Update Details
+
+
+  public selectedBookReadTime = new FormControl(new Date());
+
+  public selectedMoment = new Date();
+
+
+  //#endregion
+
 }

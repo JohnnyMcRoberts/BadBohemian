@@ -8,6 +8,11 @@
     public class Book
     {
         /// <summary>
+        /// Gets or sets the unique entity identifier string.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the date string.
         /// </summary>
         public string DateString { get; set; }
@@ -74,6 +79,7 @@
 
         public Book(BookRead book)
         {
+            Id = book.Id.ToString();
             DateString = book.DateString;
             Date = book.Date;
             Author = book.Author;
