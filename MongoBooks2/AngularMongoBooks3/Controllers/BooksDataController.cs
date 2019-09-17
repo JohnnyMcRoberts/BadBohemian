@@ -3,7 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.IO;
     using System.Linq;
+    using System.Text;
+
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
 
@@ -16,6 +19,8 @@
     using AngularMongoBooks3.Controllers.DataClasses;
     using AngularMongoBooks3.Controllers.RequestsResponses;
     using AngularMongoBooks3.Controllers.Settings;
+    using AngularMongoBooks3.Controllers.Utilities;
+    using CsvHelper;
 
     [Route("api/[controller]")]
     public class BooksDataController : Controller
@@ -28,6 +33,11 @@
         /// The connection string for the database.
         /// </summary>
         public readonly string DatabaseConnectionString;
+
+        /// <summary>
+        /// The export directory to put temporary files into.
+        /// </summary>
+        public readonly string ExportDirectory;
 
         public readonly DateTime EarliestDate = DateTime.Now.AddYears(-20);
 
@@ -78,6 +88,9 @@
         /// </summary>
         private ObservableCollection<Book> _books;
 
+        /// <summary>
+        /// The authors read from database.
+        /// </summary>
         private ObservableCollection<Author> _authors;
 
         #endregion
@@ -119,7 +132,6 @@
 
             return false;
         }
-
 
         /// <summary>
         /// Gets if there is a valid new book read based on the request.
@@ -237,6 +249,56 @@
                 SuffixedDaysOfMonths[newBook.Date.Day] + newBook.Date.ToString(" MMMM yyyy");
 
             return true;
+        }
+
+        private string GetExportFileName(string exportDirectory, string fileName)
+        {
+            DateTime time = DateTime.Now;
+            fileName += " ";
+            fileName += time.ToString("yyyy MMMM dd H-mm-ss");
+            fileName += ".csv";
+            return Path.Combine(exportDirectory, fileName);
+        }
+
+        public void WriteBooksToFile(string filename, List<BookRead> booksRead)
+        {
+            using (StreamWriter sw = new StreamWriter(filename, false, Encoding.UTF8))
+            {
+                // write the header
+                sw.WriteLine(
+                    "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image,Tags"
+                );
+
+                // write the records
+                var csv = new CsvWriter(sw);
+                foreach (var book in booksRead)
+                {
+                    csv.WriteField(book.DateString);
+                    csv.WriteField(book.Date.ToString("d/M/yyyy"));
+                    csv.WriteField(book.Author);
+                    csv.WriteField(book.Title);
+                    csv.WriteField(book.Pages > 0 ? book.Pages.ToString() : "");
+                    csv.WriteField(book.Note);
+                    csv.WriteField(book.Nationality);
+                    csv.WriteField(book.OriginalLanguage);
+                    csv.WriteField(book.Format == BookFormat.Book ? "x" : "");
+                    csv.WriteField(book.Format == BookFormat.Comic ? "x" : "");
+                    csv.WriteField(book.Format == BookFormat.Audio ? "x" : "");
+                    csv.WriteField(book.ImageUrl);
+                    csv.WriteField(book.DisplayTags);
+                    csv.NextRecord();
+                }
+
+                // tidy up
+                sw.Close();
+            }
+        }
+
+        public void WriteBooksToFile(string filename, List<BookRead> booksRead, out string formattedText)
+        {
+            BooksExporter.ExportToCsvFile(booksRead, out formattedText);
+
+            WriteBooksToFile(filename, booksRead);
         }
 
         #endregion
@@ -387,6 +449,82 @@
             return booksDeltas;
         }
 
+        [HttpGet("[action]/{userId}")]
+        [ProducesResponseType(201, Type = typeof(ExportText))]
+        public ExportText GetExportCsvText(string userId)
+        {
+            ExportText exportText = new ExportText { Format = "text/plain" };
+
+            User foundUser = _userDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == userId);
+            if (foundUser == null)
+            {
+                return exportText;
+            }
+
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            _books = new ObservableCollection<Book>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                if (booksReadProvider.BooksRead != null && booksReadProvider.BooksRead.Any())
+                {
+                    List<BookRead> books =
+                        booksReadProvider.BooksRead.Where(x => x.User == foundUser.Name).OrderBy(x => x.Date).ToList();
+
+                    // Get the file export string 
+                    string formattedText;
+
+                    BooksExporter.ExportToCsvFile(books, out formattedText);
+
+
+                    // Return the formatted text
+                    exportText.FormattedText = formattedText;
+                }
+            }
+
+            return exportText;
+        }
+        [HttpGet("[action]/{userId}")]
+        [ProducesResponseType(201, Type = typeof(ExportText))]
+        [ProducesResponseType(404)]
+        public IActionResult GetExportCsvFile(string userId)
+        {
+            ExportText exportText = new ExportText { Format = "text/plain" };
+
+            User foundUser = _userDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == userId);
+            if (foundUser == null)
+            {
+                return NotFound();
+            }
+
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            _books = new ObservableCollection<Book>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                if (booksReadProvider.BooksRead != null && booksReadProvider.BooksRead.Any())
+                {
+                    List<BookRead> books =
+                        booksReadProvider.BooksRead.Where(x => x.User == foundUser.Name).OrderBy(x => x.Date).ToList();
+
+                    // Get the file export string 
+                    string formattedText;
+                    string fileName = GetExportFileName(ExportDirectory, "Books");
+                    WriteBooksToFile(fileName, books, out formattedText);
+
+
+                    // Return the formatted text
+                    if (System.IO.File.Exists(fileName))
+                        return new FileStreamResult(new FileStream(fileName, FileMode.Open), "text/csv");
+                }
+            }
+
+            return NotFound();
+        }
+
+
         [HttpGet("[action]")]
         [ProducesResponseType(200, Type = typeof(EditorDetails))]
         [ProducesResponseType(404)]
@@ -412,6 +550,46 @@
             }
 
             return editorDetails;
+        }
+
+        [HttpGet("[action]/{userId}")]
+        public IEnumerable<Book> GetAsDefaultUser(string userId)
+        {
+            var blankBooks = new List<Book>();
+
+            User foundUser = _userDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == userId);
+            if (foundUser == null)
+            {
+                return blankBooks;
+            }
+
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            List<BookRead> blankUserBooks = new List<BookRead>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                foreach (var bookRead in booksReadProvider.BooksRead)
+                {
+                    if (bookRead != null && string.IsNullOrEmpty(bookRead.User))
+                    {
+                        blankUserBooks.Add(bookRead);
+                    }
+                }
+            }
+
+
+            if (blankUserBooks.Any())
+            {
+                foreach (var itemToUpdate in blankUserBooks)
+                {
+                    itemToUpdate.User = foundUser.Name;
+                    _booksReadDatabase.UpdateDatabaseItem(itemToUpdate);
+                    blankBooks.Add(new Book(itemToUpdate));
+                }
+            }
+
+            return blankBooks;
         }
 
         /// <summary>
@@ -595,6 +773,7 @@
             MongoDbSettings dbSettings = config.Value;
 
             DatabaseConnectionString = dbSettings.DatabaseConnectionString;
+            ExportDirectory = dbSettings.ExportDirectory;
 
             _books = new ObservableCollection<Book>();
             

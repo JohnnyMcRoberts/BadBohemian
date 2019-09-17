@@ -29,21 +29,25 @@ export class HomeComponent
       name: 'Add the other Grids',
       updated: new Date('20/03/19'),
     },
-  ];
-
-  public todos: Section[] =
-  [
     {
       name: 'Add the users login',
       updated: new Date('26/08/19'),
     },
     {
       name: 'Add the books editor',
-      updated: new Date('28/03/19'),
+      updated: new Date('28/08/19'),
+    },
+  ];
+
+  public todos: Section[] =
+  [
+    {
+      name: 'Add the file import and export',
+      updated: new Date('16/09/19'),
     },
     {
-      name: 'Add the charts',
-      updated: new Date('28/03/19'),
+      name: 'Add the other charts',
+      updated: new Date('20/03/19'),
     },
   ];
 }
