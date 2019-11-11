@@ -449,6 +449,22 @@
             return booksDeltas;
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<YearlyTally> GetAllYearlyTallies()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            List<YearlyTally> yearlyTallies = new List<YearlyTally>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                yearlyTallies = 
+                    YearlyTally.GetYearlyTalliesForBooks(booksReadProvider.BooksRead.ToList());
+            }
+
+            return yearlyTallies;
+        }
+
         [HttpGet("[action]/{userId}")]
         [ProducesResponseType(201, Type = typeof(ExportText))]
         public ExportText GetExportCsvText(string userId)
@@ -485,13 +501,12 @@
 
             return exportText;
         }
+
         [HttpGet("[action]/{userId}")]
         [ProducesResponseType(201, Type = typeof(ExportText))]
         [ProducesResponseType(404)]
         public IActionResult GetExportCsvFile(string userId)
         {
-            ExportText exportText = new ExportText { Format = "text/plain" };
-
             User foundUser = _userDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == userId);
             if (foundUser == null)
             {
@@ -523,7 +538,6 @@
 
             return NotFound();
         }
-
 
         [HttpGet("[action]")]
         [ProducesResponseType(200, Type = typeof(EditorDetails))]

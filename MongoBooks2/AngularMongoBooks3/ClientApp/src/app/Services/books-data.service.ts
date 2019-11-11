@@ -11,6 +11,7 @@ import { BookTally } from '../Models/BookTally';
 import { MonthlyTally } from '../Models/MonthlyTally';
 import { TagBooks } from '../Models/TagBooks';
 import { DeltaBooks } from '../Models/DeltaBooks';
+import { YearlyTally, IYearlyTally } from '../Models/YearlyTally';
 import { EditorDetails } from '../Models/EditorDetails';
 import { ExportText } from '../Models/ExportText';
 
@@ -120,6 +121,17 @@ export class BooksDataService
                 },
                 error => console.error(error));
     }
+
+    public yearlyTallies: YearlyTally[];
+    fetchAllYearlyTalliesData()
+    {
+        return this.http.get<YearlyTally[]>(this.requestUrl + "GetAllYearlyTallies")
+        .toPromise().then(result => {
+            this.yearlyTallies = result as YearlyTally[];
+          },
+          error => console.error(error));
+    }
+
 
     public editorDetails: EditorDetails;
     fetchEditorDetails()

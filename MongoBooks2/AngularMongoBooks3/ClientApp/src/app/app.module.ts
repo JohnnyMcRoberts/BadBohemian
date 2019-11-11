@@ -18,6 +18,7 @@ import { BookDetailComponent } from './components/Grids/book-detail/book-detail.
 
 import { MainBooksChartsComponent } from './components/Charts/main-books-charts/main-books-charts.component';
 import { BookAndPageRatesComponent } from './components/Charts/book-and-page-rates/book-and-page-rates.component';
+import { BooksAndPagesByTimeChartsComponent } from './components/Charts/books-and-pages-by-time-charts/books-and-pages-by-time-charts.component';
 
 
 import { MainBooksFormsComponent } from './components/Forms/main-books-forms/main-books-forms.component';
@@ -138,6 +139,7 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
 
     MainBooksChartsComponent,
     BookAndPageRatesComponent,
+    BooksAndPagesByTimeChartsComponent,
 
     MainBooksFormsComponent,
     AddNewBookComponent,
