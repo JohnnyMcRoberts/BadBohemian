@@ -33,16 +33,18 @@ export class NavigationHeaderComponent implements OnInit
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange })
   {
-    for (let propName in changes) {
-      if (changes.hasOwnProperty(propName)) {
-        let changedProp = changes[propName];
-        var currentValue = changedProp.currentValue;
+      for (let propName in changes)
+      {
+          if (changes.hasOwnProperty(propName))
+          {
+              let changedProp = changes[propName];
+              var currentValue = changedProp.currentValue;
 
-        this.updates++;
+              this.updates++;
 
-        console.log("Update menu to :" + currentValue + " update count is " + this.updates);
+              console.log("Update menu to :" + currentValue + " update count is " + this.updates);
+          }
       }
-    }
   }
 
 

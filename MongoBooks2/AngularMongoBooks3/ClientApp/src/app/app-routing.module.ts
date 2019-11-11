@@ -13,18 +13,18 @@ import { MainImportExportComponent } from './components/ImportExport/main-import
 
 const routes: Routes =
 [
-  { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'dashboard', component: MaincomponentComponent },
-  { path: 'to-do-list', component: HomeComponent },
-  { path: 'main-books-grids', component: MainBooksGridsComponent },
-  { path: 'main-books-charts', component: MainBooksChartsComponent },
-  { path: 'main-books-forms', component: MainBooksFormsComponent },
-  { path: 'user-login', component: UserLoginComponent },
-  { path: 'import-export', component: MainImportExportComponent },
+    { path: '', component: UserLoginComponent, pathMatch: 'full' },
+    { path: 'dashboard', component: MaincomponentComponent },
+    { path: 'to-do-list', component: HomeComponent },
+    { path: 'main-books-grids', component: MainBooksGridsComponent },
+    { path: 'main-books-charts', component: MainBooksChartsComponent },
+    { path: 'main-books-forms', component: MainBooksFormsComponent },
+    { path: 'user-login', component: UserLoginComponent },
+    { path: 'import-export', component: MainImportExportComponent },
 ];
  
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+    imports: [ RouterModule.forRoot(routes) ],
+    exports: [ RouterModule ]
 })
 export class AppRoutingModule {}

@@ -22,11 +22,22 @@
           <td>{{currentLoginService.description}}</td>
         </tr>
 
+        <tr>
+          <td>
+            <button mat-raised-button (click)="onExistingUserReset()">
+              Reset
+            </button>
+          </td>
+
+          <td>
+            <button mat-raised-button (click)="onSetAsDefaultUser()">
+              Set As Default User
+            </button>
+          </td>
+        </tr>
+
       </table>
 
-      <button mat-raised-button (click)="onExistingUserReset()">
-        Reset
-      </button>
     </div>
 
     <div *ngIf="existingUserLoginSuccessString === ''">

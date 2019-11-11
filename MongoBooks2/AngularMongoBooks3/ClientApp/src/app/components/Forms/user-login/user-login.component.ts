@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 
 import { UserAddRequest, UserAddResponse, UserLoginRequest, UserLoginResponse, UserLogin } from './../../../Models/User';
 
-
+import { BooksDataService } from './../../../Services/books-data.service';
 import { CurrentLoginService } from './../../../Services/current-login.service';
 import { UserLoginService } from './../../../Services/user-login.service';
 
@@ -19,6 +19,7 @@ export class UserLoginComponent
   constructor(
     private formBuilder: FormBuilder,
     private currentLoginService: CurrentLoginService,
+    private booksDataService: BooksDataService,
     private userLoginService: UserLoginService
   )
   {
@@ -214,7 +215,6 @@ export class UserLoginComponent
       {
         this.existingUserLoginSuccessString = "Logged in successfully with User Id: " + loginResponse.userId;
         this.existingUserLoginErrorString = '';
-        //this.existingUserFormGroup.existingUserName;
 
         var userLogin: UserLogin =
           new UserLogin(
@@ -244,7 +244,20 @@ export class UserLoginComponent
     this.existingUserLoginSuccessString = '';
   }
 
-    //#endregion
+
+  public onSetAsDefaultUser()
+  {
+    console.log('onSetAsDefaultUser -> Name : ', this.currentLoginService.name);
+
+
+    this.booksDataService.getAsDefaultUser(this.currentLoginService.userId).then(() =>
+    {
+      console.log('Completed : onSetAsDefaultUser for ', this.currentLoginService.name);
+    });
+
+  }
+
+  //#endregion
 
 }
 

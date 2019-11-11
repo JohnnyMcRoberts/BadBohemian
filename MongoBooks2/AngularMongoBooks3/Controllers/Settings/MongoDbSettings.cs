@@ -2,6 +2,7 @@
 {
     public class MongoDbSettings
     {
+        public string ExportDirectory { get; set; }
         public string DatabaseConnectionString { get; set; }
     }
 }

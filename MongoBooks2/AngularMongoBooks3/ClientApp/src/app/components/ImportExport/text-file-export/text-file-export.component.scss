@@ -1,1 +1,90 @@
-﻿
+.not-logged-in-div
+{
+  margin: 50px;
+}
+
+.logged-in-div
+{
+  margin: 15px;
+}
+
+
+.example-button-row button,
+.example-button-row a
+{
+  margin-right: 8px;
+}
+
+.example-details-button button
+{
+  margin-right: 8px;
+}
+
+table
+{
+  width: 100%;
+}
+
+.spinner-wrapper
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-card
+{
+  max-width: 200px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.example-div
+{
+  padding-top: 40px;
+  padding-left: 60px;
+}
+
+.wraptext
+{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-
+{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.section-values-table td, .section-values-table th
+{
+  min-width: 100px;
+}
+
+.section-values-table-first-col
+{
+  width: 40%;
+}
+
+.section-values-table-second-col
+{
+  width: 60%;
+}
+
+.example-margin
+{
+  margin: 0 10px;
+}
+
+.example-radio-group
+{
+  display: flex;
+  flex-direction: row;
+  margin: 15px 0;
+}
+
+.example-radio-button
+{
+  margin: 5px;
+}
