@@ -85,7 +85,7 @@
 
         #endregion
 
-        #region nested classes
+        #region Nested classes
 
         public sealed class ExtentedStringWriter : StringWriter
         {
@@ -104,6 +104,7 @@
                 }
             }
         }
+
         #endregion
 
         public static void ExportToCsvFile(List<BookRead> books, out string fileContent)
