@@ -10,4 +10,25 @@
 
   </mat-tab>
 
+  <mat-tab label="Pages per Day">
+
+    <plotly-plot [data]="pagesPerDayData"
+                 [layout]="pagesPerDayLayout"
+                 [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+  <mat-tab label="Average Days per Book ">
+
+    <plotly-plot [data]="averageDaysPerBookData"
+                 [layout]="averageDaysPerBookLayout"
+                 [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+
 </mat-tab-group>

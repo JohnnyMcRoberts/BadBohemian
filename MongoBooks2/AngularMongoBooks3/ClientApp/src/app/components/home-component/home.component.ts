@@ -37,17 +37,21 @@ export class HomeComponent
       name: 'Add the books editor',
       updated: new Date('28/08/19'),
     },
+    {
+      name: 'Add the file export',
+      updated: new Date('16/09/19'),
+    },
   ];
 
   public todos: Section[] =
   [
     {
-      name: 'Add the file import and export',
-      updated: new Date('16/09/19'),
+      name: 'Add the other charts',
+      updated: new Date('27/11/19'),
     },
     {
-      name: 'Add the other charts',
-      updated: new Date('20/03/19'),
+      name: 'Add the file import',
+      updated: new Date('16/09/19'),
     },
   ];
 }
