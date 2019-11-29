@@ -4,7 +4,7 @@ import { BooksDataService } from './../../../Services/books-data.service';
 import { SeriesColors } from './../../../Models/SeriesColors';
 import { YearlyTally } from './../../../Models/YearlyTally';
 import { IDeltaBooks, DeltaBooks} from './../../../Models/DeltaBooks';
-import { ICurveFitter, LinearCurveFitter, QuadraticCurveFitter } from './../../../Models/CurveFitter';
+import { ICurveFitter, QuadraticCurveFitter } from './../../../Models/CurveFitter';
 
 @Component({
     selector: 'app-books-and-pages-by-time-charts',
@@ -286,6 +286,15 @@ export class BooksAndPagesByTimeChartsComponent
             daysSinceStart.push(deltaBook.daysSinceStart);
             deltaDates.push(new Date(deltaBook.date));
             pageRates.push(deltaBook.overallTally.pageRate);
+        }
+
+        if (this.deltaBooks[0].languageTotals != null)
+        {
+            console.log("setupPagesPerDayChart - have first languageTotals =" + this.deltaBooks[0].languageTotals.length);
+        }
+        else
+        {
+            console.log("setupPagesPerDayChart - have undefined first languageTotal");
         }
 
         var curveFitter: ICurveFitter =

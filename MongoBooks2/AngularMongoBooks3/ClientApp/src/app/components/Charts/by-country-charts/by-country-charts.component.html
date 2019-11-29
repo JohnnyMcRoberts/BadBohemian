@@ -1,0 +1,70 @@
+<mat-tab-group dynamicHeight #tabGroup>
+
+  <mat-tab label="Percentage of Books Read by Country">
+
+    <plotly-plot [data]="percentageOfBooksReadByCountryData"
+                 [layout]="percentageOfBooksReadByCountryLayout"
+                 [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+  <mat-tab label="Total Books Read by Country">
+
+    <plotly-plot [data]="totalBooksReadByCountryData"
+                 [layout]="totalBooksReadByCountryLayout"
+                 [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+  <mat-tab label="Percentage of Pages Read by Country">
+
+    <plotly-plot [data]="percentageOfPagesReadByCountryData"
+                 [layout]="percentageOfPagesReadByCountryLayout"
+                 [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+  <mat-tab label="Total Pages Read by Country">
+
+    <plotly-plot [data]="totalPagesReadByCountryData"
+                 [layout]="totalPagesReadByCountryLayout"
+                 [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+  <mat-tab label="Current Books and Pages Read by Country">
+
+    <table width="100%" style="margin: 0;">
+      <tr>
+        <td><b>Books Read by Country</b></td>
+        <td><b>Pages Read by Country</b></td>
+      </tr>
+      <tr>
+        <td>
+          <plotly-plot [data]="booksReadByCountryData"
+                       [layout]="currentPieChartByCountryLayout"
+                       [config]="plotlyConfig">
+
+          </plotly-plot>
+        </td>
+        <td>
+          <plotly-plot [data]="pagesReadByCountryData"
+                       [layout]="currentPieChartByCountryLayout"
+                       [config]="plotlyConfig">
+
+          </plotly-plot>
+        </td>
+      </tr>
+    </table>
+
+  </mat-tab>
+
+</mat-tab-group>
