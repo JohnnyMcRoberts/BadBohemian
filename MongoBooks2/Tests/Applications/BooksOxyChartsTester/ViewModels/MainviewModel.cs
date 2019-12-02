@@ -12,9 +12,11 @@ namespace BooksOxyChartsTester.ViewModels
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows.Input;
+
     using BooksCore.Books;
     using BooksCore.Geography;
     using BooksCore.Provider;
+
     using BooksDatabase.Implementations;
     using BooksOxyCharts.Utilities;
     using BooksOxyCharts.ViewModels;
@@ -176,7 +178,6 @@ namespace BooksOxyChartsTester.ViewModels
                 PlotTypesByTitle.Add(selection, title);
             }
         }
-
 
         #endregion
 
