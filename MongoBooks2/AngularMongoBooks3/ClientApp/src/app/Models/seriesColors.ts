@@ -68,7 +68,7 @@ export class SeriesColors
     'rgb(51,  51	,0)',
     'rgb(153,	51	,0)',
     'rgb(153,	51	,102)',
-      'rgb(51,	51	,153)'
+    'rgb(51,	51	,153)'
   ];
 
 }

@@ -132,7 +132,6 @@ export class BooksDataService
           error => console.error(error));
     }
 
-
     public editorDetails: EditorDetails;
     fetchEditorDetails()
     {

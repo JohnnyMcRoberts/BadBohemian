@@ -7,9 +7,9 @@
     {
         public string Name { get; set; }
 
-        public int TotalBooksReadInLanguage { get; set; }
+        public int TotalBooksReadFromCountry { get; set; }
 
-        public int TotalPagesReadInLanguage { get; set; }
+        public int TotalPagesReadFromCountry { get; set; }
 
         public int TotalBooksWorldWide { get; set; }
 
@@ -31,8 +31,8 @@
         public CountryAuthors(AuthorCountry authorCountry)
         {
             Name = authorCountry.Country;
-            TotalBooksReadInLanguage = authorCountry.TotalBooksWorldWide;
-            TotalPagesReadInLanguage = (int)authorCountry.TotalPagesWorldWide;
+            TotalBooksReadFromCountry = authorCountry.TotalBooksReadFromCountry;
+            TotalPagesReadFromCountry = (int)authorCountry.TotalPagesReadFromCountry;
             TotalBooksWorldWide = authorCountry.TotalBooksWorldWide;
             TotalPagesWorldWide = (int)authorCountry.TotalPagesWorldWide;
             PercentageOfBooksRead = (float)Math.Round(authorCountry.PercentageOfBooksRead, 2);
