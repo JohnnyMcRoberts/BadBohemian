@@ -21,6 +21,7 @@ import { BookAndPageRatesComponent } from './components/Charts/book-and-page-rat
 import { BooksAndPagesByTimeChartsComponent } from './components/Charts/books-and-pages-by-time-charts/books-and-pages-by-time-charts.component';
 import { ByLanguageChartsComponent } from './components/Charts/by-language-charts/by-language-charts.component';
 import { ByCountryChartsComponent } from './components/Charts/by-country-charts/by-country-charts.component';
+import { CountryMapsComponent } from './components/Charts/country-maps/country-maps.component';
 
 
 import { MainBooksFormsComponent } from './components/Forms/main-books-forms/main-books-forms.component';
@@ -144,6 +145,7 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
     BooksAndPagesByTimeChartsComponent,
     ByLanguageChartsComponent,
     ByCountryChartsComponent,
+    CountryMapsComponent,
 
     MainBooksFormsComponent,
     AddNewBookComponent,
