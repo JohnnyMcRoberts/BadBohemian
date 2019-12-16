@@ -1,0 +1,33 @@
+<mat-tab-group dynamicHeight #tabGroup>
+
+  <mat-tab label="Books By Country">
+
+    <plotly-plot [data]="booksReadByCountryMapData"
+                 [layout]="plotlyMapLayout"
+                 [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+  <mat-tab label="Pages by Country">
+
+    <plotly-plot [data]="pagesReadByCountryMapData"
+                 [layout]="plotlyMapLayout"
+                 [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+  <mat-tab label="Authors by Country">
+
+    <plotly-plot [data]="authorsReadByCountryMapData"
+                 [layout]="plotlyMapLayout"
+                 [config]="plotlyConfig">
+
+    </plotly-plot>
+
+  </mat-tab>
+
+</mat-tab-group>
