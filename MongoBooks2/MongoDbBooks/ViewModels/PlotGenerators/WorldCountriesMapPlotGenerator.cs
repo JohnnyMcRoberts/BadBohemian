@@ -1,6 +1,6 @@
-﻿
-namespace MongoDbBooks.ViewModels.PlotGenerators
+﻿namespace MongoDbBooks.ViewModels.PlotGenerators
 {
+    using System;
     using System.IO;
     using System.Windows.Media.Imaging;
     using System.Net;
@@ -13,7 +13,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
 
     public class WorldCountriesMapPlotGenerator : IPlotGenerator
     {
-        public OxyPlot.PlotModel SetupPlot(Models.MainBooksModel mainModel)
+        public PlotModel SetupPlot(Models.MainBooksModel mainModel)
         {
             _mainModel = mainModel;
             return SetupWorldCountriesMapPlot();
@@ -46,39 +46,48 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
                         new Models.Geography.PolygonPoint(nation.Longitude, nation.Latitude);
                     double x, y;
                     capitalCity.GetCoordinates(out x, out y);
-                    
-                    WebRequest req = HttpWebRequest.Create(nation.ImageUri);
-                    Stream stream = req.GetResponse().GetResponseStream();
-                    var bitmap = new System.Drawing.Bitmap(stream);
 
-                    MemoryStream memoryStream = new MemoryStream();
-                    bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Bmp);
-                    var asBytes = memoryStream.ToArray();
+                    try
+                    {
+                        WebRequest req = WebRequest.Create(nation.ImageUri);
+                        Stream stream = req.GetResponse().GetResponseStream();
+                        var bitmap = new System.Drawing.Bitmap(stream);
 
-                    var typeOfImage = GetImageFormat(asBytes);
+                        MemoryStream memoryStream = new MemoryStream();
+                        bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Bmp);
+                        var asBytes = memoryStream.ToArray();
 
-                    if (typeOfImage == ImageFormat.Unknown)
+                        var typeOfImage = GetImageFormat(asBytes);
+
+                        if (typeOfImage == ImageFormat.Unknown)
+                            continue;
+
+                        OxyImage image = new OxyImage(asBytes);
+                        newPlot.Annotations.Add(
+                            new ImageAnnotation
+                            {
+                                ImageSource = image,
+                                Opacity = 0.5,
+
+                                X = new PlotLength(x, PlotLengthUnit.Data),
+                                Y = new PlotLength(y, PlotLengthUnit.Data),
+                                Width = new PlotLength(30, PlotLengthUnit.ScreenUnits),
+                                Height = new PlotLength(20, PlotLengthUnit.ScreenUnits),
+                                HorizontalAlignment = HorizontalAlignment.Center,
+                                VerticalAlignment = VerticalAlignment.Middle
+                            });
+
+
+                        //newPlot.Annotations.Add(new TextAnnotation { TextPosition = new DataPoint(x, y), Text = nation.Capital });
+
+                        flagCount++;
+
+                    }
+                    catch (Exception e)
+                    {
                         continue;
+                    }
 
-                    OxyImage image = new OxyImage(asBytes);
-                    newPlot.Annotations.Add(
-                        new ImageAnnotation
-                        {
-                            ImageSource = image,
-                            Opacity = 0.5,
-
-                            X = new PlotLength(x, PlotLengthUnit.Data),
-                            Y = new PlotLength(y, PlotLengthUnit.Data),
-                            Width = new PlotLength(30, PlotLengthUnit.ScreenUnits),
-                            Height = new PlotLength(20, PlotLengthUnit.ScreenUnits),
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            VerticalAlignment = VerticalAlignment.Middle
-                        });
-
-
-                    //newPlot.Annotations.Add(new TextAnnotation { TextPosition = new DataPoint(x, y), Text = nation.Capital });
-
-                    flagCount++;
                 }
 
             }
@@ -127,7 +136,7 @@ namespace MongoDbBooks.ViewModels.PlotGenerators
             }
         }
 
-        public byte[] ImageToByte(System.Windows.Media.Imaging.BitmapImage imageSource)
+        public byte[] ImageToByte(BitmapImage imageSource)
         {
             byte[] data;
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
