@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+
 import { CurrentLoginService } from './../../../Services/current-login.service';
+import { GoogleBookService } from './../../../Services/google-book.service';
+import { GoogleBook } from './../../../Models/google-api.interface';
 
 @Component({
     selector: 'app-main-books-forms',
@@ -10,8 +14,21 @@ import { CurrentLoginService } from './../../../Services/current-login.service';
 export class MainBooksFormsComponent
 {
     /** MainBooksForms ctor */
-    constructor(private currentLoginService: CurrentLoginService)
+    constructor(
+        private currentLoginService: CurrentLoginService,
+        private googleBookApiService: GoogleBookService)
     {
+
+    }
+
+    books: Observable<GoogleBook[]>;
+
+    bookQuery(bookTitle)
+    {
+        if (bookTitle.length > 2)
+        {
+            this.books = this.googleBookApiService.findBook(bookTitle);
+        }
 
     }
 }

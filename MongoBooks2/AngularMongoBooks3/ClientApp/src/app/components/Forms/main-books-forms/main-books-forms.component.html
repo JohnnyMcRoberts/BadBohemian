@@ -18,7 +18,24 @@
     </mat-tab>
 
     <mat-tab label="Add Books from E-Mail">
+        <div class="main-div">
+            <mat-card>
+                <h1>Search a book</h1>
 
+                <mat-form-field class="example-full-width">
+                    <mat-label>Find a book</mat-label>
+                    <input matInput
+                           placeholder="Enter book title"
+                           (keyup)="bookQuery($event.target.value)" />
+                </mat-form-field>
+            </mat-card>
+        </div>
+
+        <div>
+            <app-google-book-item *ngFor="let book of books | async" [book]="book">
+                <p>test</p>
+            </app-google-book-item>
+        </div>
 
     </mat-tab>
 

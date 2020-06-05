@@ -1,0 +1,21 @@
+<a [routerLink]="['/book', id]" style="width:100%;">
+    <mat-card>
+        <mat-card-title-group>
+            <mat-card-title>{{ book.volumeInfo.title }}</mat-card-title>
+            <mat-card-subtitle *ngIf="book.volumeInfo.subtitle">
+                {{ book.volumeInfo.subtitle }}. Author: {{ book.volumeInfo.authors }}
+            </mat-card-subtitle>
+        </mat-card-title-group>
+        <mat-card-content>
+            <p *ngIf="book.volumeInfo.description">{{ book.volumeInfo.description }}</p>
+            <img *ngIf="thumbnail" [src]="thumbnail" />
+            <div width="100%">
+                <mat-form-field appearance="fill" style="width: 100%">
+                    <mat-label>Image Url</mat-label>
+                    <input matInput value="{{ fullPath }}" readonly>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+
+    </mat-card>
+</a>
