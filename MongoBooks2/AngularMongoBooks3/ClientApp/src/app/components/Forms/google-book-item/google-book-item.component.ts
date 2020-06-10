@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from "@angular/core";
 
-import { GoogleBook } from './../../../Models/google-api.interface';
+import { GoogleBookInterface, GoogleBookDetailInterface, GoogleBookDetail } from './../../../Models/google-api.interface';
+
+import { GoogleBookService } from './../../../Services/google-book.service';
 
 @Component({
     selector: 'app-google-book-item',
@@ -11,12 +13,12 @@ import { GoogleBook } from './../../../Models/google-api.interface';
 export class GoogleBookItemComponent implements OnInit
 {
     /** GoogleBookItem ctor */
-    constructor()
+    constructor(private googleBookApiService: GoogleBookService)
     {
 
     }
 
-    @Input() book: GoogleBook;
+    @Input() book: GoogleBookInterface;
 
     get id(): string
     {
@@ -29,7 +31,6 @@ export class GoogleBookItemComponent implements OnInit
             : "";
     }
 
-
     get fullPath(): string {
         return this.book.volumeInfo.imageLinks
             ? this.book.volumeInfo.imageLinks.thumbnail
@@ -38,4 +39,25 @@ export class GoogleBookItemComponent implements OnInit
 
     ngOnInit(): void { }
 
+    onGetDetails()
+    {
+        console.log("onGetDetails: title = " + this.book.volumeInfo.title + " volume id ->" + this.book.id);
+
+        this.googleBookApiService.fetchBookDetail(this.book.id).then(() =>
+        {
+            if (this.googleBookApiService.googleBookDetail !== undefined &&
+                this.googleBookApiService.googleBookDetail !== null)
+            {
+                this.bookDetailsString = JSON.stringify(this.googleBookApiService.googleBookDetail, null, 4);
+
+                this.bookDetails = GoogleBookDetail.fromData(this.googleBookApiService.googleBookDetail);
+
+
+                console.log("\n bookDetails \n as JSON \n\n\n" + JSON.stringify(this.bookDetails, null, 4));
+            }
+        });
+    }
+
+    public bookDetailsString: string;
+    public bookDetails: GoogleBookDetailInterface;
 }

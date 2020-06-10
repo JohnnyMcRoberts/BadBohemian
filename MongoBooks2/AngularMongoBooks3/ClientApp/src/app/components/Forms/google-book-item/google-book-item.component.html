@@ -1,21 +1,121 @@
-<a [routerLink]="['/book', id]" style="width:100%;">
-    <mat-card>
-        <mat-card-title-group>
-            <mat-card-title>{{ book.volumeInfo.title }}</mat-card-title>
-            <mat-card-subtitle *ngIf="book.volumeInfo.subtitle">
-                {{ book.volumeInfo.subtitle }}. Author: {{ book.volumeInfo.authors }}
-            </mat-card-subtitle>
-        </mat-card-title-group>
-        <mat-card-content>
-            <p *ngIf="book.volumeInfo.description">{{ book.volumeInfo.description }}</p>
-            <img *ngIf="thumbnail" [src]="thumbnail" />
-            <div width="100%">
-                <mat-form-field appearance="fill" style="width: 100%">
-                    <mat-label>Image Url</mat-label>
-                    <input matInput value="{{ fullPath }}" readonly>
-                </mat-form-field>
-            </div>
-        </mat-card-content>
+<table width="100%">
+    <tr>
+        <td width="50%" style="vertical-align: top">
 
-    </mat-card>
-</a>
+            <mat-card>
+                <mat-card-title-group>
+                    <mat-card-title>{{ book.volumeInfo.title }}</mat-card-title>
+                    <mat-card-subtitle *ngIf="book.volumeInfo.subtitle">
+                        {{ book.volumeInfo.subtitle }}. Author: {{ book.volumeInfo.authors }}
+                    </mat-card-subtitle>
+                </mat-card-title-group>
+                <mat-card-content>
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td width="60%">
+                                    <div *ngIf="book.volumeInfo.description">
+                                        <mat-form-field appearance="fill" style="width: 100%">
+                                            <mat-label>Description</mat-label>
+                                            <textarea matInput
+                                                      cdkTextareaAutosize
+                                                      #autosize="cdkTextareaAutosize"
+                                                      cdkAutosizeMinRows="5"
+                                                      value="{{ book.volumeInfo.description }}" readonly></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <img *ngIf="thumbnail" [src]="thumbnail"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div width="100%" *ngIf="book.id">
+                        <table>
+                            <tr>
+                                <td>
+                                    <mat-form-field appearance="fill" style="width: 100%">
+                                        <mat-label>Volume Id</mat-label>
+                                        <input matInput value="{{ book.id }}" readonly>
+                                    </mat-form-field>
+                                </td>
+                                <td width="100%"></td>
+                                <td>
+                                    <button mat-raised-button
+                                            color="primary"
+                                            (click)="onGetDetails()" i18n>
+                                        Get Details
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card-content>
+
+            </mat-card>
+
+        </td>
+        <td width="50%" style="vertical-align: top">
+
+            <div *ngIf="bookDetails" style="display: table-row;">
+                <table>
+                    <tr>
+                        <td style="vertical-align: top"><b>Title</b></td>
+                        <td>{{bookDetails.volumeInfo.title}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Subtitle</b></td>
+                        <td>{{bookDetails.volumeInfo.subtitle}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Author(s)</b></td>
+                        <td>{{bookDetails.volumeInfo.allAuthors}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Publisher</b></td>
+                        <td>{{bookDetails.volumeInfo.publisher}} ({{bookDetails.volumeInfo.publishedDate}})</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>ISBN-10</b></td>
+                        <td>{{bookDetails.volumeInfo.isbn10}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>ISBN-13</b></td>
+                        <td>{{bookDetails.volumeInfo.isbn13}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Pages</b></td>
+                        <td>{{bookDetails.volumeInfo.pageCount | number}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Categories</b></td>
+                        <td>{{bookDetails.volumeInfo.allCategories}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Image</b></td>
+                        <td> <img [src]="bookDetails.volumeInfo.imageLinkThumbnail" style="max-width: 300px; height: auto"/> </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top" colspan="2">
+
+                            <mat-form-field appearance="fill" style="width: 100%">
+                                <mat-label>Image Full Path</mat-label>
+                                <input matInput value="{{ bookDetails.volumeInfo.imageLinkThumbnail }}" readonly>
+                            </mat-form-field>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Description</b></td>
+                        <td>
+                            <div [innerHTML]="bookDetails.volumeInfo.description"></div> </td>
+                    </tr>
+                </table>
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>

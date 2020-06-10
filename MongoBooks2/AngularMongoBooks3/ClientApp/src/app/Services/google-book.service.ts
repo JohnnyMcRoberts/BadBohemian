@@ -3,9 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { UserAddRequest, UserAddResponse, UserLoginRequest, UserLoginResponse } from './../Models/User';
-
-import { GoogleBook, GoogleBooksApiInterface } from './../Models/google-api.interface';
+import { GoogleBooksApiInterface, GoogleBookInterface, GoogleBookDetailInterface } from './../Models/google-api.interface';
 
 const httpOptions =
 {
@@ -21,9 +19,24 @@ export class GoogleBookService
 
     constructor(private http: HttpClient) { }
 
-    findBook(title: string): Observable<GoogleBook[]> {
+    findBook(title: string): Observable<GoogleBookInterface[]>
+    {
         return this.http
             .get<GoogleBooksApiInterface>(`${this.API_URL}?q=${title}`)
             .pipe(map((data: GoogleBooksApiInterface) => data.items));
     }
+
+    public googleBookDetail: GoogleBookDetailInterface;
+
+    fetchBookDetail(volumeId: string)
+    {
+        return this.http
+            .get<GoogleBookDetailInterface>(`${this.API_URL}/${volumeId}`)
+            .toPromise().then(result =>
+                {
+                this.googleBookDetail = result as GoogleBookDetailInterface;
+                },
+                error => console.error(error));
+    }
+
 }

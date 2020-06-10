@@ -28,6 +28,7 @@ import { MainBooksFormsComponent } from './components/Forms/main-books-forms/mai
 import { AddNewBookComponent } from './components/Forms/add-new-book/add-new-book.component';
 import { EditExistingBookComponent } from './components/Forms/edit-existing-book/edit-existing-book.component';
 import { GoogleBookItemComponent } from './components/Forms/google-book-item/google-book-item.component';
+import { FindBookComponent } from './components/Forms/find-book/find-book.component';
 
 
 
@@ -155,6 +156,7 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
     MainBooksFormsComponent,
     AddNewBookComponent,
     EditExistingBookComponent,
+    FindBookComponent,
     GoogleBookItemComponent,
 
     MainImportExportComponent,
