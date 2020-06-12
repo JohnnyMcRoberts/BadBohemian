@@ -27,6 +27,9 @@ import { CountryMapsComponent } from './components/Charts/country-maps/country-m
 import { MainBooksFormsComponent } from './components/Forms/main-books-forms/main-books-forms.component';
 import { AddNewBookComponent } from './components/Forms/add-new-book/add-new-book.component';
 import { EditExistingBookComponent } from './components/Forms/edit-existing-book/edit-existing-book.component';
+import { GoogleBookItemComponent } from './components/Forms/google-book-item/google-book-item.component';
+import { FindBookComponent } from './components/Forms/find-book/find-book.component';
+
 
 
 import { MainImportExportComponent } from './components/ImportExport/main-import-export/main-import-export.component';
@@ -34,6 +37,7 @@ import { TextFileExportComponent } from './components/ImportExport/text-file-exp
 
 
 import { UserLoginComponent } from './components/Forms/user-login/user-login.component';
+
 
 
 import { LayoutComponent } from './Layout/layout/layout.component';
@@ -48,6 +52,8 @@ import { NavigationHeaderComponent } from './Layout/navigation-header/navigation
 import { UserLoginService } from './Services/user-login.service';
 import { CurrentLoginService } from './Services/current-login.service';
 import { BooksDataService } from './Services/books-data.service';
+
+import { GoogleBookService } from './Services/google-book.service';
 
 //#endregion
 
@@ -150,6 +156,8 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
     MainBooksFormsComponent,
     AddNewBookComponent,
     EditExistingBookComponent,
+    FindBookComponent,
+    GoogleBookItemComponent,
 
     MainImportExportComponent,
     TextFileExportComponent,
@@ -216,7 +224,8 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
   [
     BooksDataService,
     UserLoginService,
-    CurrentLoginService
+    CurrentLoginService,
+    GoogleBookService
   ],
   bootstrap: [AppComponent]
 })

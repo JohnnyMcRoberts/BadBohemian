@@ -53,5 +53,9 @@ export class HomeComponent
       name: 'Add the file import',
       updated: new Date('16/09/19'),
     },
+  {
+      name: 'Add the find book service',
+      updated: new Date('05/06/20'),
+  }
   ];
 }
