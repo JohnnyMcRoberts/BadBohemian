@@ -6,6 +6,15 @@ import { ChartUtilities } from './../../../Models/ChartUtilities';
 
 import { DeltaBooks, ICategoryTotal } from './../../../Models/DeltaBooks';
 import { LanguageAuthors } from './../../../Models/LanguageAuthors';
+import { Book } from './../../../Models/Book';
+
+export class NameCountPair
+{
+    constructor(
+        public name: string = "",
+        public count: number = 0)
+    {}
+}
 
 @Component({
     selector: 'app-by-language-charts',
@@ -27,6 +36,7 @@ export class ByLanguageChartsComponent
     public componentTitle: string;
     public languageAuthors: LanguageAuthors[];
     public deltaBooks: DeltaBooks[];
+    public books: Book[];
 
     //#region Component Implementation
 
@@ -56,6 +66,17 @@ export class ByLanguageChartsComponent
             }
 
             this.setupAllCharts();
+        });
+
+        this.booksDataService.fetchAllBooksData().then(() => {
+            this.books = new Array<Book>();
+
+            for (let item of this.booksDataService.books) {
+                let book: Book = item;
+                this.books.push(book);
+            }
+
+            this.setupBooksAndPagesReadByLanguageAndCountryCharts();
         });
     }
 
@@ -720,5 +741,197 @@ export class ByLanguageChartsComponent
     }
 
     //#endregion
+
+    //#region Books and Pages Read by Language
+
+    public currentStarburstChartBooksByLanguageAndCountryLayout: any;
+
+    public booksReadByLanguageAndCountryData = null;
+    public pagesReadByLanguageAndCountryData = null;
+
+    public setupBooksAndPagesReadByLanguageAndCountryLayout(): void {
+        this.currentStarburstChartBooksByLanguageAndCountryLayout =
+        {
+            width: ChartUtilities.chartWidth,
+            height: ChartUtilities.chartHeight,
+            showlegend: true,
+            margin:
+            {
+                l: 55,
+                r: 55,
+                b: 55,
+                t: 45,
+                pad: 4
+            },
+        };
+    }
+
+    public setupBooksAndPagesReadByLanguageAndCountryCharts(): void {
+        this.setupBooksAndPagesReadByLanguageAndCountryLayout();
+
+        // get the language & country counts for books
+        const booksByLanguage: Map<string, Array<Book>> = new Map<string, Array<Book>>();
+        const booksByCountry: Map<string, Array<Book>> = new Map<string, Array<Book>>();
+
+        for (let i = 0; i < this.books.length; i++) {
+
+            const book: Book = this.books[i];
+
+            if (booksByLanguage.has(book.originalLanguage)) {
+                booksByLanguage.get(book.originalLanguage).push(book);
+            } else {
+                const booksForLanguage: Array<Book> = new Array<Book>();
+                booksForLanguage.push(book);
+                booksByLanguage.set(book.originalLanguage, booksForLanguage);
+            }
+
+            if (booksByCountry.has(book.nationality)) {
+                booksByCountry.get(book.nationality).push(book);
+            } else {
+                const booksForCountry: Array<Book> = new Array<Book>();
+                booksForCountry.push(book);
+                booksByCountry.set(book.nationality, booksForCountry);
+            }
+        }
+
+        // get the language counts
+        let sortedByLanguages =
+            ByLanguageChartsComponent.getBooksSortedNameCountPairs(booksByLanguage);
+
+        const maxItems: number = SeriesColors.liveChartsColors.length;
+
+        let labels: string[] = new Array<string>();
+        let parents: string[] = new Array<string>();
+        let values: number[] = new Array<number>();
+
+        let labelNamesUsed: Map<string, string> = new Map<string, string>();
+
+        // Add the top level
+        const allLanguagesLabel: string = "All";
+
+        if (!labelNamesUsed.has(allLanguagesLabel))
+        {
+            labels.push(allLanguagesLabel);
+            parents.push("");
+            values.push(this.books.length);
+            labelNamesUsed.set(allLanguagesLabel, allLanguagesLabel);
+        }
+
+        // Add the main language nodes
+        for (let i = 0; i < maxItems && i < sortedByLanguages.length; i++)
+        {
+            let languageCount = sortedByLanguages[i];
+            let languageName = languageCount.name;
+
+            if (!labelNamesUsed.has(languageName))
+            {
+                labels.push(languageName);
+                parents.push(allLanguagesLabel);
+                values.push(languageCount.count);
+                labelNamesUsed.set(languageName, languageName);
+            }
+
+            // get the sorted countries for this language
+            let booksByCountryMap =
+                ByLanguageChartsComponent.getBooksByCountryMap(booksByLanguage.get(languageName));
+
+            let sortedBooksByCountry =
+                ByLanguageChartsComponent.getBooksSortedNameCountPairs(booksByCountryMap);
+
+            // add the child languages
+
+            // Add the main language nodes
+            for (let j = 0; j < maxItems && j < sortedBooksByCountry.length; j++)
+            {
+                let countryCount = sortedBooksByCountry[j];
+                let countryName = countryCount.name;
+
+                if (!labelNamesUsed.has(countryName)) {
+                    labels.push(countryName);
+                    parents.push(languageName);
+                    values.push(countryCount.count);
+                    labelNamesUsed.set(countryName, countryName);
+                }
+
+            }
+
+        }
+
+        this.booksReadByLanguageAndCountryData =
+            ByLanguageChartsComponent.getStarburstPlotData(labels, parents, values, SeriesColors.liveChartsColors);
+    }
+
+    public static getBooksByCountryMap(books: Book[]): Map<string, Array<Book>>
+    {
+        const booksByCountry: Map<string, Array<Book>> = new Map<string, Array<Book>>();
+
+        for (let i = 0; i < books.length; i++)
+        {
+            const book: Book = books[i];
+
+            if (booksByCountry.has(book.nationality)) {
+                booksByCountry.get(book.nationality).push(book);
+            }
+            else
+            {
+                const booksForCountry: Array<Book> = new Array<Book>();
+                booksForCountry.push(book);
+                booksByCountry.set(book.nationality, booksForCountry);
+            }
+        }
+
+        return booksByCountry;
+    }
+
+    public static getBooksSortedNameCountPairs(booksMap: Map<string, Array<Book>>): NameCountPair[]
+    {
+        // Get the key counts pairs
+        const mapKeys: string[] = Array.from(booksMap.keys());
+        const keyCounts: NameCountPair[] = new Array<NameCountPair>();
+        for (let i = 0; i < mapKeys.length; i++) {
+            const mapKey: string = mapKeys[i];
+            keyCounts.push(new NameCountPair(mapKey, booksMap.get(mapKey).length));
+        }
+
+        // sort by key & return
+        const sortedByKeys: NameCountPair[] = keyCounts.sort((t1, t2) => {
+            const ttl1 = t1.count;
+            const ttl2 = t2.count;
+
+            if (ttl1 > ttl2) { return -1; }
+            if (ttl1 < ttl2) { return 1; }
+            return 0;
+        });
+
+        return sortedByKeys;
+    }
+
+    public static getStarburstPlotData(labels: string[], parents: string[], values: number[], colors: string[]): any[] {
+        var plotData: any[] =
+        [
+            {
+                type: "sunburst",
+                labels: labels,
+                parents: parents,
+                values: values,
+                outsidetextfont: { size: 20, color: "#377eb8" },
+                leaf: { opacity: 0.4 },
+                marker: { line: { width: 2 } },
+            }
+        ];
+
+        return plotData;
+    }
+
+    public onResetSunburstChart(chartName: string) {
+
+        // log the change
+        console.log("onResetSunburstChart : " + chartName);
+
+        this.setupBooksAndPagesReadByLanguageAndCountryCharts();
+    }
+
+    //#endregion
+
 
 }
