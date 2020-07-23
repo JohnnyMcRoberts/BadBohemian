@@ -923,7 +923,8 @@ export class ByLanguageChartsComponent
         return plotData;
     }
 
-    public onResetSunburstChart(chartName: string) {
+    public onResetSunburstChart(chartName: string)
+    {
 
         // log the change
         console.log("onResetSunburstChart : " + chartName);
