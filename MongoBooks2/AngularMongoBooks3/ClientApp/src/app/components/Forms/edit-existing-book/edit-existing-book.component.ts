@@ -1,6 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 
 import { BooksDataService } from './../../../Services/books-data.service';
 import { CurrentLoginService } from './../../../Services/current-login.service';
