@@ -99,10 +99,21 @@
                     <tr>
                         <td style="vertical-align: top" colspan="2">
 
-                            <mat-form-field appearance="fill" style="width: 100%">
-                                <mat-label>Image Full Path</mat-label>
-                                <input matInput value="{{ bookDetails.volumeInfo.imageLinkThumbnail }}" readonly>
-                            </mat-form-field>
+                            <table width="100%">
+                                <tr width="100%">
+                                    <td width="80%">
+                                        <mat-form-field appearance="fill" style="width: 100%">
+                                            <mat-label>Image Full Path</mat-label>
+                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinkThumbnail }}" readonly>
+                                        </mat-form-field>
+                                    </td>
+                                    <td>
+                                        <button mat-raised-button
+                                                color="primary"
+                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinkThumbnail)" i18n>Copy to Clipboard</button>
+                                    </td>
+                                </tr>
+                            </table>
 
                         </td>
                     </tr>

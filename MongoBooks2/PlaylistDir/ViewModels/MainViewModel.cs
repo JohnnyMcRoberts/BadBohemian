@@ -222,7 +222,16 @@
             {
                 var songPath = Path.Combine(sourceDirectory, song);
                 var outputSong = Path.Combine(OutputDirectory, Path.GetFileName(song));
-                File.Copy(songPath, outputSong);
+                try
+                {
+
+                    File.Copy(songPath, outputSong);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    //throw;
+                }
             }
         }
 
