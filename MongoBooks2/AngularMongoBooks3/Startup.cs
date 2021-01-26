@@ -1,44 +1,33 @@
-using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-
-using System.Net;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-
-using Microsoft.AspNetCore.Authorization;
-using AspNet.Security.OAuth.Validation;
-using Microsoft.AspNetCore.Identity;
-using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
-using System.Collections.Generic;
-using Microsoft.Net.Http.Headers;
-
 namespace AngularMongoBooks3
 {
+    using System;
+
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
+    
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+    
+    using Microsoft.Net.Http.Headers;
+    
+    using AspNet.Security.OAuth.Validation;
+
+    using Swashbuckle.AspNetCore.Swagger;
+
     using AngularMongoBooks3.Controllers.Settings;
+    using Microsoft.AspNetCore.Http.Headers;
 
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        //private readonly IHostingEnvironment _hostingEnvironment;
-
-
 
         public Startup(IConfiguration configuration/*, IHostingEnvironment env*/)
         {
             Configuration = configuration;
-            //_hostingEnvironment = env;
         }
-
-
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -46,26 +35,7 @@ namespace AngularMongoBooks3
             ViewModels.MapperVm.AutoMapperConfig.Init();
 
             // Configure Identity options and password complexity here
-            services.Configure<IdentityOptions>(options =>
-            {
-                // User settings
-                options.User.RequireUniqueEmail = true;
-
-                //    //// Password settings
-                //    //options.Password.RequireDigit = true;
-                //    //options.Password.RequiredLength = 8;
-                //    //options.Password.RequireNonAlphanumeric = false;
-                //    //options.Password.RequireUppercase = true;
-                //    //options.Password.RequireLowercase = false;
-
-                //    //// Lockout settings
-                //    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                //    //options.Lockout.MaxFailedAccessAttempts = 10;
-
-            });
-
-
-
+            services.Configure<IdentityOptions>(options => options.User.RequireUniqueEmail = true);
 
             services.AddAuthentication(options =>
             {
@@ -73,36 +43,15 @@ namespace AngularMongoBooks3
                 options.DefaultChallengeScheme = OAuthValidationDefaults.AuthenticationScheme;
             }).AddOAuthValidation();
 
-
             // Add cors
             services.AddCors();
 
             // Add framework services.
             services.AddMvc();
 
-
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
-
-
-            // Enforce https during production. To quickly enable ssl during development. Go to: Project Properties->Debug->Enable SSL
-            //if (!_hostingEnvironment.IsDevelopment())
-            //    services.Configure<MvcOptions>(options => options.Filters.Add(new RequireHttpsAttribute()));
-
-
-            //Todo: ***Using DataAnnotations for validation until Swashbuckle supports FluentValidation***
-            //services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
-
-
-            //.AddJsonOptions(opts =>
-            //{
-            //    opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            //});
-
-
+            services.AddSpaStaticFiles(
+                configuration => configuration.RootPath = "ClientApp/dist");
 
             // Add our Config object so it can be injected
             services.Configure<MongoDbSettings>(Configuration.GetSection("MongoDbSettings"));
@@ -118,9 +67,7 @@ namespace AngularMongoBooks3
                     TokenUrl = "/connect/token"
                 });
             });
-
         }
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -128,8 +75,6 @@ namespace AngularMongoBooks3
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug(LogLevel.Warning);
 
-            //Utilities.ConfigureLogger(loggerFactory);
-            //EmailTemplates.Initialize(env);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -137,11 +82,6 @@ namespace AngularMongoBooks3
             else
             {
                 // Enforce https during production
-                //var rewriteOptions = new RewriteOptions()
-                //    .AddRedirectToHttps();
-                //app.UseRewriter(rewriteOptions);
-
-
                 app.UseExceptionHandler("/Home/Error");
             }
 
@@ -152,12 +92,11 @@ namespace AngularMongoBooks3
                 .AllowAnyHeader()
                 .AllowAnyMethod());
 
-
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = (context) =>
                 {
-                    var headers = context.Context.Response.GetTypedHeaders();
+                    ResponseHeaders headers = context.Context.Response.GetTypedHeaders();
 
                     headers.CacheControl = new CacheControlHeaderValue
                     {
@@ -169,38 +108,25 @@ namespace AngularMongoBooks3
             app.UseSpaStaticFiles();
             app.UseAuthentication();
 
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "AngularMongoBooks3 API V1");
             });
 
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
+            app.UseMvc(routes => routes.MapRoute(
+                name: "default",
+                template: "{controller}/{action=Index}/{id?}"));
 
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
-
-                //spa.Options.SourcePath = "ClientApp";
-
-                //if (env.IsDevelopment())
-                //{
-                //    spa.UseAngularCliServer(npmScript: "start");
-                //}
-
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4205");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4305");
                 }
             });
         }

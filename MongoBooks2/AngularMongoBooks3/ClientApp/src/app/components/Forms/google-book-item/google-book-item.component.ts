@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
+import { Clipboard } from '@angular/cdk/clipboard';
 
 import { GoogleBookInterface, GoogleBookDetailInterface, GoogleBookDetail } from './../../../Models/google-api.interface';
 
@@ -13,7 +14,10 @@ import { GoogleBookService } from './../../../Services/google-book.service';
 export class GoogleBookItemComponent implements OnInit
 {
     /** GoogleBookItem ctor */
-    constructor(private googleBookApiService: GoogleBookService)
+    constructor(
+        private clipboard: Clipboard,
+        private googleBookApiService: GoogleBookService
+    )
     {
 
     }
@@ -56,6 +60,13 @@ export class GoogleBookItemComponent implements OnInit
                 console.log("\n bookDetails \n as JSON \n\n\n" + JSON.stringify(this.bookDetails, null, 4));
             }
         });
+    }
+
+    copyToClipboard(imageLinkThumbnail: string) {
+
+        console.log(" copyToClipboard: " + imageLinkThumbnail);
+        this.clipboard.copy(imageLinkThumbnail);
+
     }
 
     public bookDetailsString: string;

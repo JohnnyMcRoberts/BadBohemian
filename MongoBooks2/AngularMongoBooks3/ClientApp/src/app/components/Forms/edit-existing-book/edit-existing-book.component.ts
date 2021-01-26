@@ -291,9 +291,9 @@ export class EditExistingBookComponent extends BaseEditBookComponent implements 
     this.displayOnResp(resp);
   }
 
-  public async onDeleteAlbum()
+  public async onDeleteBook()
   {
-    console.log("onDeleteAlbum");
+    console.log("onDeleteBook");
 
     this.selectedBookToDisplay = true;
     this.inputDateRead = this.selectedBookReadTime.value;
