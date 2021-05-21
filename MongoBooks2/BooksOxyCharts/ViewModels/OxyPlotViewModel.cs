@@ -32,7 +32,7 @@ namespace BooksOxyCharts.ViewModels
 
         public OxyPlotViewModel(Utilities.PlotType plotType)
         {
-            // Get the plot generator type etc and create theplot pair.
+            // Get the plot generator type etc and create the plot pair.
             string title = plotType.GetTitle();
             bool? canHover = plotType.GetCanHover();
             Type plotGeneratorType = plotType.GetGeneratorClass();
