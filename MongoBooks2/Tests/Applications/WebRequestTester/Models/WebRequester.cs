@@ -28,7 +28,7 @@ namespace WebRequestTester.Models
         {
             try
             {
-                var result = await HttpClient.GetStringAsync(url);
+                string result = await HttpClient.GetStringAsync(url);
                 string checkResult = result;
                 HttpClient.Dispose();
                 _httpClient = null;
