@@ -1,7 +1,7 @@
 {
-  "FromEmail": "*some email*@gmail.com",
-  "Password": "*Some Password*",
-  "ToEmail": "*somebody else*@*some workplace*",
-  "ToEmailDisplayName": "Some One Else",
+  "FromEmail": "McBobsBooks@gmail.com",
+  "Password": "Splash1001",
+  "ToEmail": "jmcroberts@actify.com",
+  "ToEmailDisplayName": "terry the thief",
   "FromEmailDisplayName": "McBob's Books"
 }

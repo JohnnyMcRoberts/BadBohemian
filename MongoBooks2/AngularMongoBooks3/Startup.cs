@@ -55,6 +55,7 @@ namespace AngularMongoBooks3
 
             // Add our Config object so it can be injected
             services.Configure<MongoDbSettings>(Configuration.GetSection("MongoDbSettings"));
+            services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
 
             services.AddSwaggerGen(c =>
             {

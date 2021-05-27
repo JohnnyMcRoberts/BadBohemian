@@ -8,6 +8,15 @@
     
     public class SmtpEmailer
     {
+        private static SmtpClient SetupSmtpClient(StmpConnection connection)
+        {
+            SmtpClient client = new SmtpClient(connection.Host, connection.Port)
+            {
+                Credentials = new NetworkCredential(connection.FromEmail, connection.Password),
+                EnableSsl = true
+            };
+            return client;
+        }
 
         public static void SendTestEmail(StmpConnection connection, string toEmail)
         {
@@ -32,16 +41,6 @@
             message.To.Add(new MailAddress(emailDefinition.ToEmail, emailDefinition.ToEmailDisplayName));
 
             client.Send(message);
-        }
-
-        private static SmtpClient SetupSmtpClient(StmpConnection connection)
-        {
-            SmtpClient client = new SmtpClient(connection.Host, connection.Port)
-            {
-                Credentials = new NetworkCredential(connection.FromEmail, connection.Password),
-                EnableSsl = true
-            };
-            return client;
         }
     }
 }

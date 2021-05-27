@@ -194,7 +194,7 @@ export class BooksDataService
         console.log('No issues, waiting until promise is resolved...');
     }
 
-    public readonly MaxErrorLength: number  = 255;
+    public readonly maxErrorLength: number  = 255;
     public exportCsvFile: any;
     public exportCsvFileBlob: Blob;
     public exportCsvTextFile: ExportText;
@@ -211,8 +211,8 @@ export class BooksDataService
 
                 this.exportCsvTextFile = new ExportText('text/csv', resultString);
 
-                if (resultString.length > this.MaxErrorLength)
-                    resultString = resultString.substring(0, this.MaxErrorLength) + "...";
+                if (resultString.length > this.maxErrorLength)
+                    resultString = resultString.substring(0, this.maxErrorLength) + "...";
 
                 this.log("fetched ExportCsvFileData " + resultString);
                 this.exportCsvFile = result;
