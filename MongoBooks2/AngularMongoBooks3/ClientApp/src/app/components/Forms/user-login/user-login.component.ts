@@ -1,7 +1,15 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 
-import { UserAddRequest, UserAddResponse, UserLoginRequest, UserLoginResponse, UserLogin } from './../../../Models/User';
+import {
+    UserAddRequest,
+    UserAddResponse,
+    UserVerifyRequest,
+    UserVerifyResponse,
+    UserLoginRequest,
+    UserLoginResponse,
+    UserLogin
+} from './../../../Models/User';
 
 import { BooksDataService } from './../../../Services/books-data.service';
 import { CurrentLoginService } from './../../../Services/current-login.service';
@@ -64,17 +72,21 @@ export class UserLoginComponent
 
     public clearFormGroupControl(formGroup: FormGroup, controlName: string): void
     {
+        formGroup.get(controlName).clearValidators();
         formGroup.get(controlName).reset();
         formGroup.get(controlName).markAsPristine();
-        formGroup.get(controlName).clearValidators();
+        formGroup.get(controlName).markAsUntouched();
+        formGroup.get(controlName).updateValueAndValidity();
     }
 
     //#endregion
 
     //#region New User Form data and processing
 
-    public addUserLoginSuccessString = '';
-    public addUserLoginErrorString = '';
+    public addUserLoginSuccessString: string = '';
+    public addUserLoginErrorString: string = '';
+    public addUserId: string = '';
+    public newUserLoginValidating: boolean = false;
 
     /* Shorthands for form controls (used from within template) */
     get newUserName() { return this.newUserFormGroup.get('newUserName'); }
@@ -89,9 +101,13 @@ export class UserLoginComponent
         this.addUserLoginErrorString = '';
         this.addUserLoginSuccessString = '';
         if (this.newUserFormGroup.hasError('passwordMismatch'))
+        {
             this.password2.setErrors([{ 'passwordMismatch': true }]);
+        }
         else
+        {
             this.password2.setErrors(null);
+        }
     }
 
     onNewUserNameInput()
@@ -117,6 +133,7 @@ export class UserLoginComponent
     public async onNewUserSubmitted()
     {
         console.log('onNewUserSubmitted -> newUserName : ', this.newUserFormGroup.value.newUserName);
+        this.newUserLoginValidating = false;
 
         const addUserReq: UserAddRequest =
             new UserAddRequest(this.newUserFormGroup.value.newUserName,
@@ -138,8 +155,10 @@ export class UserLoginComponent
 
             const addResponse: UserAddResponse = UserAddResponse.fromData(resp);
 
-            if (addResponse.errorCode === 0) {
-                this.addUserLoginSuccessString = "Added New User Id: " + addResponse.userId;
+            if (addResponse.errorCode === 0)
+            {
+                this.addUserId = addResponse.userId;
+                this.addUserLoginSuccessString = "Added New User Id: " + this.addUserId;
                 this.addUserLoginErrorString = '';
 
                 const userLogin: UserLogin =
@@ -159,11 +178,74 @@ export class UserLoginComponent
                 this.clearFormGroupControl(this.newUserFormGroup, 'newUserDescription');
                 this.clearFormGroupControl(this.newUserFormGroup, 'password');
                 this.clearFormGroupControl(this.newUserFormGroup, 'password2');
+
+                this.newUserFormGroup.markAsPristine();
+                this.newUserFormGroup.markAsUntouched();
+                this.newUserFormGroup.updateValueAndValidity();
+
+                console.log("should have a cleared form....");
+
+                this.newUserLoginValidating = true;
             }
             else
             {
                 this.addUserLoginSuccessString = '';
                 this.addUserLoginErrorString = addResponse.failReason;
+            }
+        }
+    }
+
+    //#endregion
+
+    //#region New User Confirmation
+
+    confirmationCodeForm: FormControl = new FormControl();
+
+    confirmationCodeValue: string = '';
+
+    verificationError: string = undefined;
+    verificationSuccess: boolean = false;
+
+    async onSubmitConfirmationCode()
+    {
+        this.confirmationCodeValue = this.confirmationCodeForm.value as string;
+        console.log("got a new confirmation code: " + this.confirmationCodeValue);
+
+        // make up the very request
+        const verifyUserReq: UserVerifyRequest =
+            new UserVerifyRequest(this.addUserId, this.confirmationCodeValue);
+
+        await this.userLoginService.getAsyncUserVerify(verifyUserReq);
+
+        const resp = this.userLoginService.addUserVerifyResponse;
+
+        if (resp == undefined)
+        {
+            console.log("Error in response");
+        }
+        else
+        {
+            console.log("Response OK");
+
+            const verifyResponse: UserVerifyResponse = UserVerifyResponse.fromData(resp);
+
+            if (verifyResponse.errorCode === 0)
+            {
+                // set as the current log in 
+                const userLogin: UserLogin =
+                    new UserLogin(
+                        verifyResponse.name,
+                        verifyResponse.description,
+                        verifyResponse.email,
+                        verifyResponse.userId);
+
+                this.currentLoginService.login(userLogin);
+
+                this.verificationSuccess = true;
+            }
+            else
+            {
+                this.verificationError = verifyResponse.failReason;
             }
         }
     }

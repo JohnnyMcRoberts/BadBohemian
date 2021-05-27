@@ -1,7 +1,8 @@
 ﻿namespace AngularMongoBooks3.Controllers
 {
+    using System;
     using System.Linq;
-    using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
 
@@ -83,6 +84,48 @@
             SmtpEmailer.SendHtmlEmail(connection, emailDefinition);
         }
 
+        private bool CheckForUserVerificationErrors(
+            UserVerifyRequest verifyRequest,
+            User userToVerify,
+            UserVerifyResponse response,
+            out IActionResult actionResult)
+        {
+            // default the result value.
+            actionResult = null;
+
+            if (userToVerify.Verified)
+            {
+                response.ErrorCode = (int)UserResponseCode.AlreadyVerifiedUser;
+                response.FailReason = "Cannot Verify as User already verified";
+                {
+                    actionResult = Ok(response);
+                    return true;
+                }
+            }
+
+            if (userToVerify.VerificationByTime > DateTime.Now)
+            {
+                response.ErrorCode = (int)UserResponseCode.VerificationCodeTimedOut;
+                response.FailReason = "Cannot Verify as code has timed out";
+                {
+                    actionResult = Ok(response);
+                    return true;
+                }
+            }
+
+            if (userToVerify.VerificationCode.ToString() != verifyRequest.ConfirmationCode.Trim())
+            {
+                response.ErrorCode = (int)UserResponseCode.IncorrectConfirmationCode;
+                response.FailReason = "Cannot Verify as code is incorrect";
+                {
+                    actionResult = Ok(response);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
         #endregion
 
         #region HTTP Handlers
@@ -90,7 +133,7 @@
         /// <summary>
         /// Adds a new user login.
         /// </summary>
-        /// <param name="addRequest">The check new user login to try to add.</param>
+        /// <param name="addRequest">The new user login to try to add.</param>
         /// <returns>The action result.</returns>
         [HttpPost("AddNewUser")]
         public IActionResult AddNewUser([FromBody] UserAddRequest addRequest)
@@ -131,6 +174,51 @@
 
             // return the unverified e-mail to the user display
             response.UserId = newUser.Id.ToString();
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Verifies a new user login.
+        /// </summary>
+        /// <param name="verifyRequest">The new user login to try to verify.</param>
+        /// <returns>The action result.</returns>
+        [HttpPost("VerifyNewUser")]
+        public IActionResult VerifyNewUser([FromBody] UserVerifyRequest verifyRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            UserVerifyResponse response = new UserVerifyResponse
+            {
+                ErrorCode = (int)UserResponseCode.Success,
+                FailReason = "",
+                UserId = ""
+            };
+
+            User userToVerify = 
+                _userDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == verifyRequest.UserId);
+
+            if (userToVerify == null)
+            {
+                response.ErrorCode = (int)UserResponseCode.UnknownItem;
+                response.FailReason = "Cannot Verify this unknown user";
+                return Ok(response);
+            }
+
+            IActionResult actionResult;
+            if (CheckForUserVerificationErrors(verifyRequest, userToVerify, response, out actionResult)) 
+                return actionResult;
+
+            // If here a valid user so set the flag and update.
+            userToVerify.Verified = true;
+            _userDatabase.UpdateDatabaseItem(userToVerify);
+
+            // Send the successful fully populated response.
+            response.Name = userToVerify.Name;
+            response.Description = userToVerify.Description;
+            response.Email = userToVerify.Email;
             return Ok(response);
         }
 

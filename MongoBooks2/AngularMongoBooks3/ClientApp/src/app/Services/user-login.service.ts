@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { UserAddRequest, UserAddResponse, UserLoginRequest, UserLoginResponse } from './../Models/User';
+import
+{
+     UserAddRequest,
+     UserAddResponse,
+     UserVerifyRequest,
+     UserVerifyResponse,
+     UserLoginRequest,
+     UserLoginResponse
+
+} from './../Models/User';
 
 const httpOptions =
 {
@@ -13,12 +22,13 @@ export class UserLoginService
 {
     constructor(private http: HttpClient)
     {
-        this.usersUrl = 'api/Users/';
-        this.addUserLoginUrl = this.usersUrl + 'AddNewUser/';
+        this.baseUsersUrl = 'api/Users/';
+        this.addUserLoginUrl = this.baseUsersUrl + 'AddNewUser/';
+        this.addUserVerifyUrl = this.baseUsersUrl + 'VerifyNewUser/';
         this.requestUserLoginUrl = 'api/UserLogin/';
     }
 
-    public usersUrl: string;
+    public baseUsersUrl: string;
     public addUserLoginUrl: string;
     public addUserLoginResponse: any;
 
@@ -32,6 +42,19 @@ export class UserLoginService
         console.log('No issues, waiting until promise is resolved...');
     }
 
+    public addUserVerifyUrl: string;
+    public addUserVerifyResponse: any;
+
+    async getAsyncUserVerify(request: UserVerifyRequest)
+    {
+        this.addUserVerifyResponse =
+            await this.http.post<UserVerifyResponse>(
+                this.addUserVerifyUrl, request, httpOptions
+            ).toPromise();
+
+        console.log('No issues, waiting until promise is resolved...');
+    }
+    
     public requestUserLoginUrl: string;
     public userLoginResponse: any;
 

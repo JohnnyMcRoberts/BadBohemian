@@ -204,6 +204,9 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
         this.tagsSelectionChange(this.selectedBook.tags);
         this.displayTags = "";
         this.addNewBookForm.reset();
+        this.addNewBookForm.markAsPristine();
+        this.addNewBookForm.markAsUntouched();
+        this.addNewBookForm.updateValueAndValidity();
     }
 
     public selectedBook: Book;
