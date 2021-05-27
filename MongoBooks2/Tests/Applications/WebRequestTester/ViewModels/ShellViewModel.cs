@@ -77,27 +77,64 @@
 
 
         /// <summary>
-        /// Sends the http get.
+        /// Sends the basic test e-mail.
         /// </summary>
-        public async void SendMail()
+        public async void SendTestMail()
         {
-            //SmtpEmailer.SendNicerEmail();
-            //.SendTestEmail();
-            //SendBasicEmail.SendTestEmail();
-
-            StmpConnection connection = 
+            StmpConnection connection =
                 new StmpConnection(_emailParameters.FromEmail, _emailParameters.Password);
 
             SmtpEmailer.SendTestEmail(connection, _emailParameters.ToEmail);
+        }
+
+
+        /// <summary>
+        /// Sends the dummy html e-mail.
+        /// </summary>
+        public async void SendHtmlMail()
+        {
+            StmpConnection connection =
+                new StmpConnection(_emailParameters.FromEmail, _emailParameters.Password);
 
             HtmlEmailDefinition emailDefinition = new HtmlEmailDefinition()
             {
                 FromEmailDisplayName = _emailParameters.FromEmailDisplayName,
-                ToEmail = _emailParameters.ToEmail, 
+                ToEmail = _emailParameters.ToEmail,
                 ToEmailDisplayName = _emailParameters.ToEmailDisplayName,
                 Subject = "Your ace from outer space",
                 BodyHtml = "Sometimes it fine <em>It's great to use HTML in mail!!</em> and <b>SUPER!!!!</b> is how it is."
             };
+
+            SmtpEmailer.SendHtmlEmail(connection, emailDefinition);
+        }
+
+        /// <summary>
+        /// Sends the activation e-mail.
+        /// </summary>
+        public async void SendActivateMail()
+        {
+            StmpConnection connection =
+                new StmpConnection(_emailParameters.FromEmail, _emailParameters.Password);
+
+            SmtpEmailer.SendTestEmail(connection, _emailParameters.ToEmail);
+
+            string body =
+                @"<body>
+                <p>Please enter the following code to activate the new user login:</p>
+                <h4>123987</h4>
+                <p>This activation code will expire at: <b>11:30 AM</b><p>
+                <p>Thanks and enjoy the trip!<p>
+                </body>";
+
+            HtmlEmailDefinition emailDefinition = 
+                new HtmlEmailDefinition
+                {
+                    FromEmailDisplayName = _emailParameters.FromEmailDisplayName,
+                    ToEmail = _emailParameters.ToEmail, 
+                    ToEmailDisplayName = _emailParameters.ToEmailDisplayName,
+                    Subject = "McBob's Books Authentication",
+                    BodyHtml = body
+                };
 
             SmtpEmailer.SendHtmlEmail(connection,emailDefinition);
         }

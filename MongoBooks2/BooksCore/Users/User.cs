@@ -63,6 +63,25 @@ namespace BooksCore.Users
         public Uri DisplayImage => 
             string.IsNullOrEmpty(ImageUri) ? new Uri("pack://application:,,,/Images/camera_image_cancel-32.png") : new Uri(ImageUri);
 
+
+        /// <summary>
+        /// Gets or sets if the user has been verified.
+        /// </summary>
+        [BsonElement("verified")]
+        public bool Verified { get; set; }
+
+        /// <summary>
+        /// Gets or sets the time the verification must be sent by.
+        /// </summary>
+        [BsonElement("verification_by_time")]
+        public DateTime VerificationByTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the verification code that must be returned.
+        /// </summary>
+        [BsonElement("verification_code")]
+        public int VerificationCode { get; set; }
+
         #region Public methods
 
         public bool VerifyPassword(string password)
@@ -81,9 +100,11 @@ namespace BooksCore.Users
 
             // Check a changed password
             byte[] salt = null;
-            var passwordHash = SimpleHash.ComputeHash(password, HashAlgorithm, ref salt);
+            string passwordHash = SimpleHash.ComputeHash(password, HashAlgorithm, ref salt);
             if (PasswordHash == passwordHash)
+            {
                 return false;
+            }
 
             // Update & say OK
             PasswordHash = passwordHash;
@@ -101,6 +122,11 @@ namespace BooksCore.Users
             Email = email;
             DateAdded = DateTime.Now;
             ImageUri = string.Empty;
+            VerificationByTime = DateAdded.AddMinutes(15);
+
+            Random rand = new Random((int)DateAdded.Ticks);
+            VerificationCode = rand.Next(100000, 999999);
+            Verified = false;
 
             byte[] salt = null;
             PasswordHash = SimpleHash.ComputeHash(password, HashAlgorithm, ref salt);

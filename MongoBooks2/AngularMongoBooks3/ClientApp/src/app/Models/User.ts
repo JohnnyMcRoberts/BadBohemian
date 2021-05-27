@@ -55,6 +55,62 @@ export class UserAddResponse implements IUserAddResponse
     }
 };
 
+export interface IUserVerifyRequest
+{
+    userId: string;
+    confirmationCode: string;
+};
+
+export class UserVerifyRequest implements IUserVerifyRequest
+{
+    static fromData(data: IUserVerifyRequest)
+    {
+        return new this(
+            data.userId,
+            data.confirmationCode);
+    }
+
+    constructor(
+        public userId: string = "",
+        public confirmationCode: string = "")
+    {
+    }
+};
+
+export interface IUserVerifyResponse
+{
+    userId: string;
+    errorCode: number;
+    failReason: string;
+    name: string;
+    description: string;
+    email: string;
+};
+
+export class UserVerifyResponse implements IUserVerifyResponse
+{
+    static fromData(data: IUserVerifyResponse)
+    {
+        return new this(
+            data.userId,
+            data.errorCode,
+            data.failReason,
+            data.name,
+            data.description,
+            data.email);
+    }
+
+    constructor(
+        public userId: string = "",
+        public errorCode: number = -1,
+        public failReason: string = "",
+        public name: string = "",
+        public description: string = "",
+        public email: string = "")
+    {
+    }
+};
+
 export interface IUserLogin
 {
     name: string;
@@ -102,7 +158,6 @@ export class UserLoginRequest implements IUserLoginRequest
         public password: string = "") {
     }
 };
-
 
 export interface IUserLoginResponse
 {

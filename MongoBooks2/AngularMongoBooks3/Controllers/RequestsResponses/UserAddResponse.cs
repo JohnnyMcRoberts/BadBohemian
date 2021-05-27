@@ -7,8 +7,11 @@
         DuplicateEmail,
         UnknownUser,
         IncorrectPassword,
-        UnknownItem
-    };
+        UnknownItem,
+        AlreadyVerifiedUser,
+        VerificationCodeTimedOut,
+        IncorrectConfirmationCode
+    }
 
     public class UserAddResponse
     {
