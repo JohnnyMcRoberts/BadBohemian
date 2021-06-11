@@ -9,6 +9,7 @@
 
 namespace BooksDatabase.Implementations
 {
+    using System;
     using System.Collections.ObjectModel;
     using BooksCore.Geography;
     using MongoDB.Bson;
@@ -98,7 +99,8 @@ namespace BooksDatabase.Implementations
         /// Initializes a new instance of the <see cref="NationDatabase"/> class.
         /// </summary>
         /// <param name="dbConnection">The connection string for the database.</param>
-        public NationDatabase(string dbConnection)
+        /// <param name="connectAtStartup">Whether or not to connect to the database at startup.</param>
+        public NationDatabase(string dbConnection, bool connectAtStartup = true)
         {
             DatabaseConnectionString = dbConnection;
 
@@ -110,6 +112,11 @@ namespace BooksDatabase.Implementations
 
             DatabaseName = "books_read";
             CollectionName = "nations";
+
+            if (connectAtStartup)
+            {
+                ConnectToDatabase();
+            }
         }
     }
 }

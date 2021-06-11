@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IDatabaseConnection.cs" company="N/A">
+// <copyright file="IDatabaseCollection.cs" company="N/A">
 //   2017-2086
 // </copyright>
 // <summary>
-//   The nation MongoDb entity.
+//   The database interface for a generic database entity.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksDatabase.Interfaces
@@ -22,16 +22,6 @@ namespace BooksDatabase.Interfaces
         /// Gets the connection string for the database.
         /// </summary>
         string DatabaseConnectionString { get; }
-
-        /// <summary>
-        /// Gets the name of the database.
-        /// </summary>
-        string DatabaseName { get; }
-
-        /// <summary>
-        /// Gets the name of the collection.
-        /// </summary>
-        string CollectionName { get; }
 
         /// <summary>
         /// Gets the database collection filter.
@@ -54,11 +44,6 @@ namespace BooksDatabase.Interfaces
         /// Gets the items database.
         /// </summary>
         IMongoDatabase ItemsDatabase { get; }
-
-        /// <summary>
-        /// Connects to the database and sets up the loaded items from the collection or vice versa.
-        /// </summary>
-        void ConnectToDatabase();
 
         /// <summary>
         /// Adds a new item to the database.

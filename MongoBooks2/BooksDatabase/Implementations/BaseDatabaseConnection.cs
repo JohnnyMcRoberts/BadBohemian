@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace BooksDatabase.Implementations
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -19,7 +20,7 @@ namespace BooksDatabase.Implementations
     /// The MongoDb abstract base connection class.
     /// </summary>
     /// <typeparam name="T">Type of the data entity</typeparam>
-    public abstract class BaseDatabaseConnection<T> : IDatabaseConnection<T> where T : BaseMongoEntity
+    public abstract class BaseDatabaseConnection<T> : IDatabaseCollection, IDatabaseConnection<T> where T : BaseMongoEntity
     {
         #region Abstract Properties
 
@@ -50,8 +51,7 @@ namespace BooksDatabase.Implementations
 
         #endregion
 
-        #region Properties
-
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the connection to the database.
@@ -68,6 +68,16 @@ namespace BooksDatabase.Implementations
         /// </summary>
         public bool ReadFromDatabase { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the function used to get the Mongo client.
+        /// </summary>
+        public Func<string, IMongoClient> MongoClientFunc { get; set; }
+
+        /// <summary>
+        /// Gets the number of loaded items read from the collection.
+        /// </summary>
+        public int LoadedItemsCount => LoadedItems?.Count ?? 0;
+
         #endregion
 
         #region Utility Functions
@@ -81,16 +91,16 @@ namespace BooksDatabase.Implementations
             List<T> missingItems = new List<T>();
             List<T> existingItems;
 
-            using (var cursor = itemsRead.FindSync(Filter))
+            using (IAsyncCursor<T> cursor = itemsRead.FindSync(Filter))
             {
                 existingItems = cursor.ToList();
             }
 
             // Get the missing items.
-            foreach (var loaded in LoadedItems)
+            foreach (T loaded in LoadedItems)
             {
                 bool alreadyThere = false;
-                foreach (var existing in existingItems)
+                foreach (T existing in existingItems)
                 {
                     if (ItemsEquivalent(loaded, existing))
                     {
@@ -100,7 +110,9 @@ namespace BooksDatabase.Implementations
                 }
 
                 if (!alreadyThere)
+                {
                     missingItems.Add(loaded);
+                }
             }
 
             // Then insert them to the list.
@@ -116,10 +128,10 @@ namespace BooksDatabase.Implementations
         {
             LoadedItems.Clear();
 
-            using (var cursor = itemsRead.FindSync(Filter))
+            using (IAsyncCursor<T> cursor = itemsRead.FindSync(Filter))
             {
-                var itemList = cursor.ToList();
-                foreach (var item in itemList)
+                List<T> itemList = cursor.ToList();
+                foreach (T item in itemList)
                 {
                     LoadedItems.Add(item);
                 }
@@ -138,25 +150,32 @@ namespace BooksDatabase.Implementations
             using (IAsyncCursor<T> cursor = itemsInDatabase.FindSync(Filter))
             {
                 List<T> itemList = cursor.ToList();
-                foreach (var item in itemList)
+                foreach (T item in itemList)
                 {
                     dbItems.Add(item);
                 }
             }
 
-            foreach (var currentItem in LoadedItems)
+            foreach (T currentItem in LoadedItems)
             {
                 bool itemInDb = false;
-                foreach (var dbItem in dbItems)
+                foreach (T dbItem in dbItems)
                 {
                     if (ItemsEquivalent(dbItem, currentItem))
+                    {
                         itemInDb = true;
+                    }
+
                     if (itemInDb)
+                    {
                         break;
+                    }
                 }
 
                 if (!itemInDb)
+                {
                     missingItems.Add(currentItem);
+                }
             }
 
             if (missingItems.Any())
@@ -177,31 +196,54 @@ namespace BooksDatabase.Implementations
             return itemsInDatabase.Count(Filter);
         }
 
+        /// <summary>
+        /// Gets the loaded items matching the database after an item has been removed.
+        /// </summary>
         private void UpdateLoadedAfterRemove()
         {
-            var collection = Client.GetDatabase(DatabaseName).GetCollection<T>(CollectionName);
+            IMongoCollection<T> collection =
+                Client.GetDatabase(DatabaseName).GetCollection<T>(CollectionName);
 
             List<T> reloadedItems = new List<T>();
-            using (var cursor = collection.FindSync(Filter))
+            using (IAsyncCursor<T> cursor = collection.FindSync(Filter))
             {
-                var countryList = cursor.ToList();
-                foreach (var country in countryList)
-                {
-                    reloadedItems.Add(country);
-                }
+                List<T> itemList = cursor.ToList();
+                reloadedItems.AddRange(itemList);
             }
 
             if (reloadedItems.Count != LoadedItems.Count)
             {
                 LoadedItems.Clear();
-                foreach (var item in reloadedItems)
+                foreach (T item in reloadedItems)
+                {
                     LoadedItems.Add(item);
+                }
             }
+        }
+
+        /// <summary>
+        /// Gets a database client using the connection string.
+        /// </summary>
+        /// <param name="databaseName">The name of the database to connect to.</param>
+        /// <returns>The database client for the connection string.</returns>
+        private MongoClient GetMongoClientFromConnectionString(string databaseName)
+        {
+            return new MongoClient(DatabaseConnectionString);
         }
 
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Gets the client connection to the appropriate database.
+        /// </summary>
+        /// <returns>The client connection to the database.</returns>
+        public virtual IMongoClient GetMongoClient()
+        {
+            IMongoClient client = MongoClientFunc.Invoke(this.DatabaseName);
+            return client;
+        }
 
         /// <summary>
         /// Gets if two items are equivalent.
@@ -220,7 +262,7 @@ namespace BooksDatabase.Implementations
         /// <param name="newItem">The item to add.</param>
         public void AddNewItemToDatabase(T newItem)
         {
-            Client = new MongoClient(DatabaseConnectionString);
+            Client = GetMongoClient(); 
 
             ItemsDatabase = Client.GetDatabase(DatabaseName);
 
@@ -228,7 +270,7 @@ namespace BooksDatabase.Implementations
 
             itemsRead.InsertOne(newItem);
         }
-
+        
         /// <summary>
         /// Removes an item from the database.
         /// </summary>
@@ -236,7 +278,7 @@ namespace BooksDatabase.Implementations
         public bool RemoveItemFromDatabase(T deleteItem)
         {
             bool removed = false;
-            Client = new MongoClient(DatabaseConnectionString);
+            Client = GetMongoClient();
 
             ItemsDatabase = Client.GetDatabase(DatabaseName);
 
@@ -262,17 +304,29 @@ namespace BooksDatabase.Implementations
         /// <param name="existingItem">The item to update.</param>
         public void UpdateDatabaseItem(T existingItem)
         {
-            Client = new MongoClient(DatabaseConnectionString);
+            Client = GetMongoClient();
 
             ItemsDatabase = Client.GetDatabase(DatabaseName);
 
             IMongoCollection<T> itemsRead = ItemsDatabase.GetCollection<T>(CollectionName);
 
-            var filterOnId = Builders<T>.Filter.Eq(s => s.Id, existingItem.Id);
+            FilterDefinition<T> filterOnId = Builders<T>.Filter.Eq(s => s.Id, existingItem.Id);
 
             long totalCount = itemsRead.Count(filterOnId);
 
-            var result = itemsRead.ReplaceOne(filterOnId, existingItem);
+            ReplaceOneResult result = itemsRead.ReplaceOne(filterOnId, existingItem);
+        }
+
+        /// <summary>
+        /// Resets the list of items loaded from the collection data.
+        /// </summary>
+        public void ResetLoadedItems()
+        {
+            ReadFromDatabase = false;
+            LoadedItems = new ObservableCollection<T>();
+            Client = null;
+            ItemsDatabase = null;
+            DatabaseConnectionString = string.Empty;
         }
 
         /// <summary>
@@ -281,7 +335,7 @@ namespace BooksDatabase.Implementations
         public void ConnectToDatabase()
         {
             ReadFromDatabase = false;
-            Client = new MongoClient(DatabaseConnectionString);
+            Client = GetMongoClient();
             ItemsDatabase = Client.GetDatabase(DatabaseName);
             IMongoCollection<T> itemsRead = ItemsDatabase.GetCollection<T>(CollectionName);
 
@@ -308,5 +362,13 @@ namespace BooksDatabase.Implementations
         }
 
         #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseDatabaseConnection"/> class.
+        /// </summary>
+        protected BaseDatabaseConnection()
+        {
+            MongoClientFunc = GetMongoClientFromConnectionString;
+        }
     }
 }
