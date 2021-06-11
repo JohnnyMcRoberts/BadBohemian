@@ -1,7 +1,7 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { FormControl } from '@angular/forms';
-import { ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef } from '@angular/core';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { MatDialog } from '@angular/material/dialog';
 
 import { Observable } from 'rxjs';
@@ -40,6 +40,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
 {
     /** AddNewBook ctor */
     constructor(
+        private router: Router,
         private dialog: MatDialog,
         private formBuilder: FormBuilder,
         private booksDataService: BooksDataService,
@@ -134,6 +135,16 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
         }
     }
 
+    private hardRefresh(): Promise<void> {
+
+        // to refresh the page fist navigate to the application root
+        return this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+
+            // then navigate back to the current page item
+            this.router.navigate(['/main-books-forms']);
+        });
+    }
+
     //#region Main Form
 
     public addNewBookForm: FormGroup;
@@ -178,7 +189,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
         }
     }
 
-    public onNewBookReset()
+    public async onNewBookReset()
     {
         this.newBook = new Book();
         this.selectedBookToDisplay = false;
@@ -207,6 +218,8 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
         this.addNewBookForm.markAsPristine();
         this.addNewBookForm.markAsUntouched();
         this.addNewBookForm.updateValueAndValidity();
+
+        await this.hardRefresh();
     }
 
     public selectedBook: Book;
