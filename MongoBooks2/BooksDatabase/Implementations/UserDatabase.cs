@@ -43,13 +43,14 @@ namespace BooksDatabase.Implementations
         /// <summary>
         /// Gets or sets the set of items from the database.
         /// </summary>
-        public sealed override ObservableCollection<User> LoadedItems { get; set; }        
+        public sealed override ObservableCollection<User> LoadedItems { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserDatabase"/> class.
         /// </summary>
         /// <param name="dbConnection">The connection string for the database.</param>
-        public UserDatabase(string dbConnection)
+        /// <param name="connectAtStartup">Whether or not to connect to the database at startup.</param>
+        public UserDatabase(string dbConnection, bool connectAtStartup = true)
         {
             DatabaseConnectionString = dbConnection;
 
@@ -61,7 +62,11 @@ namespace BooksDatabase.Implementations
 
             DatabaseName = "books_read";
             CollectionName = "users";
-            ConnectToDatabase();
+
+            if (connectAtStartup)
+            {
+                ConnectToDatabase();
+            }
         }
     }
 }

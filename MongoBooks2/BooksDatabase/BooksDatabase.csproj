@@ -41,7 +41,6 @@
     </Reference>
     <Reference Include="MongoDB.Driver, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MongoDB.Driver.2.5.0\lib\net45\MongoDB.Driver.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="MongoDB.Driver.Core, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MongoDB.Driver.Core.2.5.0\lib\net45\MongoDB.Driver.Core.dll</HintPath>
@@ -67,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Implementations\BaseDatabaseConnection.cs" />
     <Compile Include="Implementations\BooksReadDatabase.cs" />
+    <Compile Include="Interfaces\IDatabaseCollection.cs" />
     <Compile Include="Interfaces\IDatabaseConnection.cs" />
     <Compile Include="Implementations\NationDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

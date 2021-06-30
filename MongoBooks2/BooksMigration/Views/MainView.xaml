@@ -1,0 +1,134 @@
+﻿<mah:MetroWindow x:Class="BooksMigration.Views.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
+             xmlns:local="clr-namespace:BooksMigration.Views"
+             xmlns:cm="http://caliburnmicro.com"
+
+             Title="Mongo DB Copy" 
+             Width="800"
+             Height="450"
+             WindowStartupLocation="CenterScreen"
+             GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+             ResizeMode="CanResizeWithGrip"
+             mc:Ignorable="d">
+
+    <mah:MetroWindow.LeftWindowCommands>
+        <mah:WindowCommands>
+            <Button ToolTip="Open up the GitHub site" 
+                    cm:Message.Attach="[Event Click] = [Action SayHello()]">
+                <iconPacks:PackIconModern Width="22"
+                                          Height="22"
+                                          Kind="SocialGithubOctocat" />
+            </Button>
+            <Button ToolTip="Do something else" 
+                    cm:Message.Attach="[Event Click] = [Action SayHello()]">
+                <iconPacks:PackIconMaterial Kind="ContentSaveSettings"
+                                            Width="22"
+                                            Height="22"/>
+            </Button>
+
+
+
+        </mah:WindowCommands>
+    </mah:MetroWindow.LeftWindowCommands>
+
+    <Grid>
+        <TabControl  Style="{DynamicResource MahApps.Styles.TabControl.AnimatedSingleRow}">
+            <TabItem Header="Local Data">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="15"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="15"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+
+                    <Label Grid.Row="1" Grid.Column="1">Local Connection String</Label>
+                    <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding LocalConnectionString}" Margin="2"
+                             IsReadOnly="True"></TextBox>
+
+                    <DataGrid Grid.Row="2"  Grid.Column="1" Grid.ColumnSpan="3"
+                              ItemsSource="{Binding Path=LocalDatabaseCollections, Mode=OneWay}"
+                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+                    </DataGrid>
+
+                    <Button Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" 
+                            ToolTip="Reload Local Collections" 
+                            cm:Message.Attach="[Event Click] = [Action SetupLocalCollections()]">
+                        <Span>
+                            <iconPacks:PackIconMaterial Kind="Refresh" Width="16"
+                                                        Height="16"/>
+                            Reload Local Collections
+                        </Span>
+                    </Button>
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="Remote Data">
+
+
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="15"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="15"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+
+                    <Label Grid.Row="1" Grid.Column="1">Remote Host</Label>
+                    <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding RemoteHost}" Margin="2"
+                             IsReadOnly="True"></TextBox>
+
+                    <DataGrid Grid.Row="2"  Grid.Column="1" Grid.ColumnSpan="3"
+                              ItemsSource="{Binding Path=RemoteDatabaseCollections, Mode=OneWay}"
+                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto">
+
+                    </DataGrid>
+
+                    <Button Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" 
+                            ToolTip="Reload Local Collections" 
+                            cm:Message.Attach="[Event Click] = [Action SetupRemoteCollections()]">
+                        <Span>
+                            <iconPacks:PackIconMaterial Kind="Refresh" Width="16"
+                                                        Height="16"/>
+                            Reload Remote Collections
+                        </Span>
+                    </Button>
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="Settings">
+
+                <local:SettingsView DataContext="{Binding Path=SettingsVm}"></local:SettingsView>
+
+            </TabItem>
+        </TabControl>
+    </Grid>
+
+</mah:MetroWindow>
