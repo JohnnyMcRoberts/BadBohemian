@@ -61,6 +61,7 @@ import { GoogleBookService } from './Services/google-book.service';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { AngularMaterialModule } from './angular-material';
@@ -73,11 +74,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AgmCoreModule } from '@agm/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyModule } from 'angular-plotly.js';
-
-PlotlyModule.plotlyjs = PlotlyJS;
-
+import { PlotlyViaCDNModule } from 'angular-plotly.js';
+PlotlyViaCDNModule.plotlyVersion = 'latest';
+PlotlyViaCDNModule.plotlyBundle = null;
 
 import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
 
@@ -146,7 +145,8 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
     OwlNativeDateTimeModule,
 
     AgmCoreModule,
-    PlotlyModule,
+    CommonModule,
+    PlotlyViaCDNModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule

@@ -51,10 +51,12 @@
     <Compile Include="Exporters\NationsToXmlFileExport.cs" />
     <Compile Include="Exporters\SelectedMonthToHtmlFileExporter.cs" />
     <Compile Include="Importers\BooksFromCsvFileImport.cs" />
+    <Compile Include="Importers\CountryCodeIso3166Import.cs" />
     <Compile Include="Importers\NationsFromXmlFileImport.cs" />
     <Compile Include="Interfaces\IBooksFileExport.cs" />
     <Compile Include="Interfaces\IBooksFileImport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\AllCountryCodes.cs" />
     <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="Utilities\ImportExportTypeAttribute.cs" />
     <Compile Include="Utilities\NationsFile.cs" />
@@ -70,6 +72,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="AllCountryCodes.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

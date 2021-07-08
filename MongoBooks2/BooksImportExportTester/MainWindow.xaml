@@ -156,6 +156,21 @@
                 </Grid>
             </TabItem>
 
+            <TabItem Header="Country Codes">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Width="150" Content="Get Country Codes" Height="22" Command="{Binding Path=GetCountryCodesCommand}"></Button>
+
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="True"
+                              ItemsSource="{Binding Path=CountryCodes, Mode=OneWay}"
+                              MinHeight="190" IsReadOnly="True" HorizontalScrollBarVisibility="Auto"/>
+
+                </Grid>
+            </TabItem>
+
         </TabControl>
     </Grid>
 </Window>

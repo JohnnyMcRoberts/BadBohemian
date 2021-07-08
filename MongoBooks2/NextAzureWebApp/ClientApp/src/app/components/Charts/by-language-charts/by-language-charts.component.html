@@ -1,0 +1,98 @@
+<mat-tab-group dynamicHeight #tabGroup>
+
+    <mat-tab label="Percentage of Books Read by Language">
+
+        <plotly-plot [data]="percentageOfBooksReadByLanguageData"
+                     [layout]="percentageOfBooksReadByLanguageLayout"
+                     [config]="plotlyConfig">
+
+        </plotly-plot>
+
+    </mat-tab>
+
+    <mat-tab label="Total Books Read by Language">
+
+        <plotly-plot [data]="totalBooksReadByLanguageData"
+                     [layout]="totalBooksReadByLanguageLayout"
+                     [config]="plotlyConfig">
+
+        </plotly-plot>
+
+    </mat-tab>
+
+    <mat-tab label="Percentage of Pages Read by Language">
+
+        <plotly-plot [data]="percentageOfPagesReadByLanguageData"
+                     [layout]="percentageOfPagesReadByLanguageLayout"
+                     [config]="plotlyConfig">
+
+        </plotly-plot>
+
+    </mat-tab>
+
+    <mat-tab label="Total Pages Read by Language">
+
+        <plotly-plot [data]="totalPagesReadByLanguageData"
+                     [layout]="totalPagesReadByLanguageLayout"
+                     [config]="plotlyConfig">
+
+        </plotly-plot>
+
+    </mat-tab>
+
+    <mat-tab label="Current Books and Pages Read by Language">
+
+        <table width="100%" style="margin: 0;">
+            <tr>
+                <td><b>Books Read by Language</b></td>
+                <td><b>Pages Read by Language</b></td>
+            </tr>
+            <tr>
+                <td>
+                    <plotly-plot [data]="booksReadByLanguageData"
+                                 [layout]="currentPieChartByLanguageLayout"
+                                 [config]="plotlyConfig">
+
+                    </plotly-plot>
+                </td>
+                <td>
+                    <plotly-plot [data]="pagesReadByLanguageData"
+                                 [layout]="currentPieChartByLanguageLayout"
+                                 [config]="plotlyConfig">
+
+                    </plotly-plot>
+                </td>
+            </tr>
+        </table>
+
+    </mat-tab>
+
+    <mat-tab label="Current Books by Language and Country">
+
+        <table width="100%" style="margin: 0;">
+            <tr>
+                <td width="100%"></td>
+                <td>
+
+                    <button mat-raised-button
+                            color="primary"
+                            (click)="onResetSunburstChart('Books by Language and Country')"
+                            i18n>
+                        Reset Chart
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <plotly-plot [data]="booksReadByLanguageAndCountryData"
+                                 [layout]="currentStarburstChartBooksByLanguageAndCountryLayout"
+                                 [config]="plotlyConfig">
+
+                    </plotly-plot>
+                </td>
+            </tr>
+        </table>
+
+    </mat-tab>
+
+</mat-tab-group>

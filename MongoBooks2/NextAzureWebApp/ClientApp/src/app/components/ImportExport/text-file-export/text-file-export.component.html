@@ -1,0 +1,58 @@
+<div>
+  
+  <div class="logged-in-div">
+        
+    <table>
+      <tr>
+        <td>
+          Export Type:
+        </td>
+        <td>
+
+          <mat-radio-group aria-labelledby="example-radio-group-label"
+                           class="example-radio-group"
+                           [(ngModel)]="selectedExportType">
+            <mat-radio-button class="example-radio-button" *ngFor="let exportType of exportTypes" [value]="exportType">
+              {{exportType}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </td>
+
+        <td>
+          <div>Selection: <b>{{selectedExportType}}</b></div>
+        </td>
+
+        <td>
+
+          <button mat-raised-button
+                  color="primary"
+                  [disabled]="!optionSelected"
+                  (click)="onDisplayExportData()">
+            Display
+          </button>
+
+        </td>
+        <td>
+
+          <button mat-raised-button
+                  color="primary"
+                  [disabled]="!optionSelected"
+                  (click)="onExportDataToFile()">
+            Export Data To File
+          </button>
+
+        </td>
+      </tr>
+    </table>
+
+  </div>
+      
+  <div *ngIf="exportDataToDisplay" class="logged-in-div">
+        
+    <pre>
+      <code>{{displayText}}</code>
+    </pre>
+
+  </div>
+
+</div>
