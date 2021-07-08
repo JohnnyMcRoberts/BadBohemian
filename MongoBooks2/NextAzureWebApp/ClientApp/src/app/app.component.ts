@@ -7,18 +7,18 @@ import { SideNavigationListComponent } from './Layout/side-navigation-list/side-
 
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html'
+    selector: 'app-root',
+    templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'app';
+    title = 'app';
 
 
 
-  public selectedMenu: string = SideNavigationListComponent.defaultMenuItemText;
+    public selectedMenu: string = SideNavigationListComponent.defaultMenuItemText;
 
-  onSelectedMenuItem(selection: string): void {
-      this.selectedMenu = selection;
-  }
+    onSelectedMenuItem(selection: string): void {
+        this.selectedMenu = selection;
+    }
 
 }

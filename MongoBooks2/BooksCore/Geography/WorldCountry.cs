@@ -14,6 +14,9 @@ namespace BooksCore.Geography
     [BsonIgnoreExtraElements]
     public class WorldCountry : BaseMongoEntity
     {
+        /// <summary>
+        /// Gets or sets the name of the country.
+        /// </summary>
         [BsonElement("country")]
         public string Country { get; set; }
 

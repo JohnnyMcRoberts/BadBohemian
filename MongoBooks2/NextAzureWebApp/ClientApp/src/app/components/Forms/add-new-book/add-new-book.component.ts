@@ -1,8 +1,11 @@
-import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef, ElementRef } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { MatDialog } from '@angular/material/dialog';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -65,16 +68,24 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
                 imageUrl: [''],
                 bookTags: ['']
             });
+
+        this.filteredTags = this.tagsControl.valueChanges.pipe(
+            startWith(null),
+            map((tag: string | null) => tag ? this.filterTags(tag) : this.unselectedTags.slice()));
     }
 
     @ViewChild('addedDialog') addedDialog: TemplateRef<any>;
     @ViewChild('failedDialog') failedDialog: TemplateRef<any>;
+
+    @ViewChild('tagsInput') tagsInput: ElementRef<HTMLInputElement>;
+    @ViewChild('autocompleteTags') matAutocomplete: MatAutocomplete;
 
     public componentTitle: string;
     public newBook: Book = new Book();
     public editorDetails: EditorDetails;
 
     public selectedBookToDisplay: boolean = false;
+    public updateInProgress: boolean = false;
 
     ngOnInit()
     {
@@ -122,6 +133,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
             if (this.editorDetails.tags !== null)
             {
                 this.tagOptions = this.editorDetails.tags;
+                this.allCurrentTags = this.editorDetails.tags;
             }
 
             if (this.editorDetails.languages !== null)
@@ -156,10 +168,12 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
         const addRequest: BookReadAddRequest =
             BookReadAddRequest.fromBook(this.newBook, this.currentLoginService.userId);
 
+        this.updateInProgress = true;
         await this.booksDataService.addAsyncBookRead(addRequest);
         console.log("addAsyncBookRead has returned");
 
         const resp = BookReadAddResponse.fromData(this.booksDataService.addBookReadResponse);
+        this.updateInProgress = false;
 
         if (resp === undefined || resp === null)
         {
@@ -177,7 +191,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
 
                 dialogRef.afterClosed().subscribe(result =>
                 {
-                    console.log('The dialog was closed');
+                    console.log('The dialog was closed:' + result.toString());
                     this.onNewBookReset();
                 });
             }
@@ -242,7 +256,7 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
         const language = this.addNewBookForm.value.originalLanguage;
         const format = this.formatLookup.get(this.addNewBookForm.value.bookFormat).viewValue;
         const imageUrl: string = this.addNewBookForm.value.imageUrl;
-        const theTags: string[] = this.addNewBookForm.value.bookTags;
+        const theTags: string[] = this.selectedTags;
         const notes: string = this.addNewBookForm.value.bookNotes;
 
         console.warn("setupNewBook ==== >>>> ");
@@ -428,6 +442,116 @@ export class AddNewBookComponent implements OnInit, AfterViewInit
     public readonly defaultImageUrl = "https://images-na.ssl-images-amazon.com/images/I/61TGJyLMu6L._SY606_.jpg";
 
     public imageUrl: string = this.defaultImageUrl;
+
+    //#endregion
+
+    //#region Tag Chip list Options
+
+    visible = true;
+    selectable = true;
+    removable = true;
+    separatorKeysCodes: number[] = [ENTER, COMMA];
+    tagsControl = new FormControl();
+    filteredTags: Observable<string[]>;
+    selectedTags: string[] = [];
+    allCurrentTags: string[] = [];
+
+    get unselectedTags(): string[] {
+
+        const selectedTagMap: Map<string, string> = new Map<string, string>();
+        const unusedTags: string[] = [];
+
+        for (let i = 0; i < this.selectedTags.length; i++)
+        {
+            const tag:string = this.selectedTags[i];
+            selectedTagMap.set(tag, tag);
+        }
+
+        for (let i = 0; i < this.allCurrentTags.length; i++)
+        {
+            const tag: string = this.allCurrentTags[i];
+            if (!selectedTagMap.has(tag))
+            {
+                unusedTags.push(tag);
+            }
+        }
+
+        return unusedTags;
+    }
+
+    add(event: MatChipInputEvent): void
+    {
+        // get the data from the event
+        const input = event.input;
+        const value = event.value;
+
+        // Add our tag
+        if ((value || '').trim()) {
+            this.selectedTags.push(value.trim());
+        }
+
+        // Reset the input value
+        if (input) {
+            input.value = '';
+        }
+
+        this.tagsControl.setValue(null);
+
+        // update the display list
+        this.setupDisplayTags();
+    }
+
+    remove(fruit: string): void
+    {
+        // see where the item to remove is in the list
+        const index = this.selectedTags.indexOf(fruit);
+
+        if (index >= 0)
+        {
+            // if it is in the list remove it
+            this.selectedTags.splice(index, 1);
+        }
+
+        // update the display list
+        this.setupDisplayTags();
+    }
+
+    selected(event: MatAutocompleteSelectedEvent): void {
+
+        // add the selected tag
+        this.selectedTags.push(event.option.viewValue);
+
+        // clear the control
+        this.tagsInput.nativeElement.value = '';
+        this.tagsControl.setValue(null);
+
+        // update the display list
+        this.setupDisplayTags();
+    }
+
+    setupDisplayTags(): void
+    {
+        this.displayTags = "";
+        for (let i = 0; i < this.selectedTags.length; i++)
+        {
+            if (i === 0)
+            {
+                this.displayTags = this.selectedTags[0];
+            }
+            else
+            {
+                this.displayTags += ", ";
+                this.displayTags += this.selectedTags[i];
+            }
+        }
+    }
+
+    filterTags(value: string): string[]
+    {
+        const filterValue = value.toLowerCase();
+
+        return this.unselectedTags.filter(tag => tag.toLowerCase().indexOf(filterValue) === 0);
+    }
 
     //#endregion
 }

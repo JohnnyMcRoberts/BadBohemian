@@ -1,58 +1,109 @@
 <div>
-  
-  <div class="logged-in-div">
-        
-    <table>
-      <tr>
-        <td>
-          Export Type:
-        </td>
-        <td>
 
-          <mat-radio-group aria-labelledby="example-radio-group-label"
-                           class="example-radio-group"
-                           [(ngModel)]="selectedExportType">
-            <mat-radio-button class="example-radio-button" *ngFor="let exportType of exportTypes" [value]="exportType">
-              {{exportType}}
-            </mat-radio-button>
-          </mat-radio-group>
-        </td>
 
-        <td>
-          <div>Selection: <b>{{selectedExportType}}</b></div>
-        </td>
 
-        <td>
+    <div *ngIf="loadingChartData">
+        <p>{{componentTitle}}</p>
+    </div>
 
-          <button mat-raised-button
-                  color="primary"
-                  [disabled]="!optionSelected"
-                  (click)="onDisplayExportData()">
-            Display
-          </button>
+    <div class="logged-in-div">
 
-        </td>
-        <td>
+        <table>
+            <tr>
+                <td width="30%">
+                    <table>
+                        <tr>
+                            <td>
+                                Data Source:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
 
-          <button mat-raised-button
-                  color="primary"
-                  [disabled]="!optionSelected"
-                  (click)="onExportDataToFile()">
-            Export Data To File
-          </button>
+                                <mat-radio-group aria-labelledby="example-radio-group-label"
+                                                 class="example-radio-group"
+                                                 [(ngModel)]="selectedExportDataSource">
+                                    <mat-radio-button class="example-radio-button"
+                                                      *ngFor="let exportDataSource of exportDataSources" [value]="exportDataSource">
+                                        {{exportDataSource}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
 
-        </td>
-      </tr>
-    </table>
+                            </td>
 
-  </div>
-      
-  <div *ngIf="exportDataToDisplay" class="logged-in-div">
-        
-    <pre>
-      <code>{{displayText}}</code>
-    </pre>
+                            <td *ngIf="selectedExportDataSource">
+                                <span>Selection: <b>{{selectedExportDataSource}}</b></span>
+                            </td>
 
-  </div>
+
+                        </tr>
+                    </table>
+
+                </td>
+
+                <td width="30%">
+                    <table>
+                        <tr>
+                            <td>
+                                Export Type:
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td>
+
+                                <mat-radio-group aria-labelledby="example-radio-group-label"
+                                                 class="example-radio-group"
+                                                 [(ngModel)]="selectedExportType">
+                                    <mat-radio-button class="example-radio-button" *ngFor="let exportType of exportTypes" [value]="exportType">
+                                        {{exportType}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+
+                            </td>
+
+                            <td *ngIf="selectedExportType">
+                                <span>Selection: <b>{{selectedExportType}}</b></span>
+                            </td>
+
+
+                        </tr>
+
+                    </table>
+                </td>
+
+
+                <td>
+
+                    <button mat-raised-button
+                            color="primary"
+                            [disabled]="!optionSelected"
+                            (click)="onDisplayExportData()">
+                        Display
+                    </button>
+
+                </td>
+                <td>
+
+                    <button mat-raised-button
+                            color="primary"
+                            [disabled]="!optionSelected"
+                            (click)="onExportDataToFile()">
+                        Export Data To File
+                    </button>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div *ngIf="exportDataToDisplay" class="logged-in-div">
+
+        <pre>
+        <code>{{displayText}}</code>
+        </pre>
+
+    </div>
 
 </div>

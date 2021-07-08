@@ -47,6 +47,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\Models\NationGeography.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>
 
@@ -56,6 +60,10 @@
     <ProjectReference Include="..\BooksDatabase\BooksDatabase.csproj" />
     <ProjectReference Include="..\BooksMailbox\BooksMailbox.csproj" />
     <ProjectReference Include="..\BooksUtilities\BooksUtilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\Models\NationGeography.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

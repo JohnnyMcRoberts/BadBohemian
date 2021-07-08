@@ -100,6 +100,11 @@ namespace BooksControllerUtilities
         /// </summary>
         private ObservableCollection<Author> _authors;
 
+        /// <summary>
+        /// The nations read from database.
+        /// </summary>
+        private ObservableCollection<NationGeography> _nations;
+
         #endregion
 
         #region Utility Functions
@@ -308,6 +313,30 @@ namespace BooksControllerUtilities
             WriteBooksToFile(filename, booksRead);
         }
 
+        private void WriteNationsToFile(string fileName, List<Nation> nations, out string formattedText)
+        {
+            // Get the text
+            NationsExporter.ExportToCsvFile(nations, out formattedText);
+
+            // open the write stream
+            using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.UTF8))
+            {
+                // loop through the lines of text
+                using (StringReader reader = new StringReader(formattedText))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        // write the line
+                        sw.WriteLine(line);
+                    }
+                }
+
+                // tidy up
+                sw.Close();
+            }
+        }
+        
         #endregion
 
         #region HTTP Handlers
@@ -463,6 +492,23 @@ namespace BooksControllerUtilities
             return yearlyTallies;
         }
 
+        public IEnumerable<NationGeography> GetAllNations()
+        {
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            _nations = new ObservableCollection<NationGeography>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                foreach (Nation nation in geographyProvider.Nations.OrderBy(x => x.Name))
+                {
+                    _nations.Add(new NationGeography(nation));
+                }
+            }
+
+            return _nations;
+        }
+
         public ExportText GetExportCsvText(string userId)
         {
             ExportText exportText = new ExportText { Format = "text/plain" };
@@ -522,6 +568,75 @@ namespace BooksControllerUtilities
                     string fileName = GetExportFileName(ExportDirectory, "Books");
                     WriteBooksToFile(fileName, books, out formattedText);
 
+
+                    // Return the formatted text
+                    if (File.Exists(fileName))
+                    {
+                        return new FileStream(fileName, FileMode.Open);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public ExportText GetExportNationsCsvText(string userId)
+        {
+            ExportText exportText = new ExportText { Format = "text/plain" };
+
+            User foundUser = _userDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == userId);
+            if (foundUser == null)
+            {
+                return exportText;
+            }
+
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            _books = new ObservableCollection<Book>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                if (geographyProvider.Nations != null && geographyProvider.Nations.Any())
+                {
+                    List<Nation> nations =
+                        geographyProvider.Nations.OrderBy(x => x.Name).ToList();
+
+                    // Get the file export string 
+                    string formattedText;
+
+                    NationsExporter.ExportToCsvFile(nations, out formattedText);
+
+                    // Return the formatted text
+                    exportText.FormattedText = formattedText;
+                }
+            }
+
+            return exportText;
+        }
+
+        public FileStream GetExportNationsCsvFile(string userId)
+        {
+            User foundUser = _userDatabase.LoadedItems.FirstOrDefault(x => x.Id.ToString() == userId);
+            if (foundUser == null)
+            {
+                return null;
+            }
+
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            _books = new ObservableCollection<Book>();
+
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                if (geographyProvider.Nations != null && geographyProvider.Nations.Any())
+                {
+                    List<Nation> nations =
+                        geographyProvider.Nations.OrderBy(x => x.Name).ToList();
+
+                    // Get the file export string 
+                    string formattedText;
+                    string fileName = GetExportFileName(ExportDirectory, "Nations");
+                    WriteNationsToFile(fileName, nations, out formattedText);
 
                     // Return the formatted text
                     if (File.Exists(fileName))
