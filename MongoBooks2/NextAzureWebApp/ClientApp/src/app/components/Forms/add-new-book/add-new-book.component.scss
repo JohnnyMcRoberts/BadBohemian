@@ -1,0 +1,75 @@
+.example-container
+{
+  display: flex;
+  flex-direction: column;
+}
+
+.example-container > *
+{
+  width: 100%;
+}
+
+.right
+{
+  text-align: right
+}
+
+.quarter-width-container
+{
+  display: flex;
+  flex-direction: column;
+}
+
+.quarter-width-container > *
+{
+  width: 25%;
+}
+
+
+.half-width-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.half-width-container > * {
+  width: 25%;
+}
+
+.mat-form-field
+{
+  width: 100%;
+}
+
+.wide-coloumn {
+  width: 40%;
+}
+
+.narrow-coloumn {
+  width: 20%;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+images-td {
+  width: 40%;
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+cover-image
+{
+  height: 300;
+}
+
+.not-logged-in-div
+{
+  margin: 50px;
+}
+
+.logged-in-div
+{
+  margin: 15px;
+}

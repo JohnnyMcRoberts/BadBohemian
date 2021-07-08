@@ -5,6 +5,7 @@ namespace AngularMongoBooks3
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Headers;
     using Microsoft.AspNetCore.Identity;
     
     using Microsoft.Extensions.Configuration;
@@ -17,8 +18,7 @@ namespace AngularMongoBooks3
 
     using Swashbuckle.AspNetCore.Swagger;
 
-    using AngularMongoBooks3.Controllers.Settings;
-    using Microsoft.AspNetCore.Http.Headers;
+    using BooksControllerUtilities.Settings;
 
     public class Startup
     {

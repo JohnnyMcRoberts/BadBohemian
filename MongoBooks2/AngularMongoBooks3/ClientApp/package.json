@@ -47,6 +47,7 @@
                 "oidc-client": "^1.9.1",
                 "plotly": "1.0.6",
                 "plotly.js": "^1.54.7",
+                "plotly.js-geo-dist": "^1.54.7",
                 "popper.js": "^1.16.0",
                 "rxjs": "^6.5.5",
                 "timsort": "^0.3.0",

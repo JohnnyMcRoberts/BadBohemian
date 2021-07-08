@@ -1,0 +1,297 @@
+<table width="100%">
+    <tr>
+        <td width="50%" style="vertical-align: top">
+
+            <mat-card>
+                <mat-card-title-group>
+                    <mat-card-title>{{ book.volumeInfo.title }}</mat-card-title>
+                    <mat-card-subtitle *ngIf="book.volumeInfo.subtitle">
+                        {{ book.volumeInfo.subtitle }}. Author: {{ book.volumeInfo.authors }}
+                    </mat-card-subtitle>
+                </mat-card-title-group>
+                <mat-card-content>
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td width="60%">
+                                    <div *ngIf="book.volumeInfo.description">
+                                        <mat-form-field appearance="fill" style="width: 100%">
+                                            <mat-label>Description</mat-label>
+                                            <textarea matInput
+                                                      cdkTextareaAutosize
+                                                      #autosize="cdkTextareaAutosize"
+                                                      cdkAutosizeMinRows="5"
+                                                      value="{{ book.volumeInfo.description }}" readonly></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <img *ngIf="thumbnail" [src]="thumbnail"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div width="100%" *ngIf="book.id">
+                        <table>
+                            <tr>
+                                <td>
+                                    <mat-form-field appearance="fill" style="width: 100%">
+                                        <mat-label>Volume Id</mat-label>
+                                        <input matInput value="{{ book.id }}" readonly>
+                                    </mat-form-field>
+                                </td>
+                                <td width="100%"></td>
+                                <td>
+                                    <button mat-raised-button
+                                            color="primary"
+                                            (click)="onGetDetails()" i18n>
+                                        Get Details
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card-content>
+
+            </mat-card>
+
+        </td>
+        <td width="50%" style="vertical-align: top">
+
+            <div *ngIf="bookDetails" style="display: table-row;">
+                <table>
+                    <tr>
+                        <td style="vertical-align: top"><b>Title</b></td>
+                        <td>{{bookDetails.volumeInfo.title}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Subtitle</b></td>
+                        <td>{{bookDetails.volumeInfo.subtitle}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Author(s)</b></td>
+                        <td>{{bookDetails.volumeInfo.allAuthors}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Publisher</b></td>
+                        <td>{{bookDetails.volumeInfo.publisher}} ({{bookDetails.volumeInfo.publishedDate}})</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>ISBN-10</b></td>
+                        <td>{{bookDetails.volumeInfo.isbn10}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>ISBN-13</b></td>
+                        <td>{{bookDetails.volumeInfo.isbn13}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Pages</b></td>
+                        <td>{{bookDetails.volumeInfo.pageCount | number}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Categories</b></td>
+                        <td>{{bookDetails.volumeInfo.allCategories}}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Image</b></td>
+                        <td>
+                             <img [src]="bookDetails.volumeInfo.imageLinkThumbnail" style="max-width: 300px; height: auto"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top" colspan="2">
+
+                            <table width="100%">
+                                <tr width="100%">
+                                    <td width="80%">
+                                        <mat-form-field appearance="fill" style="width: 100%">
+                                            <mat-label>Image Full Path</mat-label>
+                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinkThumbnail }}" readonly>
+                                        </mat-form-field>
+                                    </td>
+                                    <td>
+                                        <button mat-raised-button
+                                                color="primary"
+                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinkThumbnail)" i18n>Copy to Clipboard</button>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top"><b>Description</b></td>
+                        <td>
+                            <div [innerHTML]="bookDetails.volumeInfo.description"></div> </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div *ngIf="bookDetails.volumeInfo.imageLinks">
+
+                                <mat-tab-group dynamicHeight #tabGroup>
+
+                                    <mat-tab label="Extra Large">
+                                        <div>
+
+                                            <img [src]="bookDetails.volumeInfo.imageLinks.extraLarge" style="max-width: 300px; height: auto" />
+
+                                            <table width="100%">
+                                                <tr width="100%">
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.extraLarge }}" readonly>
+                                                        </mat-form-field>
+                                                    </td>
+                                                    <td>
+                                                        <button mat-raised-button
+                                                                color="primary"
+                                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.extraLarge)" i18n>
+                                                            Copy to Clipboard
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </mat-tab>
+
+                                    <mat-tab label="Large">
+                                        <div>
+                                            <img [src]="bookDetails.volumeInfo.imageLinks.large" style="max-width: 300px; height: auto" />
+
+                                            <table width="100%">
+                                                <tr width="100%">
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.large }}" readonly>
+                                                        </mat-form-field>
+                                                    </td>
+                                                    <td>
+                                                        <button mat-raised-button
+                                                                color="primary"
+                                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.large)" i18n>
+                                                            Copy to Clipboard
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </mat-tab>
+
+                                    <mat-tab label="Medium">
+                                        <div>
+                                            <img [src]="bookDetails.volumeInfo.imageLinks.medium" style="max-width: 300px; height: auto" />
+
+                                            <table width="100%">
+                                                <tr width="100%">
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.medium }}" readonly>
+                                                        </mat-form-field>
+                                                    </td>
+                                                    <td>
+                                                        <button mat-raised-button
+                                                                color="primary"
+                                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.medium)" i18n>
+                                                            Copy to Clipboard
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </mat-tab>
+
+                                    <mat-tab label="Small">
+                                        <div>
+                                            <img [src]="bookDetails.volumeInfo.imageLinks.small" style="max-width: 300px; height: auto" />
+
+                                            <table width="100%">
+                                                <tr width="100%">
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.small }}" readonly>
+                                                        </mat-form-field>
+                                                    </td>
+                                                    <td>
+                                                        <button mat-raised-button
+                                                                color="primary"
+                                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.small)" i18n>
+                                                            Copy to Clipboard
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </mat-tab>
+
+                                    <mat-tab label="Thumbnail">
+                                        <div>
+                                            <img [src]="bookDetails.volumeInfo.imageLinks.thumbnail" style="max-width: 300px; height: auto" />
+
+                                            <table width="100%">
+                                                <tr width="100%">
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.thumbnail }}" readonly>
+                                                        </mat-form-field>
+                                                    </td>
+                                                    <td>
+                                                        <button mat-raised-button
+                                                                color="primary"
+                                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.thumbnail)" i18n>
+                                                            Copy to Clipboard
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </mat-tab>
+
+                                    <mat-tab label="Small Thumbnail">
+                                        <div>
+                                            <img [src]="bookDetails.volumeInfo.imageLinks.smallThumbnail" style="max-width: 300px; height: auto" />
+
+                                            <table width="100%">
+                                                <tr width="100%">
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.smallThumbnail }}" readonly>
+                                                        </mat-form-field>
+                                                    </td>
+                                                    <td>
+                                                        <button mat-raised-button
+                                                                color="primary"
+                                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.smallThumbnail)" i18n>
+                                                            Copy to Clipboard
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </mat-tab>
+
+                                </mat-tab-group>
+                                
+
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>

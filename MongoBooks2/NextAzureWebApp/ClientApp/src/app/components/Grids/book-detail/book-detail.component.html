@@ -1,0 +1,40 @@
+<table>
+  <tr>
+    <td width="25%"><b>Date:</b></td>
+    <td width="25%">{{selectedBook.date | date :'fullDate'}}</td>
+    <td width="25%"><b>Selected Image:</b></td>
+    <td width="25%"><b>Notes:</b></td>
+  </tr>
+  <tr>
+    <td><b>Author:</b></td>
+    <td>{{selectedBook.author}}</td>
+    <td rowspan="6" *ngIf="selectedBook.imageUrl !== ''" style="margin: 20px">
+      <img src="{{selectedBook.imageUrl}}" alt="Photo of a book" width="200">
+    </td>
+    <td rowspan="4">
+      <p>{{selectedBook.note}}</p>
+    </td>
+  </tr>
+  <tr>
+    <td><b>Title:</b></td>
+    <td>{{selectedBook.title}}</td>
+  </tr>
+  <tr>
+    <td><b>Pages:</b></td>
+    <td>{{selectedBook.pages}}</td>
+  </tr>
+  <tr>
+    <td><b>Author's Home Country:</b></td>
+    <td>{{selectedBook.nationality}}</td>
+  </tr>
+  <tr>
+    <td><b>Original Language:</b></td>
+    <td>{{selectedBook.originalLanguage}}</td>
+    <td><b>Tags:</b></td>
+  </tr>
+  <tr>
+    <td><b>Format:</b></td>
+    <td>{{selectedBook.format}}</td>
+    <td><p>{{displayTags}}</p></td>
+  </tr>
+</table>

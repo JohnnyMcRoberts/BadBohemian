@@ -10,11 +10,13 @@ namespace BooksImportExportTester.ViewModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Data;
     using System.Linq;
     using System.Windows.Input;
     using System.Windows.Forms;
+    using BooksCore.Geography;
     using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
     using BooksCore.Provider;
@@ -41,6 +43,12 @@ namespace BooksImportExportTester.ViewModel
         /// The output file.
         /// </summary>
         private BooksReadProvider _booksReadProvider;
+
+        /// <summary>
+        /// The users read from database.
+        /// </summary>
+        private ObservableCollection<CountryCodeIso3166> _countryCodesReadFromDatabase;
+
 
         /// <summary>
         /// The output file.
@@ -116,6 +124,11 @@ namespace BooksImportExportTester.ViewModel
         /// The import file command.
         /// </summary>
         private ICommand _importFileCommand;
+
+        /// <summary>
+        /// The get country codes command.
+        /// </summary>
+        private ICommand _getCountryCodesCommand;
 
         #endregion
 
@@ -215,6 +228,12 @@ namespace BooksImportExportTester.ViewModel
             _importFileCommand ?? (_importFileCommand = new CommandHandler(ImportFileCommandAction, true));
 
         /// <summary>
+        /// Gets the get users from database command.
+        /// </summary>
+        public ICommand GetCountryCodesCommand => 
+            _getCountryCodesCommand ?? (_getCountryCodesCommand = new CommandHandler(GetCountryCodesCommandAction, true));
+
+        /// <summary>
         /// Gets the first month.
         /// </summary>
         public DateTime LastMonth
@@ -224,7 +243,7 @@ namespace BooksImportExportTester.ViewModel
                 return _lastMonth;
             }
 
-            private set
+            set
             {
                 if (_lastMonth != value)
                 {
@@ -244,7 +263,7 @@ namespace BooksImportExportTester.ViewModel
                 return _firstMonth;
             }
 
-            private set
+            set
             {
                 if (_firstMonth != value)
                 {
@@ -286,7 +305,7 @@ namespace BooksImportExportTester.ViewModel
         public string OutputFile
         {
             get { return _outputFile; }
-            private set
+            set
             {
                 if (_outputFile != value)
                 {
@@ -307,7 +326,7 @@ namespace BooksImportExportTester.ViewModel
                 return _exportErrorMessage;
             }
 
-            private set
+            set
             {
                 if (_exportErrorMessage != value)
                 {
@@ -327,7 +346,7 @@ namespace BooksImportExportTester.ViewModel
                 return _inputFile;
             }
 
-            private set
+            set
             {
                 if (_inputFile != value)
                 {
@@ -348,7 +367,7 @@ namespace BooksImportExportTester.ViewModel
                 return _importErrorMessage;
             }
 
-            private set
+            set
             {
                 if (_importErrorMessage != value)
                 {
@@ -399,13 +418,18 @@ namespace BooksImportExportTester.ViewModel
                 return _importDataTable;
             }
 
-            private set
+            set
             {
                 _importDataTable = value;
                 OnPropertyChanged(() => ImportDataTable);
             }
         }
 
+        /// <summary>
+        /// Gets the users.
+        /// </summary>
+        public ObservableCollection<CountryCodeIso3166> CountryCodes => _countryCodesReadFromDatabase;
+        
         #endregion
 
         #region Command handlers
@@ -518,6 +542,20 @@ namespace BooksImportExportTester.ViewModel
 
             }
         }
+
+        /// <summary>
+        /// The get country codes from the file command action.
+        /// </summary>
+        public void GetCountryCodesCommandAction()
+        {
+            CountryCodes.Clear();
+
+            foreach (CountryCodeIso3166 code in AllCountryCodes.CountryCodes)
+            {
+                CountryCodes.Add(code);
+            }
+        }
+        
         #endregion
 
         #region Utility Functions
@@ -631,6 +669,9 @@ namespace BooksImportExportTester.ViewModel
             _inputFile = string.Empty;
             SetupImportTypesByTitle();
             ImportDataTable = new DataTable();
+
+            _countryCodesReadFromDatabase 
+                = new ObservableCollection<CountryCodeIso3166>();
         }
 
         #endregion

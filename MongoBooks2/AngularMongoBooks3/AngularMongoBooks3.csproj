@@ -51,6 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BooksControllerUtilities\BooksControllerUtilities.csproj" />
     <ProjectReference Include="..\BooksCore\BooksCore.csproj" />
     <ProjectReference Include="..\BooksDatabase\BooksDatabase.csproj" />
     <ProjectReference Include="..\BooksMailbox\BooksMailbox.csproj" />

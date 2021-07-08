@@ -7,6 +7,8 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CdkTableModule } from '@angular/cdk/table';
 import { CdkTreeModule } from '@angular/cdk/tree';
+import { LayoutModule } from '@angular/cdk/layout';
+import { PlatformModule } from '@angular/cdk/platform';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
@@ -47,6 +49,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         CdkStepperModule,
         CdkTableModule,
         CdkTreeModule,
+        LayoutModule,
+        PlatformModule,
         DragDropModule,
         ClipboardModule,
         MatAutocompleteModule,

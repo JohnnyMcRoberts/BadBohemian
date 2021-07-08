@@ -78,6 +78,7 @@
     <Compile Include="Books\BookTag.cs" />
     <Compile Include="Books\MonthlyReportsTally.cs" />
     <Compile Include="Geography\CountriesData.cs" />
+    <Compile Include="Geography\CountryCodeIso3166.cs" />
     <Compile Include="Geography\CountryGeography.cs" />
     <Compile Include="Interfaces\IBooksReadProvider.cs" />
     <Compile Include="Interfaces\IGeographicEntity.cs" />
