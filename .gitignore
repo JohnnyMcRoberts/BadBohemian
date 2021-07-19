@@ -268,3 +268,5 @@ ModelManifest.xml
 /MongoBooks2/AzureMongoConsoleConnnect/Core/Compression/Zstandard/lib/win/libzstd.dll
 /MongoBooks2/AzureMongoConsoleConnnect/Core/Compression/Snappy/lib/win/snappy64.dll
 /MongoBooks2/AzureMongoConsoleConnnect/Core/Compression/Snappy/lib/win/snappy32.dll
+/MongoBooks2/NextAzureWebApp/ClientApp/src/app/Models/NationGeography.js.map
+/MongoBooks2/NextAzureWebApp/ClientApp/src/app/Models/NationGeography.js

@@ -1,6 +1,4 @@
-﻿
-
-namespace NextAzureWebApp.Controllers
+﻿namespace NextAzureWebApp.Controllers
 {
     using System.Collections.Generic;
     using System.IO;
@@ -82,6 +80,12 @@ namespace NextAzureWebApp.Controllers
             return _booksDataControllerUtilities.GetAllYearlyTallies();
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<NationGeography> GetAllNations()
+        {
+            return _booksDataControllerUtilities.GetAllNations();
+        }
+
         [HttpGet("[action]/{userId}")]
         [ProducesResponseType(201, Type = typeof(ExportText))]
         public ExportText GetExportCsvText(string userId)
@@ -94,7 +98,31 @@ namespace NextAzureWebApp.Controllers
         [ProducesResponseType(404)]
         public IActionResult GetExportCsvFile(string userId)
         {
-            FileStream exportFileStream = _booksDataControllerUtilities.GetExportCsvFile(userId);
+            FileStream exportFileStream =
+                _booksDataControllerUtilities.GetExportCsvFile(userId);
+
+            if (exportFileStream == null)
+            {
+                return NotFound();
+            }
+
+            return new FileStreamResult(exportFileStream, "text/csv");
+        }
+
+        [HttpGet("[action]/{userId}")]
+        [ProducesResponseType(201, Type = typeof(ExportText))]
+        public ExportText GetExportNationsCsvText(string userId)
+        {
+            return _booksDataControllerUtilities.GetExportNationsCsvText(userId);
+        }
+
+        [HttpGet("[action]/{userId}")]
+        [ProducesResponseType(201, Type = typeof(ExportText))]
+        [ProducesResponseType(404)]
+        public IActionResult GetExportNationsCsvFile(string userId)
+        {
+            FileStream exportFileStream =
+                _booksDataControllerUtilities.GetExportNationsCsvFile(userId);
 
             if (exportFileStream == null)
             {

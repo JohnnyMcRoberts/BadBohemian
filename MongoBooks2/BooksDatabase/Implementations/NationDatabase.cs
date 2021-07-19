@@ -9,7 +9,6 @@
 
 namespace BooksDatabase.Implementations
 {
-    using System;
     using System.Collections.ObjectModel;
     using BooksCore.Geography;
     using MongoDB.Bson;

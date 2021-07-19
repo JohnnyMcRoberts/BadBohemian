@@ -66,6 +66,7 @@ export class CountryCodeLookup
                 ["Colombia", "COL"],
                 ["Comoros", "COM"],
                 ["Congo, Democratic Republic of the", "COD"],
+                ["Democratic Republic of the Congo", "COD"],
                 ["Congo, Republic of the", "COG"],
                 ["Cook Islands", "COK"],
                 ["Costa Rica", "CRI"],

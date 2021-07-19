@@ -12,22 +12,21 @@ import { MonthlyTally } from '../Models/MonthlyTally';
 import { TagBooks } from '../Models/TagBooks';
 import { DeltaBooks } from '../Models/DeltaBooks';
 import { YearlyTally, IYearlyTally } from '../Models/YearlyTally';
+import { NationGeography } from '../Models/NationGeography';
 import { EditorDetails } from '../Models/EditorDetails';
 import { ExportText } from '../Models/ExportText';
 
 const httpOptions =
 {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
-export class BooksDataService
-{
+export class BooksDataService {
     constructor(
-        private http: HttpClient)
-    {
+        private http: HttpClient) {
         this.requestUrl = '/api/BooksData/';
     }
 
@@ -39,10 +38,10 @@ export class BooksDataService
     {
         return this.http.get<Book[]>(this.requestUrl + "GetAllBooks")
             .toPromise().then(result =>
-              {
-                this.books = result as Book[];
-              },
-              error => console.error(error));
+                {
+                    this.books = result as Book[];
+                },
+                error => console.error(error));
     }
 
     public authors: Author[];
@@ -50,21 +49,21 @@ export class BooksDataService
     {
         return this.http.get<Author[]>(this.requestUrl + "GetAllAuthors")
             .toPromise().then(result =>
-              {
-                this.authors = result as Author[];
-              },
-              error => console.error(error));
+                {
+                    this.authors = result as Author[];
+                },
+                error => console.error(error));
     }
 
     public languageAuthors: LanguageAuthors[];
     fetchAllLanguageAuthorsData()
     {
         return this.http.get<LanguageAuthors[]>(this.requestUrl + "GetAllLanguageAuthors")
-          .toPromise().then(result =>
-            {
-                this.languageAuthors = result as LanguageAuthors[];
-            },
-            error => console.error(error));
+            .toPromise().then(result =>
+                {
+                    this.languageAuthors = result as LanguageAuthors[];
+                },
+                error => console.error(error));
     }
 
     public countryAuthors: CountryAuthors[];
@@ -72,21 +71,21 @@ export class BooksDataService
     {
         return this.http.get<CountryAuthors[]>(this.requestUrl + "GetAllCountryAuthors")
             .toPromise().then(result =>
-              {
-                  this.countryAuthors = result as CountryAuthors[];
-              },
-              error => console.error(error));
+                {
+                    this.countryAuthors = result as CountryAuthors[];
+                },
+                error => console.error(error));
     }
 
     public bookTallies: BookTally[];
     fetchAllBookTalliesData()
     {
         return this.http.get<BookTally[]>(this.requestUrl + "GetAllBookTallies")
-          .toPromise().then(result =>
-              {
-                  this.bookTallies = result as BookTally[];
-              },
-              error => console.error(error));
+            .toPromise().then(result =>
+                {
+                    this.bookTallies = result as BookTally[];
+                },
+                error => console.error(error));
     }
 
     public monthlyTallies: MonthlyTally[];
@@ -126,10 +125,22 @@ export class BooksDataService
     fetchAllYearlyTalliesData()
     {
         return this.http.get<YearlyTally[]>(this.requestUrl + "GetAllYearlyTallies")
-        .toPromise().then(result => {
-            this.yearlyTallies = result as YearlyTally[];
-          },
-          error => console.error(error));
+            .toPromise().then(result =>
+                {
+                    this.yearlyTallies = result as YearlyTally[];
+                },
+                error => console.error(error));
+    }
+
+    public nations: NationGeography[];
+    fetchAllNationsData()
+    {
+        return this.http.get<NationGeography[]>(this.requestUrl + "GetAllNations")
+            .toPromise().then(result =>
+                {
+                    this.nations = result as NationGeography[];
+                },
+                error => console.error(error));
     }
 
     public editorDetails: EditorDetails;
@@ -137,10 +148,10 @@ export class BooksDataService
     {
         return this.http.get<EditorDetails>(this.requestUrl + "GetEditorDetails")
             .toPromise().then(result =>
-              {
-                  this.editorDetails = result as EditorDetails;
-              },
-              error => console.error(error));
+                {
+                    this.editorDetails = result as EditorDetails;
+                },
+                error => console.error(error));
     }
 
     public exportCsvText: ExportText;
@@ -154,22 +165,32 @@ export class BooksDataService
                 error => console.error(error));
     }
 
+    fetchExportNationsCsvTextData(userId: string)
+    {
+        return this.http.get<ExportText>(this.requestUrl + "GetExportNationsCsvText/" + userId)
+            .toPromise().then(result =>
+                {
+                    this.exportCsvText = result as ExportText;
+                },
+                error => console.error(error));
+    }
+
     public booksWithDefaultUser: Book[];
     getAsDefaultUser(userId: string)
     {
         return this.http.get<Book[]>(this.requestUrl + "GetAsDefaultUser/" + userId)
             .toPromise().then(result =>
-              {
-                  this.booksWithDefaultUser = result as Book[];
-              },
-              error => console.error(error));
+                {
+                    this.booksWithDefaultUser = result as Book[];
+                },
+                error => console.error(error));
     }
 
     public addBookReadResponse: any;
     async addAsyncBookRead(request: BookReadAddRequest)
     {
         this.addBookReadResponse =
-            await this.http.post<BookReadAddResponse>( this.requestUrl, request, httpOptions ).toPromise();
+            await this.http.post<BookReadAddResponse>(this.requestUrl, request, httpOptions).toPromise();
 
         console.log('No issues, waiting until promise is resolved...');
     }
@@ -178,7 +199,7 @@ export class BooksDataService
     async  updateAsyncBook(book: Book)
     {
         this.updateBookResponse =
-          await this.http.put<BookReadAddResponse>( this.requestUrl, book, httpOptions ).toPromise();
+            await this.http.put<BookReadAddResponse>(this.requestUrl, book, httpOptions).toPromise();
 
         console.log('No issues, waiting until promise is resolved...');
     }
@@ -188,38 +209,63 @@ export class BooksDataService
     {
         this.deleteBookResponse =
             await this.http.delete<BookReadAddResponse>(
-            this.requestUrl + "/" + book.id, httpOptions
+                this.requestUrl + "/" + book.id, httpOptions
             ).toPromise();
 
         console.log('No issues, waiting until promise is resolved...');
     }
 
-    public readonly maxErrorLength: number  = 255;
+    public readonly maxErrorLength: number = 255;
     public exportCsvFile: any;
     public exportCsvFileBlob: Blob;
     public exportCsvTextFile: ExportText;
     fetchExportCsvFileData(userId: string)
     {
-        var requestUrl = this.requestUrl + "GetExportCsvFile/" + userId;
+        const requestUrl = this.requestUrl + "GetExportCsvFile/" + userId;
 
         const headers = new HttpHeaders().set('Content-Type', 'text/csv; charset=utf-8');
 
         return this.http.get(requestUrl, { headers, responseType: 'text' }).pipe(
             tap((result: any) =>
-            {
-                var resultString = result.toString();
+                {
+                    let resultString = result.toString();
 
-                this.exportCsvTextFile = new ExportText('text/csv', resultString);
+                    this.exportCsvTextFile = new ExportText('text/csv', resultString);
 
-                if (resultString.length > this.maxErrorLength)
-                    resultString = resultString.substring(0, this.maxErrorLength) + "...";
+                    if (resultString.length > this.maxErrorLength)
+                        resultString = resultString.substring(0, this.maxErrorLength) + "...";
 
-                this.log("fetched ExportCsvFileData " + resultString);
-                this.exportCsvFile = result;
-                this.exportCsvFileBlob = result as Blob;
-            }
+                    this.log("fetched ExportCsvFileData " + resultString);
+                    this.exportCsvFile = result;
+                    this.exportCsvFileBlob = result as Blob;
+                }
             ),
             catchError(this.handleError<any>('fetchExportCsvFileData'))
+        ).toPromise();
+    }
+
+    fetchExportNationsCsvFileData(userId: string)
+    {
+        const requestUrl = this.requestUrl + "GetExportNationsCsvFile/" + userId;
+
+        const headers = new HttpHeaders().set('Content-Type', 'text/csv; charset=utf-8');
+
+        return this.http.get(requestUrl, { headers, responseType: 'text' }).pipe(
+            tap((result: any) =>
+                {
+                    let resultString = result.toString();
+
+                    this.exportCsvTextFile = new ExportText('text/csv', resultString);
+
+                    if (resultString.length > this.maxErrorLength)
+                        resultString = resultString.substring(0, this.maxErrorLength) + "...";
+
+                    this.log("fetched ExportNationsCsvFileData " + resultString);
+                    this.exportCsvFile = result;
+                    this.exportCsvFileBlob = result as Blob;
+                }
+            ),
+            catchError(this.handleError<any>('fetchExportNationsCsvFileData'))
         ).toPromise();
 
     }
@@ -228,16 +274,17 @@ export class BooksDataService
 
     private handleError<T>(operation = 'operation', result?: T)
     {
-      return (error: any): Observable<T> => {
-        // TODO: send the error to remote logging infrastructure
-        console.error(error); // log to console instead
+        return (error: any): Observable<T> =>
+        {
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
 
-        // TODO: better job of transforming error for user consumption
-        this.log(`${operation} failed: ${error.message}`);
+            // TODO: better job of transforming error for user consumption
+            this.log(`${operation} failed: ${error.message}`);
 
-        // Let the app keep running by returning an empty result.
-        return new Observable<T>();
-      };
+            // Let the app keep running by returning an empty result.
+            return new Observable<T>();
+        };
     }
 
     /** Log a QuoteService message with the MessageService */

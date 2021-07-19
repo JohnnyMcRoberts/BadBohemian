@@ -2,15 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+
     using System.Text;
 
     using CsvHelper;
 
-    using BooksCore.Books;
 
     using BooksControllerUtilities.DataClasses;
+    using BooksCore.Geography;
 
-    public static class BooksExporter
+    public static class NationsExporter
     {
         #region Constants
 
@@ -52,17 +53,17 @@
             return headerString;
         }
 
-        private static string GetCsvBookRecord(Book book)
+        private static string GetCsvNationRecord(Nation nation)
         {
             string recordString = string.Empty;
 
             int count = 0;
-            foreach (BookRecordFields recordField in Enum.GetValues(typeof(BookRecordFields)))
+            foreach (NationRecordFields recordField in Enum.GetValues(typeof(NationRecordFields)))
             {
                 if (count != 0)
                     recordString += ",";
 
-                recordString += CsvBookRead.GetCsvBookRecordField(recordField, book);
+                recordString += CsvNation.GetCsvNationRecordField(recordField, nation);
                 count++;
             }
 
@@ -71,50 +72,44 @@
             return recordString;
         }
 
+
         #endregion
 
         #region Public Static methods
 
-        public static void ExportToFile(List<Book> books, out string fileContent)
+        public static void ExportToFile(List<Nation> nations, out string fileContent)
         {
             fileContent = string.Empty;
 
             fileContent += GetCsvHeader();
 
-            foreach(var book in books)
-                fileContent += GetCsvBookRecord(book);
+            foreach (Nation nation in nations)
+            {
+                fileContent += GetCsvNationRecord(nation);
+            }
         }
 
         #endregion
 
-        public static void ExportToCsvFile(List<BookRead> books, out string fileContent)
+        public static void ExportToCsvFile(List<Nation> nations, out string fileContent)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             ExtendedStringWriter sw = new ExtendedStringWriter(stringBuilder, Encoding.UTF8);
 
             // write the header
-            sw.WriteLine(
-                "Date,DD/MM/YYYY,Author,Title,Pages,Note,Nationality,Original Language,Book,Comic,Audio,Image,Tags"
-            );
+            sw.WriteLine("Name,Capital,Latitude,Longitude,ImageUri,GeographyXml");
 
             // write the records
-            var csv = new CsvWriter(sw);
-            foreach (var book in books)
+            CsvWriter csv = new CsvWriter(sw);
+            foreach (Nation nation in nations)
             {
-                csv.WriteField(book.DateString);
-                csv.WriteField(book.Date.ToString("d/M/yyyy"));
-                csv.WriteField(book.Author);
-                csv.WriteField(book.Title);
-                csv.WriteField(book.Pages > 0 ? book.Pages.ToString() : "");
-                csv.WriteField(book.Note);
-                csv.WriteField(book.Nationality);
-                csv.WriteField(book.OriginalLanguage);
-                csv.WriteField(book.Format == BookFormat.Book ? "x" : "");
-                csv.WriteField(book.Format == BookFormat.Comic ? "x" : "");
-                csv.WriteField(book.Format == BookFormat.Audio ? "x" : "");
-                csv.WriteField(book.ImageUrl);
-                csv.WriteField(book.DisplayTags);
+                csv.WriteField(nation.Name);
+                csv.WriteField(nation.Capital);
+                csv.WriteField(nation.Latitude);
+                csv.WriteField(nation.Longitude);
+                csv.WriteField(nation.ImageUri);
+                csv.WriteField(nation.GeographyXml);
                 csv.NextRecord();
             }
 
@@ -122,7 +117,6 @@
             sw.Close();
 
             fileContent = sw.ToString();
-
         }
     }
 }

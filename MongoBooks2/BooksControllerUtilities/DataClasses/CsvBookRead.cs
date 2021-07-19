@@ -1,6 +1,8 @@
 ﻿namespace BooksControllerUtilities.DataClasses
 {
-    public enum RecordFields
+    using BooksControllerUtilities.Utilities;
+
+    public enum BookRecordFields
     {
         DateString = 0,
         Date,
@@ -51,64 +53,64 @@
 
         #region Public Utility functions
 
-        public static string GetCsvBookRecordField(RecordFields recordField, Book book)
+        public static string GetCsvBookRecordField(BookRecordFields recordField, Book book)
         {
             string fieldString = string.Empty;
             switch (recordField)
             {
-                case RecordFields.DateString:
+                case BookRecordFields.DateString:
                     fieldString += book.DateString;
                     break;
 
-                case RecordFields.Date:
+                case BookRecordFields.Date:
                     fieldString +=
                        book.Date.Day + "/" + book.Date.Month + "/" + book.Date.Year;
                     break;
 
-                case RecordFields.Author:
-                    fieldString += GetSafeString(book.Author);
+                case BookRecordFields.Author:
+                    fieldString += ExtendedStringWriter.GetSafeString(book.Author);
                     break;
 
-                case RecordFields.Title:
-                    fieldString += GetSafeString(book.Title);
+                case BookRecordFields.Title:
+                    fieldString += ExtendedStringWriter.GetSafeString(book.Title);
                     break;
 
-                case RecordFields.Pages:
+                case BookRecordFields.Pages:
                     if (!(book.Pages == 0 && (book.Format == "Audio" || book.Format == "Comic")))
                         fieldString += book.Pages;
                     break;
 
-                case RecordFields.Note:
-                    fieldString += GetSafeString(book.Note);
+                case BookRecordFields.Note:
+                    fieldString += ExtendedStringWriter.GetSafeString(book.Note);
                     break;
 
-                case RecordFields.Nationality:
-                    fieldString += GetSafeString(book.Nationality);
+                case BookRecordFields.Nationality:
+                    fieldString += ExtendedStringWriter.GetSafeString(book.Nationality);
                     break;
 
-                case RecordFields.OriginalLanguage:
-                    fieldString += GetSafeString(book.OriginalLanguage);
+                case BookRecordFields.OriginalLanguage:
+                    fieldString += ExtendedStringWriter.GetSafeString(book.OriginalLanguage);
                     break;
 
-                case RecordFields.Book:
+                case BookRecordFields.Book:
                     if (book.Format == "Book")
                         fieldString += "x";
                     break;
 
-                case RecordFields.Comic:
+                case BookRecordFields.Comic:
                     if (book.Format == "Comic")
                         fieldString += "x";
                     break;
-                case RecordFields.Audio:
+                case BookRecordFields.Audio:
                     if (book.Format == "Audio")
                         fieldString += "x";
                     break;
 
-                case RecordFields.Image:
-                    fieldString += GetSafeString(book.ImageUrl);
+                case BookRecordFields.Image:
+                    fieldString += ExtendedStringWriter.GetSafeString(book.ImageUrl);
                     break;
 
-                case RecordFields.Tags:
+                case BookRecordFields.Tags:
                     {
                         string tags = string.Empty;
                         for (int i = 0; i < book.Tags.Length; i++)
@@ -119,7 +121,7 @@
                             tags += book.Tags[i];
                         }
 
-                        fieldString += GetSafeString(tags);
+                        fieldString += ExtendedStringWriter.GetSafeString(tags);
 
                     }
                     break;
@@ -128,33 +130,25 @@
             return fieldString;
         }
 
-        public static string GetSafeString(string fieldValue)
-        {
-            if (string.IsNullOrWhiteSpace(fieldValue))
-                return string.Empty;
-
-            return fieldValue;
-        }
-
         #endregion
 
         #region Constructors
 
         public CsvBookRead(Book book)
         {
-            DateString = GetCsvBookRecordField(RecordFields.DateString, book);
-            Date = GetCsvBookRecordField(RecordFields.Date, book);
-            Author = GetCsvBookRecordField(RecordFields.Author, book);
-            Title = GetCsvBookRecordField(RecordFields.Title, book);
-            Pages = GetCsvBookRecordField(RecordFields.Pages, book);
-            Note = GetCsvBookRecordField(RecordFields.Note, book);
-            Nationality = GetCsvBookRecordField(RecordFields.Nationality, book);
-            OriginalLanguage = GetCsvBookRecordField(RecordFields.OriginalLanguage, book);
-            Book = GetCsvBookRecordField(RecordFields.Book, book);
-            Comic = GetCsvBookRecordField(RecordFields.Comic, book);
-            Audio = GetCsvBookRecordField(RecordFields.Audio, book);
-            Image = GetCsvBookRecordField(RecordFields.Image, book);
-            Tags = GetCsvBookRecordField(RecordFields.Tags, book);
+            DateString = GetCsvBookRecordField(BookRecordFields.DateString, book);
+            Date = GetCsvBookRecordField(BookRecordFields.Date, book);
+            Author = GetCsvBookRecordField(BookRecordFields.Author, book);
+            Title = GetCsvBookRecordField(BookRecordFields.Title, book);
+            Pages = GetCsvBookRecordField(BookRecordFields.Pages, book);
+            Note = GetCsvBookRecordField(BookRecordFields.Note, book);
+            Nationality = GetCsvBookRecordField(BookRecordFields.Nationality, book);
+            OriginalLanguage = GetCsvBookRecordField(BookRecordFields.OriginalLanguage, book);
+            Book = GetCsvBookRecordField(BookRecordFields.Book, book);
+            Comic = GetCsvBookRecordField(BookRecordFields.Comic, book);
+            Audio = GetCsvBookRecordField(BookRecordFields.Audio, book);
+            Image = GetCsvBookRecordField(BookRecordFields.Image, book);
+            Tags = GetCsvBookRecordField(BookRecordFields.Tags, book);
         }
 
         #endregion

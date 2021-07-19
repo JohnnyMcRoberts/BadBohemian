@@ -1,6 +1,10 @@
-import { OnInit, EventEmitter, AfterViewInit } from '@angular/core';
+import { OnInit, EventEmitter, AfterViewInit, ElementRef  } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
+
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -9,7 +13,7 @@ import { BooksDataService } from './../../Services/books-data.service';
 import { CurrentLoginService } from './../../Services/current-login.service';
 
 import { EditorDetails } from './../../Models/EditorDetails';
-import { Book, BookReadAddResponse, BookReadAddRequest } from './../../Models/Book';
+import { Book } from './../../Models/Book';
 
 export class SelectionItem
 {
@@ -65,6 +69,10 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
             this.setupSelectionOptions();
         });
 
+        this.filteredTags = this.tagsControl.valueChanges.pipe(
+            startWith(null),
+            map((tag: string | null) => tag ? this.filterTags(tag) : this.unselectedTags.slice()));
+
         this.ngOnInitAddition();
     }
 
@@ -97,13 +105,13 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
             if (this.editorDetails.tags != null)
             {
                 this.tagOptions = this.editorDetails.tags;
+                this.allCurrentTags = this.editorDetails.tags;
             }
 
             if (this.editorDetails.languages != null)
             {
                 this.optionForLanguages = this.editorDetails.languages;
                 this.filteredLanguages = this.originalLanguage.valueChanges.pipe(
-                    //startWith(''),
                     map(value => this.filterLanguage(value))
                 );
             }
@@ -342,6 +350,118 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
 
     //#endregion
 
+    //#region Tag Chip list Options
+
+    visible = true;
+    selectable = true;
+    removable = true;
+    separatorKeysCodes: number[] = [ENTER, COMMA];
+    tagsControl = new FormControl();
+    filteredTags: Observable<string[]>;
+    selectedTags: string[] = [];
+    allCurrentTags: string[] = [];
+
+    get unselectedTags(): string[]
+    {
+        const selectedTagMap: Map<string, string> = new Map<string, string>();
+        const unusedTags: string[] = [];
+
+        for (let i = 0; i < this.selectedTags.length; i++)
+        {
+            const tag: string = this.selectedTags[i];
+            selectedTagMap.set(tag, tag);
+        }
+
+        for (let i = 0; i < this.allCurrentTags.length; i++)
+        {
+            const tag: string = this.allCurrentTags[i];
+            if (!selectedTagMap.has(tag))
+            {
+                unusedTags.push(tag);
+            }
+        }
+
+        return unusedTags;
+    }
+
+    add(event: MatChipInputEvent): void
+    {
+        // get the data from the event
+        const input = event.input;
+        const value = event.value;
+
+        // Add our tag
+        if ((value || '').trim())
+        {
+            this.selectedTags.push(value.trim());
+        }
+
+        // Reset the input value
+        if (input)
+        {
+            input.value = '';
+        }
+
+        this.tagsControl.setValue(null);
+
+        // update the display list
+        this.setupDisplayTags();
+    }
+
+    remove(fruit: string): void
+    {
+        // see where the item to remove is in the list
+        const index = this.selectedTags.indexOf(fruit);
+
+        if (index >= 0)
+        {
+            // if it is in the list remove it
+            this.selectedTags.splice(index, 1);
+        }
+
+        // update the display list
+        this.setupDisplayTags();
+    }
+
+    selected(event: MatAutocompleteSelectedEvent): void
+    {
+        // add the selected tag
+        this.selectedTags.push(event.option.viewValue);
+
+        // clear the control
+        this.tagsInput.nativeElement.value = '';
+        this.tagsControl.setValue(null);
+
+        // update the display list
+        this.setupDisplayTags();
+    }
+
+    setupDisplayTags(): void
+    {
+        this.displayTags = "";
+        for (let i = 0; i < this.selectedTags.length; i++)
+        {
+            if (i === 0)
+            {
+                this.displayTags = this.selectedTags[0];
+            }
+            else
+            {
+                this.displayTags += ", ";
+                this.displayTags += this.selectedTags[i];
+            }
+        }
+    }
+
+    filterTags(value: string): string[]
+    {
+        const filterValue = value.toLowerCase();
+
+        return this.unselectedTags.filter(tag => tag.toLowerCase().indexOf(filterValue) === 0);
+    }
+
+    //#endregion
+
     //#region Abstract Elements
 
     //@Output() change = new EventEmitter();	
@@ -350,6 +470,11 @@ export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
     public abstract ngOnInitAddition();
 
     public abstract ngAfterViewInitAddition();
+
+    //@ViewChild('tagsInput')
+    public abstract tagsInput: ElementRef<HTMLInputElement>;
+    //@ViewChild('autocompleteTags')
+    public abstract matAutocomplete: MatAutocomplete;
 
     //#endregion
 }
