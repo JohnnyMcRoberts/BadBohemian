@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -11,10 +11,11 @@ import { BookTally } from '../Models/BookTally';
 import { MonthlyTally } from '../Models/MonthlyTally';
 import { TagBooks } from '../Models/TagBooks';
 import { DeltaBooks } from '../Models/DeltaBooks';
-import { YearlyTally, IYearlyTally } from '../Models/YearlyTally';
+import { YearlyTally } from '../Models/YearlyTally';
 import { NationGeography } from '../Models/NationGeography';
 import { EditorDetails } from '../Models/EditorDetails';
 import { ExportText } from '../Models/ExportText';
+import { ExportDataToEmailRequest, ExportDataToEmailResponse } from '../Models/ExportDataToEmail';
 
 const httpOptions =
 {
@@ -270,6 +271,17 @@ export class BooksDataService
             catchError(this.handleError<any>('fetchExportNationsCsvFileData'))
         ).toPromise();
 
+    }
+
+    public exportDataToEmailResponse: any;
+    async exportDataToEmailAsync(request: ExportDataToEmailRequest)
+    {
+        const exportDataToEmailUrl: string = this.requestUrl + 'ExportDataToEmail/';
+
+        this.exportDataToEmailResponse =
+            await this.http.post<ExportDataToEmailResponse>(exportDataToEmailUrl, request, httpOptions).toPromise();
+
+        console.log('exportDataToEmailAsync: No issues, waiting until promise is resolved...');
     }
 
     // utility methods

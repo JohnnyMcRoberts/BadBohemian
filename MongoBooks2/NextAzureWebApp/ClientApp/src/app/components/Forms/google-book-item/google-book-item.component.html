@@ -103,16 +103,18 @@
 
                             <table width="100%">
                                 <tr width="100%">
+                                    <td>
+                                        <button mat-raised-button
+                                                color="primary"
+                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinkThumbnail)" i18n>
+                                            Copy to Clipboard
+                                        </button>
+                                    </td>
                                     <td width="80%">
                                         <mat-form-field appearance="fill" style="width: 100%">
                                             <mat-label>Image Full Path</mat-label>
                                             <input matInput value="{{ bookDetails.volumeInfo.imageLinkThumbnail }}" readonly>
                                         </mat-form-field>
-                                    </td>
-                                    <td>
-                                        <button mat-raised-button
-                                                color="primary"
-                                                (click)="copyToClipboard(bookDetails.volumeInfo.imageLinkThumbnail)" i18n>Copy to Clipboard</button>
                                     </td>
                                 </tr>
                             </table>
@@ -137,18 +139,18 @@
 
                                             <table width="100%">
                                                 <tr width="100%">
-                                                    <td width="80%">
-                                                        <mat-form-field appearance="fill" style="width: 100%">
-                                                            <mat-label>Image Full Path</mat-label>
-                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.extraLarge }}" readonly>
-                                                        </mat-form-field>
-                                                    </td>
                                                     <td>
                                                         <button mat-raised-button
                                                                 color="primary"
                                                                 (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.extraLarge)" i18n>
                                                             Copy to Clipboard
                                                         </button>
+                                                    </td>
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.extraLarge }}" readonly>
+                                                        </mat-form-field>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -162,18 +164,18 @@
 
                                             <table width="100%">
                                                 <tr width="100%">
-                                                    <td width="80%">
-                                                        <mat-form-field appearance="fill" style="width: 100%">
-                                                            <mat-label>Image Full Path</mat-label>
-                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.large }}" readonly>
-                                                        </mat-form-field>
-                                                    </td>
                                                     <td>
                                                         <button mat-raised-button
                                                                 color="primary"
                                                                 (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.large)" i18n>
                                                             Copy to Clipboard
                                                         </button>
+                                                    </td>
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.large }}" readonly>
+                                                        </mat-form-field>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -187,18 +189,18 @@
 
                                             <table width="100%">
                                                 <tr width="100%">
-                                                    <td width="80%">
-                                                        <mat-form-field appearance="fill" style="width: 100%">
-                                                            <mat-label>Image Full Path</mat-label>
-                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.medium }}" readonly>
-                                                        </mat-form-field>
-                                                    </td>
                                                     <td>
                                                         <button mat-raised-button
                                                                 color="primary"
                                                                 (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.medium)" i18n>
                                                             Copy to Clipboard
                                                         </button>
+                                                    </td>
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.medium }}" readonly>
+                                                        </mat-form-field>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -212,18 +214,18 @@
 
                                             <table width="100%">
                                                 <tr width="100%">
-                                                    <td width="80%">
-                                                        <mat-form-field appearance="fill" style="width: 100%">
-                                                            <mat-label>Image Full Path</mat-label>
-                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.small }}" readonly>
-                                                        </mat-form-field>
-                                                    </td>
                                                     <td>
                                                         <button mat-raised-button
                                                                 color="primary"
                                                                 (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.small)" i18n>
                                                             Copy to Clipboard
                                                         </button>
+                                                    </td>
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.small }}" readonly>
+                                                        </mat-form-field>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -237,18 +239,18 @@
 
                                             <table width="100%">
                                                 <tr width="100%">
-                                                    <td width="80%">
-                                                        <mat-form-field appearance="fill" style="width: 100%">
-                                                            <mat-label>Image Full Path</mat-label>
-                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.thumbnail }}" readonly>
-                                                        </mat-form-field>
-                                                    </td>
                                                     <td>
                                                         <button mat-raised-button
                                                                 color="primary"
                                                                 (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.thumbnail)" i18n>
                                                             Copy to Clipboard
                                                         </button>
+                                                    </td>
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.thumbnail }}" readonly>
+                                                        </mat-form-field>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -262,18 +264,18 @@
 
                                             <table width="100%">
                                                 <tr width="100%">
-                                                    <td width="80%">
-                                                        <mat-form-field appearance="fill" style="width: 100%">
-                                                            <mat-label>Image Full Path</mat-label>
-                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.smallThumbnail }}" readonly>
-                                                        </mat-form-field>
-                                                    </td>
                                                     <td>
                                                         <button mat-raised-button
                                                                 color="primary"
                                                                 (click)="copyToClipboard(bookDetails.volumeInfo.imageLinks.smallThumbnail)" i18n>
                                                             Copy to Clipboard
                                                         </button>
+                                                    </td>
+                                                    <td width="80%">
+                                                        <mat-form-field appearance="fill" style="width: 100%">
+                                                            <mat-label>Image Full Path</mat-label>
+                                                            <input matInput value="{{ bookDetails.volumeInfo.imageLinks.smallThumbnail }}" readonly>
+                                                        </mat-form-field>
                                                     </td>
                                                 </tr>
                                             </table>

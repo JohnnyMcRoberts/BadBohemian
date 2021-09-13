@@ -70,7 +70,6 @@ export class TextFileExportComponent implements OnInit, AfterViewInit
 
     public get loadingChartData(): boolean
     {
-
         return (!this.books || !this.books);
     }
 

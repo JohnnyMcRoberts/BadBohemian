@@ -1,9 +1,10 @@
-import { ViewChild } from '@angular/core';
+import { ViewChild, Injectable } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 /** LanguageAuthorsTable component*/
+@Injectable()
 export abstract class BaseTableComponent
 {
   public componentTitle: string;

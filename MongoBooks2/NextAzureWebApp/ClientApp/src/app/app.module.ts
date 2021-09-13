@@ -42,6 +42,7 @@ import { FindBookComponent } from './components/Forms/find-book/find-book.compon
 
 import { MainImportExportComponent } from './components/ImportExport/main-import-export/main-import-export.component';
 import { TextFileExportComponent } from './components/ImportExport/text-file-export/text-file-export.component';
+import { ExportToEmailComponent } from './components/ImportExport/export-to-email/export-to-email.component';
 
 
 import { UserLoginComponent } from './components/Forms/user-login/user-login.component';
@@ -128,6 +129,7 @@ PlotlyViaCDNModule.plotlyBundle = null;
 
         MainImportExportComponent,
         TextFileExportComponent,
+        ExportToEmailComponent,
 
         UserLoginComponent
 
@@ -136,11 +138,9 @@ PlotlyViaCDNModule.plotlyBundle = null;
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
         HttpClientModule,
         FormsModule,
-
-
+        
         ReactiveFormsModule,
-
-
+        
         AngularMaterialModule,
 
         OwlDateTimeModule,
@@ -150,14 +150,11 @@ PlotlyViaCDNModule.plotlyBundle = null;
         BrowserAnimationsModule,
         AppRoutingModule,
         LayoutModule,
-
-
-
+        
         CommonModule,
         PlotlyViaCDNModule,
 
-
-
+        
         RouterModule.forRoot([
             { path: '', component: UserLoginComponent, pathMatch: 'full' },
             { path: 'counter', component: CounterComponent },
