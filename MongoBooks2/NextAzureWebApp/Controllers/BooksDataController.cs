@@ -184,15 +184,36 @@
             return Ok(response);
         }
 
+        /// <summary>
+        /// Exports data via an attachment to an e-mail.
+        /// </summary>
+        /// <param name="exportRequest">The export to email request.</param>
+        /// <returns>The action result.</returns>
+        [HttpPost("ExportDataToEmail")]
+        public IActionResult SendExportEmail([FromBody] ExportDataToEmailRequest exportRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            ExportDataToEmailResponse response =
+                _booksDataControllerUtilities.SendExportEmail(exportRequest);
+
+            return Ok(response);
+        }
         #endregion
 
         #region Constructor
 
-        public BooksDataController(IOptions<MongoDbSettings> config)
+        public BooksDataController(
+            IOptions<MongoDbSettings> config,
+            IOptions<SmtpConfig> mailConfig)
         {
             MongoDbSettings dbSettings = config.Value;
 
-            _booksDataControllerUtilities = new BooksDataControllerUtilities(dbSettings);
+            _booksDataControllerUtilities =
+                new BooksDataControllerUtilities(dbSettings, mailConfig.Value);
         }
 
         #endregion

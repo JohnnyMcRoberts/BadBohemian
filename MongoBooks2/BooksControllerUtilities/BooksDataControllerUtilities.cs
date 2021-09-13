@@ -29,6 +29,7 @@ namespace BooksControllerUtilities
     using BooksCore.Users;
 
     using BooksDatabase.Implementations;
+    using BooksMailbox;
 
     public class BooksDataControllerUtilities : BaseControllerUtilities
     {
@@ -55,6 +56,26 @@ namespace BooksControllerUtilities
             "20th", "21st", "22nd", "23rd", "24th", "25th", "26th", "27th", "28th", "29th",
             "30th", "31st"
         };
+
+        private readonly string AuthCodeText = "AUTH-CODE";
+
+        private readonly string ActivateTimeText = "ACTIVATE-TIME";
+
+        private readonly string MessageSubject = "McBob's Books Authentication";
+
+        private readonly string MessageBodyTop =
+            @"<body>
+                <p>Please enter the following code to activate the new user login:</p>";
+
+        private readonly string MessageBodyAuthCode =
+            @"<h4>AUTH-CODE</h4>";
+
+        private readonly string MessageBodyActivateTime =
+            @"<p>This activation code will expire at: <b>ACTIVATE-TIME</b><p>";
+
+        private readonly string MessageBodyBottom =
+            @"<p>Thanks and enjoy the trip!<p>
+                </body>";
 
         #endregion
 
@@ -104,6 +125,8 @@ namespace BooksControllerUtilities
         /// The nations read from database.
         /// </summary>
         private ObservableCollection<NationGeography> _nations;
+
+        private readonly SmtpConfig _smtpConfig;
 
         #endregion
 
@@ -336,7 +359,40 @@ namespace BooksControllerUtilities
                 sw.Close();
             }
         }
-        
+
+        private void SendExportEmailToUser(ExportDataToEmailRequest exportRequest)
+        {
+            // Set up the message
+            string messageBody = MessageBodyTop;
+
+            string messageAuth =
+                MessageBodyAuthCode.Replace(AuthCodeText, "some code");
+            messageBody += messageAuth;
+
+            string messageTime =
+                MessageBodyActivateTime.Replace(ActivateTimeText, "xsome time");
+            messageBody += messageTime;
+
+            messageBody += MessageBodyBottom;
+
+            // Set up the mail connection parameters
+            StmpConnection connection =
+                new StmpConnection(_smtpConfig.EmailAddress, _smtpConfig.Password);
+
+            // Set up the message parameters
+            HtmlEmailDefinition emailDefinition =
+                new HtmlEmailDefinition
+                {
+                    FromEmailDisplayName = _smtpConfig.Username,
+                    ToEmail = exportRequest.DestinationEmail,
+                    ToEmailDisplayName = "Guy we know",
+                    Subject = MessageSubject,
+                    BodyHtml = messageBody
+                };
+
+            SmtpEmailer.SendHtmlEmail(connection, emailDefinition);
+        }
+
         #endregion
 
         #region HTTP Handlers
@@ -876,10 +932,17 @@ namespace BooksControllerUtilities
             return response;
         }
 
+        public ExportDataToEmailResponse SendExportEmail(
+            ExportDataToEmailRequest exportRequest)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
-        public BooksDataControllerUtilities(MongoDbSettings dbSettings) : base(dbSettings)
+        public BooksDataControllerUtilities(MongoDbSettings dbSettings, SmtpConfig mailConfig) : base(dbSettings)
         {
+            _smtpConfig = mailConfig;
             DatabaseConnectionString = dbSettings.DatabaseConnectionString;
             ExportDirectory = dbSettings.ExportDirectory;
 
@@ -919,5 +982,6 @@ namespace BooksControllerUtilities
                 _userDatabase.ConnectToDatabase();
             }
         }
+
     }
 }
