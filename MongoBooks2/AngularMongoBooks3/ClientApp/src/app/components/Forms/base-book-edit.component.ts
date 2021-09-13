@@ -1,4 +1,4 @@
-import { OnInit, EventEmitter, AfterViewInit, ElementRef  } from '@angular/core';
+import { OnInit, EventEmitter, AfterViewInit, ElementRef, Injectable } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 
@@ -33,6 +33,7 @@ export class NumericSelectionItem
 }
 
 /** BaseEditBook component*/
+@Injectable()
 export abstract class BaseEditBookComponent implements OnInit, AfterViewInit
 {
     /** BaseEditBook ctor */

@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { UserLogin } from './../Models/User';
 
-@Injectable(({
-  providedIn: 'root',
-}) as any)
+@Injectable({
+    providedIn: 'root',
+})
 export class CurrentLoginService
 {
   constructor()

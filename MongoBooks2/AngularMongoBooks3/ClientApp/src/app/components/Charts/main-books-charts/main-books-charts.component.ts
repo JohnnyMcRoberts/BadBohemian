@@ -14,7 +14,7 @@ export class MainBooksChartsComponent {
     /** MainBooksCharts ctor */
     constructor(
         private router: Router,
-        private currentLoginService: CurrentLoginService) {
+        public currentLoginService: CurrentLoginService) {
 
     }
 
