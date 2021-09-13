@@ -187,11 +187,14 @@
 
         #region Constructor
 
-        public BooksDataController(IOptions<MongoDbSettings> config)
+        public BooksDataController(
+            IOptions<MongoDbSettings> config,
+            IOptions<SmtpConfig> mailConfig)
         {
             MongoDbSettings dbSettings = config.Value;
 
-            _booksDataControllerUtilities = new BooksDataControllerUtilities(dbSettings);
+            _booksDataControllerUtilities = 
+                new BooksDataControllerUtilities(dbSettings, mailConfig.Value);
         }
 
         #endregion

@@ -1,0 +1,129 @@
+<div style="margin: 10px 10px 10px 10px;">
+
+    <h1>Welcome to McBob's Books!</h1>
+
+    <p>This is a demonstration single-page application, to show fluency with the following:</p>
+
+    <mat-tab-group #tabGroup dynamicHeight class="noMargin">
+
+        <mat-tab label="Technology">
+            <div class="home-tab-content">
+                <ul>
+                    <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
+                    <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
+                    <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
+                </ul>
+                <p>The main versions are as follows:</p>
+                <table>
+                    <tr>
+                        <td>Angular CLI:</td>
+                        <td> <b class="bold-version-number">{{angularVersions.angularCLI}}</b> </td>
+                    </tr>
+                    <tr>
+                        <td>Node:</td>
+                        <td> <b sclass="bold-version-number">{{angularVersions.node}}</b> </td>
+                    </tr>
+                    <tr>
+                        <td>Package Manager:</td>
+                        <td> <b class="bold-version-number">{{angularVersions.packageManager}}</b> </td>
+                    </tr>
+                    <tr>
+                        <td>OS:</td>
+                        <td> <b class="bold-version-number">{{angularVersions.os}}</b> </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Angular:</td>
+                        <td> <b class="bold-version-number">{{angularVersions.angular.version}}</b> </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+
+                            <ul class="inline-list">
+                                <li *ngFor="let angularPackage of angularVersions.angular.packages">
+                                    <b class="bold-version-number">{{angularPackage}}</b>
+                                </li>
+
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+
+                <p>The individual package versions are as follows:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td><h5>Package</h5></td>
+                            <td><h5>Version</h5></td>
+                        </tr>
+                    </thead>
+                    <tr *ngFor="let packageVersion of angularVersions.packageVersions">
+                        <td>{{packageVersion.package}}</td>
+                        <td><b class="bold-version-number">{{packageVersion.version}}</b></td>
+                    </tr>
+                </table>
+
+
+            </div>
+        </mat-tab>
+
+        <mat-tab label="User Login">
+
+            <div class="home-tab-content">
+                <p>The user log in tab is used to gain secure access to the application. A user must be logged in to read or update any book data.</p>
+                <p>The existing user log in looks like this.</p>
+                <img src="/assets/images/Bookslogin.png" alt="image">
+                <p>After successfully logging in you will see something like this.</p>
+                <img src="/assets/images/successfulUserLogin.png" alt="image">
+                <p>Creating a new resource will lead to completing this form.</p>
+                <img src="/assets/images/newUserLogin.png" alt="image">
+                <p>After which you will be a confirmatory e-mail with the activation code looking something like this:</p>
+                <img src="/assets/images/confirmEmail.png" alt="image">
+            </div>
+
+        </mat-tab>
+
+        <mat-tab label="Tables">
+
+            <div class="home-tab-content">
+
+                <p>These tables show the books that have been by a user since they started keeping track.</p>
+                <img src="/assets/images/PageOfBooks.png" alt="image">
+                <p>These can be sorted and filtered should the user wish to find a particular book and user clicks on a book they get the full details.</p>
+                <img src="/assets/images/booksDetail.png" alt="image">
+                <p>The broken down by various characteristics such as author, original language etc in the other tables.</p>
+
+            </div>
+
+        </mat-tab>
+
+        <mat-tab label="Forms">
+
+            <div class="home-tab-content">
+            </div>
+
+        </mat-tab>
+
+        <mat-tab label="Charts">
+
+            <div class="home-tab-content">
+            </div>
+
+        </mat-tab>
+
+        <mat-tab label="Import/Export">
+
+            <div class="home-tab-content">
+            </div>
+
+        </mat-tab>
+
+    </mat-tab-group>
+
+</div>

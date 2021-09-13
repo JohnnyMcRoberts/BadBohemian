@@ -1,0 +1,100 @@
+<div>
+    <h2> Hello </h2>
+
+    <table class="example-full-width">
+
+        <tr>
+        </tr>
+
+        <tr>
+
+            <td>
+                <b>Data Source:</b>
+            </td>
+
+            <td>
+
+                <mat-radio-group aria-labelledby="example-radio-group-label"
+                                 class="example-radio-group"
+                                 [(ngModel)]="selectedExportDataSource">
+                    <mat-radio-button class="example-radio-button"
+                                      *ngFor="let exportDataSource of exportDataSources"
+                                      [value]="exportDataSource">
+                        {{exportDataSource}}
+                    </mat-radio-button>
+                </mat-radio-group>
+
+            </td>
+
+            <td *ngIf="selectedExportDataSource">
+                <span>Selection: <b>{{selectedExportDataSource}}</b></span>
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+                <b>Export Type:</b>
+            </td>
+
+            <td>
+
+                <mat-radio-group aria-labelledby="example-radio-group-label"
+                                 class="example-radio-group"
+                                 [(ngModel)]="selectedExportType">
+                    <mat-radio-button class="example-radio-button" *ngFor="let exportType of exportTypes" [value]="exportType">
+                        {{exportType}}
+                    </mat-radio-button>
+                </mat-radio-group>
+
+            </td>
+
+            <td *ngIf="selectedExportType">
+                <span>Selection: <b>{{selectedExportType}}</b></span>
+            </td>
+
+
+        </tr>
+
+        <tr>
+            <td>
+                <b>Destination E-mail:</b>
+            </td>
+
+            <td>
+                <form [formGroup]="destinationUserFormGroup" #formDir="ngForm" class="example-form">
+
+                    <mat-form-field class="example-full-width">
+                        <input matInput type="text"
+                               placeholder="Destination Email"
+                               formControlName="newUserEmail"
+                               (input)="onNewUserEmailInput()">
+                        <mat-error *ngIf="newUserEmail.hasError('email') && !newUserEmail.hasError('required')">
+                            Please enter a valid email address
+                        </mat-error>
+                        <mat-error *ngIf="newUserEmail.hasError('required')">
+                            Email is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+
+                </form>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <button mat-raised-button
+                        color="primary"
+                        (click)="onSendEmail()"
+                        [disabled]="destinationUserFormGroup.invalid || !sourceOptionSelected || !exportOptionSelected">
+                    Submit
+                </button>
+            </td>
+        </tr>
+    </table>
+
+</div>
