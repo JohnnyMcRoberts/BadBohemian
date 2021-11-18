@@ -1,0 +1,21 @@
+<p>Welcome to your new single-page books data entry application, the current state is:</p>
+<div style="float: left; width: 50%;">
+    <mat-list>
+        <h3 mat-subheader>To Do</h3>
+        <mat-list-item *ngFor="let todo of todos">
+            <mat-icon mat-list-icon>add_circle_outline</mat-icon>
+            <h4 mat-line>{{todo.name}}</h4>
+        </mat-list-item>
+    </mat-list>
+</div>
+
+
+<div style="float: right; width: 50%;">
+    <mat-list>
+        <h3 mat-subheader>Completed</h3>
+        <mat-list-item *ngFor="let completed of complete">
+            <mat-icon mat-list-icon>done</mat-icon>
+            <h4 mat-line>{{completed.name}}</h4>
+        </mat-list-item>
+    </mat-list>
+</div>

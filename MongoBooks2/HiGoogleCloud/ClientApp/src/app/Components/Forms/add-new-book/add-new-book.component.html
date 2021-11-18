@@ -1,0 +1,271 @@
+<div *ngIf="!currentLoginService.isLoggedIn" class="not-logged-in-div">
+    <h1>Not currently Logged In</h1>
+</div>
+
+<div *ngIf="currentLoginService.isLoggedIn" style="margin: 15px">
+
+    <p *ngIf="!editorDetails"><em>Loading...</em></p>
+
+    <mat-spinner *ngIf="!editorDetails"></mat-spinner>
+
+    <div *ngIf="editorDetails">
+
+        <form [formGroup]="addNewBookForm">
+
+            <ng-template #addedDialog>
+                <h2 matDialogTitle>Successfully Added</h2>
+                <p matDialogContent>The new book has been added successfully.</p>
+                <mat-dialog-actions align="end">
+                    <button mat-button matDialogClose>OK</button>
+                </mat-dialog-actions>
+            </ng-template>
+
+            <ng-template #failedDialog>
+                <h2 matDialogTitle>Failed</h2>
+                <p matDialogContent>This book could not be added, please check logs for details.</p>
+                <mat-dialog-actions align="end">
+                    <button mat-button matDialogClose>OK</button>
+                </mat-dialog-actions>
+            </ng-template>
+
+            <mat-tab-group dynamicHeight class="full-width-table">
+
+                <mat-tab label="Basics Fields" class="full-width-table">
+
+                    <div>
+                        <span>
+
+                            <mat-label>Date Read </mat-label>
+
+                            <input [matDatepicker]="datePickerBookRead"
+                                   [max]="currentDate"
+                                   (dateChange)="setNewDateRead()"
+                                   formControlName="dateBookRead"
+                                   type="text"
+                                   class="right"
+                                   placeholder="Date Read">
+                            <mat-datepicker-toggle [for]="datePickerBookRead"></mat-datepicker-toggle>
+                            <mat-datepicker #datePickerBookRead></mat-datepicker>
+                        </span>
+                    </div>
+
+
+
+                    <div>
+                        <mat-form-field class="example-full-width">
+                            <input type="text" placeholder="Author" aria-label="Author" matInput formControlName="bookAuthor" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredAuthors | async" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div>
+                        <mat-form-field>
+                            <mat-label>Title</mat-label>
+                            <input matInput placeholder="Title" formControlName="bookTitle" required>
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+                        <mat-form-field>
+                            <mat-label>Pages</mat-label>
+                            <input matInput type="number" min="0" max="3000" formControlName="bookPages" required>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div>
+                        <mat-form-field>
+                            <mat-label>Home Country</mat-label>
+                            <mat-select [(value)]="selectedCountry"
+                                        placeholder="Chosen Country"
+                                        (selectionChange)="newSelectedCountry($event.value)"
+                                        formControlName="authorCountry"
+                                        disableOptionCentering
+                                        panelClass="material-option-select-panel"
+                                        required>
+                                <mat-option *ngFor="let item of countryOptions" [value]="item.value">
+                                    {{item.viewValue}}
+                                </mat-option>
+                            </mat-select>
+
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+                        <mat-form-field>
+                            <input type="text"
+                                   placeholder="Language"
+                                   aria-label="Language"
+                                   matInput
+                                   disableOptionCentering
+                                   panelClass="material-option-select-panel"
+                                   formControlName="originalLanguage"
+                                   [matAutocomplete]="autoLanguage">
+                            <mat-autocomplete #autoLanguage="matAutocomplete">
+                                <mat-option *ngFor="let language of filteredLanguages | async" [value]="language">
+                                    {{language}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div>
+                        <mat-form-field>
+                            <mat-label>Format</mat-label>
+                            <mat-select [(value)]="selectedFormat"
+                                        placeholder="Chosen Format"
+                                        (selectionChange)="newSelectedFormat($event.value)"
+                                        formControlName="bookFormat"
+                                        disableOptionCentering
+                                        panelClass="material-option-select-panel"
+                                        required>
+                                <mat-option *ngFor="let item of formatOptions" [value]="item.value">
+                                    {{item.viewValue}}
+                                </mat-option>
+                            </mat-select>
+
+                        </mat-form-field>
+                    </div>
+
+                </mat-tab>
+
+                <mat-tab label="Cover Image" class="full-width-table">
+
+
+
+                    <div>
+                        <img src="{{imageUrl}}" height="250" />
+                    </div>
+
+
+                    <div>
+                        <table width="100%">
+                            <tr width="100%">
+                                <td>
+                                    <button mat-raised-button
+                                            color="primary"
+                                            (click)="pasteImageUrlFromClipboard()">
+                                        Paste from Clipboard
+                                    </button>
+                                </td>
+                                <td width="80%">
+                                    <mat-form-field>
+                                        <mat-label>Image URL</mat-label>
+                                        <input matInput placeholder="Image URL" formControlName="imageUrl">
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </mat-tab>
+
+                <mat-tab label="Notes and Tags" class="full-width-table">
+
+
+                    <div>
+                        <mat-form-field>
+                            <mat-label>Notes</mat-label>
+                            <textarea matInput mdTextareaAutosize rows="10"
+                                      formControlName="bookNotes"
+                                      placeholder="Notes about the book">
+                                </textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+
+                        <mat-form-field class="example-chip-list">
+                            <mat-chip-list #chipList aria-label="Tag selection">
+                                <mat-chip *ngFor="let tag of selectedTags"
+                                          [selectable]="selectable"
+                                          [removable]="removable"
+                                          (removed)="remove(tag)">
+                                    {{tag}}
+                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                </mat-chip>
+                                <input placeholder="Tags..."
+                                       #tagsInput
+                                       [formControl]="tagsControl"
+                                       [matAutocomplete]="autocompleteTags"
+                                       [matChipInputFor]="chipList"
+                                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                       (matChipInputTokenEnd)="add($event)">
+                            </mat-chip-list>
+                            <mat-autocomplete #autocompleteTags="matAutocomplete" (optionSelected)="selected($event)">
+                                <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                                    {{tag}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div>
+                        <b>Tags:</b> {{displayTags}}
+                    </div>
+
+                </mat-tab>
+
+            </mat-tab-group>
+
+            <table>
+
+                <tr>
+
+                    <td>
+
+                        <button [disabled]="!addNewBookForm.valid || updateInProgress"
+                                mat-raised-button
+                                color="primary"
+                                (click)="onSubmit()">
+                            Add New Book
+                        </button>
+
+                    </td>
+
+                    <td>
+
+                        <button mat-raised-button
+                                color="warn"
+                                [disabled]="!addNewBookForm.valid"
+                                (click)="onNewBookReset()">
+                            Reset Details
+                        </button>
+
+                    </td>
+
+                    <td>
+
+                        <button mat-raised-button
+                                [disabled]="!addNewBookForm.valid"
+                                (click)="onNewBookDisplay()">
+                            Display Details
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </form>
+
+        <div *ngIf="selectedBookToDisplay">
+
+            <app-book-detail [bookSelected]="selectedBook">
+
+            </app-book-detail>
+
+        </div>
+
+    </div>
+
+
+</div>
