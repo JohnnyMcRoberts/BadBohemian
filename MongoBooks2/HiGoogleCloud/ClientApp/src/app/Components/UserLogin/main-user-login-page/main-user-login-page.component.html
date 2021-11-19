@@ -2,7 +2,7 @@
 
   <mat-tab label="Existing User Login">
 
-    <div *ngIf="existingUserLoginSuccessString != ''" style="margin: 15px">
+    <div *ngIf="existingUserLoginSuccessString != ''" style="margin: 15px; min-height: 400px;">
 
       <h2> Successfully Logged In </h2>
 
@@ -89,7 +89,6 @@
         </table>
       </form>
     </div>
-
 
     <div *ngIf="existingUserLoginSuccessString === '' && existingUserLoginInProgressName !== ''" style="margin: 15px">
 
