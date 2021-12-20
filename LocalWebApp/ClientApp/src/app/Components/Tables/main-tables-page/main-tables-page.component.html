@@ -1,0 +1,53 @@
+<!--<div *ngIf="!currentLoginService.isLoggedIn" class="not-logged-in-div" (click)="goToLogin();">
+    <h1>Not currently Logged In</h1>
+</div>
+
+<div *ngIf="currentLoginService.isLoggedIn" style="margin: 15px">-->
+
+    <mat-tab-group dynamicHeight #tabGroup>
+
+        <mat-tab label="Books Read">
+
+            <app-books-read-table></app-books-read-table>
+
+        </mat-tab>
+
+        <mat-tab label="Authors">
+
+            <app-authors-read-table></app-authors-read-table>
+
+        </mat-tab>
+
+        <mat-tab label="Languages">
+
+            <app-language-authors-table></app-language-authors-table>
+
+        </mat-tab>
+
+        <mat-tab label="Countries">
+
+            <app-country-author-table></app-country-author-table>
+
+        </mat-tab>
+
+        <mat-tab label="Tallies">
+
+            <app-book-tallies-table></app-book-tallies-table>
+
+        </mat-tab>
+
+        <mat-tab label="Per Month Tallies">
+
+            <app-monthly-tallies-table></app-monthly-tallies-table>
+
+        </mat-tab>
+
+        <mat-tab label="Tags">
+
+            <app-books-tags-table></app-books-tags-table>
+
+        </mat-tab>
+
+    </mat-tab-group>
+
+<!--</div>-->

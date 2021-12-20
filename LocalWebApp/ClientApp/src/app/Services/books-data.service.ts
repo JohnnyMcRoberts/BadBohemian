@@ -26,9 +26,9 @@ const httpOptions =
     providedIn: 'root',
 })
 export class BooksDataService {
-    constructor(
-        private http: HttpClient) {
-        this.requestUrl = '/api/BooksData/';
+    constructor(public http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+        //this.requestUrl = '/api/BooksData/';
+        this.requestUrl = baseUrl + 'booksdata/';
     }
 
     public requestUrl: string;

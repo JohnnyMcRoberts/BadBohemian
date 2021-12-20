@@ -7,6 +7,9 @@ import { HomeComponent } from './../home/home.component';
 import { CounterComponent } from './../counter/counter.component';
 import { FetchDataComponent } from './../fetch-data/fetch-data.component';
 
+
+import { MainTablesPageComponent } from './../Components/Tables/main-tables-page/main-tables-page.component';
+
 const routes: Routes =
   [
     { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -17,7 +20,7 @@ const routes: Routes =
     //{ path: 'charts', component: MainBooksChartsComponent },
     //{ path: 'forms', component: MainBooksFormsComponent },
     //{ path: 'import-export', component: MainImportExportComponent },
-    //{ path: 'tables', component: MainTablesPageComponent },
+    { path: 'tables', component: MainTablesPageComponent },
     //{ path: 'to-do', component: ToDoListComponent },
     //{ path: 'user-login', component: MainUserLoginPageComponent },
 
