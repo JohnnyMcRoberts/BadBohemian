@@ -1,0 +1,131 @@
+<p *ngIf="!items">{{componentTitle}}</p>
+
+<div class="mat-elevation-z8" *ngIf="items">
+  <table class="noborders-table">
+    <tr class="noborders">
+      <td class="noborders">
+        <mat-form-field appearance="fill">
+          <input matInput (keyup)="applyItemsFilter($event.target)"
+                 placeholder="Filter">
+        </mat-form-field>
+      </td>
+      <td class="noborders">
+        <mat-paginator #itemsTablePaginator
+                       [length]="5"
+                       [pageSize]="6"
+                       [pageSizeOptions]="[5, 10, 20]"
+                       showFirstLastButtons>
+        </mat-paginator>
+      </td>
+    </tr>
+  </table>
+
+  <mat-table #table [dataSource]="itemsDataSource"
+             #itemsTableSort="matSort"
+             matSortActive="monthDate"
+             matSortDisableClear
+             matSortDirection="desc"
+             matSort>
+
+    <ng-container matColumnDef="monthDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.monthDate | date : "d MMMM yyyy"}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="daysInTheMonth">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Days in the Month</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.daysInTheMonth}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalBooks">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Total Books</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.totalBooks}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalPagesRead">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Total Pages Read</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.totalPagesRead}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalBookFormat">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Total in Book Format</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.totalBookFormat}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalComicFormat">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Total in Comic Format</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.totalComicFormat}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAudioFormat">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Total in Audio Format</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.totalAudioFormat}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="percentageInEnglish">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>% in English</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.percentageInEnglish | number:'2.2'}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="percentageInTranslation">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>% in Translation</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.percentageInTranslation | number:'2.2'}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="pageRate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Page Rate</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.pageRate | number:'.2'}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="daysPerBook">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Days per Book</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.daysPerBook | number:'.2'}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="pagesPerBook">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Pages per Book</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.pagesPerBook | number:'.2'}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="booksPerYear">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Books per Year</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.booksPerYear | number:'.2'}}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="itemsDisplayedColumns"></mat-header-row>
+
+    <mat-row *matRowDef="let row; columns: itemsDisplayedColumns"
+             (click)="onItemsRowClicked(row)"></mat-row>
+
+  </mat-table>
+
+</div>
+
+<div *ngIf="selectedBooks">
+
+  <table class="full-width-table">
+
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Date</th>
+      <th>Pages</th>
+      <th>Cover</th>
+    </tr>
+
+    <tr *ngFor="let book of selectedBooks">
+      <td class="padded-cell"><b>{{book.title}}</b></td>
+      <td>{{book.author}}</td>
+      <td>{{book.date | date : "d MMMM yyyy"}}</td>
+      <td>{{book.pages}}</td>
+      <td><img src="{{book.imageUrl}}" class="aspectshrink" /></td>
+    </tr>
+
+  </table>
+</div>
+

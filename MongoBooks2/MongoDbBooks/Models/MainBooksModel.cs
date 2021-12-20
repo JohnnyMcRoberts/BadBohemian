@@ -92,7 +92,6 @@
         #region Connection strings
 
         public const string DatabaseConnectionString = "mongodb://localhost:27017";
-
         #endregion
 
         #region Public Data
