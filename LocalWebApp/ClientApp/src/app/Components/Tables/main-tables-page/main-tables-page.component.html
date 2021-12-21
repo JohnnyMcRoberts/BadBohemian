@@ -1,9 +1,8 @@
-<!--<div *ngIf="!currentLoginService.isLoggedIn" class="not-logged-in-div" (click)="goToLogin();">
+<div *ngIf="!currentLoginService.isLoggedIn" class="not-logged-in-div" (click)="goToLogin();">
     <h1>Not currently Logged In</h1>
 </div>
 
-<div *ngIf="currentLoginService.isLoggedIn" style="margin: 15px">-->
-
+<div *ngIf="currentLoginService.isLoggedIn" style="margin: 15px">
     <mat-tab-group dynamicHeight #tabGroup>
 
         <mat-tab label="Books Read">
@@ -50,4 +49,4 @@
 
     </mat-tab-group>
 
-<!--</div>-->
+</div>

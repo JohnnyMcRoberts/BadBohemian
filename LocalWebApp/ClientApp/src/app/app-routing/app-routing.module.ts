@@ -10,6 +10,7 @@ import { FetchDataComponent } from './../fetch-data/fetch-data.component';
 
 import { MainTablesPageComponent } from './../Components/Tables/main-tables-page/main-tables-page.component';
 import { MainBooksFormsComponent } from './../Components/Forms/main-books-forms/main-books-forms.component';
+import { MainUserLoginPageComponent } from './../Components/UserLogin/main-user-login-page/main-user-login-page.component';
 
 const routes: Routes =
   [
@@ -23,7 +24,7 @@ const routes: Routes =
     //{ path: 'import-export', component: MainImportExportComponent },
     { path: 'tables', component: MainTablesPageComponent },
     //{ path: 'to-do', component: ToDoListComponent },
-    //{ path: 'user-login', component: MainUserLoginPageComponent },
+    { path: 'user-login', component: MainUserLoginPageComponent },
 
     //{ path: 'dashboard', component: MainComponentComponent }
   ];

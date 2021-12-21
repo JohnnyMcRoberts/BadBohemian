@@ -38,6 +38,10 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 
+
+// UserLogin
+import { MainUserLoginPageComponent } from './Components/UserLogin/main-user-login-page/main-user-login-page.component';
+
 // Forms
 import { MainFormsPageComponent } from './Components/Forms/main-forms-page/main-forms-page.component';
 import { MainBooksFormsComponent } from './Components/Forms/main-books-forms/main-books-forms.component';
@@ -72,6 +76,8 @@ import { SelectedBookDetailComponent } from './Components/Tables/selected-book-d
             HomeComponent,
             CounterComponent,
             FetchDataComponent,
+
+            MainUserLoginPageComponent,
 
             MainFormsPageComponent,
             MainBooksFormsComponent,

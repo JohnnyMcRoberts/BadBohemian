@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import
@@ -20,12 +20,14 @@ const httpOptions =
 @Injectable()
 export class UserLoginService
 {
-    constructor(private http: HttpClient)
-    {
-        this.baseUsersUrl = 'api/Users/';
+    constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+
+        //this.baseUsersUrl = 'api/Users/';
+        this.baseUsersUrl = baseUrl + 'users/';
         this.addUserLoginUrl = this.baseUsersUrl + 'AddNewUser/';
         this.addUserVerifyUrl = this.baseUsersUrl + 'VerifyNewUser/';
-        this.requestUserLoginUrl = 'api/UserLogin/';
+        //this.requestUserLoginUrl = 'api/UserLogin/';
+        this.requestUserLoginUrl = baseUrl + 'userlogin/';
     }
 
     public baseUsersUrl: string;
