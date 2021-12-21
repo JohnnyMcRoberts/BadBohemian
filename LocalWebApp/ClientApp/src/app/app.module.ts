@@ -38,6 +38,14 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 
+// Forms
+import { MainFormsPageComponent } from './Components/Forms/main-forms-page/main-forms-page.component';
+import { MainBooksFormsComponent } from './Components/Forms/main-books-forms/main-books-forms.component';
+import { AddNewBookComponent } from './Components/Forms/add-new-book/add-new-book.component';
+import { EditExistingBookComponent } from './Components/Forms/edit-existing-book/edit-existing-book.component';
+import { GoogleBookItemComponent } from './Components/Forms/google-book-item/google-book-item.component';
+import { FindBookComponent } from './Components/Forms/find-book/find-book.component';
+
 // Tables
 import { MainTablesPageComponent } from './Components/Tables/main-tables-page/main-tables-page.component';
 import { BooksReadTableComponent } from './Components/Tables/books-read-table/books-read-table.component';
@@ -49,6 +57,7 @@ import { BooksTagsTableComponent } from './Components/Tables/books-tags-table/bo
 import { MonthlyTalliesTableComponent } from './Components/Tables/monthly-tallies-table/monthly-tallies-table.component';
 import { BookDetailComponent } from './Components/Tables/book-detail/book-detail.component';
 import { SelectedBookDetailComponent } from './Components/Tables/selected-book-detail/selected-book-detail.component';
+
 
 //#endregion
 
@@ -63,6 +72,13 @@ import { SelectedBookDetailComponent } from './Components/Tables/selected-book-d
             HomeComponent,
             CounterComponent,
             FetchDataComponent,
+
+            MainFormsPageComponent,
+            MainBooksFormsComponent,
+            AddNewBookComponent,
+            EditExistingBookComponent,
+            GoogleBookItemComponent,
+            FindBookComponent,
 
             MainTablesPageComponent,
             BooksReadTableComponent,

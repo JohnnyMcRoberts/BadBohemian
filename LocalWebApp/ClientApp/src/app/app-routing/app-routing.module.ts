@@ -9,6 +9,7 @@ import { FetchDataComponent } from './../fetch-data/fetch-data.component';
 
 
 import { MainTablesPageComponent } from './../Components/Tables/main-tables-page/main-tables-page.component';
+import { MainBooksFormsComponent } from './../Components/Forms/main-books-forms/main-books-forms.component';
 
 const routes: Routes =
   [
@@ -18,7 +19,7 @@ const routes: Routes =
     { path: 'fetch-data', component: FetchDataComponent },
 
     //{ path: 'charts', component: MainBooksChartsComponent },
-    //{ path: 'forms', component: MainBooksFormsComponent },
+    { path: 'forms', component: MainBooksFormsComponent },
     //{ path: 'import-export', component: MainImportExportComponent },
     { path: 'tables', component: MainTablesPageComponent },
     //{ path: 'to-do', component: ToDoListComponent },
