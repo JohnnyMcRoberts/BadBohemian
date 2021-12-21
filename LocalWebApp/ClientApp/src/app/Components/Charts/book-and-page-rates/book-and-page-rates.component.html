@@ -1,0 +1,73 @@
+<div *ngIf="loadingChartData">
+    <p>{{componentTitle}}</p>
+</div>
+
+<div width="100%" height="95%">
+    <mat-tab-group dynamicHeight #tabGroup>
+        <mat-tab label="Overall Tallies">
+            <plotly-plot [data]="overallTalliesData"
+                         [layout]="overallTalliesLayout"
+                         [config]="plotlyConfig"
+                         [useResizeHandler]="true"
+                         [style]="{position: 'relative', width: '100%', height: '100%'}"
+                         >
+            </plotly-plot>
+        </mat-tab>
+        <mat-tab label="Days per book">
+            <plotly-plot [data]="daysPerBookData"
+                         [layout]="daysPerBookLayout"
+                         [config]="plotlyConfig"
+                         [useResizeHandler]="true"
+                         [style]="{position: 'relative', width: '100%', height: '100%'}">
+            </plotly-plot>
+        </mat-tab>
+        <mat-tab label="Page Rate">
+            <plotly-plot [data]="pageRateData"
+                         [layout]="pageRateLayout"
+                         [config]="plotlyConfig"
+                         [useResizeHandler]="true"
+                         [style]="{position: 'relative', width: '100%', height: '100%'}">
+            </plotly-plot>
+        </mat-tab>
+        <mat-tab label="Pages per Book">
+            <plotly-plot [data]="pagesPerBookData"
+                         [layout]="pagesPerBookLayout"
+                         [config]="plotlyConfig"
+                         [useResizeHandler]="true"
+                         [style]="{position: 'relative', width: '100%', height: '100%'}">
+            </plotly-plot>
+        </mat-tab>
+        <mat-tab label="Books per Month by Year">
+            <plotly-plot [data]="bookTalliesPerMonthByCalendarYearData"
+                         [layout]="bookTalliesPerMonthByCalendarYearLayout"
+                         [config]="plotlyConfig"
+                         [useResizeHandler]="true"
+                         [style]="{position: 'relative', width: '100%', height: '100%'}">
+            </plotly-plot>
+        </mat-tab>
+        <mat-tab label="Pages per Month by Year">
+            <plotly-plot [data]="pageTalliesPerMonthByCalendarYearData"
+                         [layout]="pageTalliesPerMonthByCalendarYearLayout"
+                         [config]="plotlyConfig"
+                         [useResizeHandler]="true"
+                         [style]="{position: 'relative', width: '100%', height: '100%'}">
+            </plotly-plot>
+        </mat-tab>
+        <mat-tab label="Book Tallies by Year">
+            <plotly-plot [data]="bookTalliesByCalendarYearData"
+                         [layout]="bookTalliesByCalendarYearLayout"
+                         [config]="plotlyConfig"
+                         [useResizeHandler]="true"
+                         [style]="{position: 'relative', width: '100%', height: '100%'}">
+            </plotly-plot>
+        </mat-tab>
+        <mat-tab label="Pages Tallies by Year">
+            <plotly-plot [data]="pageTalliesByCalendarYearData"
+                         [layout]="pageTalliesByCalendarYearLayout"
+                         [config]="plotlyConfig"
+                         [useResizeHandler]="true"
+                         [style]="{position: 'relative', width: '100%', height: '100%'}">
+            </plotly-plot>
+        </mat-tab>
+    </mat-tab-group>
+</div>
