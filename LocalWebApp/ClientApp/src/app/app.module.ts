@@ -62,6 +62,11 @@ import { MonthlyTalliesTableComponent } from './Components/Tables/monthly-tallie
 import { BookDetailComponent } from './Components/Tables/book-detail/book-detail.component';
 import { SelectedBookDetailComponent } from './Components/Tables/selected-book-detail/selected-book-detail.component';
 
+// Import/Export
+import { MainImportExportPageComponent } from './Components/ImportExport/main-import-export-page/main-import-export-page.component';
+import { MainImportExportComponent } from './Components/ImportExport/main-import-export/main-import-export.component';
+import { TextFileExportComponent } from './Components/ImportExport/text-file-export/text-file-export.component';
+import { EmailExportComponent } from './Components/ImportExport/email-export/email-export.component';
 
 //#endregion
 
@@ -76,8 +81,6 @@ import { SelectedBookDetailComponent } from './Components/Tables/selected-book-d
             HomeComponent,
             CounterComponent,
             FetchDataComponent,
-
-            MainUserLoginPageComponent,
 
             MainFormsPageComponent,
             MainBooksFormsComponent,
@@ -95,7 +98,14 @@ import { SelectedBookDetailComponent } from './Components/Tables/selected-book-d
             BooksTagsTableComponent,
             MonthlyTalliesTableComponent,
             BookDetailComponent,
-            SelectedBookDetailComponent
+            SelectedBookDetailComponent,
+
+            MainImportExportPageComponent,
+            MainImportExportComponent,
+            TextFileExportComponent,
+            EmailExportComponent,
+
+            MainUserLoginPageComponent
         ],
     imports:
         [

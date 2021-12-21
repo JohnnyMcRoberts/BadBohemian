@@ -1,0 +1,114 @@
+
+<div>
+
+    <div *ngIf="loadingChartData">
+        <p>{{componentTitle}}</p>
+    </div>
+
+    <div class="logged-in-div">
+
+        <table>
+            <tr>
+                <td>
+                    <b class="input-type-name">Data Source:</b>
+                </td>
+                <td class="radio-group-panel">
+
+                    <mat-radio-group aria-labelledby="example-radio-group-label"
+                                     class="example-radio-group"
+                                     [(ngModel)]="selectedExportDataSource">
+                        <mat-radio-button class="example-radio-button"
+                                          *ngFor="let exportDataSource of exportDataSources" [value]="exportDataSource">
+                            {{exportDataSource}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+                    <b class="input-type-name">Export Type:</b>
+                </td>
+
+                <td class="radio-group-panel">
+
+                    <mat-radio-group aria-labelledby="example-radio-group-label"
+                                     class="example-radio-group"
+                                     [(ngModel)]="selectedExportType">
+                        <mat-radio-button class="example-radio-button" *ngFor="let exportType of exportTypes" [value]="exportType">
+                            {{exportType}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+
+                </td>
+
+
+
+            </tr>
+
+
+            <tr>
+                <td>
+                    <b class="input-type-name">Source E-mail Address:</b>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <b class="input-type-name">Source E-mail Password:</b>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <b class="input-type-name">Destination E-mail:</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b class="input-type-name">Additional Notes:</b>
+                </td>
+            </tr>
+
+            <tr>
+
+                <td>
+                </td>
+
+                <td>
+
+                    <button mat-raised-button
+                            color="primary"
+                            [disabled]="!optionSelected"
+                            (click)="onDisplayExportData()">
+                        Display
+                    </button>
+
+                </td>
+                <td>
+
+                    <button mat-raised-button
+                            color="primary"
+                            [disabled]="!optionSelected"
+                            (click)="onExportDataToFile()">
+                        Export Data To File
+                    </button>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div *ngIf="exportDataToDisplay" class="logged-in-div">
+
+        <pre>
+        <code>{{displayText}}</code>
+        </pre>
+
+    </div>
+
+</div>
