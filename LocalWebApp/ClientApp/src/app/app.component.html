@@ -1,6 +1,20 @@
-<body>
+<!--<body>
   <app-nav-menu></app-nav-menu>
   <div class="container">
     <router-outlet></router-outlet>
   </div>
-</body>
+</body>-->
+
+<app-layout>
+    <mat-sidenav-container>
+        <mat-sidenav #sidenav role="navigation">
+            <app-side-navigation-list (sidenavClose)="sidenav.close()" (selectedMenuItem)='onSelectedMenuItem($event)'></app-side-navigation-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <app-navigation-header [selectedMenuOption]="selectedMenu" (sidenavToggle)="sidenav.toggle()"></app-navigation-header>
+            <main>
+                <router-outlet></router-outlet>
+            </main>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</app-layout>

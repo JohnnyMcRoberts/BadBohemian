@@ -38,6 +38,10 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 
+// Layout
+import { LayoutComponent } from './Components/Layout/layout/layout.component';
+import { SideNavigationListComponent } from './Components/Layout/side-navigation-list/side-navigation-list.component';
+import { NavigationHeaderComponent } from './Components/Layout/navigation-header/navigation-header.component';
 
 // UserLogin
 import { MainUserLoginPageComponent } from './Components/UserLogin/main-user-login-page/main-user-login-page.component';
@@ -81,6 +85,10 @@ import { EmailExportComponent } from './Components/ImportExport/email-export/ema
             HomeComponent,
             CounterComponent,
             FetchDataComponent,
+
+            LayoutComponent,
+            SideNavigationListComponent,
+            NavigationHeaderComponent,
 
             MainFormsPageComponent,
             MainBooksFormsComponent,

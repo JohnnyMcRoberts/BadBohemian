@@ -33,6 +33,7 @@
   <ItemGroup>
     <Folder Include="ClientApp\src\app\Components\Forms\" />
     <Folder Include="ClientApp\src\app\Components\ImportExport\" />
+    <Folder Include="ClientApp\src\app\Components\Layout\" />
     <Folder Include="ClientApp\src\app\Components\UserLogin\" />
     <Folder Include="ClientApp\src\app\Components\Tables\" />
     <Folder Include="ClientApp\src\app\Pipes\" />
