@@ -44,7 +44,7 @@ export class ByCountryChartsComponent
         {
             this.countryAuthors = new Array<CountryAuthors>();
 
-            for (let item of this.booksDataService.countryAuthors)
+            for (let item of this.booksDataService.countryAuthors as CountryAuthors[])
             {
                 const countryAuthor: CountryAuthors = item;
                 this.countryAuthors.push(countryAuthor);
@@ -57,7 +57,7 @@ export class ByCountryChartsComponent
         {
             this.deltaBooks = new Array<DeltaBooks>();
 
-            for (let item of this.booksDataService.deltaBooks)
+            for (let item of this.booksDataService.deltaBooks as DeltaBooks[])
             {
                 const deltaBook: DeltaBooks = item;
                 this.deltaBooks.push(deltaBook);
@@ -70,8 +70,7 @@ export class ByCountryChartsComponent
         this.viewportRuler.change().subscribe(() => { this.setupChartSizeFromViewport(); });
     }
 
-    ngAfterViewInit()
-    {
+    ngAfterViewInit() {
         this.setupChartSizeFromViewport();
         this.setupAllCharts();
     }
@@ -81,9 +80,9 @@ export class ByCountryChartsComponent
     //#region General Chart Data
 
     public plotlyConfig =
-    {
-      "displaylogo": false,
-    };
+        {
+            "displaylogo": false,
+        };
 
     public chartWidth: number = ChartUtilities.chartWidth;
     public chartHeight: number = ChartUtilities.chartHeight;
@@ -98,7 +97,8 @@ export class ByCountryChartsComponent
         this.viewPortWidth = viewportSize.width;
         this.viewPortHeight = viewportSize.height;
 
-        if (viewportSize.width > 1 && viewportSize.width > 1) {
+        if (viewportSize.width > 1 && viewportSize.width > 1)
+        {
             this.chartWidth = Math.floor(this.viewPortWidth * 0.95);
             this.chartHeight = Math.floor(this.viewPortHeight * 0.8);
         }
@@ -127,44 +127,44 @@ export class ByCountryChartsComponent
 
     public percentageOfBooksReadByCountryLayout: any;
 
-    public percentageOfBooksReadByCountryData = null;
+    public percentageOfBooksReadByCountryData: any = null;
 
     public setupPercentageOfBooksReadByCountryLayout(): void
     {
         this.percentageOfBooksReadByCountryLayout =
+        {
+            xaxis:
             {
-                xaxis:
-                {
-                    autorange: true,
-                    title: "Date"
-                },
-                yaxis:
-                {
-                    autorange: true,
-                    title: "% Books Read",
-                    titlefont: { color: SeriesColors.liveChartsColors[0] },
-                    tickfont: { color: SeriesColors.liveChartsColors[0] }
-                },
-                hovermode: 'closest',
+                autorange: true,
+                title: "Date"
+            },
+            yaxis:
+            {
+                autorange: true,
+                title: "% Books Read",
+                titlefont: { color: SeriesColors.liveChartsColors[0] },
+                tickfont: { color: SeriesColors.liveChartsColors[0] }
+            },
+            hovermode: 'closest',
 
-                width: this.chartWidth,
-                height: this.chartHeight,
-                showlegend: true,
-                legend:
-                {
-                    "orientation": "h",
-                    x: 0.1,
-                    y: 1
-                },
-                margin:
-                {
-                    l: 55,
-                    r: 55,
-                    b: 55,
-                    t: 45,
-                    pad: 4
-                },
-            };
+            width: this.chartWidth,
+            height: this.chartHeight,
+            showlegend: true,
+            legend:
+            {
+                "orientation": "h",
+                x: 0.1,
+                y: 1
+            },
+            margin:
+            {
+                l: 55,
+                r: 55,
+                b: 55,
+                t: 45,
+                pad: 4
+            },
+        };
     }
 
     public setupPercentageOfBooksReadByCountryCharts(): void
@@ -175,7 +175,7 @@ export class ByCountryChartsComponent
         let numberCountryTallies = this.deltaBooks.length;
         let finalCountryTotals = this.deltaBooks[numberCountryTallies - 1].countryTotals;
 
-        const sortedByBooks: ICategoryTotal[] = finalCountryTotals.sort((t1, t2) =>
+        const sortedByBooks: ICategoryTotal[] = finalCountryTotals.sort((t1: ICategoryTotal, t2: ICategoryTotal) =>
         {
             const ttl1 = t1.percentageBooks;
             const ttl2 = t2.percentageBooks;
@@ -226,7 +226,8 @@ export class ByCountryChartsComponent
 
                 if (displayedCountryPercentagesByTime.has(countryTotal.name))
                 {
-                    displayedCountryPercentagesByTime.get(countryTotal.name).push(countryTotal.percentageBooks);
+                    (displayedCountryPercentagesByTime.get(countryTotal.name) as number[]).push(
+                        countryTotal.percentageBooks);
                     countriesAdded.push(countryTotal.name);
                 }
                 else
@@ -240,12 +241,12 @@ export class ByCountryChartsComponent
                 let displayedCountry = displayedCountries[j];
                 if (countriesAdded.indexOf(displayedCountry) === -1)
                 {
-                    displayedCountryPercentagesByTime.get(displayedCountry).push(0);
+                    (displayedCountryPercentagesByTime.get(displayedCountry) as number[]).push(0);
                 }
             }
 
             if (includeOtherCountry)
-                displayedCountryPercentagesByTime.get(otherLabel).push(otherTotal);
+                (displayedCountryPercentagesByTime.get(otherLabel) as number[]).push(otherTotal);
         }
 
         // Create a series per language & display the series on the plot
@@ -259,43 +260,43 @@ export class ByCountryChartsComponent
 
     public totalBooksReadByCountryLayout: any;
 
-    public totalBooksReadByCountryData = null;
+    public totalBooksReadByCountryData: any = null;
 
     public setupTotalBooksReadByCountryLayout(): void
     {
         this.totalBooksReadByCountryLayout =
+        {
+            xaxis:
             {
-                xaxis:
-                {
-                    autorange: true,
-                    title: "Date"
-                },
-                yaxis:
-                {
-                    autorange: true,
-                    title: "Total Books Read",
-                },
-                hovermode: 'closest',
+                autorange: true,
+                title: "Date"
+            },
+            yaxis:
+            {
+                autorange: true,
+                title: "Total Books Read",
+            },
+            hovermode: 'closest',
 
 
-                width: this.chartWidth,
-                height: this.chartHeight,
-                showlegend: true,
-                legend:
-                {
-                    "orientation": "h",
-                    x: 0.1,
-                    y: 1
-                },
-                margin:
-                {
-                    l: 55,
-                    r: 55,
-                    b: 55,
-                    t: 45,
-                    pad: 4
-                },
-            };
+            width: this.chartWidth,
+            height: this.chartHeight,
+            showlegend: true,
+            legend:
+            {
+                "orientation": "h",
+                x: 0.1,
+                y: 1
+            },
+            margin:
+            {
+                l: 55,
+                r: 55,
+                b: 55,
+                t: 45,
+                pad: 4
+            },
+        };
     }
 
     public setupTotalBooksReadByCountryCharts(): void
@@ -306,7 +307,7 @@ export class ByCountryChartsComponent
         let numberCountryTallies = this.deltaBooks.length;
         let finalCountryTotals = this.deltaBooks[numberCountryTallies - 1].countryTotals;
 
-        const sortedByBooks: ICategoryTotal[] = finalCountryTotals.sort((t1, t2) =>
+        const sortedByBooks: ICategoryTotal[] = finalCountryTotals.sort((t1: ICategoryTotal, t2: ICategoryTotal) =>
         {
             const ttl1 = t1.totalBooks;
             const ttl2 = t2.totalBooks;
@@ -357,7 +358,7 @@ export class ByCountryChartsComponent
 
                 if (displayedCountryTotalsByTime.has(countryTotal.name))
                 {
-                    displayedCountryTotalsByTime.get(countryTotal.name).push(countryTotal.totalBooks);
+                    (displayedCountryTotalsByTime.get(countryTotal.name) as number[]).push(countryTotal.totalBooks);
                     languagesAdded.push(countryTotal.name);
                 }
                 else
@@ -371,12 +372,12 @@ export class ByCountryChartsComponent
                 let displayedCountry = displayedCountries[j];
                 if (languagesAdded.indexOf(displayedCountry) === -1)
                 {
-                    displayedCountryTotalsByTime.get(displayedCountry).push(0);
+                    (displayedCountryTotalsByTime.get(displayedCountry) as number[]).push(0);
                 }
             }
 
             if (includeOtherCountry)
-                displayedCountryTotalsByTime.get(otherLabel).push(otherTotal);
+                (displayedCountryTotalsByTime.get(otherLabel) as number[]).push(otherTotal);
         }
 
         // Create a series per language & display the series on the plot
@@ -390,45 +391,45 @@ export class ByCountryChartsComponent
 
     public percentageOfPagesReadByCountryLayout: any;
 
-    public percentageOfPagesReadByCountryData = null;
+    public percentageOfPagesReadByCountryData: any = null;
 
     public setupPercentageOfPagesReadByCountryLayout(): void
     {
         this.percentageOfPagesReadByCountryLayout =
+        {
+            xaxis:
             {
-                xaxis:
-                {
-                    autorange: true,
-                    title: "Date"
-                },
-                yaxis:
-                {
-                    autorange: true,
-                    title: "% Pages Read",
-                    titlefont: { color: SeriesColors.liveChartsColors[0] },
-                    tickfont: { color: SeriesColors.liveChartsColors[0] }
-                },
-                hovermode: 'closest',
+                autorange: true,
+                title: "Date"
+            },
+            yaxis:
+            {
+                autorange: true,
+                title: "% Pages Read",
+                titlefont: { color: SeriesColors.liveChartsColors[0] },
+                tickfont: { color: SeriesColors.liveChartsColors[0] }
+            },
+            hovermode: 'closest',
 
 
-                width: this.chartWidth,
-                height: this.chartHeight,
-                showlegend: true,
-                legend:
-                {
-                    "orientation": "h",
-                    x: 0.1,
-                    y: 1
-                },
-                margin:
-                {
-                    l: 55,
-                    r: 55,
-                    b: 55,
-                    t: 45,
-                    pad: 4
-                },
-            };
+            width: this.chartWidth,
+            height: this.chartHeight,
+            showlegend: true,
+            legend:
+            {
+                "orientation": "h",
+                x: 0.1,
+                y: 1
+            },
+            margin:
+            {
+                l: 55,
+                r: 55,
+                b: 55,
+                t: 45,
+                pad: 4
+            },
+        };
     }
 
     public setupPercentageOfPagesReadByCountryCharts(): void
@@ -439,7 +440,7 @@ export class ByCountryChartsComponent
         let numberCountryTallies = this.deltaBooks.length;
         let finalCountryTotals = this.deltaBooks[numberCountryTallies - 1].countryTotals;
 
-        const sortedByPages: ICategoryTotal[] = finalCountryTotals.sort((t1, t2) =>
+        const sortedByPages: ICategoryTotal[] = finalCountryTotals.sort((t1: ICategoryTotal, t2: ICategoryTotal) =>
         {
             const ttl1 = t1.percentagePages;
             const ttl2 = t2.percentagePages;
@@ -459,7 +460,8 @@ export class ByCountryChartsComponent
         {
             let categoryTotal: ICategoryTotal = sortedByPages[i];
 
-            if (i < maxCountries - 1) {
+            if (i < maxCountries - 1)
+            {
                 displayedCountryPercentagesByTime.set(categoryTotal.name, new Array<number>());
             }
             else
@@ -475,18 +477,19 @@ export class ByCountryChartsComponent
             let deltaDate = new Date(this.deltaBooks[i].date);
             deltaDates.push(deltaDate);
 
-            let countryTotals = this.deltaBooks[i].countryTotals;
+            let countryTotals: ICategoryTotal[] = this.deltaBooks[i].countryTotals;
 
             // if there are other languages set the default value for this delta to zero
             let otherTotal: number = 0;
 
             for (let j = 0; j < countryTotals.length; j++)
             {
-                let countryTotal = countryTotals[j];
+                let countryTotal: ICategoryTotal = countryTotals[j];
 
                 if (displayedCountryPercentagesByTime.has(countryTotal.name))
                 {
-                    displayedCountryPercentagesByTime.get(countryTotal.name).push(countryTotal.percentagePages);
+                    (displayedCountryPercentagesByTime.get(countryTotal.name) as number[]).push(
+                        countryTotal.percentagePages);
                 }
                 else
                 {
@@ -495,7 +498,8 @@ export class ByCountryChartsComponent
             }
 
             if (includeOtherCountry)
-                displayedCountryPercentagesByTime.get(otherLabel).push(otherTotal);
+                (displayedCountryPercentagesByTime.get(otherLabel) as number[]).push(
+                    otherTotal);
         }
 
         // Create a series per language & display the series on the plot
@@ -509,43 +513,43 @@ export class ByCountryChartsComponent
 
     public totalPagesReadByCountryLayout: any;
 
-    public totalPagesReadByCountryData = null;
+    public totalPagesReadByCountryData: any = null;
 
     public setupTotalPagesReadByCountryLayout(): void
     {
         this.totalPagesReadByCountryLayout =
+        {
+            xaxis:
             {
-                xaxis:
-                {
-                    autorange: true,
-                    title: "Date"
-                },
-                yaxis:
-                {
-                    autorange: true,
-                    title: "Total Pages Read",
-                },
-                hovermode: 'closest',
+                autorange: true,
+                title: "Date"
+            },
+            yaxis:
+            {
+                autorange: true,
+                title: "Total Pages Read",
+            },
+            hovermode: 'closest',
 
 
-                width: this.chartWidth,
-                height: this.chartHeight,
-                showlegend: true,
-                legend:
-                {
-                    "orientation": "h",
-                    x: 0.1,
-                    y: 1
-                },
-                margin:
-                {
-                    l: 55,
-                    r: 55,
-                    b: 55,
-                    t: 45,
-                    pad: 4
-                },
-            };
+            width: this.chartWidth,
+            height: this.chartHeight,
+            showlegend: true,
+            legend:
+            {
+                "orientation": "h",
+                x: 0.1,
+                y: 1
+            },
+            margin:
+            {
+                l: 55,
+                r: 55,
+                b: 55,
+                t: 45,
+                pad: 4
+            },
+        };
     }
 
     public setupTotalPagesReadByCountryCharts(): void
@@ -556,7 +560,7 @@ export class ByCountryChartsComponent
         let numberCountryTallies = this.deltaBooks.length;
         let finalCountryTotals = this.deltaBooks[numberCountryTallies - 1].countryTotals;
 
-        const sortedByPages: ICategoryTotal[] = finalCountryTotals.sort((t1, t2) =>
+        const sortedByPages: ICategoryTotal[] = finalCountryTotals.sort((t1: ICategoryTotal, t2: ICategoryTotal) =>
         {
             const ttl1 = t1.totalPages;
             const ttl2 = t2.totalPages;
@@ -595,7 +599,7 @@ export class ByCountryChartsComponent
             let deltaDate = new Date(this.deltaBooks[i].date);
             deltaDates.push(deltaDate);
 
-            let countryTotals = this.deltaBooks[i].countryTotals;
+            let countryTotals: ICategoryTotal[] = this.deltaBooks[i].countryTotals;
 
             // if there are other languages set the default value for this delta to zero
             let otherTotal: number = 0;
@@ -603,11 +607,12 @@ export class ByCountryChartsComponent
 
             for (let j = 0; j < countryTotals.length; j++)
             {
-                let countryTotal = countryTotals[j];
+                let countryTotal: ICategoryTotal = countryTotals[j];
 
                 if (displayedCountryTotalsByTime.has(countryTotal.name))
                 {
-                    displayedCountryTotalsByTime.get(countryTotal.name).push(countryTotal.totalPages);
+                    (displayedCountryTotalsByTime.get(countryTotal.name) as number[]).push(
+                        countryTotal.totalPages);
                     languagesAdded.push(countryTotal.name);
                 }
                 else
@@ -621,12 +626,14 @@ export class ByCountryChartsComponent
                 let displayedCountry = displayedCountries[j];
                 if (languagesAdded.indexOf(displayedCountry) === -1)
                 {
-                    displayedCountryTotalsByTime.get(displayedCountry).push(0);
+                    (displayedCountryTotalsByTime.get(displayedCountry) as number[]).push(0);
                 }
             }
 
             if (includeOtherCountry)
-                displayedCountryTotalsByTime.get(otherLabel).push(otherTotal);
+            {
+                (displayedCountryTotalsByTime.get(otherLabel) as number[]).push(otherTotal);
+            }
         }
 
         // Create a series per language & display the series on the plot
@@ -640,33 +647,33 @@ export class ByCountryChartsComponent
 
     public currentPieChartByCountryLayout: any;
 
-    public booksReadByCountryData = null;
-    public pagesReadByCountryData = null;
+    public booksReadByCountryData: any = null;
+    public pagesReadByCountryData: any = null;
 
     public setupBooksAndPagesReadByCountryLayout(): void
     {
         this.currentPieChartByCountryLayout =
+        {
+            width: this.chartWidth / 2,
+            height: this.chartHeight,
+            showlegend: true,
+            legend: { "orientation": "h" },
+            margin:
             {
-                width: this.chartWidth / 2,
-                height: this.chartHeight,
-                showlegend: true,
-                legend: { "orientation": "h" },
-                margin:
-                {
-                    l: 25,
-                    r: 25,
-                    b: 25,
-                    t: 25,
-                    pad: 4
-                },
-            };
+                l: 25,
+                r: 25,
+                b: 25,
+                t: 25,
+                pad: 4
+            },
+        };
     }
 
     public setupBooksAndPagesReadByCountryCharts(): void
     {
         this.setupBooksAndPagesReadByCountryLayout();
 
-        const sortedByBooks: CountryAuthors[] = this.countryAuthors.sort((t1, t2) =>
+        const sortedByBooks: CountryAuthors[] = this.countryAuthors.sort((t1: CountryAuthors, t2: CountryAuthors) =>
         {
             const ttl1 = t1.totalBooksReadFromCountry;
             const ttl2 = t2.totalBooksReadFromCountry;
@@ -676,7 +683,7 @@ export class ByCountryChartsComponent
             return 0;
         });
 
-        const sortedByPages: CountryAuthors[] = this.countryAuthors.sort((t1, t2) =>
+        const sortedByPages: CountryAuthors[] = this.countryAuthors.sort((t1: CountryAuthors, t2: CountryAuthors) =>
         {
             const ttl1 = t1.totalPagesReadFromCountry;
             const ttl2 = t2.totalPagesReadFromCountry;

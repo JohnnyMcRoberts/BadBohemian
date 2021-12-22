@@ -26,9 +26,9 @@ export class SideNavigationListComponent implements OnInit {
         {
             link: "/tables", text: "Tables", icon: "table_chart"
         },
-        //{
-        //    link: "/charts", text: "Charts", icon: "timeline"
-        //},
+        {
+            link: "/charts", text: "Charts", icon: "timeline"
+        },
         {
             link: "/forms", text: "Forms", icon: "library_add"
         },

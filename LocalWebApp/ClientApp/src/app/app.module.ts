@@ -12,6 +12,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
+import { PlotlyViaCDNModule } from 'angular-plotly.js';
+
+PlotlyViaCDNModule.setPlotlyVersion("1.49.0");
+PlotlyViaCDNModule.setPlotlyBundle(null);
+
 //#endregion
 
 //#region Import Services
@@ -72,6 +77,15 @@ import { MainImportExportComponent } from './Components/ImportExport/main-import
 import { TextFileExportComponent } from './Components/ImportExport/text-file-export/text-file-export.component';
 import { EmailExportComponent } from './Components/ImportExport/email-export/email-export.component';
 
+// Charts
+import { MainChartsPageComponent } from './Components/Charts/main-charts-page/main-charts-page.component';
+import { MainBooksChartsComponent } from './Components/Charts/main-books-charts/main-books-charts.component';
+import { BookAndPageRatesComponent } from './Components/Charts/book-and-page-rates/book-and-page-rates.component';
+import { BooksAndPagesByTimeChartsComponent } from './Components/Charts/books-and-pages-by-time-charts/books-and-pages-by-time-charts.component';
+import { ByLanguageChartsComponent } from './Components/Charts/by-language-charts/by-language-charts.component';
+import { ByCountryChartsComponent } from './Components/Charts/by-country-charts/by-country-charts.component';
+import { CountryMapsComponent } from './Components/Charts/country-maps/country-maps.component';
+
 //#endregion
 
 @NgModule({
@@ -113,6 +127,14 @@ import { EmailExportComponent } from './Components/ImportExport/email-export/ema
             TextFileExportComponent,
             EmailExportComponent,
 
+            MainChartsPageComponent,
+            MainBooksChartsComponent,
+            BookAndPageRatesComponent,
+            BooksAndPagesByTimeChartsComponent,
+            ByLanguageChartsComponent,
+            ByCountryChartsComponent,
+            CountryMapsComponent,
+
             MainUserLoginPageComponent
         ],
     imports:
@@ -127,6 +149,8 @@ import { EmailExportComponent } from './Components/ImportExport/email-export/ema
             MatToolbarModule,
             MatGridListModule,
             MatFormFieldModule,
+
+            PlotlyViaCDNModule,
 
             AppRoutingModule,
             BrowserAnimationsModule

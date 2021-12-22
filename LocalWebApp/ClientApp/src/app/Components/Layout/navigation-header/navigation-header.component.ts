@@ -6,19 +6,23 @@ import { Component, OnInit, Output, EventEmitter, Input, SimpleChange } from '@a
     styleUrls: ['./navigation-header.component.scss']
 })
 /** NavigationHeader component*/
-export class NavigationHeaderComponent implements OnInit {
+export class NavigationHeaderComponent implements OnInit
+{
     @Output()
     public sidenavToggle = new EventEmitter();
 
     /** NavigationHeader ctor */
-    constructor() {
+    constructor()
+    {
 
     }
 
-    ngOnInit() {
+    ngOnInit()
+    {
     }
 
-    public onToggleSidenav = () => {
+    public onToggleSidenav = () =>
+    {
         this.sidenavToggle.emit();
     };
 
@@ -29,11 +33,14 @@ export class NavigationHeaderComponent implements OnInit {
 
     private updates: number = 0;
 
-    ngOnChanges(changes: { [propKey: string]: SimpleChange; }) {
-        for (let propName in changes) {
-            if (changes.hasOwnProperty(propName)) {
+    ngOnChanges(changes: { [propKey: string]: SimpleChange; })
+    {
+        for (let propName in changes)
+        {
+            if (changes.hasOwnProperty(propName))
+            {
                 let changedProp = changes[propName];
-                var currentValue = changedProp.currentValue;
+                let currentValue = changedProp.currentValue;
 
                 this.updates++;
 

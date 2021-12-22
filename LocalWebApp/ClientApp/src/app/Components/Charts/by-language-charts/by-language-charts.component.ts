@@ -13,8 +13,7 @@ export class NameCountPair
 {
     constructor(
         public name: string = "",
-        public count: number = 0)
-    {}
+        public count: number = 0) { }
 }
 
 @Component({
@@ -31,8 +30,8 @@ export class ByLanguageChartsComponent
         private viewportRuler: ViewportRuler,
         booksDataService: BooksDataService)
     {
-      this.componentTitle = "Loading books charts from database...";
-      this.booksDataService = booksDataService;
+        this.componentTitle = "Loading books charts from database...";
+        this.booksDataService = booksDataService;
     }
 
     private booksDataService: BooksDataService;
@@ -48,13 +47,12 @@ export class ByLanguageChartsComponent
 
     //#region Component Implementation
 
-    ngOnInit()
-    {
+    ngOnInit() {
         this.booksDataService.fetchAllLanguageAuthorsData().then(() =>
         {
             this.languageAuthors = new Array<LanguageAuthors>();
 
-            for (let item of this.booksDataService.languageAuthors)
+            for (let item of this.booksDataService.languageAuthors as LanguageAuthors[])
             {
                 const languageAuthor: LanguageAuthors = item;
                 this.languageAuthors.push(languageAuthor);
@@ -67,7 +65,7 @@ export class ByLanguageChartsComponent
         {
             this.deltaBooks = new Array<DeltaBooks>();
 
-            for (let item of this.booksDataService.deltaBooks)
+            for (let item of this.booksDataService.deltaBooks as DeltaBooks[])
             {
                 let deltaBook: DeltaBooks = item;
                 this.deltaBooks.push(deltaBook);
@@ -80,7 +78,8 @@ export class ByLanguageChartsComponent
         {
             this.books = new Array<Book>();
 
-            for (let item of this.booksDataService.books) {
+            for (let item of this.booksDataService.books as Book[])
+            {
                 let book: Book = item;
                 this.books.push(book);
             }
@@ -103,9 +102,9 @@ export class ByLanguageChartsComponent
     //#region General Chart Data
 
     public plotlyConfig =
-    {
-        "displaylogo": false,
-    };
+        {
+            "displaylogo": false,
+        };
 
     public chartWidth: number = ChartUtilities.chartWidth;
     public chartHeight: number = ChartUtilities.chartHeight;
@@ -149,7 +148,7 @@ export class ByLanguageChartsComponent
 
     public percentageOfBooksReadByLanguageLayout: any;
 
-    public percentageOfBooksReadByLanguageData = null;
+    public percentageOfBooksReadByLanguageData: any = null;
 
     public setupPercentageOfBooksReadByLanguageLayout(): void
     {
@@ -197,8 +196,7 @@ export class ByLanguageChartsComponent
         let numberLanguageTallies = this.deltaBooks.length;
         let finalLanguageTotals = this.deltaBooks[numberLanguageTallies - 1].languageTotals;
 
-        const sortedByBooks: ICategoryTotal[] = finalLanguageTotals.sort((t1, t2) =>
-        {
+        const sortedByBooks: ICategoryTotal[] = finalLanguageTotals.sort((t1: ICategoryTotal, t2: ICategoryTotal) => {
             const ttl1 = t1.percentageBooks;
             const ttl2 = t2.percentageBooks;
 
@@ -211,7 +209,7 @@ export class ByLanguageChartsComponent
         const includeOtherLanguage: boolean = (sortedByBooks.length > maxLanguages);
 
         let otherLabel: string = "Other";
-        var displayedLanguagePercentagesByTime: Map<string, number[]> = new Map<string, number[]>();
+        let displayedLanguagePercentagesByTime: Map<string, number[]> = new Map<string, number[]>();
         let displayedLanguages: string[] = new Array<string>();
 
         for (let i = 0; i < sortedByBooks.length; i++)
@@ -248,12 +246,13 @@ export class ByLanguageChartsComponent
 
                 if (displayedLanguagePercentagesByTime.has(languageTotal.name))
                 {
-                    displayedLanguagePercentagesByTime.get(languageTotal.name).push(languageTotal.percentageBooks);
+                    (displayedLanguagePercentagesByTime.get(languageTotal.name) as number[]).push(
+                        languageTotal.percentageBooks);
                     languagesAdded.push(languageTotal.name);
                 }
                 else
                 {
-                   otherTotal += languageTotal.percentageBooks;
+                    otherTotal += languageTotal.percentageBooks;
                 }
             }
 
@@ -262,17 +261,17 @@ export class ByLanguageChartsComponent
                 let displayedLanguage = displayedLanguages[j];
                 if (languagesAdded.indexOf(displayedLanguage) === -1)
                 {
-                    displayedLanguagePercentagesByTime.get(displayedLanguage).push(0);
+                    (displayedLanguagePercentagesByTime.get(displayedLanguage) as number[]).push(0);
                 }
             }
 
             if (includeOtherLanguage)
-                displayedLanguagePercentagesByTime.get(otherLabel).push(otherTotal);
+                (displayedLanguagePercentagesByTime.get(otherLabel) as number[]).push(otherTotal);
         }
 
         // Create a series per language & display the series on the plot
         this.percentageOfBooksReadByLanguageData =
-          ChartUtilities.getLineSeriesForCategories(displayedLanguagePercentagesByTime, deltaDates);
+            ChartUtilities.getLineSeriesForCategories(displayedLanguagePercentagesByTime, deltaDates);
     }
 
     //#endregion
@@ -281,42 +280,42 @@ export class ByLanguageChartsComponent
 
     public totalBooksReadByLanguageLayout: any;
 
-    public totalBooksReadByLanguageData = null;
+    public totalBooksReadByLanguageData: any = null;
 
     public setupTotalBooksReadByLanguageLayout(): void
     {
         this.totalBooksReadByLanguageLayout =
+        {
+            xaxis:
             {
-                xaxis:
-                {
-                    autorange: true,
-                    title: "Date"
-                },
-                yaxis:
-                {
-                    autorange: true,
-                    title: "Total Books Read",
-                },
-                hovermode: 'closest',
+                autorange: true,
+                title: "Date"
+            },
+            yaxis:
+            {
+                autorange: true,
+                title: "Total Books Read",
+            },
+            hovermode: 'closest',
 
-                width: this.chartWidth,
-                height: this.chartHeight,
-                showlegend: true,
-                legend:
-                {
-                    "orientation": "h",
-                    x: 0.1,
-                    y: 1
-                },
-                margin:
-                {
-                    l: 55,
-                    r: 55,
-                    b: 55,
-                    t: 45,
-                    pad: 4
-                },
-            };
+            width: this.chartWidth,
+            height: this.chartHeight,
+            showlegend: true,
+            legend:
+            {
+                "orientation": "h",
+                x: 0.1,
+                y: 1
+            },
+            margin:
+            {
+                l: 55,
+                r: 55,
+                b: 55,
+                t: 45,
+                pad: 4
+            },
+        };
     }
 
     public setupTotalBooksReadByLanguageCharts(): void
@@ -327,7 +326,7 @@ export class ByLanguageChartsComponent
         let numberLanguageTallies = this.deltaBooks.length;
         let finalLanguageTotals = this.deltaBooks[numberLanguageTallies - 1].languageTotals;
 
-        const sortedByBooks: ICategoryTotal[] = finalLanguageTotals.sort((t1, t2) =>
+        const sortedByBooks: ICategoryTotal[] = finalLanguageTotals.sort((t1: ICategoryTotal, t2: ICategoryTotal) =>
         {
             const ttl1 = t1.totalBooks;
             const ttl2 = t2.totalBooks;
@@ -341,7 +340,7 @@ export class ByLanguageChartsComponent
         const includeOtherLanguage: boolean = (sortedByBooks.length > maxLanguages);
 
         let otherLabel: string = "Other";
-        var displayedLanguageTotalsByTime: Map<string, number[]> = new Map<string, number[]>();
+        let displayedLanguageTotalsByTime: Map<string, number[]> = new Map<string, number[]>();
         let displayedLanguages: string[] = new Array<string>();
 
         for (let i = 0; i < sortedByBooks.length; i++)
@@ -378,7 +377,7 @@ export class ByLanguageChartsComponent
 
                 if (displayedLanguageTotalsByTime.has(languageTotal.name))
                 {
-                    displayedLanguageTotalsByTime.get(languageTotal.name).push(languageTotal.totalBooks);
+                    (displayedLanguageTotalsByTime.get(languageTotal.name) as number[]).push(languageTotal.totalBooks);
                     languagesAdded.push(languageTotal.name);
                 }
                 else
@@ -392,12 +391,12 @@ export class ByLanguageChartsComponent
                 let displayedLanguage = displayedLanguages[j];
                 if (languagesAdded.indexOf(displayedLanguage) === -1)
                 {
-                    displayedLanguageTotalsByTime.get(displayedLanguage).push(0);
+                    (displayedLanguageTotalsByTime.get(displayedLanguage) as number[]).push(0);
                 }
             }
 
             if (includeOtherLanguage)
-                displayedLanguageTotalsByTime.get(otherLabel).push(otherTotal);
+                (displayedLanguageTotalsByTime.get(otherLabel) as number[]).push(otherTotal);
         }
 
         // Create a series per language & display the series on the plot
@@ -411,44 +410,44 @@ export class ByLanguageChartsComponent
 
     public percentageOfPagesReadByLanguageLayout: any;
 
-    public percentageOfPagesReadByLanguageData = null;
+    public percentageOfPagesReadByLanguageData: any = null;
 
     public setupPercentageOfPagesReadByLanguageLayout(): void
     {
         this.percentageOfPagesReadByLanguageLayout =
+        {
+            xaxis:
             {
-                xaxis:
-                {
-                    autorange: true,
-                    title: "Date"
-                },
-                yaxis:
-                {
-                    autorange: true,
-                    title: "% Pages Read",
-                    titlefont: { color: SeriesColors.liveChartsColors[0] },
-                    tickfont: { color: SeriesColors.liveChartsColors[0] }
-                },
-                hovermode: 'closest',
+                autorange: true,
+                title: "Date"
+            },
+            yaxis:
+            {
+                autorange: true,
+                title: "% Pages Read",
+                titlefont: { color: SeriesColors.liveChartsColors[0] },
+                tickfont: { color: SeriesColors.liveChartsColors[0] }
+            },
+            hovermode: 'closest',
 
-                width: this.chartWidth,
-                height: this.chartHeight,
-                showlegend: true,
-                legend:
-                {
-                    "orientation": "h",
-                    x: 0.1,
-                    y: 1
-                },
-                margin:
-                {
-                    l: 55,
-                    r: 55,
-                    b: 55,
-                    t: 45,
-                    pad: 4
-                },
-            };
+            width: this.chartWidth,
+            height: this.chartHeight,
+            showlegend: true,
+            legend:
+            {
+                "orientation": "h",
+                x: 0.1,
+                y: 1
+            },
+            margin:
+            {
+                l: 55,
+                r: 55,
+                b: 55,
+                t: 45,
+                pad: 4
+            },
+        };
     }
 
     public setupPercentageOfPagesReadByLanguageCharts(): void
@@ -459,7 +458,7 @@ export class ByLanguageChartsComponent
         let numberLanguageTallies = this.deltaBooks.length;
         let finalLanguageTotals = this.deltaBooks[numberLanguageTallies - 1].languageTotals;
 
-        const sortedByPages: ICategoryTotal[] = finalLanguageTotals.sort((t1, t2) =>
+        const sortedByPages: ICategoryTotal[] = finalLanguageTotals.sort((t1: ICategoryTotal, t2: ICategoryTotal) =>
         {
             const ttl1 = t1.percentagePages;
             const ttl2 = t2.percentagePages;
@@ -473,7 +472,7 @@ export class ByLanguageChartsComponent
         const includeOtherLanguage: boolean = (sortedByPages.length > maxLanguages);
 
         let otherLabel: string = "Other";
-        var displayedLanguagePercentagesByTime: Map<string, number[]> = new Map<string, number[]>();
+        let displayedLanguagePercentagesByTime: Map<string, number[]> = new Map<string, number[]>();
 
         for (let i = 0; i < sortedByPages.length; i++)
         {
@@ -507,7 +506,7 @@ export class ByLanguageChartsComponent
 
                 if (displayedLanguagePercentagesByTime.has(languageTotal.name))
                 {
-                    displayedLanguagePercentagesByTime.get(languageTotal.name).push(languageTotal.percentagePages);
+                    (displayedLanguagePercentagesByTime.get(languageTotal.name) as number[]).push(languageTotal.percentagePages);
                 }
                 else
                 {
@@ -516,7 +515,9 @@ export class ByLanguageChartsComponent
             }
 
             if (includeOtherLanguage)
-                displayedLanguagePercentagesByTime.get(otherLabel).push(otherTotal);
+            {
+                (displayedLanguagePercentagesByTime.get(otherLabel) as number[]).push(otherTotal);
+            }
         }
 
         // Create a series per language & display the series on the plot
@@ -530,42 +531,42 @@ export class ByLanguageChartsComponent
 
     public totalPagesReadByLanguageLayout: any;
 
-    public totalPagesReadByLanguageData = null;
+    public totalPagesReadByLanguageData: any = null;
 
     public setupTotalPagesReadByLanguageLayout(): void
     {
         this.totalPagesReadByLanguageLayout =
+        {
+            xaxis:
             {
-                xaxis:
-                {
-                    autorange: true,
-                    title: "Date"
-                },
-                yaxis:
-                {
-                    autorange: true,
-                    title: "Total Pages Read",
-                },
-                hovermode: 'closest',
+                autorange: true,
+                title: "Date"
+            },
+            yaxis:
+            {
+                autorange: true,
+                title: "Total Pages Read",
+            },
+            hovermode: 'closest',
 
-                width: ChartUtilities.chartWidth,
-                height: ChartUtilities.chartHeight,
-                showlegend: true,
-                legend:
-                {
-                    "orientation": "h",
-                    x: 0.1,
-                    y: 1
-                },
-                margin:
-                {
-                    l: 55,
-                    r: 55,
-                    b: 55,
-                    t: 45,
-                    pad: 4
-                },
-            };
+            width: ChartUtilities.chartWidth,
+            height: ChartUtilities.chartHeight,
+            showlegend: true,
+            legend:
+            {
+                "orientation": "h",
+                x: 0.1,
+                y: 1
+            },
+            margin:
+            {
+                l: 55,
+                r: 55,
+                b: 55,
+                t: 45,
+                pad: 4
+            },
+        };
     }
 
     public setupTotalPagesReadByLanguageCharts(): void
@@ -576,7 +577,7 @@ export class ByLanguageChartsComponent
         let numberLanguageTallies = this.deltaBooks.length;
         let finalLanguageTotals = this.deltaBooks[numberLanguageTallies - 1].languageTotals;
 
-        const sortedByPages: ICategoryTotal[] = finalLanguageTotals.sort((t1, t2) =>
+        const sortedByPages: ICategoryTotal[] = finalLanguageTotals.sort((t1: ICategoryTotal, t2: ICategoryTotal) =>
         {
             const ttl1 = t1.totalPages;
             const ttl2 = t2.totalPages;
@@ -590,7 +591,7 @@ export class ByLanguageChartsComponent
         const includeOtherLanguage: boolean = (sortedByPages.length > maxLanguages);
 
         let otherLabel: string = "Other";
-        var displayedLanguageTotalsByTime: Map<string, number[]> = new Map<string, number[]>();
+        let displayedLanguageTotalsByTime: Map<string, number[]> = new Map<string, number[]>();
         let displayedLanguages: string[] = new Array<string>();
 
         for (let i = 0; i < sortedByPages.length; i++)
@@ -621,12 +622,13 @@ export class ByLanguageChartsComponent
             let otherTotal: number = 0;
             let languagesAdded: string[] = new Array<string>();
 
-            for (let j = 0; j < languageTotals.length; j++) {
+            for (let j = 0; j < languageTotals.length; j++)
+            {
                 let languageTotal = languageTotals[j];
 
                 if (displayedLanguageTotalsByTime.has(languageTotal.name))
                 {
-                    displayedLanguageTotalsByTime.get(languageTotal.name).push(languageTotal.totalPages);
+                    (displayedLanguageTotalsByTime.get(languageTotal.name) as number[]).push(languageTotal.totalPages);
                     languagesAdded.push(languageTotal.name);
                 }
                 else
@@ -640,12 +642,14 @@ export class ByLanguageChartsComponent
                 let displayedLanguage = displayedLanguages[j];
                 if (languagesAdded.indexOf(displayedLanguage) === -1)
                 {
-                    displayedLanguageTotalsByTime.get(displayedLanguage).push(0);
+                    (displayedLanguageTotalsByTime.get(displayedLanguage) as number[]).push(0);
                 }
             }
 
             if (includeOtherLanguage)
-                displayedLanguageTotalsByTime.get(otherLabel).push(otherTotal);
+            {
+                (displayedLanguageTotalsByTime.get(otherLabel) as number[]).push(otherTotal);
+            }
         }
 
         // Create a series per language & display the series on the plot
@@ -659,14 +663,14 @@ export class ByLanguageChartsComponent
 
     public currentPieChartByLanguageLayout: any;
 
-    public booksReadByLanguageData = null;
-    public pagesReadByLanguageData = null;
+    public booksReadByLanguageData: any = null;
+    public pagesReadByLanguageData: any = null;
 
     public setupBooksAndPagesReadByLanguageLayout(): void
     {
         this.currentPieChartByLanguageLayout =
         {
-            width: this.chartWidth/2,
+            width: this.chartWidth / 2,
             height: this.chartHeight,
             showlegend: true,
             legend: { "orientation": "h" },
@@ -685,7 +689,7 @@ export class ByLanguageChartsComponent
     {
         this.setupBooksAndPagesReadByLanguageLayout();
 
-        const sortedByBooks: LanguageAuthors[] = this.languageAuthors.sort((t1, t2) =>
+        const sortedByBooks: LanguageAuthors[] = this.languageAuthors.sort((t1: LanguageAuthors, t2: LanguageAuthors) =>
         {
             const ttl1 = t1.totalBooksReadInLanguage;
             const ttl2 = t2.totalBooksReadInLanguage;
@@ -695,7 +699,7 @@ export class ByLanguageChartsComponent
             return 0;
         });
 
-        const sortedByPages: LanguageAuthors[] = this.languageAuthors.sort((t1, t2) =>
+        const sortedByPages: LanguageAuthors[] = this.languageAuthors.sort((t1: LanguageAuthors, t2: LanguageAuthors) =>
         {
             const ttl1 = t1.totalPagesReadInLanguage;
             const ttl2 = t2.totalPagesReadInLanguage;
@@ -715,7 +719,7 @@ export class ByLanguageChartsComponent
         let ttlLabels: string[] = new Array<string>();
         let ttlValues: number[] = new Array<number>();
         let colors: string[] = new Array<string>();
-        
+
         for (let i = 0; i < sortedByBooks.length; i++)
         {
             let sortedItem = sortedByBooks[i];
@@ -723,8 +727,7 @@ export class ByLanguageChartsComponent
             {
                 otherTotal += sortedItem.totalBooksReadInLanguage;
             }
-            else
-            {
+            else {
                 ttlLabels.push(sortedItem.name);
                 ttlValues.push(sortedItem.totalBooksReadInLanguage);
                 colors.push(SeriesColors.liveChartsColors[i]);
@@ -739,7 +742,7 @@ export class ByLanguageChartsComponent
         }
 
         this.booksReadByLanguageData =
-          ChartUtilities.getPiePlotData(ttlLabels, ttlValues, colors);
+            ChartUtilities.getPiePlotData(ttlLabels, ttlValues, colors);
 
         otherTotal = 0;
         ttlLabels = new Array<string>();
@@ -778,8 +781,8 @@ export class ByLanguageChartsComponent
 
     public currentStarburstChartBooksByLanguageAndCountryLayout: any;
 
-    public booksReadByLanguageAndCountryData = null;
-    public pagesReadByLanguageAndCountryData = null;
+    public booksReadByLanguageAndCountryData: any = null;
+    public pagesReadByLanguageAndCountryData: any = null;
 
     public setupBooksAndPagesReadByLanguageAndCountryLayout(): void
     {
@@ -799,28 +802,35 @@ export class ByLanguageChartsComponent
         };
     }
 
-    public setupBooksAndPagesReadByLanguageAndCountryCharts(): void {
+    public setupBooksAndPagesReadByLanguageAndCountryCharts(): void
+    {
         this.setupBooksAndPagesReadByLanguageAndCountryLayout();
 
         // get the language & country counts for books
         const booksByLanguage: Map<string, Array<Book>> = new Map<string, Array<Book>>();
         const booksByCountry: Map<string, Array<Book>> = new Map<string, Array<Book>>();
 
-        for (let i = 0; i < this.books.length; i++) {
-
+        for (let i = 0; i < this.books.length; i++)
+        {
             const book: Book = this.books[i];
 
-            if (booksByLanguage.has(book.originalLanguage)) {
-                booksByLanguage.get(book.originalLanguage).push(book);
-            } else {
+            if (booksByLanguage.has(book.originalLanguage))
+            {
+                (booksByLanguage.get(book.originalLanguage) as Array<Book>).push(book);
+            }
+            else
+            {
                 const booksForLanguage: Array<Book> = new Array<Book>();
                 booksForLanguage.push(book);
                 booksByLanguage.set(book.originalLanguage, booksForLanguage);
             }
 
-            if (booksByCountry.has(book.nationality)) {
-                booksByCountry.get(book.nationality).push(book);
-            } else {
+            if (booksByCountry.has(book.nationality))
+            {
+                (booksByCountry.get(book.nationality) as Array<Book>).push(book);
+            }
+            else
+            {
                 const booksForCountry: Array<Book> = new Array<Book>();
                 booksForCountry.push(book);
                 booksByCountry.set(book.nationality, booksForCountry);
@@ -853,8 +863,8 @@ export class ByLanguageChartsComponent
         // Add the main language nodes
         for (let i = 0; i < maxItems && i < sortedByLanguages.length; i++)
         {
-            let languageCount = sortedByLanguages[i];
-            let languageName = languageCount.name;
+            let languageCount: NameCountPair = sortedByLanguages[i];
+            let languageName: string  = languageCount.name;
 
             if (!labelNamesUsed.has(languageName))
             {
@@ -866,7 +876,8 @@ export class ByLanguageChartsComponent
 
             // get the sorted countries for this language
             let booksByCountryMap =
-                ByLanguageChartsComponent.getBooksByCountryMap(booksByLanguage.get(languageName));
+                ByLanguageChartsComponent.getBooksByCountryMap(
+                    (booksByLanguage.get(languageName) as Book[]));
 
             let sortedBooksByCountry =
                 ByLanguageChartsComponent.getBooksSortedNameCountPairs(booksByCountryMap);
@@ -885,9 +896,7 @@ export class ByLanguageChartsComponent
                     values.push(countryCount.count);
                     labelNamesUsed.set(countryName, countryName);
                 }
-
             }
-
         }
 
         this.booksReadByLanguageAndCountryData =
@@ -902,8 +911,9 @@ export class ByLanguageChartsComponent
         {
             const book: Book = books[i];
 
-            if (booksByCountry.has(book.nationality)) {
-                booksByCountry.get(book.nationality).push(book);
+            if (booksByCountry.has(book.nationality))
+            {
+                (booksByCountry.get(book.nationality) as Array<Book>).push(book);
             }
             else
             {
@@ -921,13 +931,15 @@ export class ByLanguageChartsComponent
         // Get the key counts pairs
         const mapKeys: string[] = Array.from(booksMap.keys());
         const keyCounts: NameCountPair[] = new Array<NameCountPair>();
-        for (let i = 0; i < mapKeys.length; i++) {
+        for (let i = 0; i < mapKeys.length; i++)
+        {
             const mapKey: string = mapKeys[i];
-            keyCounts.push(new NameCountPair(mapKey, booksMap.get(mapKey).length));
+            keyCounts.push(new NameCountPair(mapKey, (booksMap.get(mapKey) as Array<Book>).length));
         }
 
         // sort by key & return
-        const sortedByKeys: NameCountPair[] = keyCounts.sort((t1, t2) => {
+        const sortedByKeys: NameCountPair[] = keyCounts.sort((t1: NameCountPair, t2: NameCountPair) =>
+        {
             const ttl1 = t1.count;
             const ttl2 = t2.count;
 
@@ -939,19 +951,20 @@ export class ByLanguageChartsComponent
         return sortedByKeys;
     }
 
-    public static getStarburstPlotData(labels: string[], parents: string[], values: number[], colors: string[]): any[] {
+    public static getStarburstPlotData(labels: string[], parents: string[], values: number[], colors: string[]): any[]
+    {
         var plotData: any[] =
-        [
-            {
-                type: "sunburst",
-                labels: labels,
-                parents: parents,
-                values: values,
-                outsidetextfont: { size: 20, color: "#377eb8" },
-                leaf: { opacity: 0.4 },
-                marker: { line: { width: 2 } },
-            }
-        ];
+            [
+                {
+                    type: "sunburst",
+                    labels: labels,
+                    parents: parents,
+                    values: values,
+                    outsidetextfont: { size: 20, color: "#377eb8" },
+                    leaf: { opacity: 0.4 },
+                    marker: { line: { width: 2 } },
+                }
+            ];
 
         return plotData;
     }
@@ -966,6 +979,4 @@ export class ByLanguageChartsComponent
     }
 
     //#endregion
-
-
 }
