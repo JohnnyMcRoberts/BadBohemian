@@ -9,8 +9,7 @@
                          [layout]="overallTalliesLayout"
                          [config]="plotlyConfig"
                          [useResizeHandler]="true"
-                         [style]="{position: 'relative', width: '100%', height: '100%'}"
-                         >
+                         [style]="{position: 'relative', width: '100%', height: '100%'}">
             </plotly-plot>
         </mat-tab>
         <mat-tab label="Days per book">
@@ -68,6 +67,37 @@
                          [useResizeHandler]="true"
                          [style]="{position: 'relative', width: '100%', height: '100%'}">
             </plotly-plot>
+        </mat-tab>
+        <mat-tab label="Years Monthly Reading">
+            <div>
+                <div>
+
+                    <mat-form-field>
+                        <mat-label>Format</mat-label>
+                        <mat-select [(value)]="selectedYear"
+                                    placeholder="Select Year"
+                                    (selectionChange)="newSelectedYearsMonthlyReading($event.value)"
+                                    formControlName="selectFormControl "
+                                    disableOptionCentering
+                                    panelClass="material-option-select-panel"
+                                    required>
+                            <mat-option *ngFor="let item of yearsMonthlyReadingOptions" [value]="item.value">
+                                {{item.viewValue}}
+                            </mat-option>
+                        </mat-select>
+
+                    </mat-form-field>
+
+                </div>
+                <div>
+                    <plotly-plot [data]="selectedYearsMonthlyData"
+                                 [layout]="selectedYearsMonthlyLayout"
+                                 [config]="plotlyConfig"
+                                 [useResizeHandler]="true"
+                                 [style]="{position: 'relative', width: '100%', height: '100%'}">
+                    </plotly-plot>
+                </div>
+            </div>
         </mat-tab>
     </mat-tab-group>
 </div>

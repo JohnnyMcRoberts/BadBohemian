@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Validators, FormControl } from '@angular/forms';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
 import { BooksDataService } from './../../../Services/books-data.service';
@@ -50,6 +51,25 @@ export class YearlyTallyDelta
     )
     { }
 };
+
+export class YearsAndMonthlyTallies
+{
+    public monthlyTalliesPerYear: Map<number, MonthlyTally[]> =
+        new Map<number, MonthlyTally[]>();
+
+    public years: number[] = new Array<number>();
+
+    constructor() { }
+}
+
+export class NumericSelectionItem
+{
+    constructor(
+        public value: string = "",
+        public viewValue: string = "",
+        public numericValue: number = 0
+    ) { }
+}
 
 @Component({
     selector: 'app-book-and-page-rates',
@@ -226,6 +246,7 @@ export class BookAndPageRatesComponent
         console.log("setupMonthlyCharts has books");
         this.setupBookTalliesByCalendarYearChart();
         this.setupPageTalliesByCalendarYearChart();
+        this.setupSelectedYearsMonthlyChart();
         console.log("setupMonthlyCharts completing");
     }
 
@@ -642,13 +663,10 @@ export class BookAndPageRatesComponent
             };
     }
 
-    public setupBookTalliesPerMonthByCalendarYearChart(): void
+    public getYearsAndMonthlyTallies(): YearsAndMonthlyTallies
     {
-        this.setupBookTalliesPerMonthByCalendarYearChartLayout();
+        let tallies: YearsAndMonthlyTallies = new YearsAndMonthlyTallies();
 
-        var monthlyTalliesPerYear: Map<number, MonthlyTally[]> =
-            new Map<number, MonthlyTally[]>();
-        var years: number[] = new Array<number>();
 
         for (let i = 0; i < this.monthlyTallies.length; i++)
         {
@@ -656,19 +674,31 @@ export class BookAndPageRatesComponent
             var date = new Date(monthlyTally.monthDate);
             var year: number = date.getFullYear();
 
-            if (monthlyTalliesPerYear.has(year))
+            if (tallies.monthlyTalliesPerYear.has(year))
             {
-                (monthlyTalliesPerYear.get(year) as MonthlyTally[]).push(monthlyTally);
+                (tallies.monthlyTalliesPerYear.get(year) as MonthlyTally[]).push(monthlyTally);
             }
             else
             {
                 var monthTallies: MonthlyTally[] = new Array<MonthlyTally>();
                 monthTallies.push(monthlyTally);
-                monthlyTalliesPerYear.set(year, monthTallies);
+                tallies.monthlyTalliesPerYear.set(year, monthTallies);
 
-                years.push(year);
+                tallies.years.push(year);
             }
         }
+
+        return tallies;
+    }
+
+    public setupBookTalliesPerMonthByCalendarYearChart(): void
+    {
+        this.setupBookTalliesPerMonthByCalendarYearChartLayout();
+
+        const tallies: YearsAndMonthlyTallies = this.getYearsAndMonthlyTallies();
+
+        const monthlyTalliesPerYear: Map<number, MonthlyTally[]> = tallies.monthlyTalliesPerYear;
+        const years: number[] = tallies.years;
 
         var yearSeries: any[] = new Array<any>();
 
@@ -1106,4 +1136,198 @@ export class BookAndPageRatesComponent
     }
 
     //#endregion
+
+    //#region Years Monthly Reading
+
+    public selectedYearsMonthlyLayout: any;
+
+    public selectedYearsMonthlyData: any = null;
+
+    public yearsMonthlyReadingYears: number[] | any;
+    public yearsMonthlyReadingSelectedYear: number | any;
+
+    public yearsMonthlyReadingOptions: NumericSelectionItem[] = new Array<NumericSelectionItem>();
+    public yearsMonthlyReadingLookup: Map<string, NumericSelectionItem> | any = null;
+    public selectedYear = 'format_2020';
+    public selectFormControl = new FormControl('', Validators.required);
+    public yearToDisplayChartFor: number = 2020;
+
+    private setupYearsSelection(years: number[]): void
+    {
+        this.yearsMonthlyReadingOptions = new Array<NumericSelectionItem>();
+        this.yearsMonthlyReadingLookup = new Map<string, NumericSelectionItem>();
+
+        for (let i = 0; i < years.length; i++)
+        {
+            const viewValue: string = years[i].toString();
+            const numericValue = years[i];
+            const value = 'format_' + numericValue.toString();
+            const yearOption = new NumericSelectionItem(value, viewValue, numericValue);
+            this.yearsMonthlyReadingLookup.set(value, yearOption);
+            this.yearsMonthlyReadingOptions.push(yearOption);
+        }
+    }
+
+    public newSelectedYearsMonthlyReading(value: any)
+    {
+        console.log("newSelectedYearsMonthlyReading : " + value.toString());
+        this.selectedYear = value;
+
+        if (!this.yearsMonthlyReadingLookup)
+        {
+            return;
+        }
+
+
+        if (this.yearsMonthlyReadingLookup.has(this.selectedYear))
+        {
+            this.yearToDisplayChartFor =
+                (this.yearsMonthlyReadingLookup.get(this.selectedYear) as NumericSelectionItem).numericValue;
+
+            console.log("Going to display " + this.yearToDisplayChartFor);
+
+            let selectedMonthlyTally: MonthlyTally[] | any = null;
+
+            if (this.selectedYearsMonthlyChartTallies && this.selectedYearsMonthlyChartTallies.years)
+            {
+
+                console.log("Set up this.selectedYearsMonthlyChartTallies ")
+
+                for (let i = 0; i < this.selectedYearsMonthlyChartTallies.years.length; i++)
+                {
+                    console.log(" checking year " + i + " aka " + this.selectedYearsMonthlyChartTallies.years[i]);
+
+                    if (this.yearToDisplayChartFor === this.selectedYearsMonthlyChartTallies.years[i])
+                    {
+                        console.log(" have found data for year: " + this.yearToDisplayChartFor);
+
+                        if (this.selectedYearsMonthlyChartTallies.monthlyTalliesPerYear.has(this.yearToDisplayChartFor)) {
+
+                            selectedMonthlyTally =
+                                this.selectedYearsMonthlyChartTallies.monthlyTalliesPerYear.get(this.yearToDisplayChartFor);
+                            console.log(" selected data found");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                console.log( " not set up this.selectedYearsMonthlyChartTallies ")
+            }
+
+            const bookTotals: number[] = new Array<number>();
+            const pageTotals: number[] = new Array<number>();
+            const bookDates: Date[] = new Array<Date>();
+
+            if (selectedMonthlyTally)
+            {
+                for (let i = 0; i < selectedMonthlyTally.length; i++)
+                {
+                    const month: MonthlyTally = selectedMonthlyTally[i];
+
+                    bookTotals.push(month.totalBooks);
+                    pageTotals.push(month.totalPagesRead);
+                    bookDates.push(month.monthDate);
+                }
+            }
+
+            var bookTotalsSeries =
+            {
+                x: bookDates,
+                y: bookTotals,
+                name: 'Monthly Book Totals',
+                type: 'scatter',
+                mode: 'lines',
+                line:
+                {
+                    color: SeriesColors.liveChartsColors[0],
+                    shape: 'spline',
+                    smoothing: 1.3
+                }
+            };
+
+            var pageTotalsSeries =
+            {
+                x: bookDates,
+                y: pageTotals,
+                name: 'Monthly Page Totals',
+                yaxis: 'y2',
+                type: 'scatter',
+                mode: 'lines',
+                line:
+                {
+                    color: SeriesColors.liveChartsColors[1],
+                    shape: 'spline',
+                    smoothing: 1.3
+                }
+            };
+
+            this.selectedYearsMonthlyData = [bookTotalsSeries, pageTotalsSeries];
+        }
+    }
+
+    public selectedYearsMonthlyChartTallies: YearsAndMonthlyTallies | any;
+
+    public setupSelectedYearsMonthlyLayout(): void
+    {
+        this.selectedYearsMonthlyLayout =
+        {
+            xaxis:
+            {
+                autorange: true,
+                title: "Date"
+            },
+            yaxis:
+            {
+                autorange: true,
+                title: "Books Read",
+                titlefont: { color: SeriesColors.liveChartsColors[0] },
+                tickfont: { color: SeriesColors.liveChartsColors[0] }
+            },
+            yaxis2:
+            {
+                autorange: true,
+                title: "Pages Read",
+                titlefont: { color: SeriesColors.liveChartsColors[1] },
+                tickfont: { color: SeriesColors.liveChartsColors[1] },
+                overlaying: 'y',
+                side: 'right'
+            },
+            hovermode: 'closest',
+
+            width: this.chartWidth,
+            height: this.chartHeight,
+
+            autosize: true,
+
+            showlegend: true,
+            legend:
+            {
+                x: 0.1,
+                y: 1.0
+            },
+            margin:
+            {
+                l: 55,
+                r: 55,
+                b: 55,
+                t: 25,
+                pad: 4
+            },
+        };
+    }
+
+    public setupSelectedYearsMonthlyChart(): void
+    {
+        this.setupSelectedYearsMonthlyLayout();
+
+        const tallies: YearsAndMonthlyTallies = this.getYearsAndMonthlyTallies();
+        this.selectedYearsMonthlyChartTallies = tallies;
+        this.setupYearsSelection(tallies.years);
+
+        this.newSelectedYearsMonthlyReading(tallies.years[0]);
+    }
+
+    //#endregion
+
 }
