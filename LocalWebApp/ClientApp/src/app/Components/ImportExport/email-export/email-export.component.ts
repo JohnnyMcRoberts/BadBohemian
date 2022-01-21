@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 
 import * as FileSaver from 'file-saver';
 
@@ -9,6 +10,7 @@ import { Book } from './../../../Models/book';
 import { NationGeography } from './../../../Models/nation-geography';
 
 import { ExportText } from './../../../Models/export-text';
+import { ExportDataToEmailRequest } from './../../../Models/export-data-to-email';
 
 export enum ExportDataSource {
     Books = "Books",
@@ -36,6 +38,7 @@ export class EmailExportComponent
 {
     /** EmailExport ctor */
     constructor(
+        private formBuilder: FormBuilder,
         private booksDataService: BooksDataService,
         public currentLoginService: CurrentLoginService
     )
@@ -56,6 +59,16 @@ export class EmailExportComponent
         {
             this.nations = this.booksDataService.nations;
         });
+
+        this.sendEmailFormGroup =
+            this.formBuilder.group({
+                destinationEmail: ['',
+                    [Validators.required,
+                        Validators.email,
+                        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]],
+                notes: ['']
+            });
+
     }
 
     ngAfterViewInit()
@@ -279,6 +292,106 @@ export class EmailExportComponent
     //#endregion
 
     //#region File Save Options
+
+
+    //#endregion
+
+    //#region Send Email Form
+
+    public sendEmailFormGroup: FormGroup | any;
+
+    public async onExportDataToEmail() {
+
+        console.log("onExportDataToEmail");
+
+        // this is the workaround for special character in a csv as per
+        // https://github.com/eligrey/FileSaver.js/issues/28
+        const BOM = "\uFEFF";
+
+        let blob: Blob | any = null;
+
+        switch (this.selectedExportType) {
+            case ExportFileType.JSON:
+                {
+                    const fileName: string =
+                        this.isGeography ? "Nations.json" : "BooksRead.json";
+                    this.displayText =
+                        this.isGeography ? JSON.stringify(this.nations, null, '\t') : JSON.stringify(this.books, null, '\t');
+
+                    this.exportDataToDisplay = true;
+                    blob = new Blob([this.displayText], { type: "application/json" });
+                    //FileSaver.saveAs(blob, fileName);
+                    //saveAs(blob, fileName);
+                }
+                break;
+
+            case ExportFileType.CSV:
+                {
+                    this.setupExportDataAsText(true);
+
+                    if (!this.isGeography) {
+                        this.booksDataService.fetchExportCsvFileData(this.currentLoginService.userId).then(() => {
+                            if (this.booksDataService.exportCsvTextFile !== null) {
+                                const csvData = BOM +
+                                    (this.booksDataService.exportCsvTextFile as ExportText).formattedText;
+                                blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+                                //FileSaver.saveAs(blob, "BooksRead.csv");
+                                //saveAs(blob, "BooksRead.csv");
+                            }
+                        });
+                    }
+                    else {
+                        this.booksDataService.fetchExportNationsCsvFileData(this.currentLoginService.userId).then(() => {
+                            if (this.booksDataService.exportCsvTextFile !== null) {
+                                const csvData = BOM +
+                                    (this.booksDataService.exportCsvTextFile as ExportText).formattedText;
+                                blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+                                //FileSaver.saveAs(blob, "Nations.csv");
+                                //saveAs(blob, "Nations.csv");
+                            }
+                        });
+                    }
+                }
+                break;
+        }
+
+        //sourceEmail: ['',
+        //    [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+        //    sourcePassword: ['',
+        //        Validators.required],
+        //        destinationEmail: ['',
+        //            [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+        //            notes: ['']
+
+        const destinationEmail: string =
+            this.sendEmailFormGroup.value.destinationEmail as string;
+        const notes: string =
+            this.sendEmailFormGroup.value.notes as string;
+
+        console.log("the parameters are : ---");
+        console.log("   --- destinationEmail : " + destinationEmail);
+        console.log("   --- notes : " + notes);
+        console.log("   --- selectedExportType : " + this.selectedExportType);
+        console.log("   --- isGeography : " + this.isGeography);
+
+        let request: ExportDataToEmailRequest =
+            new ExportDataToEmailRequest(destinationEmail, this.selectedExportType, this.isGeography.toString());
+
+        this.booksDataService.exportEmail(request).then(() => {
+
+            if (this.booksDataService.exportEmailResponse !== null)
+            {
+
+                console.log("Response = " + JSON.stringify(this.booksDataService.exportEmailResponse, null, 4));
+
+                //const csvData = BOM +
+                //    (this.booksDataService.exportCsvTextFile as ExportText).formattedText;
+                //blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+                //FileSaver.saveAs(blob, "Nations.csv");
+                //saveAs(blob, "Nations.csv");
+            }
+        });
+    }
 
 
     //#endregion

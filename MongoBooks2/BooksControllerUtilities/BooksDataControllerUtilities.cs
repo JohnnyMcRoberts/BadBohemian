@@ -935,7 +935,24 @@ namespace BooksControllerUtilities
         public ExportDataToEmailResponse SendExportEmail(
             ExportDataToEmailRequest exportRequest)
         {
-            throw new NotImplementedException();
+            ExportDataToEmailResponse response = new ExportDataToEmailResponse()
+            { 
+                DestinationEmail = exportRequest.DestinationEmail, 
+                SentSuccessfully = false, 
+                Error = string.Empty 
+            };
+
+            try
+            {
+                SendExportEmailToUser(exportRequest);
+            }
+            catch (Exception ex)
+            {
+                response.Error = ex.Message;
+                response.SentSuccessfully = false;
+            }
+
+            return response;
         }
 
         #endregion

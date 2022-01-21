@@ -1,4 +1,3 @@
-
 <div>
 
     <div *ngIf="loadingChartData">
@@ -8,6 +7,7 @@
     <div class="logged-in-div">
 
         <table>
+
             <tr>
                 <td>
                     <b class="input-type-name">Data Source:</b>
@@ -45,70 +45,75 @@
 
                 </td>
 
-
-
-            </tr>
-
-
-            <tr>
-                <td>
-                    <b class="input-type-name">Source E-mail Address:</b>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <b class="input-type-name">Source E-mail Password:</b>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <b class="input-type-name">Destination E-mail:</b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <b class="input-type-name">Additional Notes:</b>
-                </td>
             </tr>
 
             <tr>
 
                 <td>
-                </td>
 
-                <td>
-
-                    <button mat-raised-button
-                            color="primary"
-                            [disabled]="!optionSelected"
-                            (click)="onDisplayExportData()">
-                        Display
-                    </button>
 
                 </td>
                 <td>
 
-                    <button mat-raised-button
-                            color="primary"
-                            [disabled]="!optionSelected"
-                            (click)="onExportDataToFile()">
-                        Export Data To File
-                    </button>
 
                 </td>
+
             </tr>
+
         </table>
 
-    </div>
+        <form [formGroup]="sendEmailFormGroup" class="form">
 
-    <div *ngIf="exportDataToDisplay" class="logged-in-div">
+            <div>
+                <mat-form-field class="form-element">
+                    <input matInput type="email" placeholder="Destination" formControlName="destinationEmail" required>
+                    <mat-error *ngIf="!sendEmailFormGroup.controls['destinationEmail'].valid && sendEmailFormGroup.controls['destinationEmail'].touched">
+                        Not a valid destination
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="form-element">
+                    <input matInput placeholder="Notes" formControlName="notes">
+                </mat-form-field>
+            </div>
+            <div class="form-element">
 
-        <pre>
-        <code>{{displayText}}</code>
+                <button mat-raised-button
+                        color="primary"
+                        style="margin-right: 25px; margin-left: 25px;"
+                        [disabled]="!optionSelected"
+                        (click)="onDisplayExportData()">
+                    Display
+                </button>
+
+                <button mat-raised-button
+                        color="primary"
+                        style="margin-right: 25px; margin-left: 25px;"
+                        [disabled]="!optionSelected"
+                        (click)="onExportDataToFile()">
+                    Export Data To File
+                </button>
+
+                <button mat-raised-button
+                        color="primary"
+                        style="margin-right: 25px; margin-left: 25px;"
+                        type="submit"
+                        class="button"
+                        [disabled]="!sendEmailFormGroup.valid || !optionSelected"
+                        (click)="onExportDataToEmail()">
+                    Send Export E-mail
+                </button>
+            </div>
+
+        </form>
+
+        <div *ngIf="exportDataToDisplay" class="logged-in-div">
+
+            <pre>
+            <code>{{displayText}}</code>
         </pre>
 
-    </div>
+        </div>
 
-</div>
+    </div>

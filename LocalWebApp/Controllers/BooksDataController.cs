@@ -184,6 +184,26 @@
             return Ok(response);
         }
 
+        /// <summary>
+        /// Sends export email to a user.
+        /// </summary>
+        /// <param name="exportDataRequest">The export parameters.</param>
+        /// <returns>The action result.</returns>
+        [HttpPost]
+        [Route("ExportToEmail")]
+        public IActionResult SendEmail([FromBody] ExportDataToEmailRequest exportDataRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            ExportDataToEmailResponse response =
+                _booksDataControllerUtilities.SendExportEmail(exportDataRequest);
+
+            return Ok(response);
+        }
+
         #endregion
 
         #region Constructor

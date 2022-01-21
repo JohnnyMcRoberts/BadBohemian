@@ -12,8 +12,11 @@
         {
             SmtpClient client = new SmtpClient(connection.Host, connection.Port)
             {
+                UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(connection.FromEmail, connection.Password),
-                EnableSsl = true
+                EnableSsl = true,
+                Timeout = 300000,
+                DeliveryMethod = SmtpDeliveryMethod.Network
             };
             return client;
         }

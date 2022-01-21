@@ -196,6 +196,17 @@ export class BooksDataService {
         console.log('No issues, waiting until promise is resolved...');
     }
 
+    public exportEmailResponse: any;
+    async exportEmail(request: ExportDataToEmailRequest) {
+        this.exportEmailResponse =
+            await this.http.post<ExportDataToEmailResponse>(
+                this.requestUrl + "ExportToEmail", request,
+                httpOptions).toPromise();
+
+        console.log('No issues, waiting until promise is resolved...');
+    }
+
+
     public updateBookResponse: any;
     async  updateAsyncBook(book: Book)
     {
