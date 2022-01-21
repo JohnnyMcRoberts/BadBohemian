@@ -61,21 +61,38 @@ namespace BooksControllerUtilities
 
         private readonly string ActivateTimeText = "ACTIVATE-TIME";
 
-        private readonly string MessageSubject = "McBob's Books Authentication";
+        private readonly string AuthMessageSubject = "McBob's Books Authentication";
 
-        private readonly string MessageBodyTop =
+        private readonly string AuthMessageBodyTop =
             @"<body>
                 <p>Please enter the following code to activate the new user login:</p>";
 
-        private readonly string MessageBodyAuthCode =
+        private readonly string AuthMessageBodyAuthCode =
             @"<h4>AUTH-CODE</h4>";
 
-        private readonly string MessageBodyActivateTime =
+        private readonly string AuthMessageBodyActivateTime =
             @"<p>This activation code will expire at: <b>ACTIVATE-TIME</b><p>";
 
-        private readonly string MessageBodyBottom =
+        private readonly string AuthMessageBodyBottom =
             @"<p>Thanks and enjoy the trip!<p>
                 </body>";
+
+
+        private readonly string ExportNoteText = "EXPORT-NOTE";
+
+        private readonly string ExportMessageSubject = "McBob's Books Export";
+
+        private readonly string ExportMessageBodyTop =
+            @"<body>
+                <p>Please find attached the latest books read:</p>";
+
+        private readonly string ExportMessageBodyNote =
+            @"<p>EXPORT-NOTE</p>";
+
+        private readonly string ExporthMessageBodyBottom =
+            @"<p>Thanks and hope you enjoy!<p>
+                </body>";
+
 
         #endregion
 
@@ -362,18 +379,40 @@ namespace BooksControllerUtilities
 
         private void SendExportEmailToUser(ExportDataToEmailRequest exportRequest)
         {
+            // Set up the providers
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            _books = new ObservableCollection<Book>();
+
+            // Get the file export string 
+            string formattedText = null;
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                if (booksReadProvider.BooksRead != null && booksReadProvider.BooksRead.Any())
+                {
+                    List<BookRead> booksRead =
+                        booksReadProvider.BooksRead.OrderBy(x => x.Date).ToList();
+
+                    BooksExporter.ExportToCsvFile(booksRead, out formattedText);
+                }
+            }
+
+            if (formattedText == null)
+            {
+                throw new Exception("Could not get books file");
+            }
+
             // Set up the message
-            string messageBody = MessageBodyTop;
+            string messageBody = ExportMessageBodyTop;
 
-            string messageAuth =
-                MessageBodyAuthCode.Replace(AuthCodeText, "some code");
-            messageBody += messageAuth;
+            if (!string.IsNullOrWhiteSpace( exportRequest.Note))
+            {
+                string messageNote =
+                    ExportMessageBodyNote.Replace(ExportNoteText, exportRequest.Note);
+                messageBody += messageNote;
+            }
 
-            string messageTime =
-                MessageBodyActivateTime.Replace(ActivateTimeText, "xsome time");
-            messageBody += messageTime;
-
-            messageBody += MessageBodyBottom;
+            messageBody += ExporthMessageBodyBottom;
 
             // Set up the mail connection parameters
             StmpConnection connection =
@@ -386,11 +425,12 @@ namespace BooksControllerUtilities
                     FromEmailDisplayName = _smtpConfig.Username,
                     ToEmail = exportRequest.DestinationEmail,
                     ToEmailDisplayName = "Guy we know",
-                    Subject = MessageSubject,
+                    Subject = ExportMessageSubject,
                     BodyHtml = messageBody
                 };
 
-            SmtpEmailer.SendHtmlEmail(connection, emailDefinition);
+            SmtpEmailer.SendHtmlEmailWithAttachment(
+                connection, emailDefinition, formattedText);
         }
 
         #endregion
@@ -938,7 +978,7 @@ namespace BooksControllerUtilities
             ExportDataToEmailResponse response = new ExportDataToEmailResponse()
             { 
                 DestinationEmail = exportRequest.DestinationEmail, 
-                SentSuccessfully = false, 
+                SentSuccessfully = true, 
                 Error = string.Empty 
             };
 

@@ -1,7 +1,7 @@
 export interface IExportDataToEmailRequest {
     destinationEmail: string;
     format: string;
-    source: string;
+    note: string;
 }
 
 export class ExportDataToEmailRequest implements IExportDataToEmailRequest {
@@ -9,13 +9,13 @@ export class ExportDataToEmailRequest implements IExportDataToEmailRequest {
         return new this(
             data.destinationEmail,
             data.format,
-            data.source);
+            data.note);
     }
 
     constructor(
         public destinationEmail: string = "",
         public format: string = "",
-        public source: string = "") {
+        public note: string = "") {
 
     }
 }

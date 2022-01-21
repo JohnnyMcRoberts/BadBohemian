@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { Component, ViewChild, TemplateRef} from '@angular/core';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 
 import * as FileSaver from 'file-saver';
 
@@ -38,6 +39,7 @@ export class EmailExportComponent
 {
     /** EmailExport ctor */
     constructor(
+        private dialog: MatDialog,
         private formBuilder: FormBuilder,
         private booksDataService: BooksDataService,
         public currentLoginService: CurrentLoginService
@@ -300,6 +302,8 @@ export class EmailExportComponent
 
     public sendEmailFormGroup: FormGroup | any;
 
+    @ViewChild('addedDialog') addedDialog: TemplateRef<any> | any;
+
     public async onExportDataToEmail() {
 
         console.log("onExportDataToEmail");
@@ -375,7 +379,7 @@ export class EmailExportComponent
         console.log("   --- isGeography : " + this.isGeography);
 
         let request: ExportDataToEmailRequest =
-            new ExportDataToEmailRequest(destinationEmail, this.selectedExportType, this.isGeography.toString());
+            new ExportDataToEmailRequest(destinationEmail, this.selectedExportType, notes);
 
         this.booksDataService.exportEmail(request).then(() => {
 
@@ -383,6 +387,22 @@ export class EmailExportComponent
             {
 
                 console.log("Response = " + JSON.stringify(this.booksDataService.exportEmailResponse, null, 4));
+
+                if (!this.booksDataService.exportEmailResponse.sentSuccessfully) {
+
+                    console.log(" Say the error ... : " + this.booksDataService.exportEmailResponse.error);
+                }
+                else {
+
+                    console.log("Sent successfully !!");
+                    console.log("Successfully added a book");
+
+                    const dialogRef = this.dialog.open(this.addedDialog);
+
+                    dialogRef.afterClosed().subscribe(result => {
+                        console.log('The dialog was closed:' + result.toString());
+                    });
+                }
 
                 //const csvData = BOM +
                 //    (this.booksDataService.exportCsvTextFile as ExportText).formattedText;

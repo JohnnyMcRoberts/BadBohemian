@@ -4,6 +4,6 @@
     {
         public string DestinationEmail { get; set; }
         public string Format { get; set; }
-        public string Source { get; set; }
+        public string Note { get; set; }
     }
 }

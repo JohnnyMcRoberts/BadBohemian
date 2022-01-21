@@ -47,22 +47,19 @@
 
             </tr>
 
-            <tr>
-
-                <td>
-
-
-                </td>
-                <td>
-
-
-                </td>
-
-            </tr>
-
         </table>
 
         <form [formGroup]="sendEmailFormGroup" class="form">
+
+
+            <ng-template #addedDialog>
+                <h2 matDialogTitle>Successfully sent e-mail</h2>
+                <p matDialogContent>The exported contents have been sent successfully.</p>
+                <mat-dialog-actions align="end">
+                    <button mat-button matDialogClose>OK</button>
+                </mat-dialog-actions>
+            </ng-template>
+
 
             <div>
                 <mat-form-field class="form-element">
@@ -117,3 +114,5 @@
         </div>
 
     </div>
+
+</div>
