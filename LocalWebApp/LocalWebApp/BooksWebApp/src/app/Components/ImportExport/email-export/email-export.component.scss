@@ -1,0 +1,28 @@
+.radio-group-panel {
+    min-width: 250px;
+}
+
+.example-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+}
+
+.example-radio-button {
+    margin-left: 16px;
+    min-width: 120px;
+}
+
+.input-type-name {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 4px;
+    word-wrap: break-word; /* IE11, Firefox */
+    word-break: break-all; /* Chrome, Safari */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 240px;
+}
+
+.mat-form-field {
+    width: 100%;
+}

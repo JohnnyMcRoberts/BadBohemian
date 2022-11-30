@@ -1,0 +1,39 @@
+<div *ngIf="!currentLoginService.isLoggedIn" class="not-logged-in-div" (click)="goToLogin();">
+    <h1>Not currently Logged In</h1>
+</div>
+
+<div *ngIf="currentLoginService.isLoggedIn" style="margin: 15px; padding: 16px; min-height: 600px; height: 100%;">
+    <mat-tab-group dynamicHeight #tabGroup>
+
+        <mat-tab label="Book and Page Rates">
+
+            <app-book-and-page-rates></app-book-and-page-rates>
+
+        </mat-tab>
+
+        <mat-tab label="Book and Pages with Time">
+
+            <app-books-and-pages-by-time-charts></app-books-and-pages-by-time-charts>
+
+        </mat-tab>
+
+        <mat-tab label="By Language">
+
+            <app-by-language-charts></app-by-language-charts>
+
+        </mat-tab>
+
+        <mat-tab label="By Country">
+
+            <app-by-country-charts></app-by-country-charts>
+
+        </mat-tab>
+
+        <mat-tab label="Maps">
+
+            <app-country-maps></app-country-maps>
+
+        </mat-tab>
+
+    </mat-tab-group>
+</div>

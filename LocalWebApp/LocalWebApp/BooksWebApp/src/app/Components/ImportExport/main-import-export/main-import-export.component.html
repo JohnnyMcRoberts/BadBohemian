@@ -1,0 +1,26 @@
+<div *ngIf="!currentLoginService.isLoggedIn" class="not-logged-in-div" (click)="goToLogin();">
+    <h1>Not currently Logged In</h1>
+</div>
+
+<div *ngIf="currentLoginService.isLoggedIn" style="margin: 15px">
+  <mat-tab-group dynamicHeight #tabGroup>
+
+    <mat-tab label="Export to Text">
+
+      <app-text-file-export></app-text-file-export>
+
+    </mat-tab>
+
+    <mat-tab label="Export to E-Mail">
+
+        <app-email-export></app-email-export>
+
+    </mat-tab>
+
+    <mat-tab label="Import from Text">
+
+
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

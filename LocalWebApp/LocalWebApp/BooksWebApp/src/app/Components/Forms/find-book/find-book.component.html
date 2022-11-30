@@ -1,0 +1,17 @@
+<div width="100%">
+    <mat-card>
+        <h1>Search for a book</h1>
+
+        <mat-form-field  appearance="fill" style="width: 100%">
+            <mat-label>Title/Author of book</mat-label>
+            <input matInput
+                   placeholder="Enter book title"
+                   (keyup)="bookQuery($event.target)" />
+        </mat-form-field>
+    </mat-card>
+</div>
+
+<div width="100%">
+    <app-google-book-item *ngFor="let book of books | async" [book]="book">
+    </app-google-book-item>
+</div>

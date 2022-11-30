@@ -39,6 +39,7 @@
     <Folder Include="ClientApp\src\app\Components\Tables\" />
     <Folder Include="ClientApp\src\app\Pipes\" />
     <Folder Include="ClientApp\src\app\Services\" />
+    <Folder Include="LocalWebApp\ui\src\" />
   </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

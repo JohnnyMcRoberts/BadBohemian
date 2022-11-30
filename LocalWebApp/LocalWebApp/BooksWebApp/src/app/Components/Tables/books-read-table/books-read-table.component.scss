@@ -1,0 +1,22 @@
+
+.mat-cell {
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.scrollable {
+  height: 95px;
+  overflow-y: auto;
+}
+.noborders {
+  border: none;
+}
+
+.noborders-table {
+  width: 100%;
+  border: none;
+}
+
+img.aspectshrink {
+  height: 95px;
+}
