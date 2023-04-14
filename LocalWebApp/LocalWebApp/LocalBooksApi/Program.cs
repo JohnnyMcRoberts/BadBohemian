@@ -34,7 +34,7 @@ app.UseAuthorization();
 //}
 List<string>? allowedOriginsList = new List<string>()
 {
-    "http://localhost:58255",
+    "http://localhost:5816",
     "https://localhost:58255",
     "https://localhost:4200",
     "http://localhost:4200",
@@ -44,7 +44,7 @@ List<string>? allowedOriginsList = new List<string>()
 app.UseCors(policy => policy
     .AllowAnyHeader()
     .AllowAnyMethod()
-    .WithOrigins(allowedOriginsList.ToArray())
+    .SetIsOriginAllowed(origin => true)
     .WithExposedHeaders("content-disposition")
     .AllowCredentials());
 
