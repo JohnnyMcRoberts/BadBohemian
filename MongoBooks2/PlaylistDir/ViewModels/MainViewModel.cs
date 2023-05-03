@@ -71,6 +71,11 @@
         /// </summary>
         private ICommand _showPlaylistCommand;
 
+        /// <summary>
+        /// The copy renumber playlist command.
+        /// </summary>
+        private ICommand _copyRenumberPlaylistCommand;
+
         #endregion
 
         #region Public Properties
@@ -131,6 +136,18 @@
         }
 
         /// <summary>
+        /// Copy and renumber the playlist command.
+        /// </summary>
+        public ICommand CopyRenumberPlaylistCommand
+        {
+            get
+            {
+                return _copyRenumberPlaylistCommand ??
+                       (_copyRenumberPlaylistCommand =
+                           new CommandHandler(() => CopyRenumberPlaylistCommandAction(), true));
+            }
+        }
+        /// <summary>
         /// Show the playlist command.
         /// </summary>
         public ICommand ShowPlaylistCommand
@@ -142,6 +159,7 @@
                         new CommandHandler(() => ShowPlaylistCommandAction(), true));
             }
         }
+        
         #endregion
 
         #region Command Handlers
@@ -170,7 +188,7 @@
         /// </summary>
         public void SelectDirectoryCommandAction()
         {
-            using (var dialog = new FolderBrowserDialog())
+            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
             {
                 dialog.ShowNewFolderButton = true;
                 if (dialog.ShowDialog() == DialogResult.OK)
@@ -190,23 +208,34 @@
 
             string sourceDirectory = Path.GetDirectoryName(Playlist);
 
+            SetupSongsReadFromPlaylist(songs, sourceDirectory);
+
+            OnPropertyChanged(() => SongsReadFromPlaylist);
+        }
+
+        private void SetupSongsReadFromPlaylist(List<string> songs, string sourceDirectory)
+        {
             SongsReadFromPlaylist.Clear();
 
             int trackNumber = 1;
-            foreach (var song in songs)
+            foreach (string song in songs)
             {
-                var songPath = Path.Combine(sourceDirectory, song);
+                string songPath = Path.Combine(sourceDirectory, song);
                 TagLib.File file = TagLib.File.Create(songPath);
 
-                PlaylistSong songFile = new PlaylistSong() { TrackNumber = trackNumber };
-                songFile.Artist = file.Tag.FirstAlbumArtist;
-                songFile.Song = file.Tag.Title;
-                songFile.Album = file.Tag.Album;
+                PlaylistSong songFile = new PlaylistSong
+                {
+                    TrackNumber = trackNumber,
+                    Artist = string.IsNullOrEmpty(file.Tag.FirstAlbumArtist)
+                        ? file.Tag.FirstPerformer
+                        : file.Tag.FirstAlbumArtist,
+                    Song = file.Tag.Title,
+                    Album = file.Tag.Album
+                };
+
                 SongsReadFromPlaylist.Add(songFile);
                 trackNumber++;
             }
-
-            OnPropertyChanged(() => SongsReadFromPlaylist);
         }
 
         /// <summary>
@@ -218,14 +247,59 @@
 
             string sourceDirectory = Path.GetDirectoryName(Playlist);
 
-            foreach (var song in songs)
+            foreach (string song in songs)
             {
-                var songPath = Path.Combine(sourceDirectory, song);
-                var outputSong = Path.Combine(OutputDirectory, Path.GetFileName(song));
+                string songPath = Path.Combine(sourceDirectory, song);
+                string outputSong = Path.Combine(OutputDirectory, Path.GetFileName(song));
+
                 try
                 {
-
                     File.Copy(songPath, outputSong);
+
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    //throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The reads the playlist file, copies the files them to the directory and renumbers the songs.
+        /// </summary>
+        public void CopyRenumberPlaylistCommandAction()
+        {
+            List<string> songs = GetPlaylistSongs();
+
+            string sourceDirectory = Path.GetDirectoryName(Playlist);
+
+            SetupSongsReadFromPlaylist(songs, sourceDirectory);
+
+            for(int i = 0; i < songs.Count; i++ )
+            {
+                string song = songs[i];
+                PlaylistSong playlistSong = SongsReadFromPlaylist[i];
+                uint trackNumber = (uint)playlistSong.TrackNumber;
+
+                string songPath = Path.Combine(sourceDirectory, song);
+                string outputSong = 
+                    Path.Combine(OutputDirectory, trackNumber.ToString() + " " + Path.GetFileName(song));
+
+                try
+                {
+                    File.Copy(songPath, outputSong);
+
+                    // Open the copied file
+                    TagLib.File file = TagLib.File.Create(outputSong);
+
+                    // Update the track
+                    file.Tag.Track = trackNumber;
+
+                    // Save Changes:
+                    file.Save();
+
                 }
                 catch (Exception e)
                 {

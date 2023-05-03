@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30002.166
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDbBooks", "MongoDbBooks\MongoDbBooks.csproj", "{F7A750B3-2C51-417E-BA0D-4C4708939FBE}"
 EndProject
@@ -69,9 +69,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Azure", "Azure", "{7417B222
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooksMigration", "BooksMigration\BooksMigration.csproj", "{8500BD96-CDA0-4F60-A0C3-52B534DFE907}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooksControllerUtilities", "BooksControllerUtilities\BooksControllerUtilities.csproj", "{D26DAFFF-1895-4275-BDC7-EF85B55209C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooksControllerUtilities", "BooksControllerUtilities\BooksControllerUtilities.csproj", "{D26DAFFF-1895-4275-BDC7-EF85B55209C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextAzureWebApp", "NextAzureWebApp\NextAzureWebApp.csproj", "{1F4591B1-E8C2-493B-9B21-2DDCB140D01A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextAzureWebApp", "NextAzureWebApp\NextAzureWebApp.csproj", "{1F4591B1-E8C2-493B-9B21-2DDCB140D01A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mp3ToDirsWpfApp", "Mp3ToDirsWpfApp\Mp3ToDirsWpfApp.csproj", "{61599E34-DF53-4806-B5D4-C9FEA632978D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3DirParserConsoleApp", "Mp3DirParserConsoleApp\Mp3DirParserConsoleApp.csproj", "{60D49EA1-6892-458A-A3D9-14B2BFC7D179}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -563,6 +567,38 @@ Global
 		{1F4591B1-E8C2-493B-9B21-2DDCB140D01A}.Release|x64.Build.0 = Release|Any CPU
 		{1F4591B1-E8C2-493B-9B21-2DDCB140D01A}.Release|x86.ActiveCfg = Release|Any CPU
 		{1F4591B1-E8C2-493B-9B21-2DDCB140D01A}.Release|x86.Build.0 = Release|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Debug|ARM.Build.0 = Debug|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Debug|x64.Build.0 = Debug|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Debug|x86.Build.0 = Debug|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Release|ARM.ActiveCfg = Release|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Release|ARM.Build.0 = Release|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Release|x64.ActiveCfg = Release|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Release|x64.Build.0 = Release|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Release|x86.ActiveCfg = Release|Any CPU
+		{61599E34-DF53-4806-B5D4-C9FEA632978D}.Release|x86.Build.0 = Release|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Debug|ARM.Build.0 = Debug|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Debug|x64.Build.0 = Debug|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Debug|x86.Build.0 = Debug|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Release|ARM.ActiveCfg = Release|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Release|ARM.Build.0 = Release|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Release|x64.ActiveCfg = Release|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Release|x64.Build.0 = Release|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Release|x86.ActiveCfg = Release|Any CPU
+		{60D49EA1-6892-458A-A3D9-14B2BFC7D179}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
