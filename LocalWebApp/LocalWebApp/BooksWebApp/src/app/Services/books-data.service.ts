@@ -295,6 +295,19 @@ export class BooksDataService {
         console.log('exportDataToEmailAsync: No issues, waiting until promise is resolved...');
     }
 
+    public importBooksCsvResponse: any;
+    async importBooksCsvAsync(request: FormData) {
+        const importBooksCsvUrl: string = this.requestUrl + 'UploadBooksCsv/';
+
+        //const headers = new HttpHeaders().set('Content-Type', 'text/csv; charset=utf-8');
+        const headers = new HttpHeaders().set('Content-Type', 'text/plain');
+
+        this.importBooksCsvResponse =
+            await this.http.post<FormData>(importBooksCsvUrl, request, { headers }).toPromise();
+
+        console.log('importBooksCsvAsync: No issues, waiting until promise is resolved...');
+    }
+
     // utility methods
 
     private handleError<T>(operation = 'operation', result?: T)

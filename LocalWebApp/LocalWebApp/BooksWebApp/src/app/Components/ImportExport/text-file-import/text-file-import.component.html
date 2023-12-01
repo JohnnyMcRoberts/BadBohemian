@@ -1,0 +1,31 @@
+<div>
+
+
+    <div *ngIf="loadingChartData">
+        <p>{{componentTitle}}</p>
+    </div>
+
+    <div class="logged-in-div">
+        <p>{{componentStatus}}</p>
+        <table>
+            <tr>
+                <td>
+                    <div>
+                        <input type="file" accept="text/csv" #file (change)="uploadFile(file.files)" class="d-none" />
+                        <button mat-raised-button
+                                color="primary"
+                                type="button"
+                                (click)="file.click()">
+                            Upload Books Csv File
+                        </button>
+                    </div>
+                    <!--<button mat-raised-button
+                            color="primary"
+                            (click)="onUploadBooksCsv()">
+                        Upload Books Csv File
+                    </button>-->
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

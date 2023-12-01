@@ -48,8 +48,6 @@ app.UseCors(policy => policy
     .WithExposedHeaders("content-disposition")
     .AllowCredentials());
 
-
-
 app.MapControllers();
 
 app.Run();

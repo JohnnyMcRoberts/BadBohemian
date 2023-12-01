@@ -205,6 +205,14 @@ namespace BooksControllerUtilities
                 Tags = addRequest.Tags.ToList()
             };
 
+            return CheckBookValidity(newBook, addRequest.Format, addRequest.Date);
+        }
+
+        private bool CheckBookValidity(
+            BookRead newBook,
+            string format,
+            DateTime addDate)
+        {
             // Check the required strings are ok.
             if (string.IsNullOrWhiteSpace(newBook.Author)
                 || string.IsNullOrWhiteSpace(newBook.Title)
@@ -215,7 +223,7 @@ namespace BooksControllerUtilities
             }
 
             // Check the format is valid
-            switch (addRequest.Format)
+            switch (format)
             {
                 case "Book":
                     newBook.Format = BookFormat.Book;
@@ -231,13 +239,13 @@ namespace BooksControllerUtilities
             }
 
             // Check the date
-            if (DateTime.Now < addRequest.Date || addRequest.Date < EarliestDate)
+            if (DateTime.Now < addDate || addDate < EarliestDate)
             {
                 return false;
             }
 
             // Set the date string 
-            newBook.Date = addRequest.Date;
+            newBook.Date = addDate;
             newBook.DateString =
                 SuffixedDaysOfMonths[newBook.Date.Day] + newBook.Date.ToString(" MMMM yyyy");
 
@@ -405,7 +413,7 @@ namespace BooksControllerUtilities
             // Set up the message
             string messageBody = ExportMessageBodyTop;
 
-            if (!string.IsNullOrWhiteSpace( exportRequest.Note))
+            if (!string.IsNullOrWhiteSpace(exportRequest.Note))
             {
                 string messageNote =
                     ExportMessageBodyNote.Replace(ExportNoteText, exportRequest.Note);
@@ -870,6 +878,50 @@ namespace BooksControllerUtilities
             return response;
         }
 
+        public string AddBooksFromImport(string userName, List<BookRead> booksToImport)
+        {
+            string statuses = string.Empty;
+
+            GeographyProvider geographyProvider;
+            BooksReadProvider booksReadProvider;
+            _books = new ObservableCollection<Book>();
+           
+            if (GetProviders(out geographyProvider, out booksReadProvider))
+            {
+                int count = 0;
+                foreach (BookRead newBook in booksToImport)
+                {
+                    count++;
+
+                    // Check the date
+                    if (DateTime.Now < newBook.Date || newBook.Date < EarliestDate)
+                    {
+                        statuses += $"Invalid book date {newBook.Date} please try again.\n";
+                        continue;
+                    }
+
+                    // Check if this is duplicate
+                    BookRead match = booksReadProvider.BooksRead.FirstOrDefault(
+                        x => x.Author == newBook.Author &&
+                             x.Title == newBook.Title &&
+                             x.DateString == newBook.DateString);
+
+                    if (match != null)
+                    {
+                        statuses += $"This book {newBook.Author} - {newBook.Title} has already been added.";
+                        continue;
+                    }
+
+                    newBook.User = userName;
+                    _booksReadDatabase.AddNewItemToDatabase(newBook);
+
+                    statuses += $"New book {newBook.Author} - {newBook.Title} added.";
+                }
+
+            }
+            return statuses;
+        }
+
         public BookReadAddResponse UpdateExistingBook(Book existingBook)
         {
             // set up the successful response
@@ -976,10 +1028,10 @@ namespace BooksControllerUtilities
             ExportDataToEmailRequest exportRequest)
         {
             ExportDataToEmailResponse response = new ExportDataToEmailResponse()
-            { 
-                DestinationEmail = exportRequest.DestinationEmail, 
-                SentSuccessfully = true, 
-                Error = string.Empty 
+            {
+                DestinationEmail = exportRequest.DestinationEmail,
+                SentSuccessfully = true,
+                Error = string.Empty
             };
 
             try
@@ -1024,14 +1076,14 @@ namespace BooksControllerUtilities
                     };
                 _booksReadDatabase.ConnectToDatabase();
 
-                _nationsReadDatabase = 
+                _nationsReadDatabase =
                     new NationDatabase(string.Empty, false)
                     {
                         MongoClientFunc = GetRemoteConnection
                     };
                 _nationsReadDatabase.ConnectToDatabase();
 
-                _userDatabase = 
+                _userDatabase =
                     new UserDatabase(string.Empty, false)
                     {
                         MongoClientFunc = GetRemoteConnection

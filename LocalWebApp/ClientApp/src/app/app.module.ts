@@ -75,6 +75,7 @@ import { SelectedBookDetailComponent } from './Components/Tables/selected-book-d
 import { MainImportExportPageComponent } from './Components/ImportExport/main-import-export-page/main-import-export-page.component';
 import { MainImportExportComponent } from './Components/ImportExport/main-import-export/main-import-export.component';
 import { TextFileExportComponent } from './Components/ImportExport/text-file-export/text-file-export.component';
+import { TextFileImportComponent } from './Components/ImportExport/text-file-import/text-file-import.component';
 import { EmailExportComponent } from './Components/ImportExport/email-export/email-export.component';
 
 // Charts
@@ -125,6 +126,7 @@ import { CountryMapsComponent } from './Components/Charts/country-maps/country-m
             MainImportExportPageComponent,
             MainImportExportComponent,
             TextFileExportComponent,
+            TextFileImportComponent,
             EmailExportComponent,
 
             MainChartsPageComponent,

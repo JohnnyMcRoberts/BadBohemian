@@ -1,18 +1,15 @@
-﻿
-using System.Collections.Generic;
-using System.IO;
+﻿using Microsoft.AspNetCore.Mvc;
 
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 using BooksControllerUtilities;
 using BooksControllerUtilities.DataClasses;
 using BooksControllerUtilities.RequestsResponses;
 using BooksControllerUtilities.Settings;
+using BooksControllerUtilities.Utilities;
 
 namespace LocalBooksApi.Controllers
 {
-
     [ApiController]
     [Route("[controller]")]
     public class BooksDataController : Controller
@@ -204,6 +201,35 @@ namespace LocalBooksApi.Controllers
                 _booksDataControllerUtilities.SendExportEmail(exportDataRequest);
 
             return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("UploadBooksCsv")]
+        public IActionResult UploadBooksCsv(IFormFile file)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check that this is a csv file that has valid contents.
+            if (string.IsNullOrEmpty(file.FileName) ||
+                !file.FileName.ToLower().EndsWith(".csv") ||
+                file.ContentType.ToLower() != "text/csv" ||
+                file.Length < 1)
+            {
+                return BadRequest("Invalid file for upload");
+            }
+
+            BooksFromCsvFileImporter importer = new BooksFromCsvFileImporter();
+
+            importer.ImportCsvFromStream(new StreamReader(file.OpenReadStream()));
+
+            string result =
+                _booksDataControllerUtilities.AddBooksFromImport(
+                    "JMcR", importer.ImportedBooks);
+
+            return Ok(result);
         }
 
         #endregion
